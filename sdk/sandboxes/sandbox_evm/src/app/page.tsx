@@ -3,7 +3,7 @@
 import Link from "next/link";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { BugAntIcon } from "@heroicons/react/24/outline";
+import { BugAntIcon, PlayIcon } from "@heroicons/react/24/outline";
 
 import { Address } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
 
@@ -32,6 +32,17 @@ const Home: NextPage = () => {
                 Tinker with your smart contract using the{" "}
                 <Link href="/debug" passHref className="link">
                   Debug Contracts
+                </Link>{" "}
+                tab.
+              </p>
+            </div>
+
+            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
+              <PlayIcon className="h-8 w-8 fill-secondary" />
+              <p>
+                Test signing operations in the{" "}
+                <Link href="/playground" passHref className="link">
+                  Signing Playground
                 </Link>{" "}
                 tab.
               </p>

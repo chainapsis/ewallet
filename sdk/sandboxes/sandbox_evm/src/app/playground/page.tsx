@@ -1,11 +1,13 @@
 import type { NextPage } from "next";
+import Link from "next/link";
 
 import { getMetadata } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/getMetadata";
-import { SigningPlayground } from "./_components/SigningPlayground";
+import { SigningPlayground } from "@keplr-ewallet-sandbox-evm/app/playground/_components/SigningPlayground";
 
 export const metadata = getMetadata({
-  title: "Playground",
-  description: "Playground for Testing Signing",
+  title: "Signing Playground",
+  description:
+    "Test personal signing and EIP-712 permit signing with Keplr E-Wallet",
 });
 
 const Playground: NextPage = () => {
