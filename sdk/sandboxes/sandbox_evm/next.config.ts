@@ -1,9 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  env: {
-    KEPLR_EWALLET_SDK_ENDPOINT: "http://localhost:3201",
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
