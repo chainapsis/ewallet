@@ -1,10 +1,12 @@
 import { sha256 } from "@noble/hashes/sha2";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
-import { SignDocWrapper } from "@keplr-wallet/cosmos";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
-import { encodeCosmosSignature } from "@keplr-ewallet-sdk-cosmos/utils/sign";
+import {
+  encodeCosmosSignature,
+  SignDocWrapper,
+} from "@keplr-ewallet-sdk-cosmos/utils";
 import { makeSignBytes, type DirectSignResponse } from "@cosmjs/proto-signing";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types";
 
@@ -22,10 +24,7 @@ export async function signDirect(
     const hashedMessage = sha256(signBytes);
     const publicKey = await this.getPublicKey();
 
-    const signDocWrapper = SignDocWrapper.fromDirectSignDoc({
-      ...signDoc,
-      accountNumber: signDoc.accountNumber.toString(),
-    });
+    const signDocWrapper = SignDocWrapper.fromDirectSignDoc(signDoc);
 
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
