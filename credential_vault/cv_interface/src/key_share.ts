@@ -48,7 +48,7 @@ export interface CheckKeyShareRequest {
 }
 
 export interface CheckKeyShareResponse {
-  is_exists: boolean;
+  exists: boolean;
 }
 
 export interface CheckKeyShareRequestBody {

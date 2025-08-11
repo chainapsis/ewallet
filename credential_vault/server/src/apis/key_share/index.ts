@@ -249,7 +249,7 @@ export async function checkKeyShare(
       return {
         success: true,
         data: {
-          is_exists: false,
+          exists: false,
         },
       };
     }
@@ -268,7 +268,7 @@ export async function checkKeyShare(
       return {
         success: true,
         data: {
-          is_exists: false,
+          exists: false,
         },
       };
     }
@@ -300,7 +300,7 @@ export async function checkKeyShare(
       return {
         success: true,
         data: {
-          is_exists: false,
+          exists: false,
         },
       };
     }
@@ -308,7 +308,7 @@ export async function checkKeyShare(
     return {
       success: true,
       data: {
-        is_exists: true,
+        exists: true,
       },
     };
   } catch (error) {

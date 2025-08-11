@@ -433,7 +433,7 @@ describe("key_share_test", () => {
       }
 
       expect(checkKeyShareRes.success).toBe(true);
-      expect(checkKeyShareRes.data?.is_exists).toBe(true);
+      expect(checkKeyShareRes.data?.exists).toBe(true);
     });
 
     it("should return false if user not found", async () => {
@@ -458,7 +458,7 @@ describe("key_share_test", () => {
       }
 
       expect(checkKeyShareRes.success).toBe(true);
-      expect(checkKeyShareRes.data?.is_exists).toBe(false);
+      expect(checkKeyShareRes.data?.exists).toBe(false);
     });
 
     it("should return false if wallet not found", async () => {
@@ -489,7 +489,7 @@ describe("key_share_test", () => {
       }
 
       expect(checkKeyShareRes.success).toBe(true);
-      expect(checkKeyShareRes.data?.is_exists).toBe(false);
+      expect(checkKeyShareRes.data?.exists).toBe(false);
     });
 
     it("should fail if public key is not valid", async () => {
@@ -571,7 +571,7 @@ describe("key_share_test", () => {
       }
 
       expect(checkKeyShareRes.success).toBe(true);
-      expect(checkKeyShareRes.data?.is_exists).toBe(false);
+      expect(checkKeyShareRes.data?.exists).toBe(false);
     });
   });
 });

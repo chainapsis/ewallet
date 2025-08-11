@@ -65,9 +65,9 @@ export const keyShareSchemas = {
   },
   CheckKeyShareResponse: {
     type: "object",
-    required: ["is_exists"],
+    required: ["exists"],
     properties: {
-      is_exists: {
+      exists: {
         type: "boolean",
         description: "Whether the key share exists",
       },
