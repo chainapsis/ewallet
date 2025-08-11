@@ -115,14 +115,14 @@ export function PermitSignWidget() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="label">
-              <span className="label-text">Value (wei)</span>
+              <span className="label-text">Value (minimum units)</span>
             </label>
             <input
               type="text"
               value={permitValue}
               onChange={(e) => setPermitValue(e.target.value)}
               className="input input-bordered w-full"
-              placeholder="1000000000000000000"
+              placeholder="1000000"
             />
             <p className="text-xs text-base-content/60 mt-1">
               Amount to approve
@@ -140,7 +140,7 @@ export function PermitSignWidget() {
               placeholder={`${Math.floor(Date.now() / 1000) + 3600}`}
             />
             <p className="text-xs text-base-content/60 mt-1">
-              Leave empty to default to 1 hour from now
+              Leave empty to sign with 1 hour from now
             </p>
           </div>
         </div>
