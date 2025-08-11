@@ -1,6 +1,7 @@
-use crate::error::CryptoError;
 use serde::{ser::SerializeTuple, Deserialize, Serialize};
 use std::fmt;
+
+use crate::error::CryptoError;
 
 #[derive(Clone, Copy, PartialEq, Eq, Ord, PartialOrd, Hash)]
 pub struct HexSerializedBytes<const N: usize> {
