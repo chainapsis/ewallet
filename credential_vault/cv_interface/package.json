@@ -1,11 +1,16 @@
 {
   "name": "@keplr-ewallet/credential-vault-interface",
   "packageManager": "yarn@4.7.0",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "del-cli dist",
     "build": "yarn clean && tsc"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",

@@ -19,14 +19,6 @@
   "dependencies": {
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.4"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/chainapsis/ewallet.git",
-    "directory": "crypto/bytes"
-  },
   "devDependencies": {
     "@jest/globals": "*",
     "@types/jest": "*",
