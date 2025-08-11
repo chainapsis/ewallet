@@ -1,25 +1,23 @@
 use std::fmt::Debug;
 
 use crate::{
-    bytes::HexSerializedBytes, 
-    crypto::shared_secret::SharedSecret,
-    curve::CurveType, 
+    bytes::HexSerializedBytes, crypto::shared_secret::SharedSecret, curve::CurveType,
     error::CryptoError,
 };
 
-// N: uncompressed size, M: compressed size
+/// N: uncompressed size, M: compressed size
 pub trait PublicKey<const N: usize, const M: usize>: Debug + Clone + Send + Sync {
     fn curve_type(&self) -> CurveType;
     fn is_compressed(&self) -> bool;
     fn from_compressed_hex_ser_bytes(bytes: &HexSerializedBytes<M>) -> Result<Self, CryptoError>;
     fn from_uncompressed_hex_ser_bytes(bytes: &HexSerializedBytes<N>) -> Result<Self, CryptoError>;
-    fn to_compressed_hex_ser_bytes(&self) -> Result<HexSerializedBytes<M>, CryptoError>;
+    fn to_compressed_hex_ser_bytes(&self) -> HexSerializedBytes<M>;
     fn to_uncompressed_hex_ser_bytes(&self) -> HexSerializedBytes<N>;
 
     // fn verify(&self, message: &[u8], signature: &[u8]) -> Result<bool, CryptoError>;
 }
 
-// N: uncompressed size, M: compressed size
+/// N: uncompressed size, M: compressed size
 pub trait PrivateKey<const N: usize, const M: usize>: Debug + Clone + Send + Sync {
     type PublicKey: PublicKey<N, M>;
     type SharedSecret: SharedSecret<N>;
