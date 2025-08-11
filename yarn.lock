@@ -3220,15 +3220,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/tecdsa-interface@workspace:crypto/tecdsa/tecdsa_interface":
-  version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/tecdsa-interface@workspace:crypto/tecdsa/tecdsa_interface"
-  dependencies:
-    "@types/node": "npm:*"
-    typescript: "npm:*"
-  languageName: unknown
-  linkType: soft
-
 "@keplr-wallet/background@npm:0.10.24-ibc.go.v7.hot.fix":
   version: 0.10.24-ibc.go.v7.hot.fix
   resolution: "@keplr-wallet/background@npm:0.10.24-ibc.go.v7.hot.fix"
