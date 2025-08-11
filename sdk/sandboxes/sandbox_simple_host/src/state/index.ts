@@ -6,8 +6,6 @@ import { EthEWallet, initEthEWallet } from "@keplr-ewallet/ewallet-sdk-eth";
 import { create } from "zustand";
 import { combine, persist } from "zustand/middleware";
 
-import { Envs } from "@/envs";
-
 const STORAGE_KEY = "sandbox-simple-host";
 
 interface AppState {
@@ -32,7 +30,7 @@ export const useAppState = create(
           const sdk = await initEthEWallet({
             // TODO:
             customer_id: "afb0afd1-d66d-4531-981c-cbf3fb1507b9",
-            sdk_endpoint: Envs.KEPLR_EWALLET_SDK_ENDPOINT,
+            sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
           });
 
           if (sdk) {
@@ -47,7 +45,7 @@ export const useAppState = create(
           const sdk = await initCosmosEWallet({
             // TODO:
             customer_id: "afb0afd1-d66d-4531-981c-cbf3fb1507b9",
-            sdk_endpoint: Envs.KEPLR_EWALLET_SDK_ENDPOINT,
+            sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
           });
 
           if (sdk) {

@@ -2,11 +2,9 @@
   "name": "sandbox_simple_host",
   "private": true,
   "scripts": {
-    "create_env": "tsx src/bin/create_env.ts",
-    "dev": "tsx ./src/bin/launch.ts",
-    "build": "tsc && vite build",
+    "dev": "vite",
+    "build": "vite build",
     "preview": "vite preview",
-    "copy:wasm": "cp ../tecdsa/cait_sith_keplr_wasm/pkg/*.wasm ./public/pkg/",
     "prettier": "npx prettier --write .",
     "typecheck": "tsc"
   },
