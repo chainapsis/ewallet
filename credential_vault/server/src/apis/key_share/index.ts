@@ -15,18 +15,14 @@ import type {
   RegisterKeyShareRequest,
 } from "@keplr-ewallet/credential-vault-interface";
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
 
 import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
-import {
-  decryptData,
-  encryptData,
-  TEMP_ENC_SECRET,
-} from "@keplr-ewallet-cv-server/apis/utils";
+import { decryptData, encryptData } from "@keplr-ewallet-cv-server/apis/utils";
 
 export async function registerKeyShare(
   db: Pool,
   registerKeyShareRequest: RegisterKeyShareRequest,
+  encryptionSecret: string,
 ): Promise<Result<void, ErrorResponse>> {
   try {
     const { email, curve_type, public_key, enc_share } =
@@ -98,7 +94,7 @@ export async function registerKeyShare(
 
     const wallet_id = createWalletRes.data.wallet_id;
 
-    const encryptedShare = encryptData(enc_share, TEMP_ENC_SECRET);
+    const encryptedShare = encryptData(enc_share, encryptionSecret);
     const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
 
     const createKeyShareRes = await createKeyShare(db, {
@@ -130,6 +126,7 @@ export async function registerKeyShare(
 export async function getKeyShare(
   db: Pool,
   getKeyShareRequest: GetKeyShareRequest,
+  encryptionSecret: string,
 ): Promise<Result<GetKeyShareResponse, ErrorResponse>> {
   try {
     const { email, public_key } = getKeyShareRequest;
@@ -210,7 +207,7 @@ export async function getKeyShare(
 
     const decryptedShare = decryptData(
       getKeyShareRes.data.enc_share.toString("utf-8"),
-      TEMP_ENC_SECRET,
+      encryptionSecret,
     );
 
     return {

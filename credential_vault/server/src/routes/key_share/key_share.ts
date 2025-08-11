@@ -109,12 +109,16 @@ export function setKeysharesRoutes(router: Router) {
         });
       }
 
-      const registerKeyShareRes = await registerKeyShare(state.db, {
-        email: googleUser.email,
-        curve_type: body.curve_type,
-        public_key: publicKeyBytesRes.data,
-        enc_share: body.enc_share,
-      });
+      const registerKeyShareRes = await registerKeyShare(
+        state.db,
+        {
+          email: googleUser.email,
+          curve_type: body.curve_type,
+          public_key: publicKeyBytesRes.data,
+          enc_share: body.enc_share,
+        },
+        state.env.ENCRYPTION_SECRET,
+      );
       if (registerKeyShareRes.success === false) {
         return res
           .status(mapKeyShareErrorCodeToStatus(registerKeyShareRes.err.code))
@@ -231,10 +235,14 @@ export function setKeysharesRoutes(router: Router) {
         });
       }
 
-      const getKeyShareRes = await getKeyShare(state.db, {
-        email: googleUser.email,
-        public_key: publicKeyBytesRes.data,
-      });
+      const getKeyShareRes = await getKeyShare(
+        state.db,
+        {
+          email: googleUser.email,
+          public_key: publicKeyBytesRes.data,
+        },
+        state.env.ENCRYPTION_SECRET,
+      );
       if (getKeyShareRes.success === false) {
         return res
           .status(mapKeyShareErrorCodeToStatus(getKeyShareRes.err.code))

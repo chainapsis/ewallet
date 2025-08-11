@@ -2,7 +2,6 @@ import * as dotenv from "dotenv";
 import path from "path";
 import { z } from "zod";
 import os from "node:os";
-import fs from "node:fs";
 
 const ENV_FILE_NAME_STEM = "credential_vault";
 
@@ -14,6 +13,7 @@ export interface EnvType {
   DB_PASSWORD: string;
   DB_NAME: string;
   DB_SSL: boolean;
+  ENCRYPTION_SECRET: string;
 }
 
 const envSchema = z.object({
@@ -24,6 +24,7 @@ const envSchema = z.object({
   DB_PASSWORD: z.string().min(1, "DB_PASSWORD is required"),
   DB_NAME: z.string().min(1, "DB_NAME is required"),
   DB_SSL: z.boolean(),
+  ENCRYPTION_SECRET: z.string().min(1, "ENCRYPTION_SECRET is required"),
 });
 
 export function loadEnvs(): EnvType {
@@ -45,6 +46,7 @@ export function loadEnvs(): EnvType {
     DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
     DB_NAME: process.env.DB_NAME || "credential_vault_dev",
     DB_SSL: (process.env.DB_SSL || "false") === "true",
+    ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET || "temp_enc_secret",
   };
 
   const envs = envSchema.parse(rawEnv);

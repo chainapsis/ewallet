@@ -21,7 +21,6 @@ import {
 } from "@keplr-ewallet-cv-server/apis/key_share";
 import {
   decryptData,
-  encryptData,
   TEMP_ENC_SECRET,
 } from "@keplr-ewallet-cv-server/apis/utils";
 
@@ -65,12 +64,16 @@ describe("key_share_test", () => {
 
       const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
 
-      const registerKeyShareRes = await registerKeyShare(pool, {
-        email: "test@test.com",
-        curve_type: "secp256k1",
-        public_key: publicKeyBytes,
-        enc_share: encShare,
-      });
+      const registerKeyShareRes = await registerKeyShare(
+        pool,
+        {
+          email: "test@test.com",
+          curve_type: "secp256k1",
+          public_key: publicKeyBytes,
+          enc_share: encShare,
+        },
+        TEMP_ENC_SECRET,
+      );
 
       expect(registerKeyShareRes.success).toBe(true);
       if (registerKeyShareRes.success === false) {
@@ -134,12 +137,16 @@ describe("key_share_test", () => {
         public_key: publicKeyBytes.toBuffer(),
       });
 
-      const registerKeyShareRes = await registerKeyShare(pool, {
-        email: "test@test.com",
-        curve_type: "secp256k1",
-        public_key: publicKeyBytes,
-        enc_share: encShare,
-      });
+      const registerKeyShareRes = await registerKeyShare(
+        pool,
+        {
+          email: "test@test.com",
+          curve_type: "secp256k1",
+          public_key: publicKeyBytes,
+          enc_share: encShare,
+        },
+        TEMP_ENC_SECRET,
+      );
 
       if (registerKeyShareRes.success === true) {
         throw new Error("register key share should fail");
@@ -166,17 +173,25 @@ describe("key_share_test", () => {
 
       const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
 
-      await registerKeyShare(pool, {
-        email,
-        curve_type: "secp256k1",
-        public_key: publicKeyBytes,
-        enc_share: encShare,
-      });
+      await registerKeyShare(
+        pool,
+        {
+          email,
+          curve_type: "secp256k1",
+          public_key: publicKeyBytes,
+          enc_share: encShare,
+        },
+        TEMP_ENC_SECRET,
+      );
 
-      const getKeyShareRes = await getKeyShare(pool, {
-        email,
-        public_key: publicKeyBytes,
-      });
+      const getKeyShareRes = await getKeyShare(
+        pool,
+        {
+          email,
+          public_key: publicKeyBytes,
+        },
+        TEMP_ENC_SECRET,
+      );
 
       if (getKeyShareRes.success === false) {
         console.error(getKeyShareRes.err);
@@ -202,17 +217,25 @@ describe("key_share_test", () => {
 
       const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
 
-      await registerKeyShare(pool, {
-        email: "test2@test.com",
-        curve_type: "secp256k1",
-        public_key: publicKeyBytes,
-        enc_share: encShare,
-      });
+      await registerKeyShare(
+        pool,
+        {
+          email: "test2@test.com",
+          curve_type: "secp256k1",
+          public_key: publicKeyBytes,
+          enc_share: encShare,
+        },
+        TEMP_ENC_SECRET,
+      );
 
-      const getKeyShareRes = await getKeyShare(pool, {
-        email,
-        public_key: publicKeyBytes,
-      });
+      const getKeyShareRes = await getKeyShare(
+        pool,
+        {
+          email,
+          public_key: publicKeyBytes,
+        },
+        TEMP_ENC_SECRET,
+      );
 
       expect(getKeyShareRes.success).toBe(false);
       if (getKeyShareRes.success === true) {
@@ -250,17 +273,25 @@ describe("key_share_test", () => {
         throw new Error("Failed to create user");
       }
 
-      await registerKeyShare(pool, {
-        email,
-        curve_type: "secp256k1",
-        public_key: publicKeyBytes2,
-        enc_share: encShare,
-      });
+      await registerKeyShare(
+        pool,
+        {
+          email,
+          curve_type: "secp256k1",
+          public_key: publicKeyBytes2,
+          enc_share: encShare,
+        },
+        TEMP_ENC_SECRET,
+      );
 
-      const getKeyShareRes = await getKeyShare(pool, {
-        email,
-        public_key: publicKeyBytes,
-      });
+      const getKeyShareRes = await getKeyShare(
+        pool,
+        {
+          email,
+          public_key: publicKeyBytes,
+        },
+        TEMP_ENC_SECRET,
+      );
 
       expect(getKeyShareRes.success).toBe(false);
       if (getKeyShareRes.success === true) {
@@ -290,10 +321,14 @@ describe("key_share_test", () => {
         public_key: publicKeyBytes.toBuffer(),
       });
 
-      const getKeyShareRes = await getKeyShare(pool, {
-        email,
-        public_key: publicKeyBytes,
-      });
+      const getKeyShareRes = await getKeyShare(
+        pool,
+        {
+          email,
+          public_key: publicKeyBytes,
+        },
+        TEMP_ENC_SECRET,
+      );
 
       expect(getKeyShareRes.success).toBe(false);
       if (getKeyShareRes.success === true) {
@@ -331,10 +366,14 @@ describe("key_share_test", () => {
         throw new Error("Failed to create wallet");
       }
 
-      const getKeyShareRes = await getKeyShare(pool, {
-        email,
-        public_key: publicKeyBytes,
-      });
+      const getKeyShareRes = await getKeyShare(
+        pool,
+        {
+          email,
+          public_key: publicKeyBytes,
+        },
+        TEMP_ENC_SECRET,
+      );
 
       expect(getKeyShareRes.success).toBe(false);
       if (getKeyShareRes.success === true) {
