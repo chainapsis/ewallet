@@ -17,6 +17,7 @@ import type {
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
+import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
 
 export async function registerKeyShare(
   db: Pool,
@@ -26,10 +27,21 @@ export async function registerKeyShare(
     const { email, curve_type, public_key, enc_share } =
       registerKeyShareRequest;
 
-    const getWalletRes = await getWalletByPublicKey(
-      db,
-      Buffer.from(public_key, "hex"),
-    );
+    const publicKeyBytesRes = Bytes.fromHexString(public_key, 33);
+
+    if (publicKeyBytesRes.success === false) {
+      return {
+        success: false,
+        err: {
+          code: "UNKNOWN_ERROR",
+          message: publicKeyBytesRes.err,
+        },
+      };
+    }
+
+    const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+
+    const getWalletRes = await getWalletByPublicKey(db, publicKeyBytes);
     if (getWalletRes.success === false) {
       return {
         success: false,
@@ -149,10 +161,18 @@ export async function getKeyShare(
       };
     }
 
-    const getWalletRes = await getWalletByPublicKey(
-      db,
-      Buffer.from(public_key, "hex"),
-    );
+    const publicKeyBytesRes = Bytes.fromHexString(public_key, 33);
+    if (publicKeyBytesRes.success === false) {
+      return {
+        success: false,
+        err: {
+          code: "UNKNOWN_ERROR",
+          message: publicKeyBytesRes.err,
+        },
+      };
+    }
+    const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+    const getWalletRes = await getWalletByPublicKey(db, publicKeyBytes);
     if (getWalletRes.success === false) {
       return {
         success: false,
@@ -249,10 +269,19 @@ export async function checkKeyShare(
       };
     }
 
-    const getWalletRes = await getWalletByPublicKey(
-      db,
-      Buffer.from(public_key, "hex"),
-    );
+    const publicKeyBytesRes = Bytes.fromHexString(public_key, 33);
+    if (publicKeyBytesRes.success === false) {
+      return {
+        success: false,
+        err: {
+          code: "UNKNOWN_ERROR",
+          message: publicKeyBytesRes.err,
+        },
+      };
+    }
+    const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+
+    const getWalletRes = await getWalletByPublicKey(db, publicKeyBytes);
     if (getWalletRes.success === false) {
       return {
         success: false,

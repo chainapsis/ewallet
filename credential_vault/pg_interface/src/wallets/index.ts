@@ -5,6 +5,7 @@ import type {
   CreateCredentialVaultWalletRequest,
 } from "@keplr-ewallet/credential-vault-interface";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Bytes33 } from "@keplr-ewallet/bytes";
 
 export async function createWallet(
   db: Pool,
@@ -82,14 +83,14 @@ export async function getWalletById(
 
 export async function getWalletByPublicKey(
   db: Pool,
-  publicKey: Buffer,
+  publicKey: Bytes33,
 ): Promise<Result<CredentialVaultWallet | null, string>> {
   try {
     const query = `
     SELECT * FROM wallets WHERE public_key = $1 LIMIT 1
     `;
 
-    const result = await db.query(query, [publicKey]);
+    const result = await db.query(query, [publicKey.toBuffer()]);
 
     let wallet: CredentialVaultWallet | null = null;
     if (result.rows.length > 0) {
