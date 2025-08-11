@@ -1,5 +1,8 @@
 import type { StdSignDoc } from "@cosmjs/amino";
-import { TxBody, AuthInfo } from "@keplr-wallet/proto-types/cosmos/tx/v1beta1/tx";
+import {
+  TxBody,
+  AuthInfo,
+} from "@keplr-wallet/proto-types/cosmos/tx/v1beta1/tx";
 import { Any } from "@keplr-wallet/proto-types/google/protobuf/any";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types";
 
@@ -46,7 +49,7 @@ export class SignDocWrapper {
         auth_info: {},
       }),
     };
-    
+
     return wrapper;
   }
 
@@ -79,8 +82,10 @@ export class SignDocWrapper {
     }
   }
 
-  private static formatAccountNumber(accountNumber: bigint | number | string): string {
-    if (typeof accountNumber === 'bigint') {
+  private static formatAccountNumber(
+    accountNumber: bigint | number | string,
+  ): string {
+    if (typeof accountNumber === "bigint") {
       return accountNumber.toString();
     }
     return String(accountNumber);

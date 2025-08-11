@@ -48,7 +48,7 @@ export class TendermintTxTracer {
     protected readonly wsEndpoint: string,
     protected readonly options: {
       wsObject?: new (url: string, protocols?: string | string[]) => WebSocket;
-    } = {}
+    } = {},
   ) {
     this.ws = this.options.wsObject
       ? new this.options.wsObject(this.getWsEndpoint())
@@ -96,7 +96,7 @@ export class TendermintTxTracer {
 
   addEventListener<T extends keyof TxEventMap>(
     type: T,
-    listener: TxEventMap[T]
+    listener: TxEventMap[T],
   ) {
     if (!this.listeners[type]) {
       this.listeners[type] = [];
@@ -173,12 +173,8 @@ export class TendermintTxTracer {
             }
           }
         }
-      } catch (e) {
-        console.log(
-          `Tendermint websocket jsonrpc response is not JSON: ${
-            e.message || e.toString()
-          }`
-        );
+      } catch {
+        console.log("Tendermint websocket jsonrpc response is not JSON");
       }
     }
   };
@@ -207,7 +203,7 @@ export class TendermintTxTracer {
 
     return () => {
       this.newBlockSubscribes = this.newBlockSubscribes.filter(
-        (s) => s.handler !== handler
+        (s) => s.handler !== handler,
       );
     };
   }
@@ -220,7 +216,7 @@ export class TendermintTxTracer {
           method: "subscribe",
           params: ["tm.event='NewBlock'"],
           id: 1,
-        })
+        }),
       );
     }
   }
@@ -340,7 +336,7 @@ export class TendermintTxTracer {
 
   protected sendSubscribeTxRpc(
     id: number,
-    params: Record<string, string | number | boolean>
+    params: Record<string, string | number | boolean>,
   ): void {
     if (this.readyState === WsReadyState.OPEN) {
       this.ws.send(
@@ -349,7 +345,7 @@ export class TendermintTxTracer {
           method: "subscribe",
           params: params,
           id,
-        })
+        }),
       );
     }
   }
@@ -386,7 +382,7 @@ export class TendermintTxTracer {
 
   protected query(
     method: string,
-    params: Record<string, string | number | boolean>
+    params: Record<string, string | number | boolean>,
   ): Promise<any> {
     const id = this.createRandomId();
 
@@ -405,7 +401,7 @@ export class TendermintTxTracer {
   protected sendQueryRpc(
     id: number,
     method: string,
-    params: Record<string, string | number | boolean>
+    params: Record<string, string | number | boolean>,
   ) {
     if (this.readyState === WsReadyState.OPEN) {
       this.ws.send(
@@ -414,7 +410,7 @@ export class TendermintTxTracer {
           method,
           params,
           id,
-        })
+        }),
       );
     }
   }

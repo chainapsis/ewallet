@@ -8,9 +8,9 @@ import { MsgSend } from "@keplr-wallet/proto-types/cosmos/bank/v1beta1/tx";
 import { PubKey } from "@keplr-wallet/proto-types/cosmos/crypto/secp256k1/keys";
 import { SignMode } from "@keplr-wallet/proto-types/cosmos/tx/signing/v1beta1/signing";
 import { SigningStargateClient } from "@cosmjs/stargate";
-import { SignDocWrapper } from "@keplr-wallet/cosmos";
 import type { Coin } from "@keplr-wallet/proto-types/cosmos/base/v1beta1/coin";
 import type { CosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
+import { SignDocWrapper } from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { makeSignDoc as makeAminoSignDoc } from "@cosmjs/amino";
 
 import { TEST_COSMOS_CHAIN_ID, TEST_COSMOS_CHAIN_RPC } from "@/constants";
@@ -97,7 +97,7 @@ export async function makeMockSendTokenProtoSignDoc(
 
   const signDocWrapper = SignDocWrapper.fromDirectSignDoc({
     ...mockSignDoc,
-    accountNumber: accountNumber.toString(),
+    accountNumber: BigInt(accountNumber),
   });
 
   return {
