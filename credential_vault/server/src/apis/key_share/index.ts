@@ -18,6 +18,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
 import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
+import { decryptData, encryptData, TEMP_ENC_SECRET } from "../utils";
 
 export async function registerKeyShare(
   db: Pool,
@@ -107,9 +108,12 @@ export async function registerKeyShare(
 
     const wallet_id = createWalletRes.data.wallet_id;
 
+    const encryptedShare = encryptData(enc_share, TEMP_ENC_SECRET);
+    const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
+
     const createKeyShareRes = await createKeyShare(db, {
       wallet_id,
-      enc_share: Buffer.from(enc_share, "hex"),
+      enc_share: encryptedShareBuffer,
     });
     if (createKeyShareRes.success === false) {
       return {
@@ -225,11 +229,16 @@ export async function getKeyShare(
       };
     }
 
+    const decryptedShare = decryptData(
+      getKeyShareRes.data.enc_share.toString("utf-8"),
+      TEMP_ENC_SECRET,
+    );
+
     return {
       success: true,
       data: {
         share_id: getKeyShareRes.data.share_id,
-        enc_share: getKeyShareRes.data.enc_share.toString("hex"),
+        enc_share: decryptedShare,
       },
     };
   } catch (error) {
