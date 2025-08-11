@@ -4,6 +4,14 @@
   "main": "./dist/index.js",
   "version": "0.0.3-alpha.10",
   "packageManager": "yarn@4.7.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chainapsis/ewallet.git",
+    "directory": "crypto/bytes"
+  },
   "scripts": {
     "clean": "del-cli dist",
     "build": "yarn clean && tsc"

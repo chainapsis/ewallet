@@ -17,6 +17,7 @@ export function doBuildPkgs() {
     [paths.sdk_cosmos, "sdk cosmos"],
     [paths.sdk_eth, "sdk eth"],
     [paths.crypto_bytes, "crypto/bytes"],
+    [paths.cv_interface, "cv interface"],
   ];
 
   for (const [path, name] of pkgsInOrder) {
