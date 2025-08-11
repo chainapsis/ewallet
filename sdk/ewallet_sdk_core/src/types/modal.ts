@@ -1,6 +1,6 @@
 import type { RpcTransactionRequest, SignableMessage } from "viem";
 import type { StdSignDoc } from "@cosmjs/amino";
-import type { Msg } from "@keplr-wallet/types";
+import type { ChainInfo, Msg } from "@keplr-wallet/types";
 
 type Any = {
   typeUrl: string;
@@ -44,6 +44,8 @@ export type ChainInfoForAttachedModal = {
   readonly rpc_url?: string;
   readonly rest_url?: string;
   readonly block_explorer_url?: string;
+  readonly fee_currencies?: ChainInfo["feeCurrencies"];
+  readonly currencies?: ChainInfo["currencies"];
 };
 
 export type MakeCosmosSigData =
