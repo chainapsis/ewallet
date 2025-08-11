@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { Home } from "@/components/home/home";
 
+import "@/styles/globals.scss";
+
 const queryClient = new QueryClient();
 
 async function main() {
