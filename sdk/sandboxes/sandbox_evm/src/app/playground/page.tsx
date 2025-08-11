@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 
 import { getMetadata } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/getMetadata";
 import { SigningPlayground } from "@keplr-ewallet-sandbox-evm/app/playground/_components/SigningPlayground";
