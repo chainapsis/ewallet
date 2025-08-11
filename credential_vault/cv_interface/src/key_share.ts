@@ -1,4 +1,5 @@
 import type { Bytes33 } from "@keplr-ewallet/bytes";
+
 import type { CurveType } from "./curve_type";
 
 export interface CredentialVaultKeyShare {
