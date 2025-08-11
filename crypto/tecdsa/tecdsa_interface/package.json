@@ -4,6 +4,16 @@
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chainapsis/ewallet.git",
+    "directory": "crypto/tecdsda/tecdsa_interface"
+  },
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "yarn clean && tsc"
+  },
   "devDependencies": {
     "@types/node": "*",
     "typescript": "*"
