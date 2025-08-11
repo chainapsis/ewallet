@@ -1,0 +1,74 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 448px;
+
+  gap: 20px;
+
+  .demoDescription {
+    text-align: center;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    color: var(--colors-text-text-primary-900, #181d27);
+    font-family: var(--Font-family-font-family-body, Inter);
+    font-size: var(--Font-size-text-md, 15px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: var(--Line-height-text-md, 22px);
+  }
+
+  .closeButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+  }
+}
+
+.signWithKeplrBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  .text {
+    color: #000;
+    font-family: var(--Font-family-font-family-body, Inter);
+    font-size: var(--Font-size-text-xs, 12px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: var(--Line-height-text-xs, 18px);
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  .rejectButton {
+    color: var(--colors-text-text-secondary-700, #414651);
+    font-family: var(--Font-family-font-family-body, Inter);
+    font-size: var(--Font-size-text-md, 15px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: var(--Line-height-text-md, 22px);
+  }
+  .approveButton {
+    color: var(--text-white);
+    font-family: var(--Font-family-font-family-body, Inter);
+    font-size: var(--Font-size-text-md, 15px);
+    font-style: normal;
+    font-weight: 600;
+    line-height: var(--Line-height-text-md, 22px);
+  }
+}

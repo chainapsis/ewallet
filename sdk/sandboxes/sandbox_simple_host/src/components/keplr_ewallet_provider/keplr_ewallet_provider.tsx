@@ -2,7 +2,7 @@
 
 import { useAppState } from "@/state";
 import React, { useEffect, useState, type PropsWithChildren } from "react";
-import { InitAuth } from "@/components/init_auth.tsx";
+import { InitAuth } from "@/components/init_auth";
 
 export const KeplrEWalletProvider: React.FC<PropsWithChildren> = ({
   children,
