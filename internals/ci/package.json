@@ -6,9 +6,9 @@
     "start": "tsx src/main.ts"
   },
   "dependencies": {
+    "chalk": "*",
     "commander": "*",
-    "jest": "*",
-    "chalk": "*"
+    "jest": "*"
   },
   "devDependencies": {
     "@types/jest": "*",
