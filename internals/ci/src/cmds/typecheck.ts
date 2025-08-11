@@ -30,5 +30,5 @@ export async function typeCheck(..._args: any[]) {
     }
   }
 
-  console.info(`All ${pkgPaths.length} ok!`);
+  console.info("%s", chalk.bold.green("Success"), `All ${pkgPaths.length} ok!`);
 }

@@ -1,5 +1,7 @@
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
+const KEPLR_IFRAME = "keplr-ewallet-attached";
+
 export function setupIframeElement(
   url: string,
 ): Result<HTMLIFrameElement, string> {
@@ -12,6 +14,16 @@ export function setupIframeElement(
     };
   }
 
+  const oldEl = document.getElementById(KEPLR_IFRAME);
+  if (oldEl !== null) {
+    console.warn("Keplr ewallet iframe already exists");
+
+    return {
+      success: true,
+      data: oldEl as HTMLIFrameElement,
+    };
+  }
+
   const bodyEl = bodyEls[0];
 
   console.debug("[keplr] appending iframe");
@@ -21,6 +33,7 @@ export function setupIframeElement(
   iframe.src = url;
 
   // iframe style
+  iframe.id = KEPLR_IFRAME;
   iframe.style.position = "fixed";
   iframe.style.top = "0";
   iframe.style.left = "0";

@@ -14,11 +14,9 @@ export const KeplrEWalletProvider: React.FC<PropsWithChildren> = ({
     async function fn() {
       try {
         const isCosmosReady = await appState.initKeplrSdkCosmos();
-
         if (!isCosmosReady) {
           console.error("something wrong");
         }
-
         const isEthReady = await appState.initKeplrSdkEth();
 
         if (!isEthReady) {
