@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import chalk from "chalk";
 
 import { paths } from "../paths";
 
@@ -21,7 +22,7 @@ export async function typeCheck(..._args: any[]) {
     });
 
     if (ret.status === 0) {
-      console.info("Ok");
+      console.info("%s %s", chalk.bold.green("Ok"), pkg);
     } else {
       console.error("Error type checking, pkg: %s", pkg);
 

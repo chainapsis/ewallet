@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import chalk from "chalk";
 
 import { paths } from "../paths";
 import { expectSuccess } from "../expect";
@@ -29,7 +30,7 @@ export function doBuildPkgs() {
     });
 
     expectSuccess(coreRet, `build ${name} failed`);
-    console.info("Ok");
+    console.info("%s %s", chalk.bold.green("Done"), name);
   }
 
   console.info("All (%s) done!", pkgsInOrder.length);
