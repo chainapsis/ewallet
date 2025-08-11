@@ -1,7 +1,17 @@
 import type { RpcTransactionRequest, SignableMessage } from "viem";
 import type { StdSignDoc } from "@cosmjs/amino";
-import type { AnyWithUnpacked } from "@keplr-wallet/cosmos";
 import type { Msg } from "@keplr-wallet/types";
+
+type Any = {
+  typeUrl: string;
+  value: Uint8Array;
+};
+
+type AnyWithUnpacked =
+  | Any
+  | (Any & {
+      unpacked: unknown;
+    });
 
 export type ShowModalPayload = MakeSignatureModalPayload | OtherModalPayload;
 
