@@ -3174,6 +3174,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:*"
     "@typescript-eslint/parser": "npm:*"
     bech32: "npm:^2.0.0"
+    buffer: "npm:^6.0.3"
     del-cli: "npm:*"
     jest: "npm:*"
     ts-jest: "npm:*"
