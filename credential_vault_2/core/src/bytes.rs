@@ -1,4 +1,4 @@
-use crate::crypto::CryptoError;
+use crate::error::CryptoError;
 use serde::{ser::SerializeTuple, Deserialize, Serialize};
 use std::fmt;
 
