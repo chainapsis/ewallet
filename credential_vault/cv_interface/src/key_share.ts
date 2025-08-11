@@ -1,3 +1,4 @@
+import type { Bytes33 } from "@keplr-ewallet/bytes";
 import type { CurveType } from "./curve_type";
 
 export interface CredentialVaultKeyShare {
@@ -16,7 +17,7 @@ export type CreateCredentialVaultKeyShareRequest = {
 export interface RegisterKeyShareRequest {
   email: string;
   curve_type: CurveType;
-  public_key: string; // hex string
+  public_key: Bytes33; // hex string
   enc_share: string; // hex string
 }
 
@@ -28,7 +29,7 @@ export type RegisterKeyShareBody = {
 
 export interface GetKeyShareRequest {
   email: string;
-  public_key: string; // hex string
+  public_key: Bytes33; // hex string
 }
 
 export interface GetKeyShareResponse {

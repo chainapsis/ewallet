@@ -32,21 +32,7 @@ export async function registerKeyShare(
     const { email, curve_type, public_key, enc_share } =
       registerKeyShareRequest;
 
-    const publicKeyBytesRes = Bytes.fromHexString(public_key, 33);
-
-    if (publicKeyBytesRes.success === false) {
-      return {
-        success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: publicKeyBytesRes.err,
-        },
-      };
-    }
-
-    const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
-
-    const getWalletRes = await getWalletByPublicKey(db, publicKeyBytes);
+    const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
       return {
         success: false,
@@ -98,7 +84,7 @@ export async function registerKeyShare(
     const createWalletRes = await createWallet(db, {
       user_id,
       curve_type,
-      public_key: Buffer.from(public_key, "hex"),
+      public_key: public_key.toBuffer(),
     });
     if (createWalletRes.success === false) {
       return {
@@ -169,18 +155,7 @@ export async function getKeyShare(
       };
     }
 
-    const publicKeyBytesRes = Bytes.fromHexString(public_key, 33);
-    if (publicKeyBytesRes.success === false) {
-      return {
-        success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: publicKeyBytesRes.err,
-        },
-      };
-    }
-    const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
-    const getWalletRes = await getWalletByPublicKey(db, publicKeyBytes);
+    const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
       return {
         success: false,
