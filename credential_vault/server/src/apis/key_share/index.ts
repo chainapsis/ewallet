@@ -15,10 +15,14 @@ import type {
   RegisterKeyShareRequest,
 } from "@keplr-ewallet/credential-vault-interface";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
 
 import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
-import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
-import { decryptData, encryptData, TEMP_ENC_SECRET } from "../utils";
+import {
+  decryptData,
+  encryptData,
+  TEMP_ENC_SECRET,
+} from "@keplr-ewallet-cv-server/apis/utils";
 
 export async function registerKeyShare(
   db: Pool,

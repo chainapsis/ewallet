@@ -7,14 +7,23 @@ import {
   getUserByEmail,
   getWalletByPublicKey,
 } from "@keplr-ewallet/credential-vault-pg-interface";
+import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
 
 import {
   createPgDatabase,
   resetPgDatabase,
 } from "@keplr-ewallet-cv-server/database";
-import { testPgConfig } from "../../database/test_config";
-import { checkKeyShare, getKeyShare, registerKeyShare } from ".";
-import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
+import { testPgConfig } from "@keplr-ewallet-cv-server/database/test_config";
+import {
+  checkKeyShare,
+  getKeyShare,
+  registerKeyShare,
+} from "@keplr-ewallet-cv-server/apis/key_share";
+import {
+  decryptData,
+  encryptData,
+  TEMP_ENC_SECRET,
+} from "@keplr-ewallet-cv-server/apis/utils";
 
 describe("key_share_test", () => {
   let pool: Pool;
@@ -95,11 +104,14 @@ describe("key_share_test", () => {
         throw new Error("Failed to get key share");
       }
 
+      const decryptedShare = decryptData(
+        getKeyShareRes.data?.enc_share.toString("utf-8")!,
+        TEMP_ENC_SECRET,
+      );
+
       expect(getKeyShareRes.data).toBeDefined();
       expect(getKeyShareRes.data?.share_id).toBeDefined();
-      expect(getKeyShareRes.data?.enc_share).toEqual(
-        Buffer.from(encShare, "hex"),
-      );
+      expect(decryptedShare).toEqual(encShare);
     });
 
     it("register key share failure - duplicate public key", async () => {
@@ -190,6 +202,12 @@ describe("key_share_test", () => {
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
       const encShare = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
+
+      const createUserRes = await createUser(pool, email);
+      if (createUserRes.success === false) {
+        console.error(createUserRes.err);
+        throw new Error("Failed to create user");
+      }
 
       await registerKeyShare(pool, {
         email,
