@@ -8,3 +8,5 @@
 public/pkg/*
 !public/pkg/.gitkeep
 .vercel
+
+!.env
