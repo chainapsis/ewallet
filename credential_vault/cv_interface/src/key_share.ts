@@ -43,7 +43,7 @@ export type GetKeyShareRequestBody = {
 
 export interface CheckKeyShareRequest {
   email: string;
-  public_key: string; // hex string
+  public_key: Bytes33; // hex string
 }
 
 export interface CheckKeyShareResponse {

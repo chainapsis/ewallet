@@ -131,7 +131,7 @@ describe("key_share_test", () => {
       await createWallet(pool, {
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         curve_type: "secp256k1",
-        public_key: Buffer.from(publicKey, "hex"),
+        public_key: publicKeyBytes.toBuffer(),
       });
 
       const registerKeyShareRes = await registerKeyShare(pool, {
@@ -287,7 +287,7 @@ describe("key_share_test", () => {
       await createWallet(pool, {
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         curve_type: "secp256k1",
-        public_key: Buffer.from(publicKey, "hex"),
+        public_key: publicKeyBytes.toBuffer(),
       });
 
       const getKeyShareRes = await getKeyShare(pool, {
@@ -324,7 +324,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: createUserRes.data!.user_id,
         curve_type: "secp256k1",
-        public_key: Buffer.from(publicKey, "hex"),
+        public_key: publicKeyBytes.toBuffer(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);
@@ -352,6 +352,13 @@ describe("key_share_test", () => {
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
       const encShare = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
 
+      const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
+      if (publicKeyBytesRes.success === false) {
+        console.error(publicKeyBytesRes.err);
+        throw new Error("Failed to get public key bytes");
+      }
+      const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+
       const createUserRes = await createUser(pool, email);
       if (createUserRes.success === false) {
         console.error(createUserRes.err);
@@ -361,7 +368,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: createUserRes.data!.user_id,
         curve_type: "secp256k1",
-        public_key: Buffer.from(publicKey, "hex"),
+        public_key: publicKeyBytes.toBuffer(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);
@@ -379,7 +386,7 @@ describe("key_share_test", () => {
 
       const checkKeyShareRes = await checkKeyShare(pool, {
         email,
-        public_key: publicKey,
+        public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
         console.error(checkKeyShareRes.err);
@@ -395,9 +402,16 @@ describe("key_share_test", () => {
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
 
+      const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
+      if (publicKeyBytesRes.success === false) {
+        console.error(publicKeyBytesRes.err);
+        throw new Error("Failed to get public key bytes");
+      }
+      const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+
       const checkKeyShareRes = await checkKeyShare(pool, {
         email,
-        public_key: publicKey,
+        public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
         console.error(checkKeyShareRes.err);
@@ -413,6 +427,13 @@ describe("key_share_test", () => {
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
 
+      const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
+      if (publicKeyBytesRes.success === false) {
+        console.error(publicKeyBytesRes.err);
+        throw new Error("Failed to get public key bytes");
+      }
+      const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+
       const createUserRes = await createUser(pool, email);
       if (createUserRes.success === false) {
         console.error(createUserRes.err);
@@ -421,7 +442,7 @@ describe("key_share_test", () => {
 
       const checkKeyShareRes = await checkKeyShare(pool, {
         email,
-        public_key: publicKey,
+        public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
         console.error(checkKeyShareRes.err);
@@ -437,6 +458,13 @@ describe("key_share_test", () => {
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
 
+      const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
+      if (publicKeyBytesRes.success === false) {
+        console.error(publicKeyBytesRes.err);
+        throw new Error("Failed to get public key bytes");
+      }
+      const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+
       const createUserRes = await createUser(pool, email);
       if (createUserRes.success === false) {
         console.error(createUserRes.err);
@@ -446,7 +474,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         curve_type: "secp256k1",
-        public_key: Buffer.from(publicKey, "hex"),
+        public_key: publicKeyBytes.toBuffer(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);
@@ -455,7 +483,7 @@ describe("key_share_test", () => {
 
       const checkKeyShareRes = await checkKeyShare(pool, {
         email,
-        public_key: publicKey,
+        public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === true) {
         throw new Error("check key share should fail");
@@ -471,6 +499,13 @@ describe("key_share_test", () => {
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
 
+      const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
+      if (publicKeyBytesRes.success === false) {
+        console.error(publicKeyBytesRes.err);
+        throw new Error("Failed to get public key bytes");
+      }
+      const publicKeyBytes: Bytes33 = publicKeyBytesRes.data;
+
       const createUserRes = await createUser(pool, email);
       if (createUserRes.success === false) {
         console.error(createUserRes.err);
@@ -480,7 +515,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: createUserRes.data!.user_id,
         curve_type: "secp256k1",
-        public_key: Buffer.from(publicKey, "hex"),
+        public_key: publicKeyBytes.toBuffer(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);
@@ -489,7 +524,7 @@ describe("key_share_test", () => {
 
       const checkKeyShareRes = await checkKeyShare(pool, {
         email,
-        public_key: publicKey,
+        public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
         console.error(checkKeyShareRes.err);

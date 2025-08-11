@@ -304,9 +304,18 @@ export function setKeysharesRoutes(router: Router) {
     async (req, res: Response<EwalletApiResponse<CheckKeyShareResponse>>) => {
       const body = req.body as CheckKeyShareRequestBody;
 
+      const publicKeyBytesRes = Bytes.fromHexString(body.public_key, 33);
+      if (publicKeyBytesRes.success === false) {
+        return res.status(400).json({
+          success: false,
+          code: "PUBLIC_KEY_INVALID",
+          msg: "Public key is not valid",
+        });
+      }
+
       const checkKeyShareRes = await checkKeyShare(req.app.locals.db, {
         email: body.email.toLowerCase(),
-        public_key: body.public_key,
+        public_key: publicKeyBytesRes.data,
       });
       if (checkKeyShareRes.success === false) {
         return res
