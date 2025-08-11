@@ -36,7 +36,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet-public.git",
+    "url": "https://github.com/chainapsis/ewallet.git",
     "directory": "sdk/ewallet_sdk_cosmos"
   },
   "dependencies": {
