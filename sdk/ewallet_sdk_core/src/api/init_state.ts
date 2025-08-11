@@ -7,6 +7,8 @@ export async function initState(
   hostOrigin: string,
 ): Promise<Result<boolean, string>> {
   try {
+    console.debug("[keplr] init core, origin: %s", hostOrigin);
+
     const res = await this.sendMsgToIframe({
       target: "keplr_ewallet_attached",
       msg_type: "init_state",
@@ -25,7 +27,8 @@ export async function initState(
       err: "init_state_ack not received",
     };
   } catch (error) {
-    console.error("[core] initState failed with error:", error);
+    console.error("[keplr] initState failed with error:", error);
+
     return {
       success: false,
       err: error instanceof Error ? error.message : String(error),

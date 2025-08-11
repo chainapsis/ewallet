@@ -16,7 +16,7 @@ export function setupIframeElement(
 
   const oldEl = document.getElementById(KEPLR_IFRAME);
   if (oldEl !== null) {
-    console.warn("Keplr ewallet iframe already exists");
+    console.warn("[keplr] iframe already exists");
 
     return {
       success: true,
