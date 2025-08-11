@@ -45,15 +45,11 @@
     "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.24",
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.3",
     "@keplr-wallet/common": "^0.12.253",
-    "@keplr-wallet/cosmos": "^0.12.253",
     "@keplr-wallet/simple-fetch": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
     "@noble/curves": "^1.9.2",
     "@noble/hashes": "^1.8.0",
-    "bech32": "^2.0.0",
-    "bitcoinjs-lib": "^6.1.7",
-    "cosmjs-types": "^0.10.1",
-    "starknet": "^7.6.4"
+    "bech32": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "*",

@@ -16,9 +16,15 @@ import type {
   SettledResponses,
 } from "@keplr-wallet/types";
 import { type KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
-import type { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 
 import type { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+
+export interface SignDoc {
+  bodyBytes: Uint8Array;
+  authInfoBytes: Uint8Array;
+  chainId: string;
+  accountNumber: bigint;
+}
 
 export interface ICosmosEWallet {
   keplrEWallet: CosmosEWallet;

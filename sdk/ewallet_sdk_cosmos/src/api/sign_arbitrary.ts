@@ -1,5 +1,5 @@
 import { sha256 } from "@noble/hashes/sha2";
-import type { StdSignature, StdSignDoc } from "@cosmjs/amino";
+import type { StdSignature } from "@cosmjs/amino";
 import { serializeSignDoc } from "@cosmjs/amino";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
