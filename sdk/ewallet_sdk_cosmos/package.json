@@ -46,7 +46,6 @@
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.3",
     "@keplr-wallet/common": "^0.12.253",
     "@keplr-wallet/cosmos": "^0.12.253",
-    "@keplr-wallet/crypto": "^0.12.253",
     "@keplr-wallet/simple-fetch": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
     "@noble/curves": "^1.9.2",

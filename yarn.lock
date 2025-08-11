@@ -3167,7 +3167,6 @@ __metadata:
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.3"
     "@keplr-wallet/common": "npm:^0.12.253"
     "@keplr-wallet/cosmos": "npm:^0.12.253"
-    "@keplr-wallet/crypto": "npm:^0.12.253"
     "@keplr-wallet/simple-fetch": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
     "@noble/curves": "npm:^1.9.2"
@@ -3425,7 +3424,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-wallet/crypto@npm:0.12.253, @keplr-wallet/crypto@npm:^0.12.253":
+"@keplr-wallet/crypto@npm:0.12.253":
   version: 0.12.253
   resolution: "@keplr-wallet/crypto@npm:0.12.253"
   dependencies:
