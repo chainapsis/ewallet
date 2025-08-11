@@ -51,7 +51,6 @@ export function SignatureVerificationWidget() {
         return;
       }
 
-      // Convert message to hex if it's not already
       const signableMessage = personalMessage.startsWith("0x")
         ? personalMessage
         : `0x${Buffer.from(personalMessage, "utf8").toString("hex")}`;
@@ -79,7 +78,6 @@ export function SignatureVerificationWidget() {
         return;
       }
 
-      // Parse the typed data
       const domain = JSON.parse(permitDomain);
       const types = JSON.parse(permitTypes);
       const message = JSON.parse(permitMessage);
@@ -203,9 +201,11 @@ export function SignatureVerificationWidget() {
             {personalRecoveredAddress && (
               <div className="alert alert-success">
                 <div className="font-medium">Signer Address Recovered</div>
-                <code className="text-xs break-all whitespace-pre-wrap w-full font-mono">
-                  {personalRecoveredAddress}
-                </code>
+                <div className="bg-base-200 rounded p-3 w-full overflow-x-auto">
+                  <code className="text-xs whitespace-pre font-mono text-base-content">
+                    {personalRecoveredAddress}
+                  </code>
+                </div>
               </div>
             )}
           </div>
@@ -221,10 +221,6 @@ export function SignatureVerificationWidget() {
               rows={4}
               placeholder='{"name": "Token", "version": "1", "chainId": 1, "verifyingContract": "0x..."}'
             />
-            <p className="text-xs text-base-content/60 -mt-2">
-              EIP-712 domain as JSON. Contains name, version, chainId, and
-              verifyingContract.
-            </p>
 
             <label className="label">
               <span className="label-text">Types (JSON)</span>
@@ -236,10 +232,6 @@ export function SignatureVerificationWidget() {
               rows={4}
               placeholder='{"Permit": [{"name": "owner", "type": "address"}, ...]}'
             />
-            <p className="text-xs text-base-content/60 -mt-2">
-              EIP-712 types as JSON. Defines the structure of the message being
-              signed.
-            </p>
 
             <label className="label">
               <span className="label-text">Message (JSON)</span>
@@ -251,10 +243,6 @@ export function SignatureVerificationWidget() {
               rows={4}
               placeholder='{"owner": "0x...", "spender": "0x...", "value": "1000000000000000000", "nonce": "0", "deadline": "1234567890"}'
             />
-            <p className="text-xs text-base-content/60 -mt-2">
-              EIP-712 message as JSON. The actual data that was signed according
-              to the types.
-            </p>
 
             <label className="label">
               <span className="label-text">Signature</span>
@@ -266,10 +254,6 @@ export function SignatureVerificationWidget() {
               className="input input-bordered w-full"
               placeholder="0x..."
             />
-            <p className="text-xs text-base-content/60 -mt-2">
-              The signature to verify (0x-prefixed hex string). Example:
-              0x1234...abcd
-            </p>
 
             <div className="flex gap-2">
               <button
@@ -295,9 +279,11 @@ export function SignatureVerificationWidget() {
             {permitRecoveredAddress && (
               <div className="alert alert-success">
                 <div className="font-medium">Signer Address Recovered</div>
-                <code className="text-xs break-all whitespace-pre-wrap w-full font-mono">
-                  {permitRecoveredAddress}
-                </code>
+                <div className="bg-base-200 rounded p-3 w-full overflow-x-auto">
+                  <code className="text-xs whitespace-pre font-mono text-base-content">
+                    {permitRecoveredAddress}
+                  </code>
+                </div>
               </div>
             )}
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { PersonalSignWidget } from "./PersonalSignWidget";
+import { PermitSignWidget } from "./PermitSignWidget";
 import { SignatureVerificationWidget } from "./SignatureVerificationWidget";
 
 export function SigningPlayground() {
@@ -14,7 +15,11 @@ export function SigningPlayground() {
           </p>
         </div>
 
-        <PersonalSignWidget />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <PersonalSignWidget />
+          <PermitSignWidget />
+        </div>
+
         <SignatureVerificationWidget />
       </div>
     </div>

@@ -37,7 +37,7 @@ export function PersonalSignWidget() {
   };
 
   return (
-    <div className="card bg-base-100 shadow-xl">
+    <div className="card bg-base-100 shadow-xl h-fit">
       <div className="card-body">
         <h2 className="card-title">Personal Sign</h2>
         <p className="text-sm text-base-content/70">
@@ -80,9 +80,11 @@ export function PersonalSignWidget() {
         {signature && (
           <div className="alert alert-success flex flex-col items-start gap-2">
             <div className="font-medium">Signature Generated</div>
-            <code className="text-xs break-all whitespace-pre-wrap w-full font-mono">
-              {signature}
-            </code>
+            <div className="bg-base-200 rounded p-3 w-full max-h-40 overflow-x-auto overflow-y-auto">
+              <code className="text-xs whitespace-pre font-mono text-base-content">
+                {signature}
+              </code>
+            </div>
             <div className="flex gap-2">
               <button
                 onClick={copySignature}

@@ -1,15 +1,14 @@
 import { useState } from "react";
 import {
   Hex,
-  hexToNumber,
   pad,
-  slice,
   toHex,
   TypedDataDomain,
   WalletClient,
   zeroAddress,
+  isAddress,
 } from "viem";
-import { useContractRead, useWalletClient } from "wagmi";
+import { useReadContract, useWalletClient } from "wagmi";
 
 import { PermitParamsAbi } from "@keplr-ewallet-sandbox-evm/contracts/abis/Permit";
 
@@ -21,31 +20,45 @@ export function usePermit({
   spenderAddress,
   permitVersion,
 }: UsePermitProps) {
-  const [signature, setSignature] = useState<PermitSignature | undefined>();
+  const [signature, setSignature] = useState<Hex | undefined>();
   const [error, setError] = useState<Error>();
 
   const { data: defaultWalletClient } = useWalletClient();
   const walletClientToUse = walletClient ?? defaultWalletClient;
   const ownerToUse =
     ownerAddress ?? walletClientToUse?.account?.address ?? zeroAddress;
-  const { data: nonce } = useContractRead({
+
+  const hasValidContract =
+    chainId !== undefined &&
+    contractAddress !== undefined &&
+    typeof contractAddress === "string" &&
+    isAddress(contractAddress);
+
+  const hasWalletOwner =
+    !!walletClientToUse?.account?.address &&
+    isAddress(walletClientToUse!.account!.address as Hex);
+
+  const { data: nonce } = useReadContract({
     chainId,
     address: contractAddress,
     abi: PermitParamsAbi,
     functionName: "nonces",
     args: [ownerToUse],
+    query: { enabled: hasValidContract && hasWalletOwner },
   });
-  const { data: name } = useContractRead({
+  const { data: name } = useReadContract({
     chainId,
     address: contractAddress,
     abi: PermitParamsAbi,
     functionName: "name",
+    query: { enabled: hasValidContract },
   });
-  const { data: versionFromContract } = useContractRead({
+  const { data: versionFromContract } = useReadContract({
     chainId,
     address: contractAddress,
     abi: PermitParamsAbi,
     functionName: "version",
+    query: { enabled: hasValidContract },
   });
 
   const validatedVersionFromContract = [1, 2, "1", "2"].includes(
@@ -61,7 +74,7 @@ export function usePermit({
     walletClientToUse !== undefined &&
     spenderAddress !== undefined &&
     chainId !== undefined &&
-    contractAddress !== undefined &&
+    hasValidContract &&
     name !== undefined &&
     nonce !== undefined;
 
@@ -146,6 +159,9 @@ export function usePermit({
         }
       : undefined,
     signature,
+    name,
+    version,
+    nonce,
     error,
   };
 }
@@ -215,7 +231,7 @@ export const signPermit = async (
     chainId,
     permitVersion,
   }: Eip2612Props,
-): Promise<PermitSignature> => {
+): Promise<Hex> => {
   const types = {
     Permit: [
       { name: "owner", type: "address" },
@@ -242,19 +258,13 @@ export const signPermit = async (
     deadline,
   };
 
-  const signature = await walletClient.signTypedData({
+  return await walletClient.signTypedData({
     account: ownerAddress,
     message,
     domain: domainData,
     primaryType: "Permit",
     types,
   });
-  const [r, s, v] = [
-    slice(signature, 0, 32),
-    slice(signature, 32, 64),
-    slice(signature, 64, 65),
-  ];
-  return { r, s, v: hexToNumber(v) };
 };
 
 export const signPermitDai =
@@ -284,7 +294,7 @@ export const signPermitDai =
       chainId,
       permitVersion,
     }: SignPermitProps,
-  ): Promise<PermitSignature> => {
+  ): Promise<Hex> => {
     const types = {
       Permit: [
         { name: "holder", type: "address" },
@@ -321,17 +331,11 @@ export const signPermitDai =
       allowed: true,
     };
 
-    const signature = await walletClient.signTypedData({
+    return await walletClient.signTypedData({
       account: ownerAddress,
       domain: domainData,
       primaryType: "Permit",
       types,
       message,
     });
-    const [r, s, v] = [
-      slice(signature, 0, 32),
-      slice(signature, 32, 64),
-      slice(signature, 64, 65),
-    ];
-    return { r, s, v: hexToNumber(v) };
   };
