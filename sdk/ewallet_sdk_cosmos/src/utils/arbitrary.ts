@@ -1,7 +1,10 @@
 import { Buffer } from "buffer";
 import type { StdSignDoc } from "@cosmjs/amino";
 import { serializeSignDoc } from "@cosmjs/amino";
-import { Hash, PubKeySecp256k1 } from "@keplr-wallet/crypto";
+import { sha256 } from "@noble/hashes/sha2";
+import { keccak_256 } from "@noble/hashes/sha3";
+import { secp256k1 } from "@noble/curves/secp256k1";
+import { bytesToNumberBE } from "@noble/curves/abstract/utils";
 
 import { getBech32Address, getCosmosAddress, getEthAddress } from "./address";
 
@@ -133,7 +136,6 @@ export function verifyADR36AminoSignDoc(
     throw new Error("Invalid sign doc for ADR-36");
   }
 
-  const cryptoPubKey = new PubKeySecp256k1(pubKey);
   const expectedSigner = (() => {
     if (algo === "ethsecp256k1") {
       return getBech32Address(getEthAddress(pubKey), bech32PrefixAccAddr);
@@ -147,14 +149,28 @@ export function verifyADR36AminoSignDoc(
 
   const msg = serializeSignDoc(signDoc);
 
-  return cryptoPubKey.verifyDigest32(
-    (() => {
-      if (algo === "ethsecp256k1") {
-        return Hash.keccak256(msg);
-      }
-      return Hash.sha256(msg);
-    })(),
-    signature,
+  const messageHash = (() => {
+    if (algo === "ethsecp256k1") {
+      return keccak_256(msg);
+    }
+    return sha256(msg);
+  })();
+
+  // Signature should be 64 bytes (32 bytes r + 32 bytes s)
+  if (signature.length !== 64) {
+    throw new Error(`Invalid length of signature: ${signature.length}`);
+  }
+
+  const r = signature.slice(0, 32);
+  const s = signature.slice(32);
+
+  return secp256k1.verify(
+    {
+      r: bytesToNumberBE(r),
+      s: bytesToNumberBE(s),
+    },
+    messageHash,
+    pubKey,
   );
 }
 

@@ -1,8 +1,7 @@
-import type { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
-import { TendermintTxTracer } from "@keplr-wallet/cosmos";
-import { simpleFetch } from "@keplr-wallet/simple-fetch";
 import { Buffer } from "buffer";
-import { retry } from "@keplr-wallet/common";
+
+import type { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import { retry, simpleFetch, TendermintTxTracer } from "@keplr-ewallet-sdk-cosmos/utils";
 
 export async function sendTx(
   this: CosmosEWallet,

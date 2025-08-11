@@ -17,19 +17,18 @@ import type {
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
+import { decryptData, encryptData } from "@keplr-ewallet-cv-server/apis/utils";
 
 export async function registerKeyShare(
   db: Pool,
   registerKeyShareRequest: RegisterKeyShareRequest,
+  encryptionSecret: string,
 ): Promise<Result<void, ErrorResponse>> {
   try {
     const { email, curve_type, public_key, enc_share } =
       registerKeyShareRequest;
 
-    const getWalletRes = await getWalletByPublicKey(
-      db,
-      Buffer.from(public_key, "hex"),
-    );
+    const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
       return {
         success: false,
@@ -81,7 +80,7 @@ export async function registerKeyShare(
     const createWalletRes = await createWallet(db, {
       user_id,
       curve_type,
-      public_key: Buffer.from(public_key, "hex"),
+      public_key: public_key.toBuffer(),
     });
     if (createWalletRes.success === false) {
       return {
@@ -95,9 +94,12 @@ export async function registerKeyShare(
 
     const wallet_id = createWalletRes.data.wallet_id;
 
+    const encryptedShare = encryptData(enc_share, encryptionSecret);
+    const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
+
     const createKeyShareRes = await createKeyShare(db, {
       wallet_id,
-      enc_share: Buffer.from(enc_share, "hex"),
+      enc_share: encryptedShareBuffer,
     });
     if (createKeyShareRes.success === false) {
       return {
@@ -124,6 +126,7 @@ export async function registerKeyShare(
 export async function getKeyShare(
   db: Pool,
   getKeyShareRequest: GetKeyShareRequest,
+  encryptionSecret: string,
 ): Promise<Result<GetKeyShareResponse, ErrorResponse>> {
   try {
     const { email, public_key } = getKeyShareRequest;
@@ -149,10 +152,7 @@ export async function getKeyShare(
       };
     }
 
-    const getWalletRes = await getWalletByPublicKey(
-      db,
-      Buffer.from(public_key, "hex"),
-    );
+    const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
       return {
         success: false,
@@ -205,11 +205,16 @@ export async function getKeyShare(
       };
     }
 
+    const decryptedShare = decryptData(
+      getKeyShareRes.data.enc_share.toString("utf-8"),
+      encryptionSecret,
+    );
+
     return {
       success: true,
       data: {
         share_id: getKeyShareRes.data.share_id,
-        enc_share: getKeyShareRes.data.enc_share.toString("hex"),
+        enc_share: decryptedShare,
       },
     };
   } catch (error) {
@@ -249,10 +254,7 @@ export async function checkKeyShare(
       };
     }
 
-    const getWalletRes = await getWalletByPublicKey(
-      db,
-      Buffer.from(public_key, "hex"),
-    );
+    const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
       return {
         success: false,

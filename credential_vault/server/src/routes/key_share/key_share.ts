@@ -18,6 +18,7 @@ import {
   type AuthenticatedRequest,
 } from "@keplr-ewallet-cv-server/middlewares";
 import type { ErrorCode } from "@keplr-ewallet-cv-server/error";
+import { Bytes } from "@keplr-ewallet/bytes";
 
 export function setKeysharesRoutes(router: Router) {
   /**
@@ -99,12 +100,25 @@ export function setKeysharesRoutes(router: Router) {
       const state = req.app.locals as any;
       const body = req.body;
 
-      const registerKeyShareRes = await registerKeyShare(state.db, {
-        email: googleUser.email,
-        curve_type: body.curve_type,
-        public_key: body.public_key,
-        enc_share: body.enc_share,
-      });
+      const publicKeyBytesRes = Bytes.fromHexString(body.public_key, 33);
+      if (publicKeyBytesRes.success === false) {
+        return res.status(400).json({
+          success: false,
+          code: "PUBLIC_KEY_INVALID",
+          msg: "Public key is not valid",
+        });
+      }
+
+      const registerKeyShareRes = await registerKeyShare(
+        state.db,
+        {
+          email: googleUser.email,
+          curve_type: body.curve_type,
+          public_key: publicKeyBytesRes.data,
+          enc_share: body.enc_share,
+        },
+        state.env.ENCRYPTION_SECRET,
+      );
       if (registerKeyShareRes.success === false) {
         return res
           .status(mapKeyShareErrorCodeToStatus(registerKeyShareRes.err.code))
@@ -212,10 +226,23 @@ export function setKeysharesRoutes(router: Router) {
       const googleUser = res.locals.google_user;
       const state = req.app.locals as any;
 
-      const getKeyShareRes = await getKeyShare(state.db, {
-        email: googleUser.email,
-        public_key: req.body.public_key,
-      });
+      const publicKeyBytesRes = Bytes.fromHexString(req.body.public_key, 33);
+      if (publicKeyBytesRes.success === false) {
+        return res.status(400).json({
+          success: false,
+          code: "PUBLIC_KEY_INVALID",
+          msg: "Public key is not valid",
+        });
+      }
+
+      const getKeyShareRes = await getKeyShare(
+        state.db,
+        {
+          email: googleUser.email,
+          public_key: publicKeyBytesRes.data,
+        },
+        state.env.ENCRYPTION_SECRET,
+      );
       if (getKeyShareRes.success === false) {
         return res
           .status(mapKeyShareErrorCodeToStatus(getKeyShareRes.err.code))
@@ -285,9 +312,18 @@ export function setKeysharesRoutes(router: Router) {
     async (req, res: Response<EwalletApiResponse<CheckKeyShareResponse>>) => {
       const body = req.body as CheckKeyShareRequestBody;
 
+      const publicKeyBytesRes = Bytes.fromHexString(body.public_key, 33);
+      if (publicKeyBytesRes.success === false) {
+        return res.status(400).json({
+          success: false,
+          code: "PUBLIC_KEY_INVALID",
+          msg: "Public key is not valid",
+        });
+      }
+
       const checkKeyShareRes = await checkKeyShare(req.app.locals.db, {
         email: body.email.toLowerCase(),
-        public_key: body.public_key,
+        public_key: publicKeyBytesRes.data,
       });
       if (checkKeyShareRes.success === false) {
         return res

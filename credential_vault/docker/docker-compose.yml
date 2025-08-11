@@ -32,6 +32,8 @@ services:
       DB_PASSWORD: "postgres"
       DB_NAME: "credential_vault"
       DB_SSL: "false"
+      # Please change it to your own secret.
+      ENCRYPTION_SECRET: "temp_enc_secret"
 
     depends_on:
       - credential_vault_pg

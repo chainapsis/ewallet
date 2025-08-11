@@ -95,14 +95,41 @@ impl<'de, const N: usize> Deserialize<'de> for HexSerializedBytes<N> {
     }
 }
 
-// test
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    const ZERO_32: [u8; 32] = [0; 32];
+
+    const ZERO_32_HEX: &str = "0000000000000000000000000000000000000000000000000000000000000000";
+
+    const ZERO_31_HEX: &str = "000000000000000000000000000000000000000000000000000000000000000";
+
+    const ZERO_33_HEX: &str = "00000000000000000000000000000000000000000000000000000000000000000";
 
     #[test]
     fn test_hex_serialized_bytes() {
         let bytes = HexSerializedBytes::<32>::zero();
         assert_eq!(bytes.data, [0; 32]);
+    }
+
+    #[test]
+    fn test_hex_serialized_bytes_from_hex() {
+        let bytes = HexSerializedBytes::<32>::from_hex(ZERO_32_HEX).unwrap();
+        assert_eq!(bytes.data, ZERO_32);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_hex_serialized_bytes_from_hex_invalid_length() {
+        let result = HexSerializedBytes::<32>::from_hex(ZERO_31_HEX);
+        result.expect("should panic");
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_hex_serialized_bytes_from_hex_invalid_hex() {
+        let result = HexSerializedBytes::<32>::from_hex(ZERO_33_HEX);
+        result.expect("should panic");
     }
 }
