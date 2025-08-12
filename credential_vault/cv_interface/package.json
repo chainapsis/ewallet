@@ -1,8 +1,22 @@
 {
   "name": "@keplr-ewallet/credential-vault-interface",
   "packageManager": "yarn@4.7.0",
+  "version": "0.0.2-alpha.3",
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "yarn clean && tsc --build --force && tsc-alias"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chainapsis/ewallet.git",
+    "directory": "credential_vault/cv_interface"
+  },
   "dependencies": {
     "@keplr-ewallet/bytes": "workspace:*"
   },
@@ -11,8 +25,10 @@
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
+    "del-cli": "*",
     "jest": "*",
     "ts-jest": "*",
+    "tsc-alias": "*",
     "tsx": "*",
     "typescript": "*"
   }

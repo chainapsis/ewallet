@@ -2,7 +2,7 @@
 
 import { useAppState } from "@/state";
 import React, { useEffect, useState, type PropsWithChildren } from "react";
-import { InitAuth } from "@/components/init_auth.tsx";
+import { InitAuth } from "@/components/init_auth";
 
 export const KeplrEWalletProvider: React.FC<PropsWithChildren> = ({
   children,
@@ -14,13 +14,11 @@ export const KeplrEWalletProvider: React.FC<PropsWithChildren> = ({
     async function fn() {
       try {
         const isCosmosReady = await appState.initKeplrSdkCosmos();
-
         if (!isCosmosReady) {
           console.error("something wrong");
         }
 
         const isEthReady = await appState.initKeplrSdkEth();
-
         if (!isEthReady) {
           console.error("something wrong");
         }

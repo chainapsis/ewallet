@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-core",
-  "version": "0.0.6-rc.25",
+  "version": "0.0.6-rc.27",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "scripts": {
@@ -34,7 +34,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet-public.git",
+    "url": "https://github.com/chainapsis/ewallet.git",
     "directory": "sdk/ewallet_sdk_core"
   },
   "devDependencies": {
@@ -48,7 +48,7 @@
   },
   "gitHead": "5c82fc2b9b670d82a53e5aef0d8550537a03dccc",
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.3",
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.4",
     "@keplr-wallet/types": "^0.12.257"
   }
 }

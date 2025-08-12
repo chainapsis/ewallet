@@ -5,7 +5,7 @@
     "sdk/ewallet_sdk_cosmos",
     "sdk/ewallet_sdk_eth",
     "crypto/bytes",
-    "tecdsa/tecdsa_interface"
+    "credential_vault/cv_interface"
   ],
   "version": "independent",
   "npmClient": "yarn"

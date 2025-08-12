@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import chalk from "chalk";
 
 import { paths } from "../paths";
 import { expectSuccess } from "../expect";
@@ -17,6 +18,7 @@ export function doBuildPkgs() {
     [paths.sdk_cosmos, "sdk cosmos"],
     [paths.sdk_eth, "sdk eth"],
     [paths.crypto_bytes, "crypto/bytes"],
+    [paths.cv_interface, "cv interface"],
   ];
 
   for (const [path, name] of pkgsInOrder) {
@@ -28,7 +30,7 @@ export function doBuildPkgs() {
     });
 
     expectSuccess(coreRet, `build ${name} failed`);
-    console.info("Ok");
+    console.info("%s %s", chalk.bold.green("Done"), name);
   }
 
   console.info("All (%s) done!", pkgsInOrder.length);

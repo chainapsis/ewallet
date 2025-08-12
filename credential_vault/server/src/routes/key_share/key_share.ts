@@ -115,7 +115,7 @@ export function setKeysharesRoutes(router: Router) {
           email: googleUser.email,
           curve_type: body.curve_type,
           public_key: publicKeyBytesRes.data,
-          enc_share: body.enc_share,
+          share: body.share,
         },
         state.env.ENCRYPTION_SECRET,
       );

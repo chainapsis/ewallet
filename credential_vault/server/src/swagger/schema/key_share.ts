@@ -1,7 +1,7 @@
 export const keyShareSchemas = {
   RegisterKeyShareBody: {
     type: "object",
-    required: ["curve_type", "public_key", "enc_share"],
+    required: ["curve_type", "public_key", "share"],
     properties: {
       curve_type: {
         type: "string",
@@ -13,9 +13,9 @@ export const keyShareSchemas = {
         description: "Public key in hex string format",
         example: "3fa1c7e8b42d9f50c6e2a8749db1fe23",
       },
-      enc_share: {
+      share: {
         type: "string",
-        description: "Encrypted key share in hex string format",
+        description: "User key share",
         example: "8c5e2d17ab9034f65d1c3b7a29ef4d88",
       },
     },
@@ -40,9 +40,9 @@ export const keyShareSchemas = {
         format: "uuid",
         description: "Unique identifier for the key share",
       },
-      enc_share: {
+      share: {
         type: "string",
-        description: "Encrypted key share in hex string format",
+        description: "User key share",
         example: "8c5e2d17ab9034f65d1c3b7a29ef4d88",
       },
     },
@@ -65,9 +65,9 @@ export const keyShareSchemas = {
   },
   CheckKeyShareResponse: {
     type: "object",
-    required: ["is_exists"],
+    required: ["exists"],
     properties: {
-      is_exists: {
+      exists: {
         type: "boolean",
         description: "Whether the key share exists",
       },

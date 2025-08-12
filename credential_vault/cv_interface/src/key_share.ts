@@ -19,13 +19,13 @@ export interface RegisterKeyShareRequest {
   email: string;
   curve_type: CurveType;
   public_key: Bytes33; // hex string
-  enc_share: string; // hex string
+  share: string;
 }
 
 export type RegisterKeyShareBody = {
   curve_type: CurveType;
   public_key: string; // hex string
-  enc_share: string; // hex string
+  share: string;
 };
 
 export interface GetKeyShareRequest {
@@ -35,7 +35,7 @@ export interface GetKeyShareRequest {
 
 export interface GetKeyShareResponse {
   share_id: string;
-  enc_share: string; // hex string
+  share: string;
 }
 
 export type GetKeyShareRequestBody = {
@@ -48,7 +48,7 @@ export interface CheckKeyShareRequest {
 }
 
 export interface CheckKeyShareResponse {
-  is_exists: boolean;
+  exists: boolean;
 }
 
 export interface CheckKeyShareRequestBody {

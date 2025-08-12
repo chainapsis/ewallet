@@ -2,22 +2,22 @@
   "name": "@keplr-ewallet/bytes",
   "type": "module",
   "main": "./dist/index.js",
-  "version": "0.0.3-alpha.9",
+  "version": "0.0.3-alpha.12",
   "packageManager": "yarn@4.7.0",
-  "scripts": {
-    "clean": "del-cli dist",
-    "build": "yarn clean && tsc"
-  },
-  "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.3"
-  },
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet-public.git",
+    "url": "https://github.com/chainapsis/ewallet.git",
     "directory": "crypto/bytes"
+  },
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "yarn clean && tsc"
+  },
+  "dependencies": {
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.4"
   },
   "devDependencies": {
     "@jest/globals": "*",
