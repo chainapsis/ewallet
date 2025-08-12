@@ -1,5 +1,5 @@
-export * from "./init";
-export * from "./cosmos_ewallet";
+export * from "./init.js";
+export * from "./cosmos_ewallet.js";
 
 export type * from "./types";
-export * from "./utils";
+export * from "./utils/index.js";
