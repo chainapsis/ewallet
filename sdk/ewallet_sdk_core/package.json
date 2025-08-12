@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc --build --force && tsc-alias"
+    "build": "yarn clean && tsc --build --force && tsc-alias && node scripts/add-extensions.js"
   },
   "publishConfig": {
     "access": "public"
@@ -16,10 +16,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.js"
     }
   },
   "files": [
