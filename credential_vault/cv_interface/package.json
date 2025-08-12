@@ -1,7 +1,7 @@
 {
   "name": "@keplr-ewallet/credential-vault-interface",
   "packageManager": "yarn@4.7.0",
-  "version": "0.0.2-alpha.5",
+  "version": "0.0.2-alpha.6",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
