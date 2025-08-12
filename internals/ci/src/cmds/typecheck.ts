@@ -9,6 +9,7 @@ export async function typeCheck(..._args: any[]) {
     paths.sdk_core,
     paths.sdk_cosmos,
     paths.sdk_eth,
+    paths.cv_server,
     paths.sandbox_simple_host,
   ];
 

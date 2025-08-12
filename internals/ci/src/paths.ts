@@ -8,6 +8,8 @@ export const paths = (function() {
     "../../../credential_vault/cv_interface",
   );
 
+  const cv_server = path.join(__dirname, "../../../credential_vault/server");
+
   const stdlib = path.join(__dirname, "../../../stdlib_js");
 
   const sdk_core = path.join(__dirname, "../../../sdk/ewallet_sdk_core/");
@@ -36,6 +38,7 @@ export const paths = (function() {
     sdk_cosmos,
     crypto_bytes,
     cv_interface,
+    cv_server,
     credential_vault_pg_interface,
     sandbox_simple_host,
   };
