@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import chalk from "chalk";
 
 import { paths } from "../paths";
+import { getPkgName } from "src/pkg_name";
 
 export async function typeCheck(..._args: any[]) {
   const pkgPaths = [
@@ -11,7 +12,7 @@ export async function typeCheck(..._args: any[]) {
     paths.sandbox_simple_host,
   ];
 
-  console.log("Type checking, pkgPaths: %j", pkgPaths);
+  console.log("Type checking, total (%s)", pkgPaths.length);
 
   for (const pkg of pkgPaths) {
     console.log("Checking %s", pkg);
@@ -21,10 +22,12 @@ export async function typeCheck(..._args: any[]) {
       stdio: "inherit",
     });
 
+    const name = getPkgName(pkg);
+
     if (ret.status === 0) {
-      console.log("%s %s", chalk.bold.green("Ok"), pkg);
+      console.log("%s %s", chalk.bold.green("Ok"), name);
     } else {
-      console.error("Error type checking, pkg: %s", pkg);
+      console.error("Error type checking, pkg: %s", name);
 
       process.exit(ret.status);
     }
