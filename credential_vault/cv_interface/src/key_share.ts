@@ -18,7 +18,7 @@ export type CreateCredentialVaultKeyShareRequest = {
 export interface RegisterKeyShareRequest {
   email: string;
   curve_type: CurveType;
-  public_key: Bytes33; // hex string
+  public_key: Bytes33;
   share: string;
 }
 
@@ -30,7 +30,7 @@ export type RegisterKeyShareBody = {
 
 export interface GetKeyShareRequest {
   email: string;
-  public_key: Bytes33; // hex string
+  public_key: Bytes33;
 }
 
 export interface GetKeyShareResponse {
@@ -44,7 +44,7 @@ export type GetKeyShareRequestBody = {
 
 export interface CheckKeyShareRequest {
   email: string;
-  public_key: Bytes33; // hex string
+  public_key: Bytes33;
 }
 
 export interface CheckKeyShareResponse {
