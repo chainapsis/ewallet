@@ -1,13 +1,21 @@
+import chalk from "chalk";
 import type { SpawnSyncReturns } from "node:child_process";
 
 export function expectSuccess(ret: SpawnSyncReturns<ArrayBuffer>, msg: string) {
   if (ret.error) {
-    console.error("Spawn err, %s", msg);
+    console.error("Spawn err, msg: %s, err: %s", msg, ret.error);
 
-    throw ret.error;
+    process.exit(1);
   }
 
   if (ret.status !== 0) {
-    throw new Error(`Command didn't exit with code 0, msg: ${msg}`);
+    console.error(
+      "%s %s, msg: %s",
+      chalk.bold.red("Error"),
+      "Exit with error",
+      msg,
+    );
+
+    process.exit(1);
   }
 }
