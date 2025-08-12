@@ -6,13 +6,12 @@ import { expectSuccess } from "../expect";
 export async function publish(..._args: any[]) {
   console.log("Publishing packages...");
 
-  console.log(
-    `1. Ensure you have "npm login"-ed in the first place. \
+  console.log(`\
+1. Ensure you have "npm login"-ed in the first place. \
 It's "npm login", not "yarn npm login".
 2. git remote "origin" needs to be set up in case you use an alias.
 3. Do "yarn ci version" first
-`,
-  );
+`);
 
   const publishRet = spawnSync(
     "yarn",

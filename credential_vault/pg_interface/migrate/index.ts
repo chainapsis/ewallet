@@ -98,7 +98,7 @@ async function migrateAll() {
       ssl: process.env.DB_SSL === "true",
     };
 
-    console.info(`Connecting to db (${dbName}), config: %j`, pgConfig);
+    console.log(`Connecting to db (${dbName}), config: %j`, pgConfig);
     const connRet = await createDBConn(pgConfig);
     if (connRet.success === true) {
       const pool = connRet.data;

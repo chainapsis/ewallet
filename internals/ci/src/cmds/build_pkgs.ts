@@ -3,7 +3,7 @@ import chalk from "chalk";
 
 import { paths } from "../paths";
 import { expectSuccess } from "../expect";
-import { getPkgName } from "src/pkg_name";
+import { getPkgName } from "../pkg_name";
 
 export function buildPkgs(..._args: any[]) {
   doBuildPkgs();
