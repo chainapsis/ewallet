@@ -14,7 +14,8 @@ function addExtensions(filePath) {
 
   const content = fs.readFileSync(filePath, "utf8");
 
-  const updatedContent = content.replace(
+  // Handle export statements
+  let updatedContent = content.replace(
     /export\s+\*\s+from\s+['"](\.\/[^'"]*?)['"]/g,
     (match, exportPath) => {
       if (exportPath.endsWith(".js")) {
@@ -25,6 +26,21 @@ function addExtensions(filePath) {
         return `export * from '${exportPath}/index.js'`;
       }
       return `export * from '${exportPath}.js'`;
+    },
+  );
+
+  // Handle import statements
+  updatedContent = updatedContent.replace(
+    /import\s+.*?\s+from\s+['"](\.\/[^'"]*?)['"]/g,
+    (match, importPath) => {
+      if (importPath.endsWith(".js")) {
+        return match;
+      }
+      const fullPath = path.join(path.dirname(filePath), importPath);
+      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+        return match.replace(importPath, `${importPath}/index.js`);
+      }
+      return match.replace(importPath, `${importPath}.js`);
     },
   );
 
