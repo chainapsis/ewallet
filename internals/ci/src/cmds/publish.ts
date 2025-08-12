@@ -4,9 +4,9 @@ import { paths } from "../paths";
 import { expectSuccess } from "../expect";
 
 export async function publish(..._args: any[]) {
-  console.info("Start publishing packages...");
+  console.log("Start publishing packages...");
 
-  console.info(
+  console.log(
     `1. Ensure you have "npm login"-ed in the first place. \
 It's "npm login", not "yarn npm login".
 2. git remote "origin" needs to be set up in case you use an alias.

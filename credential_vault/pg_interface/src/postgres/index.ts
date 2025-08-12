@@ -24,6 +24,6 @@ DROP TABLE IF EXISTS ${tableNames[idx]} CASCADE
       );
     }
 
-    console.info("Dropped tables, count: %s", tableNames.length);
+    console.log("Dropped tables, count: %s", tableNames.length);
   }
 }

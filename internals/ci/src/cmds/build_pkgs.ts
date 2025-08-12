@@ -9,7 +9,7 @@ export function buildPkgs(..._args: any[]) {
 }
 
 export function doBuildPkgs() {
-  console.info("Start building packages");
+  console.log("Start building packages");
 
   // Order matters!
   const pkgsInOrder = [
@@ -22,7 +22,7 @@ export function doBuildPkgs() {
   ];
 
   for (const [path, name] of pkgsInOrder) {
-    console.info("Build %s, path: %s", name, path);
+    console.log("Building %s, path: %s", name, path);
 
     const coreRet = spawnSync("yarn", ["run", "build"], {
       cwd: path,
@@ -30,8 +30,12 @@ export function doBuildPkgs() {
     });
 
     expectSuccess(coreRet, `build ${name} failed`);
-    console.info("%s %s", chalk.bold.green("Done"), name);
+    console.log("%s %s", chalk.bold.green("Done"), name);
   }
 
-  console.info("All (%s) done!", pkgsInOrder.length);
+  console.log(
+    "%s All (%s) done!",
+    chalk.bold.green("Success"),
+    pkgsInOrder.length,
+  );
 }

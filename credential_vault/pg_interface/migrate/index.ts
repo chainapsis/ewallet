@@ -21,7 +21,7 @@ function readMigrateSql() {
 async function createDBIfNotExists(committeeId: number) {
   const dbName =
     committeeId === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${committeeId}`;
-  console.info(`Creating database ${dbName} if not exists...`);
+  console.log(`Creating database ${dbName} if not exists...`);
 
   const pgConfig = {
     database: "postgres",
@@ -32,7 +32,7 @@ async function createDBIfNotExists(committeeId: number) {
     ssl: process.env.DB_SSL === "true",
   };
 
-  console.info("Connecting to db (postgres), config: %j", pgConfig);
+  console.log("Connecting to db (postgres), config: %j", pgConfig);
   const connRet = await createDBConn(pgConfig);
   if (connRet.success === true) {
     const pool = connRet.data;
@@ -66,8 +66,8 @@ async function createDBConn(config: PoolConfig) {
     ...config,
     ssl: config.ssl
       ? {
-          rejectUnauthorized: false,
-        }
+        rejectUnauthorized: false,
+      }
       : undefined,
   };
 
@@ -128,7 +128,7 @@ async function migrateOne() {
     ssl: process.env.DB_SSL === "true",
   };
 
-  console.info(`Connecting to db (${dbName}), config: %j`, pgConfig);
+  console.log(`Connecting to db (${dbName}), config: %j`, pgConfig);
   const connRet = await createDBConn(pgConfig);
   if (connRet.success === true) {
     const pool = connRet.data;

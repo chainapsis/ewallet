@@ -11,10 +11,10 @@ export async function typeCheck(..._args: any[]) {
     paths.sandbox_simple_host,
   ];
 
-  console.info("Type checking, pkgPaths: %j", pkgPaths);
+  console.log("Type checking, pkgPaths: %j", pkgPaths);
 
   for (const pkg of pkgPaths) {
-    console.info("Checking %s", pkg);
+    console.log("Checking %s", pkg);
 
     const ret = spawnSync("yarn", ["run", "tsc", "--noEmit"], {
       cwd: pkg,
@@ -22,7 +22,7 @@ export async function typeCheck(..._args: any[]) {
     });
 
     if (ret.status === 0) {
-      console.info("%s %s", chalk.bold.green("Ok"), pkg);
+      console.log("%s %s", chalk.bold.green("Ok"), pkg);
     } else {
       console.error("Error type checking, pkg: %s", pkg);
 
@@ -30,5 +30,5 @@ export async function typeCheck(..._args: any[]) {
     }
   }
 
-  console.info("%s", chalk.bold.green("Success"), `All ${pkgPaths.length} ok!`);
+  console.log("%s", chalk.bold.green("Success"), `All ${pkgPaths.length} ok!`);
 }
