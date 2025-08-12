@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 
 import { usePersonalSign } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { TextAreaInput } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
 
 export function PersonalSignWidget() {
   const { address } = useAccount();
@@ -45,20 +46,21 @@ export function PersonalSignWidget() {
           sign arbitrary messages that can be verified with the signature.
         </p>
 
-        <label className="label">
-          <span className="label-text">Message to Sign</span>
-        </label>
-        <textarea
-          value={personalMessage}
-          onChange={(e) => setPersonalMessage(e.target.value)}
-          className="textarea textarea-bordered w-full text-base-content"
-          rows={4}
-          placeholder="Enter message to sign..."
-        />
-        <p className="text-xs text-base-content/60 mt-1">
-          * The message will be converted to hex format for signing
-        </p>
-
+        <div className="flex flex-col gap-2">
+          <label className="label">
+            <span className="label-text">Message to Sign</span>
+          </label>
+          <TextAreaInput
+            name="personal-message"
+            placeholder="Enter message to sign..."
+            value={personalMessage}
+            onChange={(val) => setPersonalMessage(val)}
+            rows={4}
+          />
+          <p className="text-xs text-base-content/60 m-0">
+            * The message will be converted to hex format for signing
+          </p>
+        </div>
         <button
           onClick={handlePersonalSign}
           disabled={!walletClient || !address || personalSignLoading}
