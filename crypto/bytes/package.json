@@ -2,7 +2,7 @@
   "name": "@keplr-ewallet/bytes",
   "type": "module",
   "main": "./dist/index.js",
-  "version": "0.0.3-alpha.12",
+  "version": "0.0.3-alpha.13",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
@@ -17,7 +17,7 @@
     "build": "yarn clean && tsc"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.4"
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.5"
   },
   "devDependencies": {
     "@jest/globals": "*",
