@@ -25,8 +25,7 @@ export async function registerKeyShare(
   encryptionSecret: string,
 ): Promise<Result<void, ErrorResponse>> {
   try {
-    const { email, curve_type, public_key, enc_share } =
-      registerKeyShareRequest;
+    const { email, curve_type, public_key, share } = registerKeyShareRequest;
 
     const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
@@ -94,7 +93,7 @@ export async function registerKeyShare(
 
     const wallet_id = createWalletRes.data.wallet_id;
 
-    const encryptedShare = encryptData(enc_share, encryptionSecret);
+    const encryptedShare = encryptData(share, encryptionSecret);
     const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
 
     const createKeyShareRes = await createKeyShare(db, {
@@ -214,7 +213,7 @@ export async function getKeyShare(
       success: true,
       data: {
         share_id: getKeyShareRes.data.share_id,
-        enc_share: decryptedShare,
+        share: decryptedShare,
       },
     };
   } catch (error) {

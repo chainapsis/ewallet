@@ -54,7 +54,7 @@ describe("key_share_test", () => {
     it("register key share success", async () => {
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
-      const encShare = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
+      const share = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
 
       const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
       if (publicKeyBytesRes.success === false) {
@@ -70,7 +70,7 @@ describe("key_share_test", () => {
           email: "test@test.com",
           curve_type: "secp256k1",
           public_key: publicKeyBytes,
-          enc_share: encShare,
+          share,
         },
         TEMP_ENC_SECRET,
       );
@@ -115,13 +115,13 @@ describe("key_share_test", () => {
 
       expect(getKeyShareRes.data).toBeDefined();
       expect(getKeyShareRes.data?.share_id).toBeDefined();
-      expect(decryptedShare).toEqual(encShare);
+      expect(decryptedShare).toEqual(share);
     });
 
     it("register key share failure - duplicate public key", async () => {
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
-      const encShare = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
+      const share = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
 
       const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
       if (publicKeyBytesRes.success === false) {
@@ -143,7 +143,7 @@ describe("key_share_test", () => {
           email: "test@test.com",
           curve_type: "secp256k1",
           public_key: publicKeyBytes,
-          enc_share: encShare,
+          share,
         },
         TEMP_ENC_SECRET,
       );
@@ -163,7 +163,7 @@ describe("key_share_test", () => {
       const email = "test@test.com";
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
-      const encShare = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
+      const share = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
 
       const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
       if (publicKeyBytesRes.success === false) {
@@ -179,7 +179,7 @@ describe("key_share_test", () => {
           email,
           curve_type: "secp256k1",
           public_key: publicKeyBytes,
-          enc_share: encShare,
+          share,
         },
         TEMP_ENC_SECRET,
       );
@@ -200,14 +200,14 @@ describe("key_share_test", () => {
 
       expect(getKeyShareRes.data).toBeDefined();
       expect(getKeyShareRes.data?.share_id).toBeDefined();
-      expect(getKeyShareRes.data?.enc_share).toEqual(encShare);
+      expect(getKeyShareRes.data?.share).toEqual(share);
     });
 
     it("get key share failure - user not found", async () => {
       const email = "test@test.com";
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
-      const encShare = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
+      const share = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
 
       const publicKeyBytesRes = Bytes.fromHexString(publicKey, 33);
       if (publicKeyBytesRes.success === false) {
@@ -223,7 +223,7 @@ describe("key_share_test", () => {
           email: "test2@test.com",
           curve_type: "secp256k1",
           public_key: publicKeyBytes,
-          enc_share: encShare,
+          share,
         },
         TEMP_ENC_SECRET,
       );
@@ -249,7 +249,7 @@ describe("key_share_test", () => {
       const email = "test@test.com";
       const publicKey =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC566D";
-      const encShare = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
+      const share = "8c5e2d17ab9034f65d1c3b7a29ef4d88";
       const publicKey2 =
         "028812785B3F855F677594A6FEB76CA3FD39F2CA36AC5A8454A1417C4232AC5600";
 
@@ -279,7 +279,7 @@ describe("key_share_test", () => {
           email,
           curve_type: "secp256k1",
           public_key: publicKeyBytes2,
-          enc_share: encShare,
+          share,
         },
         TEMP_ENC_SECRET,
       );
