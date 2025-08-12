@@ -13,7 +13,7 @@ import type {
   GetKeyShareRequest,
   GetKeyShareResponse,
   RegisterKeyShareRequest,
-} from "@keplr-ewallet/credential-vault-interface";
+} from "@keplr-ewallet/credential-vault-interface/key_share";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";

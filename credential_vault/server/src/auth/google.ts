@@ -1,5 +1,5 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { GoogleTokenInfo } from "@keplr-ewallet/credential-vault-interface";
+import type { GoogleTokenInfo } from "@keplr-ewallet/credential-vault-interface/auth";
 
 // TODO: This may change later
 const GOOGLE_CLIENT_ID =

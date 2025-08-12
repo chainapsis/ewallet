@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   CredentialVaultWallet,
   CreateCredentialVaultWalletRequest,
-} from "@keplr-ewallet/credential-vault-interface";
+} from "@keplr-ewallet/credential-vault-interface/wallet";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { Bytes33 } from "@keplr-ewallet/bytes";
 

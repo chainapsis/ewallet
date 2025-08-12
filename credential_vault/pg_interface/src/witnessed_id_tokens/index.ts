@@ -4,7 +4,7 @@ import type {
   CommitIdTokenRequest,
   IdTokenStatus,
   WitnessedIdToken,
-} from "@keplr-ewallet/credential-vault-interface";
+} from "@keplr-ewallet/credential-vault-interface/witnessed_id_tokens";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function commitIdToken(
