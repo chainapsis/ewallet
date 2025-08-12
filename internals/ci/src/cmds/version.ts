@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import chalk from "chalk";
 
 import { paths } from "../paths";
 import { doBuildPkgs } from "./build_pkgs";
@@ -10,12 +11,13 @@ export async function version(..._args: any[]) {
   console.log("We will re-build the packages here just to make sure");
   doBuildPkgs();
 
-  console.log("Test type definition in sandbox simple host");
+  console.log("Testing type definition in sandbox simple host");
   const testSandboxRet = spawnSync("yarn", ["tsc"], {
     cwd: paths.sandbox_simple_host,
     stdio: "inherit",
   });
   expectSuccess(testSandboxRet, "publish failed");
+  console.log("%s %s", chalk.green.bold("Ok"), "sandbox_simple_host");
 
   console.log("Fetching the Git repository at 'origin' to sync with the local");
   const fetchRet = spawnSync("git", ["fetch", "origin"], {

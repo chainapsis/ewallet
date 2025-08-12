@@ -4,7 +4,7 @@ import { paths } from "../paths";
 import { expectSuccess } from "../expect";
 
 export async function publish(..._args: any[]) {
-  console.log("Start publishing packages...");
+  console.log("Publishing packages...");
 
   console.log(
     `1. Ensure you have "npm login"-ed in the first place. \

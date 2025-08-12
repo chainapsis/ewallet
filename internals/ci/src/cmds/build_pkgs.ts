@@ -9,7 +9,7 @@ export function buildPkgs(..._args: any[]) {
 }
 
 export function doBuildPkgs() {
-  console.log("Start building packages");
+  console.log("Building packages");
 
   // Order matters!
   const pkgsInOrder = [
