@@ -23,7 +23,7 @@ export const useAppState = create(
           try {
             const sdk = await initEthEWallet({
               api_key:
-                "e4f7b8a2915e40f3b81ad6b6f7c20de76d9b3a1b5c6a401ce36d2e9d0f9b2f8c", // TODO: replace with actual apiKey
+                "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c", // TODO: replace with actual apiKey
               sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
             });
 
