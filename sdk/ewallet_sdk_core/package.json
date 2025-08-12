@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc --build --force && tsc-alias && node scripts/add-extensions.js"
+    "build": "yarn clean && tsc --build --force && tsc-alias"
   },
   "publishConfig": {
     "access": "public"
