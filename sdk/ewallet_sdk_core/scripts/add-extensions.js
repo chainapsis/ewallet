@@ -20,6 +20,10 @@ function addExtensions(filePath) {
       if (exportPath.endsWith(".js")) {
         return match;
       }
+      const fullPath = path.join(path.dirname(filePath), exportPath);
+      if (fs.existsSync(fullPath) && fs.statSync(fullPath).isDirectory()) {
+        return `export * from '${exportPath}/index.js'`;
+      }
       return `export * from '${exportPath}.js'`;
     },
   );
