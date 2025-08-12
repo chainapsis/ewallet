@@ -8,7 +8,7 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc && tsc-alias",
+    "build": "yarn clean && rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "main": "./dist/index.js",
@@ -48,14 +48,18 @@
     "buffer": "^6.0.3"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@types/jest": "*",
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
     "del-cli": "*",
     "jest": "*",
+    "rollup": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.0",
     "ts-jest": "*",
-    "tsc-alias": "*",
     "typescript": "*"
   },
   "gitHead": "2ecb7098bf93b0cdb2258931a221e47c2df86ed6"
