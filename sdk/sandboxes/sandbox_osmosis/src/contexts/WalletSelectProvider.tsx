@@ -130,7 +130,8 @@ export const WalletSelectProvider = ({ children }: { children: ReactNode }) => {
     const initEwallet = async () => {
       try {
         const result = await initKeplrEwalletCore({
-          customerId: "afb0afd1-d66d-4531-981c-cbf3fb1507b9", // TODO: replace with actual customerId
+          api_key:
+            "e4f7b8a2915e40f3b81ad6b6f7c20de76d9b3a1b5c6a401ce36d2e9d0f9b2f8c", // TODO: replace with actual apiKey
         });
         if (result.success) {
           setEWallet(result.data);
@@ -138,7 +139,8 @@ export const WalletSelectProvider = ({ children }: { children: ReactNode }) => {
 
           // Initialize Cosmos wallet
           const cosmosWalletInstance = await initCosmosEWallet({
-            eWallet: result.data,
+            api_key:
+              "e4f7b8a2915e40f3b81ad6b6f7c20de76d9b3a1b5c6a401ce36d2e9d0f9b2f8c", // TODO: replace with actual apiKey
           });
           setCosmosWallet(cosmosWalletInstance);
 

@@ -49,7 +49,7 @@ export type EWalletMsgOAuthSignIn = {
   payload: {
     access_token: string;
     id_token: string;
-    customer_id: string;
+    api_key: string;
     target_origin: string;
   };
 };

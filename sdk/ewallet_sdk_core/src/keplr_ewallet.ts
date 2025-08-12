@@ -9,17 +9,17 @@ import { makeSignature } from "./api/make_signature";
 import { initState } from "./api/init_state";
 
 export class KeplrEWallet {
-  customerId: string;
+  apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
   readonly origin: string;
 
   public constructor(
-    customerId: string,
+    apiKey: string,
     iframe: HTMLIFrameElement,
     sdkEndpoint: string,
   ) {
-    this.customerId = customerId;
+    this.apiKey = apiKey;
     this.iframe = iframe;
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
