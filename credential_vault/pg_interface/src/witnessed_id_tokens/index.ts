@@ -4,7 +4,7 @@ import type {
   CommitIdTokenRequest,
   IdTokenStatus,
   WitnessedIdToken,
-} from "@keplr-ewallet/credential-vault-interface";
+} from "@keplr-ewallet/credential-vault-interface/witnessed_id_tokens";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function commitIdToken(
@@ -66,7 +66,7 @@ export async function revealIdToken(
     RETURNING *
     `;
 
-    const result = await db.query(query, [id_token_hash.toBuffer()]);
+    const result = await db.query(query, [id_token_hash.toUint8Array()]);
 
     const row = result.rows[0];
     if (!row) {

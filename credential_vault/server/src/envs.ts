@@ -50,7 +50,7 @@ export function loadEnvs(): EnvType {
   };
 
   const envs = envSchema.parse(rawEnv);
-  console.info("Loaded envs: %j", envs);
+  console.log("Loaded envs: %j", envs);
 
   return envs;
 }

@@ -8,6 +8,11 @@ import {
   type TransactionSerialized,
 } from "viem";
 
+import {
+  BytesInput,
+  TextAreaInput,
+} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
+
 function PersonalSignVerifier() {
   const [personalMessage, setPersonalMessage] = useState<string>("");
   const [personalSignature, setPersonalSignature] = useState("");
@@ -53,10 +58,10 @@ function PersonalSignVerifier() {
       <label className="label">
         <span className="label-text">Original Message</span>
       </label>
-      <textarea
+      <TextAreaInput
+        name="personal-original-message"
         value={personalMessage}
-        onChange={(e) => setPersonalMessage(e.target.value)}
-        className="textarea textarea-bordered w-full text-base-content"
+        onChange={(v) => setPersonalMessage(v)}
         rows={4}
         placeholder="Enter the original message that was signed..."
       />
@@ -68,12 +73,12 @@ function PersonalSignVerifier() {
       <label className="label">
         <span className="label-text">Signature</span>
       </label>
-      <input
-        type="text"
-        value={personalSignature}
-        onChange={(e) => setPersonalSignature(e.target.value)}
-        className="input input-bordered w-full"
+      <BytesInput
+        name="personal-signature"
         placeholder="0x..."
+        value={personalSignature}
+        onChange={(val) => setPersonalSignature(val)}
+        disableConvertToHex
       />
       <p className="text-xs text-base-content/60 -mt-2">
         The signature to verify (0x-prefixed hex string). Example: 0x1234...abcd
@@ -254,10 +259,10 @@ function TypedDataVerifier() {
           <label className="label">
             <span className="label-text">Typed Data JSON</span>
           </label>
-          <textarea
+          <TextAreaInput
+            name="typed-data-json"
             value={typedDataBlob}
-            onChange={(e) => setTypedDataBlob(e.target.value)}
-            className="textarea textarea-bordered w-full text-base-content"
+            onChange={(v) => setTypedDataBlob(v)}
             rows={8}
             placeholder='{"domain": {"name": "Token", "version": "1", "chainId": 1, "verifyingContract": "0x..."}, "types": {"Permit": [...]}, "primaryType": "Permit", "message": { ... }}'
           />
@@ -267,10 +272,10 @@ function TypedDataVerifier() {
           <label className="label">
             <span className="label-text">Domain (JSON)</span>
           </label>
-          <textarea
+          <TextAreaInput
+            name="typed-data-domain"
             value={typedDataDomain}
-            onChange={(e) => setTypedDataDomain(e.target.value)}
-            className="textarea textarea-bordered w-full text-base-content"
+            onChange={(v) => setTypedDataDomain(v)}
             rows={4}
             placeholder='{"name": "Token", "version": "1", "chainId": 1, "verifyingContract": "0x..."}'
           />
@@ -278,10 +283,10 @@ function TypedDataVerifier() {
           <label className="label">
             <span className="label-text">Types (JSON)</span>
           </label>
-          <textarea
+          <TextAreaInput
+            name="typed-data-types"
             value={typedDataTypes}
-            onChange={(e) => setTypedDataTypes(e.target.value)}
-            className="textarea textarea-bordered w-full text-base-content"
+            onChange={(v) => setTypedDataTypes(v)}
             rows={4}
             placeholder='{"Permit": [{"name": "owner", "type": "address"}, ...]}'
           />
@@ -330,10 +335,10 @@ function TypedDataVerifier() {
           <label className="label">
             <span className="label-text">Message (JSON)</span>
           </label>
-          <textarea
+          <TextAreaInput
+            name="typed-data-message"
             value={typedDataMessage}
-            onChange={(e) => setTypedDataMessage(e.target.value)}
-            className="textarea textarea-bordered w-full text-base-content"
+            onChange={(v) => setTypedDataMessage(v)}
             rows={4}
             placeholder='{"owner": "0x...", "spender": "0x...", "value": "1000000000000000000", "nonce": "0", "deadline": "1234567890"}'
           />
@@ -343,12 +348,12 @@ function TypedDataVerifier() {
       <label className="label">
         <span className="label-text">Signature</span>
       </label>
-      <input
-        type="text"
-        value={typedDataSignature}
-        onChange={(e) => setTypedDataSignature(e.target.value)}
-        className="input input-bordered w-full"
+      <BytesInput
+        name="typed-data-signature"
         placeholder="0x..."
+        value={typedDataSignature}
+        onChange={(val) => setTypedDataSignature(val)}
+        disableConvertToHex
       />
 
       <div className="flex gap-2">
@@ -423,12 +428,12 @@ function TransactionVerifier() {
       <label className="label">
         <span className="label-text">Serialized Transaction</span>
       </label>
-      <textarea
-        value={serializedTx}
-        onChange={(e) => setSerializedTx(e.target.value)}
-        className="textarea textarea-bordered w-full text-base-content"
-        rows={4}
+      <BytesInput
+        name="serialized-transaction"
         placeholder="0x02... (Signed RLP-encoded tx)"
+        value={serializedTx}
+        onChange={(val) => setSerializedTx(val)}
+        disableConvertToHex
       />
       <p className="text-xs text-base-content/60 -mt-2">
         Paste a signed serialized transaction (0x-prefixed). Works with legacy &

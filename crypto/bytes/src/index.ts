@@ -4,7 +4,7 @@ const HEX_STRING_REGEX = new RegExp("^[0-9a-fA-F]*$");
 
 // Type definition for a fixed-length byte array
 export class Bytes<N extends number> {
-  private readonly _bytes: Buffer;
+  private readonly _bytes: Uint8Array;
   readonly length: N;
 
   private constructor(bytes: Uint8Array, length: N) {
@@ -13,7 +13,7 @@ export class Bytes<N extends number> {
         `Invalid length. Expected: ${length}, Actual: ${bytes.length}`,
       );
     }
-    this._bytes = Buffer.from(bytes);
+    this._bytes = new Uint8Array(bytes);
     this.length = length;
   }
 
@@ -27,6 +27,13 @@ export class Bytes<N extends number> {
     uint8Array: Uint8Array,
     length: T,
   ): Result<Bytes<T>, string> {
+    if (!(uint8Array instanceof Uint8Array)) {
+      return {
+        success: false,
+        err: "Input must be a Uint8Array.",
+      };
+    }
+
     if (uint8Array.length !== length) {
       return {
         success: false,
@@ -47,9 +54,31 @@ export class Bytes<N extends number> {
    */
   static fromHexString<T extends number>(
     hexString: string,
-    length: T,
+    bytesLength: T,
   ): Result<Bytes<T>, string> {
-    if (!HEX_STRING_REGEX.test(hexString) || hexString.length !== length * 2) {
+    // Enhanced input validation
+    if (typeof hexString !== "string") {
+      return {
+        success: false,
+        err: "Input must be a string.",
+      };
+    }
+
+    if (hexString.length === 0 && bytesLength !== 0) {
+      return {
+        success: false,
+        err: "Empty string for non-zero length.",
+      };
+    }
+
+    if (hexString.length !== bytesLength * 2) {
+      return {
+        success: false,
+        err: `Invalid length. Expected: ${bytesLength * 2} characters, Actual: ${hexString.length}`,
+      };
+    }
+
+    if (!HEX_STRING_REGEX.test(hexString)) {
       return {
         success: false,
         err: "Invalid hexadecimal string format.",
@@ -61,7 +90,7 @@ export class Bytes<N extends number> {
     }
     return {
       success: true,
-      data: new Bytes(uint8Array, length),
+      data: new Bytes(uint8Array, bytesLength),
     };
   }
 
@@ -75,6 +104,13 @@ export class Bytes<N extends number> {
     bytes: Bytes<any>,
     length: T,
   ): Result<Bytes<T>, string> {
+    if (!(bytes instanceof Bytes)) {
+      return {
+        success: false,
+        err: "Input must be a Bytes instance.",
+      };
+    }
+
     if (bytes.length !== length) {
       return {
         success: false,
@@ -89,6 +125,7 @@ export class Bytes<N extends number> {
 
   /**
    * Compares the current Bytes instance with another Bytes instance.
+   * Uses constant-time comparison to prevent timing attacks.
    * @param other The other Bytes instance to compare with
    * @returns True if both instances are identical, false otherwise
    */
@@ -96,12 +133,12 @@ export class Bytes<N extends number> {
     if (this.length !== other.length) {
       return false;
     }
-    for (let i = 0; i < this.length; i++) {
-      if (this._bytes[i] !== other._bytes[i]) {
-        return false;
-      }
+
+    let result = 0;
+    for (let i = 0; i < this.length; i += 1) {
+      result |= this._bytes[i] ^ other._bytes[i];
     }
-    return true;
+    return result === 0;
   }
 
   /**
@@ -113,19 +150,13 @@ export class Bytes<N extends number> {
   }
 
   /**
-   * Converts the Bytes instance to a Buffer.
-   * @returns A Buffer instance
-   */
-  toBuffer(): Buffer {
-    return this._bytes;
-  }
-
-  /**
    * Converts the Bytes instance to a hexadecimal string.
    * @returns Hexadecimal string
    */
   toHex(): string {
-    return this._bytes.toString("hex");
+    return Array.from(this._bytes)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
   }
 }
 
@@ -134,6 +165,6 @@ export type Byte = Bytes<1>;
 export type Bytes16 = Bytes<16>;
 export type Bytes32 = Bytes<32>;
 export type Bytes33 = Bytes<33>; // e.g. compressed public key
-export type Bytes60 = Bytes<60>; // 32bytes ciphertext + 12 bytes iv + 16 bytes tag
+export type Bytes60 = Bytes<60>;
 export type Bytes64 = Bytes<64>;
 export type BytesN = Bytes<number>;

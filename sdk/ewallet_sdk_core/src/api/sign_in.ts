@@ -6,7 +6,7 @@ export async function signIn(this: KeplrEWallet, type: "google") {
     case "google":
       return await tryGoogleSignIn(
         this.sdkEndpoint,
-        this.customerId,
+        this.apiKey,
         this.sendMsgToIframe,
       );
     default:

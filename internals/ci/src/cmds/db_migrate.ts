@@ -5,7 +5,7 @@ import { expectSuccess } from "../expect";
 
 export async function dbMigrate(...args: any[]) {
   console.log(
-    "db_migrate, args: %j, ewallet credential vault pg interface path: %s",
+    "db_migrate, args: %j, cv pg interface path: %s",
     args,
     paths.credential_vault_pg_interface,
   );

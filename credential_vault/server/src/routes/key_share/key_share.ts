@@ -2,11 +2,11 @@ import { Router, type Response } from "express";
 import type {
   CheckKeyShareRequestBody,
   CheckKeyShareResponse,
-  EwalletApiResponse,
   GetKeyShareRequestBody,
   GetKeyShareResponse,
   RegisterKeyShareBody,
-} from "@keplr-ewallet/credential-vault-interface";
+} from "@keplr-ewallet/credential-vault-interface/key_share";
+import type { CVApiResponse } from "@keplr-ewallet/credential-vault-interface/response";
 
 import {
   checkKeyShare,
@@ -94,7 +94,7 @@ export function setKeysharesRoutes(router: Router) {
     bearerTokenMiddleware,
     async (
       req: AuthenticatedRequest<RegisterKeyShareBody>,
-      res: Response<EwalletApiResponse<void>>,
+      res: Response<CVApiResponse<void>>,
     ) => {
       const googleUser = res.locals.google_user;
       const state = req.app.locals as any;
@@ -221,7 +221,7 @@ export function setKeysharesRoutes(router: Router) {
     bearerTokenMiddleware,
     async (
       req: AuthenticatedRequest<GetKeyShareRequestBody>,
-      res: Response<EwalletApiResponse<GetKeyShareResponse>>,
+      res: Response<CVApiResponse<GetKeyShareResponse>>,
     ) => {
       const googleUser = res.locals.google_user;
       const state = req.app.locals as any;
@@ -309,7 +309,7 @@ export function setKeysharesRoutes(router: Router) {
    */
   router.post(
     "/check",
-    async (req, res: Response<EwalletApiResponse<CheckKeyShareResponse>>) => {
+    async (req, res: Response<CVApiResponse<CheckKeyShareResponse>>) => {
       const body = req.body as CheckKeyShareRequestBody;
 
       const publicKeyBytesRes = Bytes.fromHexString(body.public_key, 33);

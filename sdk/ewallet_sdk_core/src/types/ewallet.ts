@@ -1,6 +1,6 @@
 export interface KeplrEwalletInitArgs {
-  customer_id: string;
+  api_key: string;
   sdk_endpoint?: string;
 }
 
-export interface InitMsgHandlerArgs { }
+export interface InitMsgHandlerArgs {}

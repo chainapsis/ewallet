@@ -405,3 +405,4 @@ $RECYCLE.BIN/
 # env files
 .env
 .env.local
+.vercel

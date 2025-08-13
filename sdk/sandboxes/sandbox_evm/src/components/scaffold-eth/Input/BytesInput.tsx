@@ -12,7 +12,10 @@ export const BytesInput = ({
   name,
   placeholder,
   disabled,
-}: CommonInputProps) => {
+  disableConvertToHex,
+}: CommonInputProps & {
+  disableConvertToHex?: boolean;
+}) => {
   const convertStringToBytes = useCallback(() => {
     onChange(
       isHex(value) ? bytesToString(toBytes(value)) : toHex(toBytes(value)),
@@ -27,13 +30,15 @@ export const BytesInput = ({
       onChange={onChange}
       disabled={disabled}
       suffix={
-        <button
-          className="self-center cursor-pointer text-xl font-semibold px-4 text-accent"
-          onClick={convertStringToBytes}
-          type="button"
-        >
-          #
-        </button>
+        !disableConvertToHex ? (
+          <button
+            className="self-center cursor-pointer text-xl font-semibold px-4 text-accent"
+            onClick={convertStringToBytes}
+            type="button"
+          >
+            #
+          </button>
+        ) : null
       }
     />
   );

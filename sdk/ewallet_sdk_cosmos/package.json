@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-cosmos",
-  "version": "0.0.6-rc.31",
+  "version": "0.0.6-rc.47",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "publishConfig": {
@@ -9,23 +9,11 @@
   "scripts": {
     "clean": "del-cli dist",
     "build": "yarn clean && tsc && tsc-alias",
+    "build2": "yarn clean && tsc && rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    },
-    "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.js"
-    }
-  },
-  "files": [
-    "dist"
-  ],
   "keywords": [
     "keplr",
     "ewallet",
@@ -42,8 +30,8 @@
   "dependencies": {
     "@cosmjs/amino": "^0.33.1",
     "@cosmjs/proto-signing": "^0.33.1",
-    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.27",
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.4",
+    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.36",
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.5",
     "@keplr-wallet/proto-types": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
     "@noble/curves": "^1.9.2",
@@ -52,12 +40,17 @@
     "buffer": "^6.0.3"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
     "@types/jest": "*",
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
     "del-cli": "*",
     "jest": "*",
+    "rollup": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.0",
     "ts-jest": "*",
     "tsc-alias": "*",
     "typescript": "*"

@@ -134,7 +134,7 @@ describe("key_share_test", () => {
       await createWallet(pool, {
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         curve_type: "secp256k1",
-        public_key: publicKeyBytes.toBuffer(),
+        public_key: publicKeyBytes.toUint8Array(),
       });
 
       const registerKeyShareRes = await registerKeyShare(
@@ -318,7 +318,7 @@ describe("key_share_test", () => {
       await createWallet(pool, {
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         curve_type: "secp256k1",
-        public_key: publicKeyBytes.toBuffer(),
+        public_key: publicKeyBytes.toUint8Array(),
       });
 
       const getKeyShareRes = await getKeyShare(
@@ -359,7 +359,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: createUserRes.data!.user_id,
         curve_type: "secp256k1",
-        public_key: publicKeyBytes.toBuffer(),
+        public_key: publicKeyBytes.toUint8Array(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);
@@ -407,7 +407,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: createUserRes.data!.user_id,
         curve_type: "secp256k1",
-        public_key: publicKeyBytes.toBuffer(),
+        public_key: publicKeyBytes.toUint8Array(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);
@@ -513,7 +513,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: "550e8400-e29b-41d4-a716-446655440000",
         curve_type: "secp256k1",
-        public_key: publicKeyBytes.toBuffer(),
+        public_key: publicKeyBytes.toUint8Array(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);
@@ -554,7 +554,7 @@ describe("key_share_test", () => {
       const createWalletRes = await createWallet(pool, {
         user_id: createUserRes.data!.user_id,
         curve_type: "secp256k1",
-        public_key: publicKeyBytes.toBuffer(),
+        public_key: publicKeyBytes.toUint8Array(),
       });
       if (createWalletRes.success === false) {
         console.error(createWalletRes.err);

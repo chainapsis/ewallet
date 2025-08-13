@@ -3,35 +3,42 @@ import chalk from "chalk";
 
 import { paths } from "../paths";
 import { expectSuccess } from "../expect";
+import { getPkgName } from "../pkg_name";
 
 export function buildPkgs(..._args: any[]) {
   doBuildPkgs();
 }
 
 export function doBuildPkgs() {
-  console.info("Start building packages");
-
   // Order matters!
   const pkgsInOrder = [
-    [paths.stdlib, "stdlib-js"],
-    [paths.sdk_core, "sdk core"],
-    [paths.sdk_cosmos, "sdk cosmos"],
-    [paths.sdk_eth, "sdk eth"],
-    [paths.crypto_bytes, "crypto/bytes"],
-    [paths.cv_interface, "cv interface"],
+    [paths.stdlib],
+    [paths.sdk_core],
+    [paths.sdk_cosmos],
+    [paths.sdk_eth],
+    [paths.crypto_bytes],
+    [paths.cv_interface],
   ];
 
-  for (const [path, name] of pkgsInOrder) {
-    console.info("Build %s, path: %s", name, path);
+  console.log("Building packages, total (%s)", pkgsInOrder.length);
+
+  for (const [path] of pkgsInOrder) {
+    console.log("Building %s", path);
 
     const coreRet = spawnSync("yarn", ["run", "build"], {
       cwd: path,
       stdio: "inherit",
     });
 
+    const name = getPkgName(path);
+
     expectSuccess(coreRet, `build ${name} failed`);
-    console.info("%s %s", chalk.bold.green("Done"), name);
+    console.log("%s %s", chalk.bold.green("Done"), name);
   }
 
-  console.info("All (%s) done!", pkgsInOrder.length);
+  console.log(
+    "%s All (%s) done!",
+    chalk.bold.green("Success"),
+    pkgsInOrder.length,
+  );
 }

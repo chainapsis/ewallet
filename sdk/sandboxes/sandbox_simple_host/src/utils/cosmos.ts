@@ -10,10 +10,10 @@ import { SignMode } from "@keplr-wallet/proto-types/cosmos/tx/signing/v1beta1/si
 import { SigningStargateClient } from "@cosmjs/stargate";
 import type { Coin } from "@keplr-wallet/proto-types/cosmos/base/v1beta1/coin";
 import type { CosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
-import { SignDocWrapper } from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { makeSignDoc as makeAminoSignDoc } from "@cosmjs/amino";
 
 import { TEST_COSMOS_CHAIN_ID, TEST_COSMOS_CHAIN_RPC } from "@/constants";
+import { SignDocWrapper } from "./sign_doc_wrapper";
 
 export async function makeMockSendTokenProtoSignDoc(
   cosmosEWallet: CosmosEWallet,

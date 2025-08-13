@@ -11,7 +11,7 @@ const GoogleClientId =
 
 export async function tryGoogleSignIn(
   sdkEndpoint: string,
-  customerId: string,
+  apiKey: string,
   sendMsgToIframe: KeplrEWallet["sendMsgToIframe"],
 ) {
   const clientId = GoogleClientId;
@@ -34,7 +34,7 @@ export async function tryGoogleSignIn(
   });
 
   const oauthState: OAuthState = {
-    customerId,
+    apiKey,
     targetOrigin: window.location.origin,
   };
   const oauthStateString = JSON.stringify(oauthState);

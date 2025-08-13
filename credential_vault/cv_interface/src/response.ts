@@ -1,14 +1,14 @@
-export type EwalletApiResponse<T> =
-  | EwalletApiSuccessResponse<T>
-  | EwalletApiErrorResponse;
+export type CVApiResponse<T> = CVApiSuccessResponse<T> | CVApiErrorResponse;
 
-export interface EwalletApiSuccessResponse<T> {
+export interface CVApiSuccessResponse<T> {
   success: true;
   data: T;
 }
 
-export interface EwalletApiErrorResponse {
+export interface CVApiErrorResponse {
   success: false;
-  code: string;
+  code: CVApiErrorCode;
   msg: string;
 }
+
+export type CVApiErrorCode = string;

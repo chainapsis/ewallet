@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   CredentialVaultWallet,
   CreateCredentialVaultWalletRequest,
-} from "@keplr-ewallet/credential-vault-interface";
+} from "@keplr-ewallet/credential-vault-interface/wallet";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { Bytes33 } from "@keplr-ewallet/bytes";
 
@@ -90,7 +90,7 @@ export async function getWalletByPublicKey(
     SELECT * FROM wallets WHERE public_key = $1 LIMIT 1
     `;
 
-    const result = await db.query(query, [publicKey.toBuffer()]);
+    const result = await db.query(query, [publicKey.toUint8Array()]);
 
     let wallet: CredentialVaultWallet | null = null;
     if (result.rows.length > 0) {

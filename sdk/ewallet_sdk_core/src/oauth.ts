@@ -3,6 +3,6 @@ export const RedirectUriSearchParamsKey = {
 };
 
 export type OAuthState = {
-  customerId: string;
+  apiKey: string;
   targetOrigin: string;
 };

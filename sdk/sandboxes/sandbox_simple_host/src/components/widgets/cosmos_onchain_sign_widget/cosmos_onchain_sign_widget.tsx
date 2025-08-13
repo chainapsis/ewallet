@@ -49,7 +49,7 @@ export const CosmosOnchainSignWidget = () => {
 
   const aminoSignMutation = useMutation({
     mutationFn: async () => {
-      console.info("handleClickCosmosSignAnimo()");
+      console.log("handleClickCosmosSignAnimo()");
 
       if (cosmosEWallet === null) {
         throw new Error("CosmosEWallet is not initialized");
@@ -64,7 +64,7 @@ export const CosmosOnchainSignWidget = () => {
         mockSignDoc,
       );
 
-      console.info("SignAmino result:", result);
+      console.log("SignAmino result:", result);
       return result;
     },
     onError: (error) => {

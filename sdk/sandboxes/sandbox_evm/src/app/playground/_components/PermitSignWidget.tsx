@@ -5,6 +5,10 @@ import { Address, Hex } from "viem";
 import { useAccount, useWalletClient, useChainId } from "wagmi";
 
 import { usePermit } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/usePermit";
+import {
+  AddressInput,
+  IntegerInput,
+} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
 
 export function PermitSignWidget() {
   const { address } = useAccount();
@@ -70,8 +74,7 @@ export function PermitSignWidget() {
           approve token spending without requiring a transaction.
         </p>
 
-        {/* Info row for values from hook */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2 mb-2">
           <div className="bg-base-200 rounded p-3">
             <div className="text-xs text-base-content/60">Token Name</div>
             <div className="text-sm font-medium truncate">{name ?? "-"}</div>
@@ -90,56 +93,58 @@ export function PermitSignWidget() {
           </div>
         </div>
 
-        <label className="label mt-2">
-          <span className="label-text">Contract Address</span>
-        </label>
-        <input
-          type="text"
-          value={permitContractAddress}
-          onChange={(e) => setPermitContractAddress(e.target.value as Address)}
-          className="input input-bordered w-full"
-          placeholder="0x..."
-        />
+        <div className="flex flex-col gap-2">
+          <label className="label">
+            <span className="label-text">Contract Address</span>
+          </label>
+          <AddressInput
+            name="permit-contract-address"
+            placeholder="0x... or ENS"
+            value={permitContractAddress}
+            onChange={(val) => setPermitContractAddress(val as Address)}
+          />
+        </div>
 
-        <label className="label">
-          <span className="label-text">Spender Address</span>
-        </label>
-        <input
-          type="text"
-          value={permitSpenderAddress}
-          onChange={(e) => setPermitSpenderAddress(e.target.value as Address)}
-          className="input input-bordered w-full"
-          placeholder="0x..."
-        />
+        <div className="flex flex-col gap-2">
+          <label className="label">
+            <span className="label-text">Spender Address</span>
+          </label>
+          <AddressInput
+            name="permit-spender-address"
+            placeholder="0x... or ENS"
+            value={permitSpenderAddress}
+            onChange={(val) => setPermitSpenderAddress(val as Address)}
+          />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          <div className="flex flex-col gap-2">
             <label className="label">
               <span className="label-text">Value (minimum units)</span>
             </label>
-            <input
-              type="text"
-              value={permitValue}
-              onChange={(e) => setPermitValue(e.target.value)}
-              className="input input-bordered w-full"
+            <IntegerInput
+              name="permit-value"
               placeholder="1000000"
+              value={permitValue}
+              onChange={(val) => setPermitValue(val)}
+              disableMultiplyBy1e18
             />
-            <p className="text-xs text-base-content/60 mt-1">
+            <p className="text-xs text-base-content/60 m-0">
               Amount to approve
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <label className="label">
               <span className="label-text">Deadline (unix seconds)</span>
             </label>
-            <input
-              type="number"
-              value={permitDeadline}
-              onChange={(e) => setPermitDeadline(e.target.value)}
-              className="input input-bordered w-full"
+            <IntegerInput
+              name="permit-deadline"
               placeholder={`${Math.floor(Date.now() / 1000) + 3600}`}
+              value={permitDeadline}
+              onChange={(val) => setPermitDeadline(val)}
+              disableMultiplyBy1e18
             />
-            <p className="text-xs text-base-content/60 mt-1">
+            <p className="text-xs text-base-content/60 m-0">
               Leave empty to sign with 1 hour from now
             </p>
           </div>

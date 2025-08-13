@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "lib": ["dom", "es2017", "esnext.asynciterable"],
+    "target": "ES2020",
+    "lib": ["dom", "ES2020", "ESNext.AsyncIterable"],
     "skipLibCheck": true,
     "sourceMap": true,
     "baseUrl": ".",
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "noImplicitAny": true,
     "strict": true,
@@ -26,11 +26,6 @@
       "@keplr-ewallet-sdk-core/*": ["../ewallet_sdk_core/src/*"]
     }
   },
-  "references": [
-    {
-      "path": "../ewallet_sdk_core"
-    }
-  ],
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

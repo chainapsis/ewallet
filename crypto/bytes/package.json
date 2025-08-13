@@ -2,7 +2,8 @@
   "name": "@keplr-ewallet/bytes",
   "type": "module",
   "main": "./dist/index.js",
-  "version": "0.0.3-alpha.12",
+  "types": "./dist/index.d.ts",
+  "version": "0.0.3-alpha.20",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
@@ -14,10 +15,11 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc"
+    "build": "yarn clean && tsc",
+    "start": "node ./dist/index.js"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.4"
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.5"
   },
   "devDependencies": {
     "@jest/globals": "*",
@@ -27,5 +29,5 @@
     "ts-jest": "*",
     "typescript": "*"
   },
-  "gitHead": "498a4b04505b202583c7537609547ecad30c4df4"
+  "gitHead": "f3f9e74c5a592e5e3003803ba205f1225b91be32"
 }

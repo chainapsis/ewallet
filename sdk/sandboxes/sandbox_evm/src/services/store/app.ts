@@ -22,7 +22,8 @@ export const useAppState = create(
         initKeplrSdkEth: async () => {
           try {
             const sdk = await initEthEWallet({
-              customer_id: "afb0afd1-d66d-4531-981c-cbf3fb1507b9",
+              api_key:
+                "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c", // TODO: replace with actual apiKey
               sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
             });
 
