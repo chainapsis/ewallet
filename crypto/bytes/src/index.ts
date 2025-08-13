@@ -165,6 +165,6 @@ export type Byte = Bytes<1>;
 export type Bytes16 = Bytes<16>;
 export type Bytes32 = Bytes<32>;
 export type Bytes33 = Bytes<33>; // e.g. compressed public key
-export type Bytes60 = Bytes<60>; // 32bytes ciphertext + 12 bytes iv + 16 bytes tag
+export type Bytes60 = Bytes<60>;
 export type Bytes64 = Bytes<64>;
 export type BytesN = Bytes<number>;
