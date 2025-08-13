@@ -8,17 +8,12 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc && rollup -c",
+    "build": "yarn clean && tsc && tsc-alias",
+    "build2": "yarn clean && tsc && rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
   "files": [
     "dist"
   ],

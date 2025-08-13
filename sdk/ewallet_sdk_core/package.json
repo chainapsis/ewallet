@@ -5,19 +5,14 @@
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc --build --force && rollup -c"
+    "build": "yarn clean && tsc --build --force && tsc-alias",
+    "build2": "yarn clean && tsc --build --force && rollup -c"
   },
   "publishConfig": {
     "access": "public"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
   "files": [
     "dist"
   ],
