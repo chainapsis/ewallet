@@ -3368,7 +3368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/bytes@npm:^0.0.3-alpha.17, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
+"@keplr-ewallet/bytes@npm:^0.0.3-alpha.18, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/bytes@workspace:crypto/bytes"
   dependencies:
@@ -3403,7 +3403,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/credential-vault-interface@workspace:credential_vault/cv_interface"
   dependencies:
-    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.17"
+    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.18"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
