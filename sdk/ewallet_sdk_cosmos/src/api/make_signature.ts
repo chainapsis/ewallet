@@ -1,4 +1,4 @@
-import type { EWalletMsgMakeSignature } from "@keplr-ewallet-sdk-core/types";
+import type { EWalletMsgMakeSignature } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
