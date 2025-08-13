@@ -14,8 +14,8 @@ interface AppState {
 }
 
 interface AppActions {
-  initKeplrSdkEth: () => Promise<boolean>;
-  initKeplrSdkCosmos: () => Promise<boolean>;
+  initKeplrSdkEth: () => Promise<EthEWallet | null>;
+  initKeplrSdkCosmos: () => Promise<CosmosEWallet | null>;
 }
 
 export const useAppState = create(
@@ -27,33 +27,36 @@ export const useAppState = create(
       },
       (set) => ({
         initKeplrSdkEth: async () => {
-          const sdk = await initEthEWallet({
+          const initRes = await initEthEWallet({
+            // TODO: replace with actual apiKey
             api_key:
-              "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c", // TODO: replace with actual apiKey
+              "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
             sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
           });
 
-          if (sdk) {
-            set({ keplr_sdk_eth: sdk });
-            return true;
+          if (initRes.success) {
+            set({ keplr_sdk_eth: initRes.data });
+            return initRes.data;
           } else {
             console.error("sdk init fail");
-            return false;
+            return null;
           }
         },
         initKeplrSdkCosmos: async () => {
-          const sdk = await initCosmosEWallet({
+          const initRes = await initCosmosEWallet({
+            // TODO: replace with actual apiKey
             api_key:
-              "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c", // TODO: replace with actual apiKey
+              "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
             sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
           });
 
-          if (sdk) {
-            set({ keplr_sdk_cosmos: sdk });
-            return true;
+          if (initRes.success) {
+            set({ keplr_sdk_cosmos: initRes.data });
+            return initRes.data;
           } else {
             console.error("sdk init fail");
-            return false;
+
+            return null;
           }
         },
       }),
