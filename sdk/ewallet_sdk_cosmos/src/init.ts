@@ -4,7 +4,7 @@ import {
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import { CosmosEWallet } from "./cosmos_ewallet";
+import { CosmosEWallet } from "./cosmos_ewallet.js";
 
 export type CosmosEWalletArgs = KeplrEwalletInitArgs;
 

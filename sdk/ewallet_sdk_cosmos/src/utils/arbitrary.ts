@@ -6,7 +6,7 @@ import { keccak_256 } from "@noble/hashes/sha3";
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { bytesToNumberBE } from "@noble/curves/abstract/utils";
 
-import { getBech32Address, getCosmosAddress, getEthAddress } from "./address";
+import { getBech32Address, getCosmosAddress, getEthAddress } from "./address.js";
 
 export function makeADR36AminoSignDoc(
   signer: string,
