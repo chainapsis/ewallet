@@ -1,11 +1,11 @@
 import { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
 
-import { enable } from "./api/enable.js";
-import { getCosmosChainInfo } from "./api/get_cosmos_chain_info.js";
+import { enable } from "./api/enable";
+import { getCosmosChainInfo } from "./api/get_cosmos_chain_info";
 import { getAccounts } from "./api/get_accounts";
-import { experimentalSuggestChain } from "./api/experimental_suggest_chain.js";
-import { getKey } from "./api/get_key.js";
+import { experimentalSuggestChain } from "./api/experimental_suggest_chain";
+import { getKey } from "./api/get_key";
 import { getOfflineSigner } from "./api/get_offline_signer";
 import { getOfflineSignerOnlyAmino } from "./api/get_offline_signer_only_amino";
 import { getOfflineSignerAuto } from "./api/get_offline_signer_auto";
