@@ -19,7 +19,7 @@
       "default": "./dist/node/index.js"
     }
   },
-  "version": "0.0.3-alpha.14",
+  "version": "0.0.3-alpha.15",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
