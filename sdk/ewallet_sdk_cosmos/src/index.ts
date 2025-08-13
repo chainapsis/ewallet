@@ -1,4 +1,4 @@
-export * from "./init.js";
-export * from "./cosmos_ewallet.js";
+export * from "./init";
+export * from "./cosmos_ewallet";
 
 export type * from "./types.js";

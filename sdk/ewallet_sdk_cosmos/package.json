@@ -55,6 +55,7 @@
     "rollup": "^4.0.0",
     "rollup-plugin-terser": "^7.0.0",
     "ts-jest": "*",
+    "tsc-alias": "*",
     "typescript": "*"
   },
   "gitHead": "2ecb7098bf93b0cdb2258931a221e47c2df86ed6"

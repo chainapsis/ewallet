@@ -3,7 +3,7 @@ import type { ChainInfo } from "@keplr-wallet/types";
 
 import { enable } from "./api/enable.js";
 import { getCosmosChainInfo } from "./api/get_cosmos_chain_info.js";
-import { getAccounts } from "./api/get_accounts.js";
+import { getAccounts } from "./api/get_accounts";
 import { experimentalSuggestChain } from "./api/experimental_suggest_chain.js";
 import { getKey } from "./api/get_key.js";
 import { getOfflineSigner } from "./api/get_offline_signer.js";

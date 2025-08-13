@@ -3520,6 +3520,7 @@ __metadata:
     rollup: "npm:^4.0.0"
     rollup-plugin-terser: "npm:^7.0.0"
     ts-jest: "npm:*"
+    tsc-alias: "npm:*"
     typescript: "npm:*"
   languageName: unknown
   linkType: soft
