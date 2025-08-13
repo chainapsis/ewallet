@@ -18,7 +18,7 @@
     "directory": "credential_vault/cv_interface"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "workspace:*"
+    "@keplr-ewallet/bytes": "0.0.3-alpha.16"
   },
   "devDependencies": {
     "@types/jest": "*",
@@ -31,5 +31,6 @@
     "tsc-alias": "*",
     "tsx": "*",
     "typescript": "*"
-  }
+  },
+  "gitHead": "aae997e8d217758f516241f66381b7f07ffd68e6"
 }
