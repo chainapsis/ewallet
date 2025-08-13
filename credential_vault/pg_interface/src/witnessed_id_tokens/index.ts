@@ -66,7 +66,7 @@ export async function revealIdToken(
     RETURNING *
     `;
 
-    const result = await db.query(query, [id_token_hash.toBuffer()]);
+    const result = await db.query(query, [id_token_hash.toUint8Array()]);
 
     const row = result.rows[0];
     if (!row) {

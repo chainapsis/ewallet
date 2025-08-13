@@ -79,7 +79,7 @@ export async function registerKeyShare(
     const createWalletRes = await createWallet(db, {
       user_id,
       curve_type,
-      public_key: public_key.toBuffer(),
+      public_key: public_key.toUint8Array(),
     });
     if (createWalletRes.success === false) {
       return {

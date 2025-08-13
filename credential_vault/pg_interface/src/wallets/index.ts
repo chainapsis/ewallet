@@ -90,7 +90,7 @@ export async function getWalletByPublicKey(
     SELECT * FROM wallets WHERE public_key = $1 LIMIT 1
     `;
 
-    const result = await db.query(query, [publicKey.toBuffer()]);
+    const result = await db.query(query, [publicKey.toUint8Array()]);
 
     let wallet: CredentialVaultWallet | null = null;
     if (result.rows.length > 0) {

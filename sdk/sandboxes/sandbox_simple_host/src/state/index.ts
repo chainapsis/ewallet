@@ -4,9 +4,7 @@ import {
 } from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { EthEWallet, initEthEWallet } from "@keplr-ewallet/ewallet-sdk-eth";
 import { create } from "zustand";
-import { combine, persist } from "zustand/middleware";
-
-const STORAGE_KEY = "sandbox-simple-host";
+import { combine } from "zustand/middleware";
 
 interface AppState {
   keplr_sdk_eth: EthEWallet | null;
@@ -19,48 +17,45 @@ interface AppActions {
 }
 
 export const useAppState = create(
-  persist(
-    combine<AppState, AppActions>(
-      {
-        keplr_sdk_eth: null,
-        keplr_sdk_cosmos: null,
+  combine<AppState, AppActions>(
+    {
+      keplr_sdk_eth: null,
+      keplr_sdk_cosmos: null,
+    },
+    (set) => ({
+      initKeplrSdkEth: async () => {
+        const initRes = await initEthEWallet({
+          // TODO: replace with actual apiKey
+          api_key:
+            "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
+          sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
+        });
+
+        if (initRes.success) {
+          set({ keplr_sdk_eth: initRes.data });
+          return initRes.data;
+        } else {
+          console.error("sdk init fail");
+          return null;
+        }
       },
-      (set) => ({
-        initKeplrSdkEth: async () => {
-          const initRes = await initEthEWallet({
-            // TODO: replace with actual apiKey
-            api_key:
-              "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-            sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
-          });
+      initKeplrSdkCosmos: async () => {
+        const initRes = await initCosmosEWallet({
+          // TODO: replace with actual apiKey
+          api_key:
+            "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
+          sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
+        });
 
-          if (initRes.success) {
-            set({ keplr_sdk_eth: initRes.data });
-            return initRes.data;
-          } else {
-            console.error("sdk init fail");
-            return null;
-          }
-        },
-        initKeplrSdkCosmos: async () => {
-          const initRes = await initCosmosEWallet({
-            // TODO: replace with actual apiKey
-            api_key:
-              "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-            sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
-          });
+        if (initRes.success) {
+          set({ keplr_sdk_cosmos: initRes.data });
+          return initRes.data;
+        } else {
+          console.error("sdk init fail");
 
-          if (initRes.success) {
-            set({ keplr_sdk_cosmos: initRes.data });
-            return initRes.data;
-          } else {
-            console.error("sdk init fail");
-
-            return null;
-          }
-        },
-      }),
-    ),
-    { name: STORAGE_KEY },
+          return null;
+        }
+      },
+    }),
   ),
 );

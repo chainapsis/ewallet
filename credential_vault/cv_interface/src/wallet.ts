@@ -13,5 +13,5 @@ export interface CredentialVaultWallet {
 export type CreateCredentialVaultWalletRequest = {
   user_id: string;
   curve_type: CurveType;
-  public_key: Buffer;
+  public_key: Uint8Array;
 };
