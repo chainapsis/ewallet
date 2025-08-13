@@ -1,7 +1,24 @@
 {
   "name": "@keplr-ewallet/bytes",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/node/index.js",
+  "browser": "./dist/browser/index.js",
+  "types": "./dist/node/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/node/index.d.ts",
+      "node": {
+        "import": "./dist/node/index.js",
+        "types": "./dist/node/index.d.ts"
+      },
+      "browser": {
+        "import": "./dist/browser/index.js",
+        "types": "./dist/browser/index.d.ts"
+      },
+      "import": "./dist/node/index.js",
+      "default": "./dist/node/index.js"
+    }
+  },
   "version": "0.0.3-alpha.13",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
@@ -14,7 +31,9 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc"
+    "build": "yarn clean && yarn build:node && yarn build:browser",
+    "build:node": "tsc -p tsconfig.node.json",
+    "build:browser": "tsc -p tsconfig.browser.json && cp src/index.browser.d.ts dist/browser/index.d.ts"
   },
   "dependencies": {
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.5"

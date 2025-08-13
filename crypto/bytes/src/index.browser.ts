@@ -1,11 +1,10 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import crypto from "crypto";
 
 const HEX_STRING_REGEX = new RegExp("^[0-9a-fA-F]*$");
 
 // Type definition for a fixed-length byte array
 export class Bytes<N extends number> {
-  private readonly _bytes: Buffer;
+  private readonly _bytes: Uint8Array;
   readonly length: N;
 
   private constructor(bytes: Uint8Array, length: N) {
@@ -14,7 +13,7 @@ export class Bytes<N extends number> {
         `Invalid length. Expected: ${length}, Actual: ${bytes.length}`,
       );
     }
-    this._bytes = Buffer.from(bytes);
+    this._bytes = new Uint8Array(bytes);
     this.length = length;
   }
 
@@ -55,7 +54,7 @@ export class Bytes<N extends number> {
    */
   static fromHexString<T extends number>(
     hexString: string,
-    bytesLength: T,
+    length: T,
   ): Result<Bytes<T>, string> {
     // Enhanced input validation
     if (typeof hexString !== "string") {
@@ -65,17 +64,17 @@ export class Bytes<N extends number> {
       };
     }
 
-    if (hexString.length === 0 && bytesLength !== 0) {
+    if (hexString.length === 0 && length !== 0) {
       return {
         success: false,
         err: "Empty string for non-zero length.",
       };
     }
 
-    if (hexString.length !== bytesLength * 2) {
+    if (hexString.length !== length * 2) {
       return {
         success: false,
-        err: `Invalid length. Expected: ${bytesLength * 2} characters, Actual: ${hexString.length}`,
+        err: `Invalid length. Expected: ${length * 2} characters, Actual: ${hexString.length}`,
       };
     }
 
@@ -85,13 +84,14 @@ export class Bytes<N extends number> {
         err: "Invalid hexadecimal string format.",
       };
     }
+
     const uint8Array = new Uint8Array(hexString.length / 2);
     for (let i = 0; i < hexString.length; i += 2) {
       uint8Array[i / 2] = parseInt(hexString.substring(i, i + 2), 16);
     }
     return {
       success: true,
-      data: new Bytes(uint8Array, bytesLength),
+      data: new Bytes(uint8Array, length),
     };
   }
 
@@ -135,7 +135,11 @@ export class Bytes<N extends number> {
       return false;
     }
 
-    return crypto.timingSafeEqual(this._bytes, other._bytes);
+    let result = 0;
+    for (let i = 0; i < this.length; i += 1) {
+      result |= this._bytes[i] ^ other._bytes[i];
+    }
+    return result === 0;
   }
 
   /**
@@ -147,19 +151,13 @@ export class Bytes<N extends number> {
   }
 
   /**
-   * Converts the Bytes instance to a Buffer.
-   * @returns A Buffer instance
-   */
-  toBuffer(): Buffer {
-    return Buffer.from(this._bytes);
-  }
-
-  /**
    * Converts the Bytes instance to a hexadecimal string.
    * @returns Hexadecimal string
    */
   toHex(): string {
-    return this._bytes.toString("hex");
+    return Array.from(this._bytes)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
   }
 }
 
