@@ -12,6 +12,7 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
     try {
       if (cosmosEWallet) {
         setIsSigningIn(true);
+
         const eWallet = cosmosEWallet.eWallet;
         await eWallet.signIn("google");
       }
