@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Widget } from "../widget_components";
 import styles from "./login_widget.module.scss";
-import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
+import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
 
 export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   const { cosmosEWallet } = useKeplrEwallet();

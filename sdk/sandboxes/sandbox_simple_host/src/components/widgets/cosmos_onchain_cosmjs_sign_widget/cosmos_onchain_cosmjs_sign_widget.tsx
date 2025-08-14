@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { GasPrice, SigningStargateClient } from "@cosmjs/stargate";
 import { makeMockSendTokenAminoSignDoc } from "@/utils/cosmos";
 import styles from "./cosmos_onchain_cosmjs_sign_widget.module.scss";
-import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
+import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
 // import { useAuthState } from "@/state/auth";
 import { TEST_COSMOS_CHAIN_ID, TEST_COSMOS_CHAIN_RPC } from "@/constants";
 
