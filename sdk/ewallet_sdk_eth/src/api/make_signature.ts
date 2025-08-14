@@ -9,8 +9,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import type {
   EthSignMethod,
-  SignFunctionParams,
-  SignFunctionResult,
+  EthSignMethodMap,
+  EthSignParams,
+  EthSignResult,
+  EthSignFunction,
 } from "@keplr-ewallet-sdk-eth/types";
 import {
   hashEthereumMessage,
@@ -27,17 +29,20 @@ import {
 } from "@keplr-ewallet-sdk-eth/chains";
 import { standardError } from "@keplr-ewallet-sdk-eth/errors";
 
-const signTypeConfig: Record<
-  EthSignMethod,
-  {
-    sign_type: "tx" | "arbitrary" | "eip712";
+type MakeSignatureSignType = "tx" | "arbitrary" | "eip712";
+
+type SignTypeConfigMap = {
+  [M in EthSignMethod]: {
+    sign_type: MakeSignatureSignType;
     hashFunction: (data: MakeEthereumSigData) => Uint8Array;
     processResult: (
       signature: Signature,
       data?: MakeEthereumSigData,
-    ) => SignFunctionResult<EthSignMethod>;
-  }
-> = {
+    ) => EthSignMethodMap[M]["result"];
+  };
+};
+
+const signTypeConfig: SignTypeConfigMap = {
   sign_transaction: {
     sign_type: "tx",
     hashFunction: (data: MakeEthereumSigData) => {
@@ -157,9 +162,9 @@ const signTypeConfig: Record<
 
 async function handleSigningFlow<M extends EthSignMethod>(
   ethEWallet: EthEWallet,
-  config: (typeof signTypeConfig)[M],
+  config: SignTypeConfigMap[M],
   data: MakeEthereumSigData,
-): Promise<SignFunctionResult<M>> {
+): Promise<EthSignMethodMap[M]["result"]> {
   const showModalMsg: EWalletMsgShowModal = {
     target: "keplr_ewallet_attached",
     msg_type: "show_modal",
@@ -237,10 +242,10 @@ async function handleSigningFlow<M extends EthSignMethod>(
   }
 }
 
-export async function makeSignature<M extends EthSignMethod>(
+async function _makeSignature<P extends EthSignParams>(
   this: EthEWallet,
-  parameters: SignFunctionParams<M>,
-): Promise<SignFunctionResult<M>> {
+  parameters: P,
+): Promise<EthSignResult<P>> {
   const origin = this.eWallet.origin;
 
   const provider = await this.getEthereumProvider();
@@ -283,7 +288,7 @@ export async function makeSignature<M extends EthSignMethod>(
         },
       };
 
-      return handleSigningFlow(
+      return await handleSigningFlow<"sign_transaction">(
         this,
         signTypeConfig.sign_transaction,
         makeSignatureData,
@@ -305,7 +310,7 @@ export async function makeSignature<M extends EthSignMethod>(
         },
       };
 
-      return handleSigningFlow(
+      return await handleSigningFlow<"personal_sign">(
         this,
         signTypeConfig.personal_sign,
         makeSignatureData,
@@ -328,7 +333,7 @@ export async function makeSignature<M extends EthSignMethod>(
         },
       };
 
-      return handleSigningFlow(
+      return await handleSigningFlow<"sign_typedData_v4">(
         this,
         signTypeConfig.sign_typedData_v4,
         makeSignatureData,
@@ -342,3 +347,5 @@ export async function makeSignature<M extends EthSignMethod>(
     }
   }
 }
+
+export const makeSignature: EthSignFunction = _makeSignature;

@@ -351,14 +351,13 @@ export class EWalletEIP1193Provider
 
         const signableTx = toSignableTransaction(tx);
 
-        const { signedTransaction } =
-          await this.signer.sign<"sign_transaction">({
-            type: "sign_transaction",
-            data: {
-              address: await this.signer.getAddress(),
-              transaction: signableTx,
-            },
-          });
+        const { signedTransaction } = await this.signer.sign({
+          type: "sign_transaction",
+          data: {
+            address: await this.signer.getAddress(),
+            transaction: signableTx,
+          },
+        });
 
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
 
@@ -387,7 +386,7 @@ export class EWalletEIP1193Provider
             ? parseTypedData<TypedDataDefinition>(rawTypedData)
             : rawTypedData;
 
-        const { signature } = await this.signer.sign<"sign_typedData_v4">({
+        const { signature } = await this.signer.sign({
           type: "sign_typedData_v4",
           data: {
             address: signerAddress,
@@ -422,7 +421,7 @@ export class EWalletEIP1193Provider
           ? hexToString(message)
           : message;
 
-        const { signature } = await this.signer.sign<"personal_sign">({
+        const { signature } = await this.signer.sign({
           type: "personal_sign",
           data: {
             address: signerAddress,
