@@ -463,10 +463,10 @@ type EthSyncing = {
   Res: NetworkSync | false;
 };
 
-type EthPersonalSign = {
+type PersonalSign = {
   Req: {
-    method: "eth_personalSign";
-    params: [address: Address, data: Hex];
+    method: "personal_sign";
+    params: [challenge: Hex, address: Address];
   };
   Res: Hex;
 };
@@ -533,7 +533,7 @@ export interface WalletRpcMethodMap {
   eth_sendTransaction: EthSendTransaction;
   eth_signTransaction: EthSignTransaction;
   eth_signTypedData_v4: EthSignTypedDataV4;
-  personal_sign: EthPersonalSign;
+  personal_sign: PersonalSign;
   wallet_addEthereumChain: WalletAddEthereumChain;
   wallet_switchEthereumChain: WalletSwitchEthereumChain;
 }

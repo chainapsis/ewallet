@@ -418,7 +418,6 @@ export class EWalletEIP1193Provider
         }
 
         // Decode hex-encoded UTF-8 string back to original message
-        // CHECK: is this enough?
         const originalMessage = message.startsWith("0x")
           ? hexToString(message)
           : message;
