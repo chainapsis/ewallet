@@ -14,10 +14,8 @@ import { hardhat } from "../hardhat";
 import { VERSION } from "@keplr-ewallet-sdk-eth/provider";
 import type {
   EthSigner,
-  EthSignMethod,
-  SignFunction,
-  SignFunctionParams,
-  SignFunctionResult,
+  EthSignParams,
+  EthSignResult,
 } from "@keplr-ewallet-sdk-eth/types";
 import {
   parseTypedDataDefinition,
@@ -77,9 +75,9 @@ export const createChainParam = (
 export const createDummySigner = (): EthSigner => {
   return {
     getAddress: () => Promise.resolve(DUMMY_ADDRESS),
-    sign: async function <M extends EthSignMethod>(
-      parameters: SignFunctionParams<M>,
-    ): Promise<SignFunctionResult<M>> {
+    sign: async function <P extends EthSignParams>(
+      parameters: P,
+    ): Promise<EthSignResult<P>> {
       switch (parameters.type) {
         case "sign_transaction": {
           return {
@@ -105,7 +103,7 @@ export const createDummySigner = (): EthSigner => {
         default:
           throw new Error(`Unknown sign type: ${(parameters as any).type}`);
       }
-    } as SignFunction,
+    },
   };
 };
 
@@ -122,9 +120,9 @@ export const createEthSigner = (
   const account = privateKeyToAccount(privateKey);
   return {
     getAddress: () => Promise.resolve(account.address),
-    sign: async function <M extends EthSignMethod>(
-      parameters: SignFunctionParams<M>,
-    ): Promise<SignFunctionResult<M>> {
+    sign: async function <P extends EthSignParams>(
+      parameters: P,
+    ): Promise<EthSignResult<P>> {
       switch (parameters.type) {
         case "sign_transaction": {
           const { transaction } = parameters.data;
@@ -166,7 +164,7 @@ export const createEthSigner = (
         default:
           throw new Error(`Unknown sign type: ${(parameters as any).type}`);
       }
-    } as SignFunction,
+    },
     signHash: async ({ hash }: { hash: Hex }): Promise<Hex> => {
       return await account.sign({ hash });
     },

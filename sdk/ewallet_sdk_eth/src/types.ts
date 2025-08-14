@@ -41,27 +41,28 @@ export interface EthSignMethodMap {
 }
 
 export type EthSignMethod = keyof EthSignMethodMap;
-
-export type SignFunctionParams<M extends EthSignMethod> =
-  EthSignMethodMap[M]["params"];
-export type SignFunctionResult<M extends EthSignMethod> =
-  EthSignMethodMap[M]["result"];
+export type EthSignParams = EthSignMethodMap[EthSignMethod]["params"];
+export type EthSignResult<P extends EthSignParams> =
+  EthSignMethodMap[P["type"]]["result"];
 
 /**
  * Sign function
  * @param parameters - Sign function parameters
  * @returns Sign function result
  */
-export type SignFunction = <M extends EthSignMethod>(
-  parameters: SignFunctionParams<M>,
-) => Promise<SignFunctionResult<M>>;
+export type EthSignFunction = <P extends EthSignParams>(
+  parameters: P,
+) => Promise<EthSignResult<P>>;
 
 /**
  * Signer interface for Ethereum
  */
 export interface EthSigner {
   getAddress: () => Promise<Address>;
-  sign: SignFunction;
+  sign: EthSignFunction;
+  // TODO: detect account change using event emitter from core
+  // on: (event: string, listener: (...args: any[]) => void) => void;
+  // off: (event: string, listener: (...args: any[]) => void) => void;
 }
 
 /**
