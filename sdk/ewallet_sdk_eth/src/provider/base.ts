@@ -322,7 +322,13 @@ export class EWalletEIP1193Provider
       // though we just return the signer address here as there's only one account
       case "eth_requestAccounts":
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
-        return [this.signer.address];
+
+        try {
+          return [await this.signer.getAddress()];
+        } catch (error) {
+          // ignore error as it's expected when signer is not authenticated
+          return [];
+        }
       case "eth_sendTransaction":
         const [tx] =
           args.params as RpcRequestArgs<"eth_sendTransaction">["params"];
@@ -349,7 +355,7 @@ export class EWalletEIP1193Provider
           await this.signer.sign<"sign_transaction">({
             type: "sign_transaction",
             data: {
-              address: this.signer.address,
+              address: await this.signer.getAddress(),
               transaction: signableTx,
             },
           });
@@ -361,14 +367,15 @@ export class EWalletEIP1193Provider
       case "eth_signTypedData_v4": {
         const [signWith, rawTypedData] =
           args.params as RpcRequestArgs<"eth_signTypedData_v4">["params"];
+        const signerAddress = await this.signer.getAddress();
 
-        if (!isAddressEqual(signWith, this.signer.address)) {
+        if (!isAddressEqual(signWith, signerAddress)) {
           throw new RpcError(
             standardError.rpc.invalidInput({
               message: "Signer address mismatch",
               data: {
                 signWith,
-                signerAddress: this.signer.address,
+                signerAddress,
               },
             }),
           );
@@ -383,7 +390,7 @@ export class EWalletEIP1193Provider
         const { signature } = await this.signer.sign<"sign_typedData_v4">({
           type: "sign_typedData_v4",
           data: {
-            address: this.signer.address,
+            address: signerAddress,
             serializedTypedData: serializeTypedData(typedData),
           },
         });
@@ -396,13 +403,15 @@ export class EWalletEIP1193Provider
         const [message, signWith] =
           args.params as RpcRequestArgs<"personal_sign">["params"];
 
-        if (!isAddressEqual(signWith, this.signer.address)) {
+        const signerAddress = await this.signer.getAddress();
+
+        if (!isAddressEqual(signWith, signerAddress)) {
           throw new RpcError(
             standardError.rpc.invalidInput({
               message: "Signer address mismatch",
               data: {
                 signWith,
-                signerAddress: this.signer.address,
+                signerAddress,
               },
             }),
           );
@@ -417,7 +426,7 @@ export class EWalletEIP1193Provider
         const { signature } = await this.signer.sign<"personal_sign">({
           type: "personal_sign",
           data: {
-            address: this.signer.address,
+            address: signerAddress,
             message: originalMessage,
           },
         });
@@ -578,13 +587,24 @@ export class EWalletEIP1193Provider
     const { signer } = options;
 
     // Set up signer
-    if (signer) {
-      if (!isAddress(signer.address)) {
-        throw new Error("Invalid signer address");
-      }
+    // signer may not have address at this point as it's not authenticated yet
+    let signerAddresses: Address[] = [];
 
-      if (typeof signer.sign !== "function") {
-        throw new Error("Invalid signer");
+    if (signer) {
+      try {
+        const signerAddress = await signer.getAddress();
+        if (!isAddress(signerAddress)) {
+          throw new Error("Invalid signer address");
+        }
+
+        if (typeof signer.sign !== "function") {
+          throw new Error("Invalid signer");
+        }
+
+        signerAddresses = [signerAddress];
+      } catch (error) {
+        // wait for signer to be authenticated
+        signerAddresses = [];
       }
 
       this.signer = signer;
@@ -603,8 +623,8 @@ export class EWalletEIP1193Provider
 
       this._handleChainChanged(this.activeChain.chainId);
       this._handleConnected(true, { chainId: this.activeChain.chainId });
-      if (this.signer && isAddress(this.signer.address)) {
-        this._handleAccountsChanged(this.signer.address);
+      if (signerAddresses.length > 0) {
+        this._handleAccountsChanged(signerAddresses);
       }
       return;
     }
@@ -632,8 +652,8 @@ export class EWalletEIP1193Provider
 
       this._handleChainChanged(this.activeChain.chainId);
       this._handleConnected(true, { chainId: this.activeChain.chainId });
-      if (this.signer && isAddress(this.signer.address)) {
-        this._handleAccountsChanged(this.signer.address);
+      if (signerAddresses.length > 0) {
+        this._handleAccountsChanged(signerAddresses);
       }
     } else {
       throw new Error("No valid chains found during provider initialization");
@@ -802,10 +822,10 @@ export class EWalletEIP1193Provider
 
   /**
    * Handle accounts changed event
-   * @param newSelectedAddress - The new selected address
+   * @param newAddress - The new addresses
    */
-  protected _handleAccountsChanged(newSelectedAddress: Address): void {
-    this.emit("accountsChanged", [newSelectedAddress]);
+  protected _handleAccountsChanged(newAddress: Address[]): void {
+    this.emit("accountsChanged", newAddress);
   }
 }
 

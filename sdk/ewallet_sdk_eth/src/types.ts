@@ -60,7 +60,7 @@ export type SignFunction = <M extends EthSignMethod>(
  * Signer interface for Ethereum
  */
 export interface EthSigner {
-  address: Hex;
+  getAddress: () => Promise<Address>;
   sign: SignFunction;
 }
 
