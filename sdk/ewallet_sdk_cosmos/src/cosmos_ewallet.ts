@@ -1,5 +1,6 @@
 import { type KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
+import { EventEmitter2 } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { enable } from "./api/enable";
 import { getCosmosChainInfo } from "./api/get_cosmos_chain_info";
@@ -23,6 +24,7 @@ export class CosmosEWallet {
   public eWallet: KeplrEWallet;
   protected _cosmosChainInfo: ChainInfo[] | null = null;
   protected _cacheTime: number = 0;
+  eventEmitter = EventEmitter2;
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
@@ -43,6 +45,8 @@ export class CosmosEWallet {
   signDirect = signDirect.bind(this);
   signArbitrary = signArbitrary.bind(this);
   verifyArbitrary = verifyArbitrary.bind(this);
+  on = on.bind(this);
+
   protected showModal = showModal.bind(this);
   protected makeSignature = makeSignature.bind(this);
 }
