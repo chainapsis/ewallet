@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, type FC } from "react";
+// import { useEffect, type FC } from "react";
 
-import { useAuthState } from "@/state/auth";
-import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
-import { TEST_COSMOS_CHAIN_ID } from "@/constants";
+// import { useAuthState } from "@/state/auth";
+// import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
+// import { TEST_COSMOS_CHAIN_ID } from "@/constants";
 
 // export const InitAuth: FC = () => {
 //   const authState = useAuthState.getState();

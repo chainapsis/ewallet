@@ -13,18 +13,6 @@ import { EthereumOnchainSignWidget } from "@/components/widgets/ethereum_onchain
 import { CosmosOnchainCosmJsSignWidget } from "@/components/widgets/cosmos_onchain_cosmjs_sign_widget/cosmos_onchain_cosmjs_sign_widget";
 
 export const PreviewPanel = () => {
-  // const [queryClient] = useState(
-  //   () =>
-  //     new QueryClient({
-  //       defaultOptions: {
-  //         queries: {
-  //           retry: 1,
-  //           refetchOnWindowFocus: false,
-  //         },
-  //       },
-  //     }),
-  // );
-
   return (
     <div className={styles.wrapper}>
       <div className={cn(styles.inner, "common-list-scroll")}>

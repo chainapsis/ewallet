@@ -7,7 +7,7 @@ import { GasPrice, SigningStargateClient } from "@cosmjs/stargate";
 import { makeMockSendTokenAminoSignDoc } from "@/utils/cosmos";
 import styles from "./cosmos_onchain_cosmjs_sign_widget.module.scss";
 import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
-import { useAuthState } from "@/state/auth";
+// import { useAuthState } from "@/state/auth";
 import { TEST_COSMOS_CHAIN_ID, TEST_COSMOS_CHAIN_RPC } from "@/constants";
 
 interface AccountInfo {
@@ -17,10 +17,12 @@ interface AccountInfo {
 
 const useGetCosmosAccountInfo = () => {
   const { cosmosEWallet } = useKeplrEwallet();
-  const publicKey = useAuthState((state) => state.publicKey);
+  // const publicKey = useAuthState((state) => state.publicKey);
   const signer = cosmosEWallet?.getOfflineSigner(TEST_COSMOS_CHAIN_ID);
   const aminoSigner =
     cosmosEWallet?.getOfflineSignerOnlyAmino(TEST_COSMOS_CHAIN_ID);
+
+  const publicKey = "";
 
   const {
     data: accountInfo,

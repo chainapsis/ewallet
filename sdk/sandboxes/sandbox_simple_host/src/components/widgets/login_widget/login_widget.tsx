@@ -3,23 +3,17 @@ import React, { useState } from "react";
 import { Widget } from "../widget_components";
 import styles from "./login_widget.module.scss";
 import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
-import { useAuthState } from "@/state/auth";
 
 export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   const { cosmosEWallet } = useKeplrEwallet();
-  const eWallet = cosmosEWallet?.eWallet;
-  const auth = useAuthState();
   const [isSigningIn, setIsSigningIn] = useState(false);
 
   const handleSignIn = async () => {
     try {
-      setIsSigningIn(true);
-      await eWallet?.signIn("google");
-      const email = await eWallet?.getEmail();
-      const publicKey = await eWallet?.getPublicKey();
-      if (email && publicKey) {
-        auth.setEmail(email);
-        auth.setPublicKey(publicKey);
+      if (cosmosEWallet) {
+        setIsSigningIn(true);
+        const eWallet = cosmosEWallet.eWallet;
+        await eWallet.signIn("google");
       }
     } catch (error) {
       console.error(error);
@@ -29,9 +23,8 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   };
 
   const handleSignOut = async () => {
-    if (eWallet) {
-      await eWallet.signOut();
-      auth.reset();
+    if (cosmosEWallet) {
+      await cosmosEWallet.eWallet.signOut();
     }
   };
 
@@ -46,24 +39,24 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
     );
   }
 
-  if (auth.email && auth.publicKey) {
-    return (
-      <Widget>
-        <div className={styles.loginInfoContainer}>
-          <div className={styles.loginInfoRow}>
-            <p>{auth.email}</p>
-            <button className={styles.signOutButton} onClick={handleSignOut}>
-              <p>Sign out</p>
-            </button>
-          </div>
-          <div className={styles.publicKeyRow}>
-            <p>Public Key</p>
-            <p>{auth.publicKey}</p>
-          </div>
-        </div>
-      </Widget>
-    );
-  }
+  // if (auth.email && auth.publicKey) {
+  // return (
+  //   <Widget>
+  //     <div className={styles.loginInfoContainer}>
+  //       <div className={styles.loginInfoRow}>
+  //         {/* <p>{auth.email}</p> */}
+  //         <button className={styles.signOutButton} onClick={handleSignOut}>
+  //           <p>Sign out</p>
+  //         </button>
+  //       </div>
+  //       <div className={styles.publicKeyRow}>
+  //         <p>Public Key</p>
+  //         {/* <p>{auth.publicKey}</p> */}
+  //       </div>
+  //     </div>
+  //   </Widget>
+  // );
+  // }
 
   return (
     <Widget>
@@ -80,4 +73,4 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   );
 };
 
-export interface LoginWidgetProps {}
+export interface LoginWidgetProps { }
