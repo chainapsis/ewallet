@@ -136,7 +136,7 @@ const keplrEWalletConnector = (
       isAuthorized: async () => {
         console.log("keplr-ewallet: isAuthorized");
         const accounts = await wallet.getAccounts();
-        return !!accounts && accounts.length > 0;
+        return accounts.length > 0;
       },
       switchChain: async ({ chainId }: { chainId: number }) => {
         console.log("keplr-ewallet: switchChain", chainId);
