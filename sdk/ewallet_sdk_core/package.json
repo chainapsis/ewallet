@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc && rollup -c"
+    "build": "yarn clean && tsc --build --force && rollup -c"
   },
   "publishConfig": {
     "access": "public"
