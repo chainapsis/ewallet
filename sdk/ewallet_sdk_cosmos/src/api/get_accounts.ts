@@ -1,6 +1,6 @@
 import type { AccountData } from "@cosmjs/amino";
 
-import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import {
   isEthereumCompatible,
   getEthAddress,

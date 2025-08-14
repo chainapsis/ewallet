@@ -1,6 +1,6 @@
 import type { EWalletMsgMakeSignature } from "@keplr-ewallet/ewallet-sdk-core";
 
-import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
 export async function makeSignature(
   this: CosmosEWallet,

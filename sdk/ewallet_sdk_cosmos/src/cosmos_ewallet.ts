@@ -28,10 +28,10 @@ export class CosmosEWallet {
     this.eWallet = eWallet;
   }
 
-  enable = enable.bind(this);
+  enable = enable;
   getPublicKey = getPublicKey.bind(this);
   getCosmosChainInfo = getCosmosChainInfo.bind(this);
-  experimentalSuggestChain = experimentalSuggestChain.bind(this);
+  experimentalSuggestChain = experimentalSuggestChain;
   getAccounts = getAccounts.bind(this);
   getOfflineSigner = getOfflineSigner.bind(this);
   getOfflineSignerOnlyAmino = getOfflineSignerOnlyAmino.bind(this);
