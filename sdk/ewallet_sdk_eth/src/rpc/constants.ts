@@ -1,9 +1,4 @@
-import type {
-  PublicRpcMethod,
-  UnsupportedPublicRpcMethod,
-  UnsupportedWalletRpcMethod,
-  WalletRpcMethod,
-} from "./types";
+import type { PublicRpcMethod, WalletRpcMethod } from "./types";
 
 export const PUBLIC_RPC_METHODS: ReadonlySet<PublicRpcMethod> = new Set([
   "web3_clientVersion",
@@ -56,37 +51,35 @@ export const WALLET_RPC_METHODS: ReadonlySet<WalletRpcMethod> = new Set([
   "wallet_switchEthereumChain",
 ]);
 
-export const UNSUPPORTED_PUBLIC_RPC_METHODS: ReadonlySet<UnsupportedPublicRpcMethod> =
-  new Set([
-    "eth_subscribe",
-    "eth_unsubscribe",
-    "eth_simulateV1",
-    "eth_createAccessList",
-  ]);
-
-// EIP-7846, EIP-5792, EIP-7715, EIP-2255
-export const UNSUPPORTED_WALLET_RPC_METHODS: ReadonlySet<UnsupportedWalletRpcMethod> =
-  new Set([
-    // https://docs.metamask.io/wallet/concepts/signing-methods/#eth_sign
-    "eth_sign",
-    "wallet_sendTransaction",
-    "eth_signTypedData_v3",
-    "wallet_getCallsStatus",
-    "wallet_getCapabilities",
-    "wallet_getPermissions",
-    "wallet_grantPermissions",
-    "wallet_requestPermissions",
-    "wallet_revokePermissions",
-    "wallet_sendCalls",
-    "wallet_showCallsStatus",
-    "wallet_addSubAccount",
-    "wallet_connect",
-    "wallet_disconnect",
-    "wallet_watchAsset",
-  ]);
-
-export const UNSUPPORTED_RPC_METHODS: ReadonlySet<UnsupportedWalletRpcMethod> =
-  new Set([
-    ...UNSUPPORTED_PUBLIC_RPC_METHODS,
-    ...UNSUPPORTED_WALLET_RPC_METHODS,
-  ]);
+/**
+ * These methods are not supported by the provider (for future reference)
+ *
+ * ```ts
+ * export const UNSUPPORTED_PUBLIC_RPC_METHODS = new Set([
+ *   "eth_subscribe",
+ *   "eth_unsubscribe",
+ *   "eth_simulateV1",
+ * ]);
+ * ```
+ *
+ * EIP-7846, EIP-5792, EIP-7715, EIP-2255
+ * ```ts
+ * export const UNSUPPORTED_WALLET_RPC_METHODS = new Set([
+ *   "eth_sign",
+ *   "wallet_sendTransaction",
+ *   "eth_signTypedData_v3",
+ *   "wallet_getCallsStatus",
+ *   "wallet_getCapabilities",
+ *   "wallet_getPermissions",
+ *   "wallet_grantPermissions",
+ *   "wallet_requestPermissions",
+ *   "wallet_revokePermissions",
+ *   "wallet_sendCalls",
+ *   "wallet_showCallsStatus",
+ *   "wallet_addSubAccount",
+ *   "wallet_connect",
+ *   "wallet_disconnect",
+ *   "wallet_watchAsset",
+ * ]);
+ * ```
+ */

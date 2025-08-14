@@ -22,7 +22,6 @@ import type {
 import {
   RpcResponse,
   RpcError,
-  UNSUPPORTED_RPC_METHODS,
   PUBLIC_RPC_METHODS,
 } from "@keplr-ewallet-sdk-eth/rpc";
 import {
@@ -101,8 +100,6 @@ export class EWalletEIP1193Provider
   ): Promise<RpcResponseData<M>> {
     this.validateRequestArgs(args);
 
-    this.checkMethodSupport(args);
-
     try {
       const result = await this.handleRequest(args);
 
@@ -138,6 +135,7 @@ export class EWalletEIP1193Provider
     args: RpcRequestArgs<M>,
   ): Promise<RpcResponseData<M>> {
     if (PUBLIC_RPC_METHODS.has(args.method as PublicRpcMethod)) {
+      // consider as supported public RPC methods
       return this.handlePublicRpcRequest(
         args as RpcRequestArgs<PublicRpcMethod>,
       );
@@ -704,23 +702,6 @@ export class EWalletEIP1193Provider
         standardError.rpc.invalidParams({
           message: "Expected a single, non-array, object argument.",
           data: args,
-        }),
-      );
-    }
-  }
-
-  /**
-   * Checks if the given method is supported by this provider
-   * @param args - The RPC request arguments to check
-   * @throws RpcError if the method is not supported
-   */
-  protected checkMethodSupport<M extends RpcMethod>(
-    args: RpcRequestArgs<M>,
-  ): void {
-    if (UNSUPPORTED_RPC_METHODS.has(args.method)) {
-      throw new RpcError(
-        standardError.provider.unsupportedMethod({
-          data: args.method,
         }),
       );
     }

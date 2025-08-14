@@ -20,6 +20,7 @@ import type {
   NetworkSync,
   AddEthereumChainParameter,
   TypedDataDefinition,
+  AccessList,
 } from "viem";
 
 import type { ErrorObject } from "@keplr-ewallet-sdk-eth/errors";
@@ -463,6 +464,14 @@ type EthSyncing = {
   Res: NetworkSync | false;
 };
 
+type EthCreateAccessList = {
+  Req: {
+    method: "eth_createAccessList";
+    params: [transaction: RpcTransactionRequest];
+  };
+  Res: AccessList;
+};
+
 type PersonalSign = {
   Req: {
     method: "personal_sign";
@@ -525,6 +534,7 @@ export interface PublicRpcMethodMap {
   eth_protocolVersion: EthProtocolVersion;
   eth_sendRawTransaction: EthSendRawTransaction;
   eth_syncing: EthSyncing;
+  eth_createAccessList: EthCreateAccessList;
 }
 
 export interface WalletRpcMethodMap {
@@ -544,19 +554,6 @@ export type PublicRpcMethod = keyof PublicRpcMethodMap;
 export type WalletRpcMethod = keyof WalletRpcMethodMap;
 
 export type RpcMethod = PublicRpcMethod | WalletRpcMethod;
-
-export type UnsupportedPublicRpcMethod = Exclude<
-  string,
-  keyof PublicRpcMethodMap
->;
-export type UnsupportedWalletRpcMethod = Exclude<
-  string,
-  keyof WalletRpcMethodMap
->;
-
-export type UnsupportedRpcMethod =
-  | UnsupportedPublicRpcMethod
-  | UnsupportedWalletRpcMethod;
 
 export type RpcRequestArgs<M extends RpcMethod> =
   RpcMethodMap[M]["Req"]["params"] extends undefined
