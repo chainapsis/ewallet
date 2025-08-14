@@ -45,7 +45,6 @@ export interface WalletConnectOptions {
   projectId: string;
 }
 
-// TODO: move to ewallet/variants/rainbowkit or wagmi?
 const keplrEWalletConnector = (
   walletDetails: WalletDetailsParams,
   ethEWallet: EthEWallet,
@@ -117,6 +116,7 @@ const keplrEWalletConnector = (
         }
 
         await ethEWallet.eWallet.signIn("google");
+
         provider = await ethEWallet.getEthereumProvider();
 
         return provider;
@@ -166,8 +166,7 @@ const keplrEWalletConnector = (
   });
 };
 
-// TODO: move to ewallet/variants/rainbowkit or wagmi?
-export const keplrEWallet = (eWallet: EthEWallet) => {
+export function keplrEWallet(eWallet: EthEWallet) {
   return (): Wallet => ({
     id: "keplr-ewallet",
     name: "Keplr E-Wallet",
@@ -182,10 +181,11 @@ export const keplrEWallet = (eWallet: EthEWallet) => {
         "https://chromewebstore.google.com/detail/dmkamcknogkgcdfhhbddcghachkejeap?utm_source=item-share-cb",
     },
     installed: true,
-    createConnector: (walletDetails) =>
-      keplrEWalletConnector(walletDetails, eWallet),
+    createConnector: (walletDetails) => {
+      return keplrEWalletConnector(walletDetails, eWallet);
+    },
   });
-};
+}
 
 export const wagmiConfigWithKeplr = () => {
   let wallets = [...defaultWallets];
