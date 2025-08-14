@@ -6,4 +6,10 @@ export async function on(
   this: CosmosEWallet,
   eventType: KeplrEWalletEventType,
   handler: Function, // TODO:
-) {}
+) {
+  if (this.eventEmitter) {
+    this.eventEmitter.on("accountsChanged", () => {
+      console.log(123);
+    });
+  }
+}

@@ -19,15 +19,17 @@ import { verifyArbitrary } from "./api/verify_arbitrary";
 import { showModal } from "./api/show_modal";
 import { makeSignature } from "./api/make_signature";
 import { getPublicKey } from "./api/get_public_key";
+import { on } from "./api/on";
 
 export class CosmosEWallet {
   public eWallet: KeplrEWallet;
   protected _cosmosChainInfo: ChainInfo[] | null = null;
   protected _cacheTime: number = 0;
-  eventEmitter = EventEmitter2;
+  eventEmitter: EventEmitter2 | null = null;
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
+    this.eventEmitter = new EventEmitter2();
   }
 
   enable = enable;
