@@ -125,7 +125,7 @@ describe("EWallet Provider - Viem Integration", () => {
         expect(blockNumber).toBeGreaterThanOrEqual(BigInt(0));
 
         const balance = await client.getBalance({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         expect(balance).toBeDefined();
@@ -148,7 +148,7 @@ describe("EWallet Provider - Viem Integration", () => {
         expect(blobBaseFee).toBeGreaterThan(BigInt(0));
 
         const code = await client.getCode({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         expect(code).toBeUndefined();
@@ -168,7 +168,7 @@ describe("EWallet Provider - Viem Integration", () => {
         const client = createWalletClient({
           chain: hardhatAlt,
           transport: custom(hardhatProvider),
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         const chainId = await client.getChainId();
@@ -199,14 +199,14 @@ describe("EWallet Provider - Viem Integration", () => {
         const client = createWalletClient({
           chain: hardhatAlt,
           transport: custom(aliceProvider),
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         const message = "Hello, world!";
         const hash = hashMessage(message);
 
         const signature = await client.signMessage({
-          account: alice.address,
+          account: await alice.getAddress(),
           message: message,
         });
 
@@ -218,20 +218,22 @@ describe("EWallet Provider - Viem Integration", () => {
           signature,
         });
 
-        expect(isAddressEqual(recoveredAddress, alice.address)).toBe(true);
+        expect(isAddressEqual(recoveredAddress, await alice.getAddress())).toBe(
+          true,
+        );
       });
 
       it("should successfully perform eth_signTypedData_v4", async () => {
         const client = createWalletClient({
           chain: hardhatAlt,
           transport: custom(aliceProvider),
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         const typedData = createTypedData();
 
         const signature = await client.signTypedData({
-          account: alice.address,
+          account: await alice.getAddress(),
           ...typedData,
         });
 
@@ -243,18 +245,20 @@ describe("EWallet Provider - Viem Integration", () => {
           signature,
         });
 
-        expect(isAddressEqual(recoveredAddress, alice.address)).toBe(true);
+        expect(isAddressEqual(recoveredAddress, await alice.getAddress())).toBe(
+          true,
+        );
       });
 
       it("should successfully perform eth_signTransaction", async () => {
         const client = createWalletClient({
           chain: hardhatAlt,
           transport: custom(aliceProvider),
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         const request = client.prepareTransactionRequest({
-          to: bob.address,
+          to: await bob.getAddress(),
           value: parseEther("0.001"),
           gas: BigInt(21000),
           maxFeePerGas: BigInt(10000000),
@@ -265,7 +269,7 @@ describe("EWallet Provider - Viem Integration", () => {
         });
 
         const signedTransaction = await client.signTransaction({
-          account: alice.address,
+          account: await alice.getAddress(),
           ...request,
         });
 
@@ -277,7 +281,9 @@ describe("EWallet Provider - Viem Integration", () => {
           serializedTransaction: signedTransaction as `0x02${string}`,
         });
 
-        expect(isAddressEqual(recoveredAddress, alice.address)).toBe(true);
+        expect(isAddressEqual(recoveredAddress, await alice.getAddress())).toBe(
+          true,
+        );
       });
     });
 
@@ -300,29 +306,29 @@ describe("EWallet Provider - Viem Integration", () => {
         walletClient = createWalletClient({
           chain: hardhatAlt,
           transport: custom(aliceProvider),
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         txHelper = createTransactionHelper({
           publicClient,
           walletClient,
-          account: alice.address,
+          account: await alice.getAddress(),
         });
       });
 
       it("should successfully perform eth_sendTransaction", async () => {
         const aliceBalance = await publicClient.getBalance({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         const bobBalance = await publicClient.getBalance({
-          address: bob.address,
+          address: await bob.getAddress(),
         });
 
         const oneEther = parseEther("1");
 
         const result = await txHelper.sendTransactionAndExpectSuccess({
-          to: bob.address,
+          to: await bob.getAddress(),
           value: oneEther,
           gas: BigInt(21000), // intrinsic gas for a transfer
         });
@@ -332,17 +338,21 @@ describe("EWallet Provider - Viem Integration", () => {
         expect(result.hash).toMatch(/^0x[a-fA-F0-9]+$/);
 
         expect(result.receipt.status).toBe("success");
-        expect(isAddressEqual(result.receipt.from, alice.address)).toBe(true);
-        expect(isAddressEqual(result.receipt.to!, bob.address)).toBe(true);
+        expect(
+          isAddressEqual(result.receipt.from, await alice.getAddress()),
+        ).toBe(true);
+        expect(isAddressEqual(result.receipt.to!, await bob.getAddress())).toBe(
+          true,
+        );
 
         const aliceBalanceAfter = await publicClient.getBalance({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         expect(aliceBalanceAfter).toBeLessThan(aliceBalance - oneEther); // 1 ether + gas fee deducted
 
         const bobBalanceAfter = await publicClient.getBalance({
-          address: bob.address,
+          address: await bob.getAddress(),
         });
 
         expect(bobBalanceAfter).toEqual(bobBalance + oneEther);
@@ -365,7 +375,7 @@ describe("EWallet Provider - Viem Integration", () => {
       it("should successfully send zero value", async () => {
         // Zero value transaction should work
         const result = await txHelper.sendTransactionAndExpectSuccess({
-          to: bob.address,
+          to: await bob.getAddress(),
           value: BigInt(0),
         });
 
@@ -376,7 +386,7 @@ describe("EWallet Provider - Viem Integration", () => {
         // Transaction with very low gas should fail
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: bob.address,
+            to: await bob.getAddress(),
             value: parseEther("0.1"),
             gas: BigInt(1000), // Way too low for a transfer
           },
@@ -386,12 +396,12 @@ describe("EWallet Provider - Viem Integration", () => {
 
       it("should fail with excessive nonce", async () => {
         const currentNonce = await publicClient.getTransactionCount({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: bob.address,
+            to: await bob.getAddress(),
             value: parseEther("0.001"),
             nonce: currentNonce + 100, // Way ahead
           },
@@ -401,13 +411,13 @@ describe("EWallet Provider - Viem Integration", () => {
 
       it("should fail with insufficient balance", async () => {
         const balance = await publicClient.getBalance({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         // Try to send more than available balance
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: bob.address,
+            to: await bob.getAddress(),
             value: balance + parseEther("1"), // More than available balance
           },
           /insufficient|balance|funds|method not supported|provider does not support/i,
@@ -418,7 +428,7 @@ describe("EWallet Provider - Viem Integration", () => {
         // Send transaction with malformed/non-hex data
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: bob.address,
+            to: await bob.getAddress(),
             data: "invalid-hex-data" as any, // Invalid data format
           },
           /invalid|hex|data/i,
@@ -427,12 +437,12 @@ describe("EWallet Provider - Viem Integration", () => {
 
       it("should fail with double spending attempt", async () => {
         const currentNonce = await publicClient.getTransactionCount({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         // First transaction
         const tx1Promise = txHelper.sendTransactionAndExpectSuccess({
-          to: bob.address,
+          to: await bob.getAddress(),
           value: parseEther("1"),
           nonce: currentNonce,
         });
@@ -440,7 +450,7 @@ describe("EWallet Provider - Viem Integration", () => {
         // Second transaction with same nonce (double spending attempt)
         const tx2Promise = txHelper.sendTransactionAndExpectFailure(
           {
-            to: charlie.address,
+            to: await charlie.getAddress(),
             value: parseEther("1"),
             nonce: currentNonce, // Same nonce as first transaction
           },
@@ -472,13 +482,13 @@ describe("EWallet Provider - Viem Integration", () => {
         walletClient = createWalletClient({
           chain: hardhatAlt,
           transport: custom(aliceProvider),
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         contractHelper = createContractHelper({
           publicClient,
           walletClient,
-          account: alice.address,
+          account: await alice.getAddress(),
         });
       });
 
@@ -514,7 +524,10 @@ describe("EWallet Provider - Viem Integration", () => {
 
         expect(incrementResult.receipt.status).toBe("success");
         expect(
-          isAddressEqual(incrementResult.receipt.from, alice.address),
+          isAddressEqual(
+            incrementResult.receipt.from,
+            await alice.getAddress(),
+          ),
         ).toBe(true);
         expect(
           isAddressEqual(incrementResult.receipt.to!, counterAddress),
@@ -609,13 +622,13 @@ describe("EWallet Provider - Viem Integration", () => {
         walletClient = createWalletClient({
           chain: hardhatAlt,
           transport: custom(aliceProvider),
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         txHelper = createTransactionHelper({
           publicClient,
           walletClient,
-          account: alice.address,
+          account: await alice.getAddress(),
         });
       });
 
@@ -623,7 +636,7 @@ describe("EWallet Provider - Viem Integration", () => {
         const contractHelper = createContractHelper({
           publicClient,
           walletClient,
-          account: alice.address,
+          account: await alice.getAddress(),
         });
 
         const deployResult = await contractHelper.deployContract({
@@ -633,7 +646,7 @@ describe("EWallet Provider - Viem Integration", () => {
         const counterAddress = deployResult.contractAddress;
 
         const nonce = await publicClient.getTransactionCount({
-          address: alice.address,
+          address: await alice.getAddress(),
         });
 
         const authorization: Authorization = {
@@ -657,7 +670,7 @@ describe("EWallet Provider - Viem Integration", () => {
         const intrinsicGas = 25000 + 21000; // 25000 for authorization, 21000 for transfer zero value
 
         const { receipt } = await txHelper.sendTransactionAndExpectSuccess({
-          to: alice.address,
+          to: await alice.getAddress(),
           authorizationList: [authorization],
           gas: BigInt(intrinsicGas),
         });

@@ -5,7 +5,8 @@ import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 // Mock signer for testing wallet methods
 export function createMockSigner(): EthSigner {
   return {
-    address: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" as const, // vitalik.eth
+    getAddress: () =>
+      Promise.resolve("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" as const),
     sign: async () =>
       Promise.resolve({
         type: "signature",

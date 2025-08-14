@@ -73,7 +73,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
 
       const signature = await provider.request({
         method: "personal_sign",
-        params: [hexMessage, golf.address],
+        params: [hexMessage, await golf.getAddress()],
       });
 
       expect(signature).toBeDefined();
@@ -84,7 +84,9 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         signature,
       });
 
-      expect(isAddressEqual(recoveredAddress, golf.address)).toBe(true);
+      expect(isAddressEqual(recoveredAddress, await golf.getAddress())).toBe(
+        true,
+      );
     });
 
     it("should successfully perform eth_signTypedData_v4", async () => {
@@ -112,7 +114,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
 
       const signature = await provider.request({
         method: "eth_signTypedData_v4",
-        params: [golf.address, typedData],
+        params: [await golf.getAddress(), typedData],
       });
 
       expect(signature).toBeDefined();
@@ -123,7 +125,9 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         signature,
       });
 
-      expect(isAddressEqual(recoveredAddress, golf.address)).toBe(true);
+      expect(isAddressEqual(recoveredAddress, await golf.getAddress())).toBe(
+        true,
+      );
     });
 
     it("should successfully perform eth_signTransaction", async () => {
@@ -146,8 +150,8 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       );
 
       const transaction: RpcTransactionRequest = {
-        from: golf.address,
-        to: hotel.address,
+        from: await golf.getAddress(),
+        to: await hotel.getAddress(),
         value: toHex(parseEther("0.001")),
         gas: toHex(21000),
         maxFeePerGas: toHex(10000000),
@@ -169,7 +173,9 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         serializedTransaction: signedTransaction as `0x02${string}`,
       });
 
-      expect(isAddressEqual(recoveredAddress, golf.address)).toBe(true);
+      expect(isAddressEqual(recoveredAddress, await golf.getAddress())).toBe(
+        true,
+      );
     });
   });
 

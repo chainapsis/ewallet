@@ -109,7 +109,9 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         expect(typeof blockNumber).toBe("number");
         expect(blockNumber).toBeGreaterThanOrEqual(0);
 
-        const balance = await ethersProvider.getBalance(delta.address);
+        const balance = await ethersProvider.getBalance(
+          await delta.getAddress(),
+        );
 
         expect(balance).toBeDefined();
         expect(typeof balance).toBe("bigint");
@@ -126,7 +128,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         expect(typeof feeData.gasPrice).toBe("bigint");
         expect(feeData.gasPrice).toBeGreaterThan(BigInt(0));
 
-        const code = await ethersProvider.getCode(delta.address);
+        const code = await ethersProvider.getCode(await delta.getAddress());
 
         expect(code).toBe("0x");
       });
@@ -157,7 +159,10 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         );
 
         expect(
-          isAddressEqual(recoveredAddress as `0x${string}`, delta.address),
+          isAddressEqual(
+            recoveredAddress as `0x${string}`,
+            await delta.getAddress(),
+          ),
         ).toBe(true);
       });
 
@@ -206,7 +211,10 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         const recoveredAddress = recoverAddress(hash, signature);
 
         expect(
-          isAddressEqual(recoveredAddress as `0x${string}`, delta.address),
+          isAddressEqual(
+            recoveredAddress as `0x${string}`,
+            await delta.getAddress(),
+          ),
         ).toBe(true);
       });
 
@@ -215,7 +223,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         const signer = await ethersProvider.getSigner();
 
         const request: TransactionRequest = {
-          to: epsilon.address,
+          to: await epsilon.getAddress(),
           value: parseEther("0.001"),
           gasLimit: BigInt(21000),
           maxFeePerGas: parseUnits("10000", "gwei"),
@@ -233,7 +241,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
 
         const signedTransaction = Transaction.from(signedSerialized);
 
-        expect(signedTransaction.to).toBe(epsilon.address);
+        expect(signedTransaction.to).toBe(await epsilon.getAddress());
         expect(signedTransaction.value).toBe(parseEther("0.001"));
         expect(signedTransaction.gasLimit).toBe(BigInt(21000));
         expect(signedTransaction.maxFeePerGas).toBe(
@@ -257,7 +265,10 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         );
 
         expect(
-          isAddressEqual(recoveredAddress as `0x${string}`, delta.address),
+          isAddressEqual(
+            recoveredAddress as `0x${string}`,
+            await delta.getAddress(),
+          ),
         ).toBe(true);
       });
     });
@@ -285,22 +296,24 @@ describe("EWallet Provider - Ethers.js Integration", () => {
       });
 
       it("should successfully perform eth_sendTransaction", async () => {
-        const deltaBalance = await browserProvider.getBalance(delta.address);
+        const deltaBalance = await browserProvider.getBalance(
+          await delta.getAddress(),
+        );
         const epsilonBalance = await browserProvider.getBalance(
-          epsilon.address,
+          await epsilon.getAddress(),
         );
         expect(deltaBalance).toBeGreaterThan(BigInt(0));
         expect(epsilonBalance).toBeGreaterThan(BigInt(0));
         const oneEther = parseEther("1");
         await txHelper.sendTransactionAndExpectSuccess({
-          to: epsilon.address,
+          to: await epsilon.getAddress(),
           value: oneEther,
         });
         const deltaBalanceAfter = await browserProvider.getBalance(
-          delta.address,
+          await delta.getAddress(),
         );
         const epsilonBalanceAfter = await browserProvider.getBalance(
-          epsilon.address,
+          await epsilon.getAddress(),
         );
         expect(deltaBalanceAfter).toBeLessThan(deltaBalance - oneEther);
         expect(epsilonBalanceAfter).toEqual(epsilonBalance + oneEther);
@@ -319,7 +332,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         const oneEther = parseEther("1");
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: epsilon.address,
+            to: await epsilon.getAddress(),
             value: oneEther,
             gasLimit: 1_000,
           },
@@ -332,7 +345,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         const currentNonce = await signer.getNonce();
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: epsilon.address,
+            to: await epsilon.getAddress(),
             value: oneEther,
             nonce: currentNonce + 100,
             gasLimit: 1_000,
@@ -343,11 +356,13 @@ describe("EWallet Provider - Ethers.js Integration", () => {
 
       it("should fail with insufficient balance", async () => {
         const oneEther = parseEther("1");
-        const deltaBalance = await browserProvider.getBalance(delta.address);
+        const deltaBalance = await browserProvider.getBalance(
+          await delta.getAddress(),
+        );
         const currentNonce = await signer.getNonce();
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: epsilon.address,
+            to: await epsilon.getAddress(),
             value: deltaBalance + oneEther,
             nonce: currentNonce,
             gasLimit: 22_000,
@@ -360,7 +375,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         const oneEther = parseEther("1");
         await txHelper.sendTransactionAndExpectFailure(
           {
-            to: epsilon.address,
+            to: await epsilon.getAddress(),
             value: oneEther,
             data: "invalid-hex-data" as any,
           },

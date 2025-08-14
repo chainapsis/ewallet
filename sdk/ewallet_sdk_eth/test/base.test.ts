@@ -381,12 +381,12 @@ describe("EWallet Provider - Base", () => {
         const accounts = await walletProvider.request({
           method: "eth_accounts",
         });
-        expect(accounts).toEqual([mockSigner.address]);
+        expect(accounts).toEqual([await mockSigner.getAddress()]);
 
         const requestAccounts = await walletProvider.request({
           method: "eth_requestAccounts",
         });
-        expect(requestAccounts).toEqual([mockSigner.address]);
+        expect(requestAccounts).toEqual([await mockSigner.getAddress()]);
       });
     });
   });
