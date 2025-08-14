@@ -29,6 +29,17 @@ export class CosmosEWallet {
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
+
+    const emitter = this.eventEmitter;
+
+    this.eWallet.on("accountsChanged", (payload: any) => {
+      // post processing
+      if (emitter) {
+        const postProcessedPayload = {};
+        emitter.emit("accountsChanged", postProcessedPayload);
+      }
+    });
+
     this.eventEmitter = new EventEmitter2();
   }
 

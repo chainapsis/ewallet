@@ -7,13 +7,14 @@ import { getEmail } from "./api/get_email";
 import { hideModal } from "./api/hide_modal";
 import { makeSignature } from "./api/make_signature";
 import { initState } from "./api/init_state";
-import { EventEmitter } from "eventemitter3";
+import { on } from "./api/on";
+import { EventEmitter2 } from "./event";
 
 export class KeplrEWallet {
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
-  eventEmitter: EventEmitter;
+  eventEmitter: EventEmitter2;
   readonly origin: string;
 
   public constructor(
@@ -25,7 +26,7 @@ export class KeplrEWallet {
     this.iframe = iframe;
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
-    this.eventEmitter = new EventEmitter();
+    this.eventEmitter = new EventEmitter2();
   }
 
   showModal = showModal.bind(this);
@@ -37,4 +38,5 @@ export class KeplrEWallet {
   getEmail = getEmail.bind(this);
   makeSignature = makeSignature.bind(this);
   initState = initState.bind(this);
+  on = on.bind(this);
 }
