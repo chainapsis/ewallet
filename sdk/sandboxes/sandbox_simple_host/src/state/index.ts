@@ -1,3 +1,4 @@
+import type { KeplrCosmosEWalletEventTypeMap } from "@keplr-ewallet/ewallet-sdk-core";
 import {
   CosmosEWallet,
   initCosmosEWallet,
@@ -9,11 +10,20 @@ import { combine } from "zustand/middleware";
 interface AppState {
   keplr_sdk_eth: EthEWallet | null;
   keplr_sdk_cosmos: CosmosEWallet | null;
+  userInfo: {
+    email: string;
+    publicKey: string;
+  } | null;
+  ethAddress: string | null;
+  cosmosAddress: string | null;
 }
 
 interface AppActions {
   initKeplrSdkEth: () => Promise<EthEWallet | null>;
   initKeplrSdkCosmos: () => Promise<CosmosEWallet | null>;
+  setUserInfo: (userInfo: { email: string; publicKey: string }) => void;
+  setEthAddress: (ethAddress: string) => void;
+  setCosmosAddress: (cosmosAddress: string) => void;
 }
 
 export const useAppState = create(
@@ -21,8 +31,11 @@ export const useAppState = create(
     {
       keplr_sdk_eth: null,
       keplr_sdk_cosmos: null,
+      ethAddress: null,
+      cosmosAddress: null,
+      userInfo: null,
     },
-    (set) => ({
+    (set, get) => ({
       initKeplrSdkEth: async () => {
         const initRes = await initEthEWallet({
           // TODO: replace with actual apiKey
@@ -40,6 +53,10 @@ export const useAppState = create(
         }
       },
       initKeplrSdkCosmos: async () => {
+        if (get().keplr_sdk_cosmos) {
+          return get().keplr_sdk_cosmos;
+        }
+
         const initRes = await initCosmosEWallet({
           // TODO: replace with actual apiKey
           api_key:
@@ -48,13 +65,31 @@ export const useAppState = create(
         });
 
         if (initRes.success) {
-          set({ keplr_sdk_cosmos: initRes.data });
+          const cosmosSDK = initRes.data;
+          set({ keplr_sdk_cosmos: cosmosSDK });
+
+          cosmosSDK.on("keyringChanged", async (payload) => {
+            set({
+              userInfo:
+                payload as KeplrCosmosEWalletEventTypeMap["keyringChanged"],
+            });
+          });
+
           return initRes.data;
         } else {
           console.error("sdk init fail");
 
           return null;
         }
+      },
+      setUserInfo: (userInfo: { email: string; publicKey: string }) => {
+        set({ userInfo });
+      },
+      setEthAddress: (ethAddress: string) => {
+        set({ ethAddress });
+      },
+      setCosmosAddress: (cosmosAddress: string) => {
+        set({ cosmosAddress });
       },
     }),
   ),

@@ -1,4 +1,7 @@
-import { type KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
+import {
+  type KeplrEWallet,
+  type KeplrWalletCoreEventTypeMap,
+} from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
 import { EventEmitter2 } from "@keplr-ewallet/ewallet-sdk-core";
 
@@ -30,17 +33,29 @@ export class CosmosEWallet {
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
 
+    if (!this.eventEmitter) {
+      this.eventEmitter = new EventEmitter2();
+    }
     const emitter = this.eventEmitter;
 
+    //TODO: fix 현재 제네릭에서 KeplrEWalletEventTypeMap에서 각 해당 이벤트에 대한
+    //파라미터 타입이 제대로 잡히지가 않는 버그가 있음
     this.eWallet.on("accountsChanged", (payload: any) => {
       // post processing
       if (emitter) {
-        const postProcessedPayload = {};
-        emitter.emit("accountsChanged", postProcessedPayload);
+        emitter.emit("keyringChanged", payload);
       }
     });
 
-    this.eventEmitter = new EventEmitter2();
+    this.eWallet.on(
+      "chainChanged",
+      (payload: KeplrWalletCoreEventTypeMap["chainChanged"]) => {
+        // post processing
+        if (emitter) {
+          emitter.emit("chainChanged", payload);
+        }
+      },
+    );
   }
 
   enable = enable;

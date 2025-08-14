@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import { Widget } from "../widget_components";
 import styles from "./login_widget.module.scss";
 import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
+import { useAppState } from "@/state";
 
 export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   const { cosmosEWallet } = useKeplrEwallet();
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const userInfo = useAppState().userInfo;
 
   const handleSignIn = async () => {
     try {
@@ -40,24 +42,24 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
     );
   }
 
-  // if (auth.email && auth.publicKey) {
-  // return (
-  //   <Widget>
-  //     <div className={styles.loginInfoContainer}>
-  //       <div className={styles.loginInfoRow}>
-  //         {/* <p>{auth.email}</p> */}
-  //         <button className={styles.signOutButton} onClick={handleSignOut}>
-  //           <p>Sign out</p>
-  //         </button>
-  //       </div>
-  //       <div className={styles.publicKeyRow}>
-  //         <p>Public Key</p>
-  //         {/* <p>{auth.publicKey}</p> */}
-  //       </div>
-  //     </div>
-  //   </Widget>
-  // );
-  // }
+  if (userInfo) {
+    return (
+      <Widget>
+        <div className={styles.loginInfoContainer}>
+          <div className={styles.loginInfoRow}>
+            <p>{userInfo.email}</p>
+            <button className={styles.signOutButton} onClick={handleSignOut}>
+              <p>Sign out</p>
+            </button>
+          </div>
+          <div className={styles.publicKeyRow}>
+            <p>Public Key</p>
+            <p>{userInfo.publicKey}</p>
+          </div>
+        </div>
+      </Widget>
+    );
+  }
 
   return (
     <Widget>
@@ -74,4 +76,4 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   );
 };
 
-export interface LoginWidgetProps { }
+export interface LoginWidgetProps {}

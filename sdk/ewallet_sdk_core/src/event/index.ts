@@ -17,7 +17,10 @@ export class EventEmitter2 {
     this.listeners[eventName].push(listener);
   }
 
-  emit<T extends keyof KeplrEWalletEventTypeMap>(eventName: T, ...args: any) {
+  emit<T extends keyof KeplrEWalletEventTypeMap>(
+    eventName: T,
+    ...args: [KeplrEWalletEventTypeMap[T]]
+  ) {
     if (this.listeners[eventName]) {
       this.listeners[eventName].forEach((listener) => listener(...args));
     }

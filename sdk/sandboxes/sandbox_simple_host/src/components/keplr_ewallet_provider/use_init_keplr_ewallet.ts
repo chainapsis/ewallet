@@ -9,14 +9,11 @@ export function useInitKeplrEWallet() {
     async function fn() {
       try {
         const cosmosSDK = await appState.initKeplrSdkCosmos();
+        console.log("[useInitKeplrEWallet] cosmosSDK", cosmosSDK);
         if (!cosmosSDK) {
           console.error("something wrong");
           return;
         }
-
-        cosmosSDK.on("accountsChanged", () => {
-          // appState.triggerStateMutation()
-        });
 
         const isEthReady = await appState.initKeplrSdkEth();
         if (!isEthReady) {
