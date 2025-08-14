@@ -1,4 +1,4 @@
-import { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
+import { type KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
 
 import { enable } from "./api/enable";
