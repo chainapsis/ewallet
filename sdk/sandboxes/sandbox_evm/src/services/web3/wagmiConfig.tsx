@@ -7,7 +7,6 @@ import {
   Wallet,
 } from "@rainbow-me/rainbowkit";
 import { coinbaseWallet, metaMaskWallet } from "@rainbow-me/rainbowkit/wallets";
-import { keplrWallet } from "@keplr-wallet/rainbow-connector";
 import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
 import {
   initEthEWallet,
@@ -43,7 +42,6 @@ const keplrEWallet = (): Wallet => ({
 
 export const defaultWallets = [
   keplrEWallet,
-  keplrWallet,
   metaMaskWallet,
   coinbaseWallet,
   toPrivyWallet({
