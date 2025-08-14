@@ -2,15 +2,31 @@ import { toHex } from "viem";
 
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 
+export const MOCK_ADDRESS = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
+export const MOCK_SIGNATURE = "0x123456789abcdef";
+export const NO_ACCOUNT_ERROR = "No account";
+
 // Mock signer for testing wallet methods
-export function createMockSigner(): EthSigner {
+export function createMockSigner({
+  noAccount = false,
+}: { noAccount?: boolean } = {}): EthSigner {
+  if (noAccount) {
+    return {
+      getAddress: () => {
+        throw new Error(NO_ACCOUNT_ERROR);
+      },
+      sign: async () => {
+        throw new Error(NO_ACCOUNT_ERROR);
+      },
+    };
+  }
+
   return {
-    getAddress: () =>
-      Promise.resolve("0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" as const),
+    getAddress: () => Promise.resolve(MOCK_ADDRESS),
     sign: async () =>
       Promise.resolve({
         type: "signature",
-        signature: "0x123456789abcdef" as `0x${string}`,
+        signature: MOCK_SIGNATURE,
       }),
   };
 }

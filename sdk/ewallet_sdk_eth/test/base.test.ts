@@ -13,6 +13,9 @@ import {
   MockRpcServer,
   createMockRpcServer,
   mockMainnetRpc,
+  MOCK_ADDRESS,
+  MOCK_SIGNATURE,
+  NO_ACCOUNT_ERROR,
 } from "./mock";
 import {
   EWalletEIP1193Provider,
@@ -161,6 +164,23 @@ describe("EWallet Provider - Base", () => {
           ErrorCodes.rpc.invalidParams,
           ErrorCodes.rpc.methodNotFound,
         ]).toContain(thrownError.code);
+      });
+
+      it("should successfully init provider with signer but no account", async () => {
+        const mockSigner = createMockSigner({ noAccount: true });
+        const publicProvider = await initEWalletEIP1193Provider(
+          createProviderOptions([createChainParam(mainnet)], mockSigner),
+        );
+
+        const accounts = await publicProvider.request({
+          method: "eth_accounts",
+        });
+        expect(accounts).toEqual([]);
+
+        const requestAccounts = await publicProvider.request({
+          method: "eth_requestAccounts",
+        });
+        expect(requestAccounts).toEqual([]);
       });
     });
 
@@ -381,12 +401,33 @@ describe("EWallet Provider - Base", () => {
         const accounts = await walletProvider.request({
           method: "eth_accounts",
         });
-        expect(accounts).toEqual([await mockSigner.getAddress()]);
 
-        const requestAccounts = await walletProvider.request({
-          method: "eth_requestAccounts",
+        expect(accounts).toBeDefined();
+        expect(accounts[0]).toEqual(MOCK_ADDRESS);
+
+        const address = await mockSigner.getAddress();
+        const signature = await walletProvider.request({
+          method: "personal_sign",
+          params: [toHex("test"), address],
         });
-        expect(requestAccounts).toEqual([await mockSigner.getAddress()]);
+
+        expect(signature).toBeDefined();
+        expect(signature).toBe(MOCK_SIGNATURE);
+      });
+
+      it("should fail when signer given but no account", async () => {
+        const mockSigner = createMockSigner({ noAccount: true });
+        const walletProvider = await initEWalletEIP1193Provider(
+          createProviderOptions([createChainParam(mainnet)], mockSigner),
+        );
+
+        // CHECK: try-catch in provider.request is required?
+        await expect(
+          walletProvider.request({
+            method: "personal_sign",
+            params: [toHex("test"), MOCK_ADDRESS],
+          }),
+        ).rejects.toThrow(NO_ACCOUNT_ERROR);
       });
     });
   });
