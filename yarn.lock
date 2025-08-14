@@ -3486,7 +3486,6 @@ __metadata:
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
-    eventemitter3: "npm:^5.0.1"
     jest: "npm:*"
     rollup: "npm:^4.0.0"
     rollup-plugin-terser: "npm:^7.0.0"

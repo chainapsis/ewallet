@@ -43,7 +43,6 @@
   "gitHead": "5c82fc2b9b670d82a53e5aef0d8550537a03dccc",
   "dependencies": {
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.6",
-    "@keplr-wallet/types": "^0.12.257",
-    "eventemitter3": "^5.0.1"
+    "@keplr-wallet/types": "^0.12.257"
   }
 }
