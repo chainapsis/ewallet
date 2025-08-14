@@ -7,4 +7,6 @@ export async function signOut(this: KeplrEWallet) {
     msg_type: "sign_out",
     payload: null,
   });
+
+  // TODO: emit accountsChanged event for clean up
 }
