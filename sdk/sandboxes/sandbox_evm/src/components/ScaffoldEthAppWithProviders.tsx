@@ -10,7 +10,6 @@ import { Header } from "@keplr-ewallet-sandbox-evm/components/Header";
 import { BlockieAvatar } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
 import { useInitializeNativeCurrencyPrice } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
 import { wagmiConfigWithKeplr } from "@keplr-ewallet-sandbox-evm/services/web3/wagmiConfig";
-import { EWalletProvider } from "@keplr-ewallet-sandbox-evm/components/KeplrEwalletProvider";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   useInitializeNativeCurrencyPrice();
@@ -35,8 +34,9 @@ export const queryClient = new QueryClient({
   },
 });
 
+const config = wagmiConfigWithKeplr();
+
 const WagmiWithKeplr = ({ children }: { children: React.ReactNode }) => {
-  const config = wagmiConfigWithKeplr();
   return <WagmiProvider config={config}>{children}</WagmiProvider>;
 };
 
@@ -46,14 +46,12 @@ export const ScaffoldEthAppWithProviders = ({
   children: React.ReactNode;
 }) => {
   return (
-    <EWalletProvider>
-      <WagmiWithKeplr>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider avatar={BlockieAvatar}>
-            <ScaffoldEthApp>{children}</ScaffoldEthApp>
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiWithKeplr>
-    </EWalletProvider>
+    <WagmiWithKeplr>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider avatar={BlockieAvatar}>
+          <ScaffoldEthApp>{children}</ScaffoldEthApp>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiWithKeplr>
   );
 };
