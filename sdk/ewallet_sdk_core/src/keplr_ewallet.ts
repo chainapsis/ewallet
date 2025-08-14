@@ -7,11 +7,13 @@ import { getEmail } from "./api/get_email";
 import { hideModal } from "./api/hide_modal";
 import { makeSignature } from "./api/make_signature";
 import { initState } from "./api/init_state";
+import EventEmitter from "node:events";
 
 export class KeplrEWallet {
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
+  eventEmitter: EventEmitter;
   readonly origin: string;
 
   public constructor(
@@ -23,6 +25,7 @@ export class KeplrEWallet {
     this.iframe = iframe;
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
+    this.eventEmitter = new EventEmitter();
   }
 
   showModal = showModal.bind(this);

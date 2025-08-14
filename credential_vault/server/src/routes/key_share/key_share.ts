@@ -12,7 +12,7 @@ import {
   checkKeyShare,
   getKeyShare,
   registerKeyShare,
-} from "@keplr-ewallet-cv-server/apis/key_share";
+} from "@keplr-ewallet-cv-server/api/key_share";
 import {
   bearerTokenMiddleware,
   type AuthenticatedRequest,

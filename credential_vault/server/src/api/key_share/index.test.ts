@@ -18,11 +18,8 @@ import {
   checkKeyShare,
   getKeyShare,
   registerKeyShare,
-} from "@keplr-ewallet-cv-server/apis/key_share";
-import {
-  decryptData,
-  TEMP_ENC_SECRET,
-} from "@keplr-ewallet-cv-server/apis/utils";
+} from "@keplr-ewallet-cv-server/api/key_share";
+import { decryptData, TEMP_ENC_SECRET } from "@keplr-ewallet-cv-server/encrypt";
 
 describe("key_share_test", () => {
   let pool: Pool;
