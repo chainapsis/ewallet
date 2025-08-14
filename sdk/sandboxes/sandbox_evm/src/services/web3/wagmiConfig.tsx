@@ -66,8 +66,28 @@ export interface WalletConnectOptions {
 function keplrEWalletConnector(
   walletDetails: WalletDetailsParams,
 ): CreateConnectorFn {
+  let initPromise: Promise<EthEWallet> | null = null;
+
   let ethEWallet: EthEWallet | null = null;
   let provider: EIP1193Provider | null = null;
+
+  const ensureInit = () => {
+    if (!initPromise) {
+      initPromise = (async () => {
+        console.log("keplr-ewallet: setup");
+        const initRes = await initEthEWallet({
+          api_key:
+            "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
+          sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
+        });
+        if (!initRes.success) throw new Error(`init fail: ${initRes.err}`);
+        console.log("keplr-ewallet: eth sdk init success");
+        ethEWallet = initRes.data;
+        return initRes.data;
+      })();
+    }
+    return initPromise;
+  };
 
   return createConnector((config) => {
     const wallet = {
@@ -76,29 +96,12 @@ function keplrEWalletConnector(
       type: "keplr-ewallet" as const,
       icon: keplrIcon,
       setup: async () => {
-        console.log("keplr-ewallet: setup");
-
-        const initRes = await initEthEWallet({
-          api_key:
-            "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-          sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
-        });
-
-        if (initRes.success) {
-          console.log("keplr-ewallet: eth sdk init success");
-          ethEWallet = initRes.data;
-        } else {
-          throw new Error(
-            `keplr-ewallet: eth sdk init fail, err: ${initRes.err}`,
-          );
-        }
+        await ensureInit();
       },
       connect: async () => {
-        if (!ethEWallet) {
-          throw new Error("keplr-ewallet: eWallet is not initialized");
-        }
-
         console.log("keplr-ewallet: try to connect keplr e-wallet!");
+
+        const ethEWallet = await ensureInit();
 
         const providerInstance = await wallet.getProvider();
         let accounts = await providerInstance.request({
@@ -173,10 +176,7 @@ function keplrEWalletConnector(
           return provider;
         }
 
-        if (!ethEWallet) {
-          console.log("keplr-ewallet: eWallet is not initialized");
-          throw new Error("keplr-ewallet: eWallet is not initialized");
-        }
+        const ethEWallet = await ensureInit();
 
         provider = await ethEWallet.getEthereumProvider();
 
