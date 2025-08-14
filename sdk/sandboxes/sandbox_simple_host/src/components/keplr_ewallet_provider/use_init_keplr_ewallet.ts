@@ -14,7 +14,9 @@ export function useInitKeplrEWallet() {
           return;
         }
 
-        cosmosSDK.on("", () => { });
+        cosmosSDK.on("accountsChanged", () => {
+          // appState.triggerStateMutation()
+        });
 
         const isEthReady = await appState.initKeplrSdkEth();
         if (!isEthReady) {
