@@ -9,7 +9,7 @@ interface AppState {
 }
 
 interface AppActions {
-  initKeplrSdkEth: () => Promise<boolean>;
+  initKeplrSdkEth: () => Promise<EthEWallet | null>;
 }
 
 export const useAppState = create(
@@ -21,21 +21,27 @@ export const useAppState = create(
       (set) => ({
         initKeplrSdkEth: async () => {
           try {
-            const sdk = await initEthEWallet({
+            const initRes = await initEthEWallet({
               api_key:
-                "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c", // TODO: replace with actual apiKey
+                "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
               sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
             });
 
-            if (sdk) {
-              set({ keplr_sdk_eth: sdk });
-              return true;
+            let ethEWallet;
+            if (initRes.success) {
+              ethEWallet = initRes.data;
             } else {
-              return false;
+              console.error("eth sdk init fail, err: %s", initRes.err);
+
+              return null;
             }
-          } catch (error) {
-            console.error("eth sdk init fail");
-            return false;
+
+            set({ keplr_sdk_eth: ethEWallet });
+            return ethEWallet;
+          } catch (err: any) {
+            console.error("eth sdk init fail, err: %s", err);
+
+            return null;
           }
         },
       }),
