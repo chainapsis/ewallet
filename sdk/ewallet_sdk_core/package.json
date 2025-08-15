@@ -31,13 +31,13 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "*",
     "@rollup/plugin-node-resolve": "*",
+    "@rollup/plugin-terser": "*",
     "@rollup/plugin-typescript": "*",
     "@types/jest": "*",
     "@types/node": "*",
     "del-cli": "*",
     "jest": "*",
     "rollup": "*",
-    "rollup-plugin-terser": "*",
     "ts-jest": "*",
     "typescript": "*"
   },

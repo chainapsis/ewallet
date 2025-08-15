@@ -5,14 +5,14 @@ import {
 import type { ChainInfo } from "@keplr-wallet/types";
 import { EventEmitter2 } from "@keplr-ewallet/ewallet-sdk-core";
 
-import { enable } from "./api/enable";
-import { getCosmosChainInfo } from "./api/get_cosmos_chain_info";
-import { getAccounts } from "./api/get_accounts";
-import { experimentalSuggestChain } from "./api/experimental_suggest_chain";
-import { getKey } from "./api/get_key";
-import { getOfflineSigner } from "./api/get_offline_signer";
-import { getOfflineSignerOnlyAmino } from "./api/get_offline_signer_only_amino";
-import { getOfflineSignerAuto } from "./api/get_offline_signer_auto";
+import { enable } from "@keplr-ewallet-sdk-cosmos/api/enable";
+import { getCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/api/get_cosmos_chain_info";
+import { getAccounts } from "@keplr-ewallet-sdk-cosmos/api/get_accounts";
+import { experimentalSuggestChain } from "@keplr-ewallet-sdk-cosmos/api/experimental_suggest_chain";
+import { getKey } from "@keplr-ewallet-sdk-cosmos/api/get_key";
+import { getOfflineSigner } from "@keplr-ewallet-sdk-cosmos/api/get_offline_signer";
+import { getOfflineSignerOnlyAmino } from "@keplr-ewallet-sdk-cosmos/api/get_offline_signer_only_amino";
+import { getOfflineSignerAuto } from "@keplr-ewallet-sdk-cosmos/api/get_offline_signer_auto";
 import { getKeysSettled } from "./api/get_keys_settled";
 import { sendTx } from "./api/send_tx";
 import { signAmino } from "./api/sign_amino";
@@ -67,7 +67,7 @@ export class CosmosEWallet {
       "chainChanged",
       (payload: KeplrWalletCoreEventTypeMap["chainChanged"]) => {
         if (this.eventEmitter) {
-          this.eventEmitter.emit("chainChanged", {});
+          this.eventEmitter.emit("chainChanged", payload);
         }
       },
     );
