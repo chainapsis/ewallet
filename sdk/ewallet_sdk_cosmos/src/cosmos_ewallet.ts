@@ -1,9 +1,9 @@
 import {
   type KeplrEWallet,
   type KeplrWalletCoreEventTypeMap,
+  EventEmitter2,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
-import { EventEmitter2 } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { enable } from "@keplr-ewallet-sdk-cosmos/api/enable";
 import { getCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/api/get_cosmos_chain_info";

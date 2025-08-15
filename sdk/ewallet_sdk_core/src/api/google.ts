@@ -1,4 +1,4 @@
-import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
+import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import {
   type OAuthState,
   RedirectUriSearchParamsKey,

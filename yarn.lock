@@ -78,7 +78,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.27.1":
+"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.26.2, @babel/code-frame@npm:^7.27.1":
   version: 7.27.1
   resolution: "@babel/code-frame@npm:7.27.1"
   dependencies:
@@ -3489,6 +3489,7 @@ __metadata:
     del-cli: "npm:*"
     jest: "npm:*"
     rollup: "npm:*"
+    rollup-plugin-dts: "npm:*"
     ts-jest: "npm:*"
     typescript: "npm:*"
   languageName: unknown
@@ -20878,6 +20879,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rollup-plugin-dts@npm:*, rollup-plugin-dts@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "rollup-plugin-dts@npm:6.2.1"
+  dependencies:
+    "@babel/code-frame": "npm:^7.26.2"
+    magic-string: "npm:^0.30.17"
+  peerDependencies:
+    rollup: ^3.29.4 || ^4
+    typescript: ^4.5 || ^5.0
+  dependenciesMeta:
+    "@babel/code-frame":
+      optional: true
+  checksum: 10c0/f21c8726470851a40e6ca68ae580261cee8bc6275775291b9c0fdf93b868ed54f12b11c8c0dddce2c14f5691d6032b6647d094835ab9b6789226efa60e1aa71e
+  languageName: node
+  linkType: hard
+
 "rollup@npm:*, rollup@npm:^4.0.0, rollup@npm:^4.43.0":
   version: 4.46.2
   resolution: "rollup@npm:4.46.2"
@@ -20984,6 +21001,7 @@ __metadata:
     lerna: "npm:8.2.3"
     prettier: "npm:^3.6.2"
     rollup: "npm:^4.0.0"
+    rollup-plugin-dts: "npm:^6.2.1"
     ts-jest: "npm:^29.4.1"
     tsc-alias: "npm:^1.8.16"
     tsx: "npm:^4.20.3"

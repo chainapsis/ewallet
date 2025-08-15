@@ -1,4 +1,4 @@
-import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
+import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/send_msg_to_iframe";
 
 export async function getEmail(this: KeplrEWallet): Promise<string | null> {
