@@ -3675,6 +3675,7 @@ __metadata:
     rollup-plugin-dts: "npm:*"
     rollup-plugin-tsconfig-paths: "npm:*"
     ts-jest: "npm:*"
+    tsc-alias: "npm:*"
     tsx: "npm:*"
     typescript: "npm:*"
   languageName: unknown
@@ -3703,6 +3704,7 @@ __metadata:
     bech32: "npm:^2.0.0"
     buffer: "npm:^6.0.3"
     del-cli: "npm:*"
+    esbuild: "npm:*"
     jest: "npm:*"
     rollup: "npm:*"
     rollup-plugin-dts: "npm:*"

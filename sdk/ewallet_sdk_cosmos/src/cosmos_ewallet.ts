@@ -59,11 +59,11 @@ export class CosmosEWallet {
   setupEventHandlers() {
     this.eWallet.on("_accountsChanged", (payload: any) => {
       if (this.eventEmitter) {
-        this.eventEmitter.emit("keyringChanged", payload);
+        this.eventEmitter.emit("accountsChanged", payload);
       }
     });
 
-    this.eWallet.on("_chainChanged", (payload) => {
+    this.eWallet.on("_chainChanged", (payload: any) => {
       if (this.eventEmitter) {
         this.eventEmitter.emit("chainChanged", payload);
       }

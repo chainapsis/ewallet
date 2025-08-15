@@ -68,10 +68,10 @@ export const useAppState = create(
           const cosmosSDK = initRes.data;
           set({ keplr_sdk_cosmos: cosmosSDK });
 
-          cosmosSDK.on("keyringChanged", async (payload) => {
+          cosmosSDK.on("accountsChanged", async (payload) => {
             set({
               userInfo:
-                payload as KeplrCosmosEWalletEventTypeMap["keyringChanged"],
+                payload as KeplrCosmosEWalletEventTypeMap["accountsChanged"],
             });
           });
 

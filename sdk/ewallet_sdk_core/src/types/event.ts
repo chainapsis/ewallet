@@ -13,6 +13,6 @@ export interface KeplrWalletCoreEventTypeMap {
 
 export type KeplrCosmosEWalletEventType = keyof KeplrCosmosEWalletEventTypeMap;
 export interface KeplrCosmosEWalletEventTypeMap {
-  keyringChanged: { email: string; publicKey: string };
+  accountsChanged: { email: string; publicKey: string };
   chainChanged: {};
 }
