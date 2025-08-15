@@ -1,4 +1,4 @@
-import { EventEmitter2 } from "./";
+import { EventEmitter2 } from "./emitter";
 
 describe("sdk core event - static analysis", () => {
   it("t", async () => {

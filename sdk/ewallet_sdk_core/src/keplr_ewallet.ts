@@ -8,7 +8,7 @@ import { hideModal } from "./api/hide_modal";
 import { makeSignature } from "./api/make_signature";
 import { initState } from "./api/init_state";
 import { on } from "./api/on";
-import { EventEmitter2 } from "./event";
+import { EventEmitter2 } from "./event/emitter";
 
 export class KeplrEWallet {
   apiKey: string;
