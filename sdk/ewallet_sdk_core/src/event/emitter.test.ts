@@ -4,11 +4,11 @@ describe("sdk core event - static analysis", () => {
   it("t", async () => {
     const emitter = new EventEmitter2();
 
-    emitter.on("accountsChanged", (_payload) => {
+    emitter.on("_accountsChanged", (_payload) => {
       // typechecking
     });
 
-    emitter.on("chainChanged", (_payload) => {
+    emitter.on("_chainChanged", (_payload) => {
       // typechecking
     });
   });

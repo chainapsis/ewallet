@@ -7,8 +7,8 @@ export type KeplrEWalletEventTypeMap = KeplrWalletCoreEventTypeMap &
 
 export type KeplrWalletCoreEventType = keyof KeplrWalletCoreEventTypeMap;
 export interface KeplrWalletCoreEventTypeMap {
-  accountsChanged: { email: string; publicKey: string };
-  chainChanged: {};
+  _accountsChanged: { email: string; publicKey: string };
+  _chainChanged: {};
 }
 
 export type KeplrCosmosEWalletEventType = keyof KeplrCosmosEWalletEventTypeMap;

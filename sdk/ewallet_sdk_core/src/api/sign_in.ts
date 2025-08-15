@@ -24,7 +24,7 @@ export async function signIn(this: KeplrEWallet, type: "google") {
   const publicKey = await this.getPublicKey();
   const email = await this.getEmail();
   if (!!publicKey && !!email) {
-    this.eventEmitter.emit("accountsChanged", {
+    this.eventEmitter.emit("_accountsChanged", {
       email,
       publicKey,
     });

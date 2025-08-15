@@ -57,19 +57,16 @@ export class CosmosEWallet {
   protected makeSignature = makeSignature.bind(this);
 
   setupEventHandlers() {
-    this.eWallet.on("accountsChanged", (payload: any) => {
+    this.eWallet.on("_accountsChanged", (payload: any) => {
       if (this.eventEmitter) {
         this.eventEmitter.emit("keyringChanged", payload);
       }
     });
 
-    this.eWallet.on(
-      "chainChanged",
-      (payload: KeplrWalletCoreEventTypeMap["chainChanged"]) => {
-        if (this.eventEmitter) {
-          this.eventEmitter.emit("chainChanged", payload);
-        }
-      },
-    );
+    this.eWallet.on("_chainChanged", (payload) => {
+      if (this.eventEmitter) {
+        this.eventEmitter.emit("chainChanged", payload);
+      }
+    });
   }
 }
