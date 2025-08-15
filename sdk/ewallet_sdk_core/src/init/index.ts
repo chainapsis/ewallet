@@ -1,8 +1,9 @@
+import { type Result } from "@keplr-ewallet/stdlib-js";
+
+import { setupIframeElement } from "./iframe";
 import type { KeplrEwalletInitArgs } from "@keplr-ewallet-sdk-core/types";
 import { registerMsgListener } from "@keplr-ewallet-sdk-core/window_msg/listener";
 import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
-import { type Result } from "@keplr-ewallet/stdlib-js";
-import { setupIframeElement } from "./iframe";
 
 const SDK_ENDPOINT = `https://attached.embed.keplr.app`;
 const KEPLR_EWALLET_ELEM_ID = "keplr-ewallet";
