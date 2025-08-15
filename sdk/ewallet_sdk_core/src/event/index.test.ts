@@ -1,5 +1,15 @@
-describe("sdk core event test 1", () => {
+import { EventEmitter2 } from "./";
+
+describe("sdk core event - static analysis", () => {
   it("t", async () => {
-    console.log(23);
+    const emitter = new EventEmitter2();
+
+    emitter.on("accountsChanged", (_payload) => {
+      // typechecking
+    });
+
+    emitter.on("chainChanged", (_payload) => {
+      // typechecking
+    });
   });
 });
