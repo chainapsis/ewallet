@@ -9,7 +9,7 @@ import { initCosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { ChainEWallet } from "./chain-wallet";
 import { EWalletClient } from "./client";
 
-export class EWallet extends MainWalletBase {
+export class EWalletMainWallet extends MainWalletBase {
   constructor(
     walletInfo: Wallet,
     preferredEndpoints?: EndpointOptions["endpoints"],
