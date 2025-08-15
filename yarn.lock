@@ -3638,7 +3638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/bytes@npm:^0.0.3-alpha.21, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
+"@keplr-ewallet/bytes@npm:^0.0.3-alpha.22, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/bytes@workspace:crypto/bytes"
   dependencies:
@@ -3674,7 +3674,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/credential-vault-interface@workspace:credential_vault/cv_interface"
   dependencies:
-    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.21"
+    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.22"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3745,7 +3745,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
+"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.39, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core"
   dependencies:
@@ -3770,13 +3770,31 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49, @keplr-ewallet/ewallet-sdk-cosmos@workspace:*, @keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos":
+"@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49":
+  version: 0.0.6-rc.49
+  resolution: "@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49"
+  dependencies:
+    "@cosmjs/amino": "npm:^0.33.1"
+    "@cosmjs/proto-signing": "npm:^0.33.1"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.38"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
+    "@keplr-wallet/proto-types": "npm:^0.12.253"
+    "@keplr-wallet/types": "npm:^0.12.253"
+    "@noble/curves": "npm:^1.9.2"
+    "@noble/hashes": "npm:^1.8.0"
+    bech32: "npm:^2.0.0"
+    buffer: "npm:^6.0.3"
+  checksum: 10c0/e1805761e0a1e395e2fc82be9e83ed9b4e9ed113646a77de409afe835ca8729864b80996cebefc125c04734e64fb6a37ec47a89c6ccf6a7f456092d48ed59bd5
+  languageName: node
+  linkType: hard
+
+"@keplr-ewallet/ewallet-sdk-cosmos@workspace:*, @keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos"
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.38"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.39"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
@@ -3808,7 +3826,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth"
   dependencies:
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.38"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.39"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
