@@ -15,7 +15,8 @@ export async function getEmail(this: KeplrEWallet): Promise<string | null> {
 
     return null;
   } catch (error) {
-    console.error("[core] getEmail failed with error:", error);
+    console.error("[keplr] getEmail failed with error:", error);
+
     return null;
   }
 }

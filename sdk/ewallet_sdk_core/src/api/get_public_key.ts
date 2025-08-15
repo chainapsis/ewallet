@@ -15,7 +15,8 @@ export async function getPublicKey(this: KeplrEWallet): Promise<string | null> {
 
     return null;
   } catch (error) {
-    console.error("[core] getPublicKey failed with error:", error);
+    console.error("[keplr] getPublicKey failed with error:", error);
+
     return null;
   }
 }

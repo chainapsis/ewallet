@@ -9,7 +9,7 @@ export function useInitKeplrEWallet() {
     async function fn() {
       try {
         const cosmosSDK = await appState.initKeplrSdkCosmos();
-        console.log("[useInitKeplrEWallet] cosmosSDK", cosmosSDK);
+        console.log("cosmosSDK", cosmosSDK);
         if (!cosmosSDK) {
           console.error("something wrong");
           return;

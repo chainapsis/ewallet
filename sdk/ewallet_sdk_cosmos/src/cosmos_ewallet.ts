@@ -32,30 +32,9 @@ export class CosmosEWallet {
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
+    this.eventEmitter = new EventEmitter2();
 
-    if (!this.eventEmitter) {
-      this.eventEmitter = new EventEmitter2();
-    }
-    const emitter = this.eventEmitter;
-
-    //TODO: fix 현재 제네릭에서 KeplrEWalletEventTypeMap에서 각 해당 이벤트에 대한
-    //파라미터 타입이 제대로 잡히지가 않는 버그가 있음
-    this.eWallet.on("accountsChanged", (payload: any) => {
-      // post processing
-      if (emitter) {
-        emitter.emit("keyringChanged", payload);
-      }
-    });
-
-    this.eWallet.on(
-      "chainChanged",
-      (payload: KeplrWalletCoreEventTypeMap["chainChanged"]) => {
-        // post processing
-        if (emitter) {
-          emitter.emit("chainChanged", payload);
-        }
-      },
-    );
+    this.setupEventHandlers();
   }
 
   enable = enable;
@@ -74,7 +53,23 @@ export class CosmosEWallet {
   signArbitrary = signArbitrary.bind(this);
   verifyArbitrary = verifyArbitrary.bind(this);
   on = on.bind(this);
-
   protected showModal = showModal.bind(this);
   protected makeSignature = makeSignature.bind(this);
+
+  setupEventHandlers() {
+    this.eWallet.on("accountsChanged", (payload: any) => {
+      if (this.eventEmitter) {
+        this.eventEmitter.emit("keyringChanged", payload);
+      }
+    });
+
+    this.eWallet.on(
+      "chainChanged",
+      (payload: KeplrWalletCoreEventTypeMap["chainChanged"]) => {
+        if (this.eventEmitter) {
+          this.eventEmitter.emit("chainChanged", payload);
+        }
+      },
+    );
+  }
 }
