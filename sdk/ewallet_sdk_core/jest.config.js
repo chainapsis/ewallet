@@ -1,22 +1,20 @@
-import { createDefaultEsmPreset } from "ts-jest";
-
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 export default {
-  ...createDefaultEsmPreset(),
+  preset: "ts-jest/presets/default-esm",
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
   testEnvironment: "node",
-  modulePathIgnorePatterns: ["<rootDir>/dist/"],
-  extensionsToTreatAsEsm: [".ts"],
-  globals: {
-    "ts-jest": {
-      useESM: true,
-    },
-  },
   transform: {
-    "^.+\\.tsx?$": [
+    "^.+\\.ts$": [
       "ts-jest",
       {
         useESM: true,
       },
     ],
   },
+  modulePathIgnorePatterns: ["<rootDir>/dist/"],
+  moduleNameMapper: {
+    "^@keplr-ewallet-sdk-cosmos/(.*)$": "<rootDir>/src/$1",
+    "^@keplr-ewallet-sdk-core/(.*)$": "<rootDir>/../ewallet_sdk_core/src/$1",
+  },
+  setupFilesAfterEnv: [],
 };

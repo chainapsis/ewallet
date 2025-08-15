@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc --build --force && rollup -c"
+    "build": "yarn clean && tsc --build --force && rollup -c",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "publishConfig": {
     "access": "public"

@@ -1,4 +1,4 @@
-import { describe } from "node:test";
+// import { describe } from "node:test";
 
 describe("sdk core event test 1", () => {
   it("t", async () => {
