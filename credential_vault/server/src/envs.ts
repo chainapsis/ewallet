@@ -5,6 +5,12 @@ import os from "node:os";
 
 const ENV_FILE_NAME_STEM = "credential_vault";
 
+export const ENV_FILE_NAME = "credential_vault.env";
+export const EXAMPLE_ENV_FILE = "credential_vault.env.example";
+
+export const ENV_FILE_NAME_2 = "credential_vault_2.env";
+export const EXAMPLE_ENV_FILE_2 = "credential_vault_2.env.example";
+
 export interface EnvType {
   PORT: number;
   DB_HOST: string;
