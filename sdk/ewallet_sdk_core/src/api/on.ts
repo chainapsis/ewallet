@@ -7,6 +7,8 @@ import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 export async function on<T extends KeplrWalletCoreEventType>(
   this: KeplrEWallet,
   eventType: T,
+  // TODO: @elden
+  // conditional typing
   handler: (payload: KeplrWalletCoreEventTypeMap[T]) => void,
 ) {
   if (this.eventEmitter) {
