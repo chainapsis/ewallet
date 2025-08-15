@@ -16,7 +16,4 @@ esbuild
     },
     plugins: [],
   })
-  .then(() => {
-    console.log("Complete");
-  })
   .catch(() => process.exit(1));
