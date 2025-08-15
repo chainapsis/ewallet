@@ -805,6 +805,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmjs/amino@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/amino@npm:0.36.0"
+  dependencies:
+    "@cosmjs/crypto": "npm:^0.36.0"
+    "@cosmjs/encoding": "npm:^0.36.0"
+    "@cosmjs/math": "npm:^0.36.0"
+    "@cosmjs/utils": "npm:^0.36.0"
+  checksum: 10c0/7f755eb59dba493b088303b6bea68a05443517de3abf20a05d2db64b5b6b9a63bd203097fc7e32ced3d48b4902bf82ae6da6233a3b4100930a0048a5bd219268
+  languageName: node
+  linkType: hard
+
 "@cosmjs/cosmwasm-stargate@npm:0.29.0":
   version: 0.29.0
   resolution: "@cosmjs/cosmwasm-stargate@npm:0.29.0"
@@ -922,6 +934,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmjs/crypto@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/crypto@npm:0.36.0"
+  dependencies:
+    "@cosmjs/encoding": "npm:^0.36.0"
+    "@cosmjs/math": "npm:^0.36.0"
+    "@cosmjs/utils": "npm:^0.36.0"
+    "@noble/ciphers": "npm:^1.3.0"
+    "@noble/curves": "npm:^1.9.2"
+    "@noble/hashes": "npm:^1"
+    hash-wasm: "npm:^4.12.0"
+  checksum: 10c0/3768e07175801fd170ca7691e611ad3af113c64ba980dde7781c1330ce02d2707d348fdf6c1b9858f9c61f767ee380b22a37e2a9afc05ebe3ad95735c494f84d
+  languageName: node
+  linkType: hard
+
 "@cosmjs/encoding@npm:0.29.0":
   version: 0.29.0
   resolution: "@cosmjs/encoding@npm:0.29.0"
@@ -996,6 +1023,17 @@ __metadata:
     bech32: "npm:^1.1.4"
     readonly-date: "npm:^1.0.0"
   checksum: 10c0/d35f4fc7eaffde9dd3a32f60a8b58a87c0c23b8901c3a4760156a0103739b862b14963f60eeef638ddacd0b4fab28fa46b4fc57b82fa14ee08d4786aab6d87fe
+  languageName: node
+  linkType: hard
+
+"@cosmjs/encoding@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/encoding@npm:0.36.0"
+  dependencies:
+    base64-js: "npm:^1.3.0"
+    bech32: "npm:^1.1.4"
+    readonly-date: "npm:^1.0.0"
+  checksum: 10c0/3e8038b8856d080acf7e233bfdde9ce1a90e5146e4a2104da30aeba7922a0a3bc2d732589a07554e0f5d201802a85cf63771e44841873846b2364b1fed594254
   languageName: node
   linkType: hard
 
@@ -1125,6 +1163,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmjs/math@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/math@npm:0.36.0"
+  checksum: 10c0/72fbbd8beeef9919775c213e8b2ce568b957c9f73a4a634a275f5bac7cb7a0b614dcc81d3d3593b4634ded1b36fea1fe1bc9aa689a706fd51e94320a919b06b5
+  languageName: node
+  linkType: hard
+
 "@cosmjs/proto-signing@npm:0.29.0":
   version: 0.29.0
   resolution: "@cosmjs/proto-signing@npm:0.29.0"
@@ -1205,6 +1250,20 @@ __metadata:
     "@cosmjs/utils": "npm:^0.34.0"
     cosmjs-types: "npm:^0.9.0"
   checksum: 10c0/48cfc459219d8922a63c2ded58bdeab08773a8a065190618b6f5ec59fc44afbc4153d600afd319993f24fe152b3f6305e05cfbd2c83c1849d92f0eae4f232583
+  languageName: node
+  linkType: hard
+
+"@cosmjs/proto-signing@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/proto-signing@npm:0.36.0"
+  dependencies:
+    "@cosmjs/amino": "npm:^0.36.0"
+    "@cosmjs/crypto": "npm:^0.36.0"
+    "@cosmjs/encoding": "npm:^0.36.0"
+    "@cosmjs/math": "npm:^0.36.0"
+    "@cosmjs/utils": "npm:^0.36.0"
+    cosmjs-types: "npm:^0.10.1"
+  checksum: 10c0/aecc5f7325ff30d3ab6d9667617b078935d8af79c21eb17438d7f4e4cd0f8c0a384fa1ed88ece902ed2f4495c01333bf0a17b9d0189b401cfc6eb7f5674e6228
   languageName: node
   linkType: hard
 
@@ -1494,6 +1553,13 @@ __metadata:
   version: 0.34.0
   resolution: "@cosmjs/utils@npm:0.34.0"
   checksum: 10c0/a55ab727f4d4930545b80676d0056dedc22e0c1d4788670b0613e0798dd7fd8baea2a4ef7ccd0d9facb08fa4938cc6edec415463b811b2ad1e2aa13e72dace89
+  languageName: node
+  linkType: hard
+
+"@cosmjs/utils@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/utils@npm:0.36.0"
+  checksum: 10c0/ccc6c8ec8459d4e4cd37bef73df7a5e70d77ad0965e3a71710e390ec7cc74132dda875fc22a5f384a427480d0e79d6ed4a8ec451e0e7f5724c683a6501e35ee8
   languageName: node
   linkType: hard
 
@@ -3703,7 +3769,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-cosmos@workspace:*, @keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos":
+"@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49, @keplr-ewallet/ewallet-sdk-cosmos@workspace:*, @keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos"
   dependencies:
@@ -4178,6 +4244,17 @@ __metadata:
   peerDependencies:
     starknet: ^7
   checksum: 10c0/a995ef4d4aea9078d5521bbfc60f681f293fdf0d8c1e9824d9e68b224776160490964a54d6f05520742a096f0859f9777e112da19f657d377f6cb967514cc0f8
+  languageName: node
+  linkType: hard
+
+"@keplr-wallet/types@npm:^0.12.263":
+  version: 0.12.263
+  resolution: "@keplr-wallet/types@npm:0.12.263"
+  dependencies:
+    long: "npm:^4.0.0"
+  peerDependencies:
+    starknet: ^7
+  checksum: 10c0/8b734419416383adfa8d96203d6cb7bf47523da03e6f1f90f3da9043d3dacf5524dc7163a3d9f87b01df3698805f2d26a980d4cb1add96afd2cf16e67ba49d8a
   languageName: node
   linkType: hard
 
@@ -12863,6 +12940,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cosmjs-types@npm:^0.10.1":
+  version: 0.10.1
+  resolution: "cosmjs-types@npm:0.10.1"
+  checksum: 10c0/f114cd1a0636034d93b97f61b049c5dc4929c81ff63855c6e56b0335be2b2d35475eee862ea5bd504288b33d3a918952dab11d4b6bed6bc2829f401cb5e6c797
+  languageName: node
+  linkType: hard
+
 "cosmjs-types@npm:^0.5.0, cosmjs-types@npm:^0.5.2":
   version: 0.5.2
   resolution: "cosmjs-types@npm:0.5.2"
@@ -14354,7 +14438,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ewallet_cosmos_kit@workspace:sdk/ewallet_cosmos_kit"
   dependencies:
+    "@cosmjs/amino": "npm:^0.36.0"
+    "@cosmjs/proto-signing": "npm:^0.36.0"
     "@cosmos-kit/core": "npm:^2.16.3"
+    "@keplr-ewallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.49"
+    "@keplr-wallet/types": "npm:^0.12.263"
   languageName: unknown
   linkType: soft
 
@@ -15405,6 +15493,13 @@ __metadata:
     inherits: "npm:^2.0.4"
     safe-buffer: "npm:^5.2.1"
   checksum: 10c0/6dc185b79bad9b6d525cd132a588e4215380fdc36fec6f7a8a58c5db8e3b642557d02ad9c367f5e476c7c3ad3ccffa3607f308b124e1ed80e3b80a1b254db61e
+  languageName: node
+  linkType: hard
+
+"hash-wasm@npm:^4.12.0":
+  version: 4.12.0
+  resolution: "hash-wasm@npm:4.12.0"
+  checksum: 10c0/6cb95055319810b6f673de755289960683a9831807690795f0e8918b2fd7e6ae5b82a9dc47cbace171cf2814b412ef68c315a0ead0b4d96bd3e56a05e4bde136
   languageName: node
   linkType: hard
 

@@ -2,8 +2,13 @@ import type {
   OfflineAminoSigner,
   StdSignature,
   StdSignDoc,
+  AminoSignResponse,
 } from "@cosmjs/amino";
-import { type Algo, type OfflineDirectSigner } from "@cosmjs/proto-signing";
+import type {
+  Algo,
+  OfflineDirectSigner,
+  DirectSignResponse,
+} from "@cosmjs/proto-signing";
 import type {
   ChainRecord,
   DirectSignDoc,
@@ -15,8 +20,6 @@ import type {
 } from "@cosmos-kit/core";
 import { BroadcastMode } from "@keplr-wallet/types";
 import { CosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
-import type { AminoSignResponse } from "@cosmjs/amino";
-import type { DirectSignResponse } from "@cosmjs/proto-signing";
 
 export class EWalletClient implements WalletClient {
   readonly client: CosmosEWallet;
