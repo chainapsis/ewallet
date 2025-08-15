@@ -1,41 +1,76 @@
 import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import terser from "@rollup/plugin-terser";
+// import commonjs from "@rollup/plugin-commonjs";
+// import terser from "@rollup/plugin-terser";
 
-export default {
-  input: "src/index.ts",
-  output: [
-    {
-      file: "dist/index.js",
+export default [
+  {
+    input: "src/index.ts",
+    output: [
+      {
+        file: "dist/index.js",
+        format: "esm",
+        sourcemap: true,
+      },
+      // {
+      //   file: "dist/index.min.js",
+      //   format: "esm",
+      //   sourcemap: true,
+      //   plugins: [terser()],
+      // },
+    ],
+    external: [
+      "@keplr-ewallet/ewallet-sdk-core",
+      "@cosmjs/amino",
+      "@cosmjs/proto-signing",
+      "@keplr-ewallet/stdlib-js",
+      "@keplr-wallet/proto-types",
+      "@keplr-wallet/types",
+      "@noble/curves",
+      "@noble/hashes",
+      "bech32",
+      "buffer",
+    ],
+    plugins: [
+      nodeResolve(),
+      typescript({
+        tsconfig: "./tsconfig.json",
+        declaration: true,
+      }),
+    ],
+  },
+  {
+    input: "src/index.ts",
+    output: {
+      file: "dist/index.d.ts", // Output path for the bundled declaration file
       format: "esm",
-      sourcemap: true,
     },
-    {
-      file: "dist/index.min.js",
-      format: "esm",
-      sourcemap: true,
-      plugins: [terser()],
-    },
-  ],
-  external: [
-    "@keplr-ewallet/ewallet-sdk-core",
-    "@cosmjs/amino",
-    "@cosmjs/proto-signing",
-    "@keplr-ewallet/stdlib-js",
-    "@keplr-wallet/proto-types",
-    "@keplr-wallet/types",
-    "@noble/curves",
-    "@noble/hashes",
-    "bech32",
-    "buffer",
-  ],
-  plugins: [
-    nodeResolve(),
-    commonjs(),
-    typescript({
-      tsconfig: "./tsconfig.json",
-      declaration: false,
-    }),
-  ],
-};
+    plugins: [tsConfigPaths(), nodeResolve(), dts()],
+  },
+];
+
+// {
+//   input: "src/index.ts",
+//   output: {
+//     file: "dist/index.js",
+//     format: "esm",
+//     sourcemap: true,
+//   },
+//   external: ["@keplr-ewallet/stdlib-js", "@keplr-wallet/types"],
+//   plugins: [
+//     nodeResolve(),
+//     // commonjs(),
+//     typescript({
+//       tsconfig: "./tsconfig.json",
+//       declaration: true,
+//     }),
+//   ],
+// },
+// {
+//   input: "src/index.ts",
+//   output: {
+//     file: "dist/index.d.ts", // Output path for the bundled declaration file
+//     format: "esm",
+//   },
+//   plugins: [tsConfigPaths(), nodeResolve(), dts()],
+// },

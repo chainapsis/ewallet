@@ -8,7 +8,8 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc && rollup -c",
+    "build": "yarn clean && node build.mjs && tsc --build --force --emitDeclarationOnly",
+    "build2": "yarn clean && tsc && rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "main": "./dist/index.js",
@@ -47,9 +48,12 @@
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
+    "esbuild": "*",
     "del-cli": "*",
     "jest": "*",
     "rollup": "*",
+    "rollup-plugin-dts": "*",
+    "rollup-plugin-tsconfig-paths": "*",
     "ts-jest": "*",
     "tsc-alias": "*",
     "typescript": "*"

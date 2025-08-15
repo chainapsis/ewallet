@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && rollup -c",
-    "build2": "yarn clean && tsc --build --force && rollup -c",
+    "build": "yarn clean && node build.mjs && tsc --build --force --emitDeclarationOnly",
+    "build2": "yarn clean && tsc --build --force && rollup --c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "publishConfig": {
@@ -17,6 +17,9 @@
   "files": [
     "dist/"
   ],
+  "imports": {
+    "@keplr-ewallet-sdk-core/*": "./dist/*.js"
+  },
   "keywords": [
     "keplr",
     "ewallet",
@@ -41,10 +44,13 @@
     "@types/jest": "*",
     "@types/node": "*",
     "del-cli": "*",
+    "esbuild": "*",
     "jest": "*",
     "rollup": "*",
     "rollup-plugin-dts": "*",
+    "rollup-plugin-tsconfig-paths": "*",
     "ts-jest": "*",
+    "tsx": "*",
     "typescript": "*"
   },
   "gitHead": "5c82fc2b9b670d82a53e5aef0d8550537a03dccc"
