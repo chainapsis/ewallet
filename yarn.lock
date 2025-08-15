@@ -1537,6 +1537,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmos-kit/core@npm:^2.16.3":
+  version: 2.16.3
+  resolution: "@cosmos-kit/core@npm:2.16.3"
+  dependencies:
+    "@chain-registry/client": "npm:^1.49.11"
+    "@chain-registry/keplr": "npm:^1.69.13"
+    "@chain-registry/types": "npm:^0.46.11"
+    "@cosmjs/amino": "npm:^0.32.3"
+    "@cosmjs/cosmwasm-stargate": "npm:^0.32.3"
+    "@cosmjs/proto-signing": "npm:^0.32.3"
+    "@cosmjs/stargate": "npm:^0.32.3"
+    "@dao-dao/cosmiframe": "npm:^1.0.0"
+    "@walletconnect/types": "npm:2.11.0"
+    bowser: "npm:2.11.0"
+    cosmjs-types: "npm:^0.9.0"
+    events: "npm:3.3.0"
+    nock: "npm:13.5.4"
+    uuid: "npm:^9.0.1"
+  checksum: 10c0/522d9a6320ca2cc84c38ead2528a88e3c0512388b79e843fa3e7b3fb23b9f885c4b53b4d3ad3c6c57d75d4d3cb808c608bd20e98d17b3dcbdef8bc7cf8d4086a
+  languageName: node
+  linkType: hard
+
 "@cosmos-kit/keplr-extension@npm:^2.15.2":
   version: 2.15.2
   resolution: "@cosmos-kit/keplr-extension@npm:2.15.2"
@@ -14327,6 +14349,14 @@ __metadata:
   checksum: 10c0/77fbe2d94a902a80e9b8f5a73dcd695d9c14899c5e82967a61b1fc6cbbb28c46552d9b127cff47c45fcf684748bdbcfa0a50410349109de87ceb4b199ef6ee99
   languageName: node
   linkType: hard
+
+"ewallet_cosmos_kit@workspace:sdk/ewallet_cosmos_kit":
+  version: 0.0.0-use.local
+  resolution: "ewallet_cosmos_kit@workspace:sdk/ewallet_cosmos_kit"
+  dependencies:
+    "@cosmos-kit/core": "npm:^2.16.3"
+  languageName: unknown
+  linkType: soft
 
 "execa@npm:5.0.0":
   version: 5.0.0

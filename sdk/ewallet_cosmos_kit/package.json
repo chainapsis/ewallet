@@ -1,0 +1,7 @@
+{
+  "name": "ewallet_cosmos_kit",
+  "version": "0.0.1",
+  "dependencies": {
+    "@cosmos-kit/core": "^2.16.3"
+  }
+}
