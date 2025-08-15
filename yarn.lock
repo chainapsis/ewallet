@@ -3647,6 +3647,7 @@ __metadata:
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
+    jest: "npm:*"
     ts-jest: "npm:*"
     typescript: "npm:*"
   languageName: unknown

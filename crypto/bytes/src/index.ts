@@ -64,10 +64,10 @@ export class Bytes<N extends number> {
       };
     }
 
-    if (hexString.length === 0 && bytesLength !== 0) {
+    if (hexString.length <= 0 || bytesLength <= 0) {
       return {
         success: false,
-        err: "Empty string for non-zero length.",
+        err: `Invalid length or invalid bytesLength. Expected: > 0`,
       };
     }
 
