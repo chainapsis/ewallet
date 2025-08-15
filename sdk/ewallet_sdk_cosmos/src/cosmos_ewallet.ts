@@ -67,7 +67,7 @@ export class CosmosEWallet {
       "chainChanged",
       (payload: KeplrWalletCoreEventTypeMap["chainChanged"]) => {
         if (this.eventEmitter) {
-          this.eventEmitter.emit("chainChanged", payload);
+          this.eventEmitter.emit("chainChanged", {});
         }
       },
     );

@@ -1,10 +1,22 @@
-module.exports = {
-  preset: "ts-jest",
+import { createDefaultEsmPreset } from "ts-jest";
+
+/** @type {import('ts-jest').JestConfigWithTsJest} */
+export default {
+  ...createDefaultEsmPreset(),
   testEnvironment: "node",
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
-  moduleNameMapper: {},
-  setupFilesAfterEnv: [
-    // "<rootDir>/src/jest-setup.ts"
-  ],
-  testTimeout: 60000,
+  extensionsToTreatAsEsm: [".ts"],
+  globals: {
+    "ts-jest": {
+      useESM: true,
+    },
+  },
+  transform: {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+      },
+    ],
+  },
 };
