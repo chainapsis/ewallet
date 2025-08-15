@@ -28,6 +28,10 @@
     "url": "https://github.com/chainapsis/ewallet.git",
     "directory": "sdk/ewallet_sdk_core"
   },
+  "dependencies": {
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.6",
+    "@keplr-wallet/types": "^0.12.257"
+  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "*",
     "@rollup/plugin-node-resolve": "*",
@@ -41,9 +45,5 @@
     "ts-jest": "*",
     "typescript": "*"
   },
-  "gitHead": "5c82fc2b9b670d82a53e5aef0d8550537a03dccc",
-  "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.6",
-    "@keplr-wallet/types": "^0.12.257"
-  }
+  "gitHead": "5c82fc2b9b670d82a53e5aef0d8550537a03dccc"
 }
