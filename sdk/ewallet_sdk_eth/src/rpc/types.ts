@@ -27,30 +27,13 @@ import type { ErrorObject } from "@keplr-ewallet-sdk-eth/errors";
 
 export type RpcResponse<
   result = RpcResponseData<RpcMethod>,
-  error extends ErrorObject<unknown> = ErrorObject<unknown>,
+  error extends RpcError = RpcError,
 > = {
   id: number;
   jsonrpc: "2.0";
 } & ({ result: result } | { error: error });
 
-export class RpcError extends Error {
-  public readonly code: number;
-  public readonly data?: unknown;
-
-  constructor(errorObject: ErrorObject<unknown>) {
-    super(errorObject.message);
-    this.code = errorObject.code;
-    this.data = errorObject.data;
-  }
-
-  toErrorObject(): ErrorObject<unknown> {
-    return {
-      code: this.code,
-      message: this.message,
-      data: this.data,
-    };
-  }
-}
+export type RpcError = ErrorObject<unknown>;
 
 export type RpcBlockNumberOrTag = RpcBlockNumber | BlockTag;
 export type RpcBlockRef = RpcBlockNumberOrTag | RpcBlockIdentifier;

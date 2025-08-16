@@ -5,8 +5,8 @@ import type {
   RpcMethod,
   RpcRequestArgs,
   RpcResponseData,
+  RpcError,
 } from "@keplr-ewallet-sdk-eth/rpc";
-import { RpcError } from "@keplr-ewallet-sdk-eth/rpc";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 
 export interface ProviderConnectInfo {
