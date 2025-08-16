@@ -86,7 +86,8 @@ export namespace RpcResponse {
   }
 }
 
-export type RpcBlockRef = RpcBlockNumber | BlockTag | RpcBlockIdentifier;
+export type RpcBlockNumberOrTag = RpcBlockNumber | BlockTag;
+export type RpcBlockRef = RpcBlockNumberOrTag | RpcBlockIdentifier;
 
 type Web3ClientVersion = {
   Req: {
@@ -155,13 +156,10 @@ type EthEstimateGas = {
     method: "eth_estimateGas";
     params:
       | [transaction: RpcTransactionRequest]
+      | [transaction: RpcTransactionRequest, block: RpcBlockNumberOrTag]
       | [
           transaction: RpcTransactionRequest,
-          block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
-        ]
-      | [
-          transaction: RpcTransactionRequest,
-          block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
+          block: RpcBlockNumberOrTag,
           stateOverrides: RpcStateOverride,
         ];
   };
@@ -173,7 +171,7 @@ type EthFeeHistory = {
     method: "eth_feeHistory";
     params: [
       blockCount: Quantity,
-      newestBlock: Exclude<RpcBlockRef, RpcBlockIdentifier>,
+      newestBlock: RpcBlockNumberOrTag,
       rewardPercentiles: number[] | undefined,
     ];
   };
@@ -199,10 +197,7 @@ type EthGetBlockByHash = {
 type EthGetBlockByNumber = {
   Req: {
     method: "eth_getBlockByNumber";
-    params: [
-      block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
-      includeTransactionObjects: boolean,
-    ];
+    params: [block: RpcBlockNumberOrTag, includeTransactionObjects: boolean];
   };
   Res: RpcBlock | null;
 };
@@ -218,7 +213,7 @@ type EthGetBlockTransactionCountByHash = {
 type EthGetBlockTransactionCountByNumber = {
   Req: {
     method: "eth_getBlockTransactionCountByNumber";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>];
+    params: [block: RpcBlockNumberOrTag];
   };
   Res: Quantity;
 };
@@ -234,11 +229,7 @@ type EthGetCode = {
 type EthGetProof = {
   Req: {
     method: "eth_getProof";
-    params: [
-      address: Address,
-      storageKeys: Hash[],
-      block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
-    ];
+    params: [address: Address, storageKeys: Hash[], block: RpcBlockNumberOrTag];
   };
   Res: RpcProof;
 };
@@ -262,7 +253,7 @@ type EthGetTransactionByBlockHashAndIndex = {
 type EthGetTransactionByBlockNumberAndIndex = {
   Req: {
     method: "eth_getTransactionByBlockNumberAndIndex";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>, index: Quantity];
+    params: [block: RpcBlockNumberOrTag, index: Quantity];
   };
   Res: RpcTransaction | null;
 };
@@ -302,7 +293,7 @@ type EthGetUncleByBlockHashAndIndex = {
 type EthGetUncleByBlockNumberAndIndex = {
   Req: {
     method: "eth_getUncleByBlockNumberAndIndex";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>, index: Quantity];
+    params: [block: RpcBlockNumberOrTag, index: Quantity];
   };
   Res: RpcUncle | null;
 };
@@ -318,7 +309,7 @@ type EthGetUncleCountByBlockHash = {
 type EthGetUncleCountByBlockNumber = {
   Req: {
     method: "eth_getUncleCountByBlockNumber";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>];
+    params: [block: RpcBlockNumberOrTag];
   };
   Res: Quantity;
 };
@@ -395,8 +386,8 @@ type EthGetLogs = {
       topics?: LogTopic[] | undefined;
     } & (
       | {
-          fromBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
-          toBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
+          fromBlock?: RpcBlockNumberOrTag | undefined;
+          toBlock?: RpcBlockNumberOrTag | undefined;
           blockHash?: undefined;
         }
       | {
@@ -422,8 +413,8 @@ type EthNewFilter = {
     method: "eth_newFilter";
     params: [
       filter: {
-        fromBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
-        toBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
+        fromBlock?: RpcBlockNumberOrTag | undefined;
+        toBlock?: RpcBlockNumberOrTag | undefined;
         address?: Address | Address[] | undefined;
         topics?: LogTopic[] | undefined;
       },
@@ -467,10 +458,7 @@ type EthSyncing = {
 type EthCreateAccessList = {
   Req: {
     method: "eth_createAccessList";
-    params: [
-      transaction: RpcTransactionRequest,
-      block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
-    ];
+    params: [transaction: RpcTransactionRequest, block: RpcBlockNumberOrTag];
   };
   Res: {
     accessList: AccessList;
