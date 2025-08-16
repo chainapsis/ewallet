@@ -15,16 +15,13 @@ import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 import { ErrorCodes, standardError } from "@keplr-ewallet-sdk-eth/errors";
 import type {
   RpcMethod,
+  RpcResponse,
   RpcRequestArgs,
   RpcResponseData,
   PublicRpcMethod,
   WalletRpcMethod,
 } from "@keplr-ewallet-sdk-eth/rpc";
-import {
-  RpcResponse,
-  RpcError,
-  PUBLIC_RPC_METHODS,
-} from "@keplr-ewallet-sdk-eth/rpc";
+import { RpcError, PUBLIC_RPC_METHODS } from "@keplr-ewallet-sdk-eth/rpc";
 import {
   parseTypedData,
   isValidChainId,
@@ -183,7 +180,7 @@ export class EWalletEIP1193Provider
 
         const data = (await res.json()) as RpcResponse<RpcResponseData<M>>;
 
-        if (RpcResponse.isError(data)) {
+        if ("error" in data) {
           throw new RpcError(data.error);
         }
         return data.result;

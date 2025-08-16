@@ -52,40 +52,6 @@ export class RpcError extends Error {
   }
 }
 
-export namespace RpcResponse {
-  export function isSuccess<T>(
-    response: RpcResponse<T>,
-  ): response is { id: number; jsonrpc: "2.0" } & { result: T } {
-    return "result" in response;
-  }
-
-  export function isError<T>(response: RpcResponse<T>): response is {
-    id: number;
-    jsonrpc: "2.0";
-  } & {
-    error: ErrorObject<unknown>;
-  } {
-    return "error" in response;
-  }
-
-  export function getResult<T>(response: RpcResponse<T>): T {
-    if (isSuccess(response)) {
-      return response.result;
-    }
-    throw new RpcError(response.error);
-  }
-
-  export function getResultOrNull<T>(response: RpcResponse<T>): T | null {
-    return isSuccess(response) ? response.result : null;
-  }
-
-  export function getError<T>(
-    response: RpcResponse<T>,
-  ): ErrorObject<unknown> | null {
-    return isError(response) ? response.error : null;
-  }
-}
-
 export type RpcBlockNumberOrTag = RpcBlockNumber | BlockTag;
 export type RpcBlockRef = RpcBlockNumberOrTag | RpcBlockIdentifier;
 
