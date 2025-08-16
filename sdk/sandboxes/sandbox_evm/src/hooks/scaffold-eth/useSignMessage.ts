@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Hex, WalletClient } from "viem";
 
-export function usePersonalSign() {
+export function useSignMessage() {
   const [signature, setSignature] = useState<Hex | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const signPersonalMessage = async (
+  const signMessage = async (
     walletClient: WalletClient,
     message: string,
   ): Promise<void> => {
@@ -18,20 +18,14 @@ export function usePersonalSign() {
         throw new Error("No account connected");
       }
 
-      // Convert message to hex if it's not already
-      const messageHex = message.startsWith("0x")
-        ? message
-        : `0x${Buffer.from(message, "utf8").toString("hex")}`;
-
       const signature = await walletClient.signMessage({
         account: walletClient.account.address,
-        message: messageHex,
+        message,
       });
 
       setSignature(signature);
     } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error("Personal signing failed");
+      const error = err instanceof Error ? err : new Error("Signing failed");
       setError(error);
       throw error;
     } finally {
@@ -40,7 +34,7 @@ export function usePersonalSign() {
   };
 
   return {
-    signPersonalMessage,
+    signMessage,
     signature,
     isLoading,
     error,

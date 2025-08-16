@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 
-import { usePersonalSign } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { useSignMessage } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
 import { TextAreaInput } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
 
 export function PersonalSignWidget() {
@@ -15,19 +15,19 @@ export function PersonalSignWidget() {
   );
 
   const {
-    signPersonalMessage,
+    signMessage,
     signature,
     isLoading: personalSignLoading,
     error: personalSignError,
     reset: resetPersonalSign,
-  } = usePersonalSign();
+  } = useSignMessage();
 
   const handlePersonalSign = async () => {
     if (!walletClient || !address) {
       return;
     }
 
-    signPersonalMessage(walletClient, personalMessage);
+    await signMessage(walletClient, personalMessage);
   };
 
   const copySignature = async () => {
@@ -57,9 +57,6 @@ export function PersonalSignWidget() {
             onChange={(val) => setPersonalMessage(val)}
             rows={4}
           />
-          <p className="text-xs text-base-content/60 m-0">
-            * The message will be converted to hex format for signing
-          </p>
         </div>
         <button
           onClick={handlePersonalSign}

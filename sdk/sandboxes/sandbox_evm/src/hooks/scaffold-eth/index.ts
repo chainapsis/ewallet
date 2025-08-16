@@ -9,4 +9,4 @@ export * from "./useTransactor";
 export * from "./useWatchBalance";
 export * from "./useSelectedNetwork";
 export * from "./usePermit";
-export * from "./usePersonalSign";
+export * from "./useSignMessage";
