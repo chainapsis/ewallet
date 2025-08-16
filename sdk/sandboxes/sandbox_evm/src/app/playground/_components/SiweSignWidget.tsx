@@ -4,7 +4,6 @@ import { useAccount, useChainId, useWalletClient } from "wagmi";
 import { createSiweMessage, generateSiweNonce } from "viem/siwe";
 import { useState } from "react";
 
-import { TextAreaInput } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
 import { useSignMessage } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
 
 export function SiweSignWidget() {
