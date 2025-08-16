@@ -6,7 +6,11 @@ import {
   recoverTypedDataAddress,
   recoverTransactionAddress,
   type TransactionSerialized,
+  createPublicClient,
+  http,
 } from "viem";
+import { mainnet } from "viem/chains";
+import { parseSiweMessage } from "viem/siwe";
 
 import {
   BytesInput,
@@ -29,12 +33,8 @@ function PersonalSignVerifier() {
         return;
       }
 
-      const signableMessage = personalMessage.startsWith("0x")
-        ? personalMessage
-        : `0x${Buffer.from(personalMessage, "utf8").toString("hex")}`;
-
       const recoveredAddress = await recoverMessageAddress({
-        message: signableMessage,
+        message: personalMessage,
         signature: personalSignature as `0x${string}`,
       });
 
@@ -108,6 +108,124 @@ function PersonalSignVerifier() {
           <div className="bg-base-200 rounded p-3 w-full overflow-x-auto">
             <code className="text-xs whitespace-pre font-mono text-base-content">
               {personalRecoveredAddress}
+            </code>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SiweVerifier() {
+  const [siweMessage, setSiweMessage] = useState<string>("");
+  const [siweSignature, setSiweSignature] = useState("");
+  const [siweError, setSiweError] = useState("");
+  const [siweAddress, setSiweAddress] = useState<`0x${string}` | null>(null);
+
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  });
+
+  const verifySiweSignature = async () => {
+    try {
+      setSiweError("");
+      setSiweAddress(null);
+
+      if (!siweMessage || !siweSignature) {
+        setSiweError("Please provide both SIWE message and signature");
+        return;
+      }
+
+      const parsed = parseSiweMessage(siweMessage);
+
+      console.log(parsed);
+
+      if (!parsed.address) {
+        setSiweError("Invalid SIWE message");
+        return;
+      }
+
+      const valid = await publicClient.verifySiweMessage({
+        message: siweMessage,
+        signature: siweSignature as `0x${string}`,
+      });
+
+      if (!valid) {
+        setSiweError("Invalid signature");
+        return;
+      }
+
+      setSiweAddress(parsed.address);
+    } catch (error) {
+      setSiweError(
+        error instanceof Error ? error.message : "Verification failed",
+      );
+    }
+  };
+
+  const resetSiweVerification = () => {
+    setSiweMessage("");
+    setSiweSignature("");
+    setSiweAddress(null);
+    setSiweError("");
+  };
+
+  return (
+    <div className="space-y-4">
+      <label className="label">
+        <span className="label-text">SIWE Message</span>
+      </label>
+      <TextAreaInput
+        name="siwe-original-message"
+        value={siweMessage}
+        onChange={(v) => setSiweMessage(v)}
+        rows={8}
+        placeholder="Enter the original SIWE message that was signed..."
+      />
+      <p className="text-xs text-base-content/60 -mt-2">
+        The exact SIWE message that was signed. Example:
+        "keplr-ewallet-sandbox.vercel.app wants you to sign in..."
+      </p>
+
+      <label className="label">
+        <span className="label-text">Signature</span>
+      </label>
+      <BytesInput
+        name="siwe-signature"
+        placeholder="0x..."
+        value={siweSignature}
+        onChange={(val) => setSiweSignature(val)}
+        disableConvertToHex
+      />
+      <p className="text-xs text-base-content/60 -mt-2">
+        The signature to verify (0x-prefixed hex string). Example: 0x1234...abcd
+      </p>
+
+      <div className="flex gap-2">
+        <button
+          onClick={verifySiweSignature}
+          className="btn btn-warning flex-1"
+        >
+          Verify SIWE
+        </button>
+        <button onClick={resetSiweVerification} className="btn btn-ghost">
+          Reset
+        </button>
+      </div>
+
+      {siweError && (
+        <div className="alert alert-error">
+          <span className="text-sm">{siweError}</span>
+        </div>
+      )}
+
+      {siweAddress && (
+        <div className="alert alert-success">
+          <div className="font-medium">Valid SIWE Signature</div>
+          <div className="bg-base-200 rounded p-3 w-full overflow-x-auto">
+            <code className="text-xs whitespace-pre font-mono text-base-content">
+              {siweAddress}
             </code>
           </div>
         </div>
@@ -471,7 +589,7 @@ function TransactionVerifier() {
 
 export function SignatureVerificationWidget() {
   const [verificationType, setVerificationType] = useState<
-    "personal" | "typed-data" | "transaction"
+    "personal" | "siwe" | "typed-data" | "transaction"
   >("personal");
 
   return (
@@ -480,7 +598,7 @@ export function SignatureVerificationWidget() {
         <h2 className="card-title">Signature Verification</h2>
         <p className="text-sm text-base-content/70">
           Verify signatures and recover signer addresses from personal signs,
-          EIP-712 typed data, and serialized transactions.
+          SIWE messages, EIP-712 typed data, and serialized transactions.
         </p>
 
         <div className="flex justify-between items-center mb-4">
@@ -490,6 +608,12 @@ export function SignatureVerificationWidget() {
               onClick={() => setVerificationType("personal")}
             >
               Personal Sign
+            </a>
+            <a
+              className={`tab ${verificationType === "siwe" ? "tab-active" : ""}`}
+              onClick={() => setVerificationType("siwe")}
+            >
+              SIWE
             </a>
             <a
               className={`tab ${verificationType === "typed-data" ? "tab-active" : ""}`}
@@ -507,6 +631,7 @@ export function SignatureVerificationWidget() {
         </div>
 
         {verificationType === "personal" && <PersonalSignVerifier />}
+        {verificationType === "siwe" && <SiweVerifier />}
         {verificationType === "typed-data" && <TypedDataVerifier />}
         {verificationType === "transaction" && <TransactionVerifier />}
       </div>
