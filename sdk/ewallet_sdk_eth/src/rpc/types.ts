@@ -467,9 +467,15 @@ type EthSyncing = {
 type EthCreateAccessList = {
   Req: {
     method: "eth_createAccessList";
-    params: [transaction: RpcTransactionRequest];
+    params: [
+      transaction: RpcTransactionRequest,
+      block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
+    ];
   };
-  Res: AccessList;
+  Res: {
+    accessList: AccessList;
+    gasUsed: Quantity;
+  };
 };
 
 type PersonalSign = {
