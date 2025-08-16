@@ -15,7 +15,6 @@ import {
   mockMainnetRpc,
   MOCK_ADDRESS,
   MOCK_SIGNATURE,
-  NO_ACCOUNT_ERROR,
 } from "./mock";
 import {
   EWalletEIP1193Provider,
@@ -377,13 +376,32 @@ describe("EWallet Provider - Base", () => {
         expect(chainId).toBe(toHex(mainnet.id));
       });
 
+      it("should successfully handle wallet RPC methods not requiring authenticated signer", async () => {
+        const publicProvider = await initEWalletEIP1193Provider(
+          createProviderOptions([createChainParam(mainnet)]),
+        );
+
+        const accounts = await publicProvider.request({
+          method: "eth_accounts",
+        });
+        expect(accounts).toEqual([]);
+
+        const requestAccounts = await publicProvider.request({
+          method: "eth_requestAccounts",
+        });
+        expect(requestAccounts).toEqual([]);
+      });
+
       it("should fail with wallet RPC methods without signer", async () => {
         const publicProvider = await initEWalletEIP1193Provider(
           createProviderOptions([createChainParam(mainnet)]),
         );
 
         await expect(
-          publicProvider.request({ method: "eth_accounts" }),
+          publicProvider.request({
+            method: "personal_sign",
+            params: [toHex("test"), MOCK_ADDRESS],
+          }),
         ).rejects.toMatchObject({
           code: ErrorCodes.provider.unsupportedMethod,
           message: expect.stringContaining("Signer is required"),
@@ -427,7 +445,10 @@ describe("EWallet Provider - Base", () => {
             method: "personal_sign",
             params: [toHex("test"), MOCK_ADDRESS],
           }),
-        ).rejects.toThrow(NO_ACCOUNT_ERROR);
+        ).rejects.toMatchObject({
+          code: ErrorCodes.provider.unsupportedMethod,
+          message: expect.stringContaining("No authenticated signer"),
+        });
       });
     });
   });
