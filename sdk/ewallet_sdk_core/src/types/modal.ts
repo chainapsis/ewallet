@@ -48,6 +48,8 @@ export type ChainInfoForAttachedModal = {
   readonly currencies?: ChainInfo["currencies"];
 };
 
+export type MakeCosmosSignType = MakeCosmosSigData["sign_type"];
+
 export type MakeCosmosSigData =
   | {
       chain_type: "cosmos";
@@ -86,6 +88,8 @@ export type CosmosArbitrarySignPayload = {
   signDoc: StdSignDoc;
   origin: string;
 };
+
+export type MakeEthereumSignType = MakeEthereumSigData["sign_type"];
 
 export type MakeEthereumSigData =
   | {

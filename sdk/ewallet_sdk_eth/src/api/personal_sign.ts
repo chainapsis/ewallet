@@ -1,7 +1,6 @@
 import type { Hex } from "viem";
 
 import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
-import { standardError } from "@keplr-ewallet-sdk-eth/errors";
 
 export async function personalSign(
   this: EthEWallet,
