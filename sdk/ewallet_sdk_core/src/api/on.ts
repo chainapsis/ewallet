@@ -7,7 +7,7 @@ export async function on<T extends KeplrWalletCoreEventType>(
   handler: (payload: T extends "_accountsChanged" ? any : any) => void,
 ) {
   if (this.eventEmitter) {
-    this.eventEmitter.on<T>(eventType, (payload: any) => {
+    this.eventEmitter.on(eventType, (payload: any) => {
       console.log("core on", eventType, payload);
 
       handler(payload);
