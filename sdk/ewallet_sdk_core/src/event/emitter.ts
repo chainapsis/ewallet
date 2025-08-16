@@ -1,20 +1,20 @@
-import type { KeplrEWalletEventTypeMap } from "../types";
+import type {
+  KeplrEWalletEventTypeMap,
+  KeplrWalletCoreEventHandler,
+} from "../types";
 
-export class EventEmitter2 {
-  listeners: { [type: string]: Function[] } = {};
+export class EventEmitter2<T, M> {
+  listeners: { [key: string]: Function[] };
 
   constructor() {
     this.listeners = {};
   }
 
-  on<T extends keyof KeplrEWalletEventTypeMap>(
-    eventName: T,
-    listener: (event: CustomEvent<KeplrEWalletEventTypeMap[T]>) => void,
-  ) {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
+  on(eventName: T, listener: (event: M) => void) {
+    if (!this.listeners[eventName as any]) {
+      this.listeners[eventName as any] = [];
     }
-    this.listeners[eventName].push(listener);
+    this.listeners[eventName as any].push(listener);
   }
 
   emit<T extends keyof KeplrEWalletEventTypeMap>(

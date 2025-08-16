@@ -5,14 +5,14 @@ import os from "node:os";
 import fs from "node:fs";
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
-const CONFIG_DIR_NAME = ".keplr_ewallet";
-
 import {
   ENV_FILE_NAME,
   EXAMPLE_ENV_FILE,
   ENV_FILE_NAME_2,
   EXAMPLE_ENV_FILE_2,
 } from "@keplr-ewallet-cv-server/envs";
+
+const CONFIG_DIR_NAME = ".keplr_ewallet";
 
 function copyEnv(envFileName: string, exampleEnvFileName: string) {
   const cwd = process.cwd();
