@@ -10,13 +10,14 @@ import {
   expectedInitiaBech32Address,
   cosmosHubChainInfo,
   initiaChainInfo,
+  cosmosAddress,
+  initiaAddress,
 } from "@keplr-ewallet-sdk-cosmos/tests/test-data";
 
 describe("getKey", () => {
   let mockCosmosEWallet: CosmosEWallet;
   let mockGetPublicKey: jest.Mock<() => Promise<Uint8Array>>;
   let mockGetCosmosChainInfo: jest.Mock<() => Promise<ChainInfo[]>>;
-
 
   beforeEach(() => {
     // Create a mock CosmosEWallet instance
@@ -43,7 +44,7 @@ describe("getKey", () => {
 
     expect(result).toEqual({
       bech32Address: expectedCosmosBech32Address,
-      address: expect.any(Uint8Array),
+      address: cosmosAddress,
       pubKey: cosmosPublicKey,
       algo: "secp256k1",
       ethereumHexAddress: "",
@@ -64,7 +65,7 @@ describe("getKey", () => {
 
     expect(result).toEqual({
       bech32Address: expectedInitiaBech32Address,
-      address: expect.any(Uint8Array),
+      address: initiaAddress,
       pubKey: initiaPublicKey,
       algo: "ethsecp256k1",
       ethereumHexAddress: expect.stringMatching(/^[0-9a-f]+$/),
@@ -83,7 +84,7 @@ describe("getKey", () => {
 
   it("should throw error when chain is not found", async () => {
     await expect(
-      getKey.call(mockCosmosEWallet, "non-existent-chain")
+      getKey.call(mockCosmosEWallet, "non-existent-chain"),
     ).rejects.toThrow("Chain info not found");
 
     // Verify method calls
@@ -101,7 +102,7 @@ describe("getKey", () => {
     mockGetCosmosChainInfo.mockResolvedValue([invalidChainInfo]);
 
     await expect(
-      getKey.call(mockCosmosEWallet, "invalid-chain")
+      getKey.call(mockCosmosEWallet, "invalid-chain"),
     ).rejects.toThrow("Chain info not found");
   });
 
@@ -109,18 +110,18 @@ describe("getKey", () => {
     const error = new Error("Failed to get public key");
     mockGetPublicKey.mockRejectedValue(error);
 
-    await expect(
-      getKey.call(mockCosmosEWallet, "cosmoshub-4")
-    ).rejects.toThrow("Failed to get public key");
+    await expect(getKey.call(mockCosmosEWallet, "cosmoshub-4")).rejects.toThrow(
+      "Failed to get public key",
+    );
   });
 
   it("should handle errors from getCosmosChainInfo gracefully", async () => {
     const error = new Error("Failed to get chain info");
     mockGetCosmosChainInfo.mockRejectedValue(error);
 
-    await expect(
-      getKey.call(mockCosmosEWallet, "cosmoshub-4")
-    ).rejects.toThrow("Failed to get chain info");
+    await expect(getKey.call(mockCosmosEWallet, "cosmoshub-4")).rejects.toThrow(
+      "Failed to get chain info",
+    );
   });
 
   it("should verify key structure for cosmos chain", async () => {

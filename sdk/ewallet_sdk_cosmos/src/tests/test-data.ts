@@ -6,9 +6,19 @@ export const cosmosPublicKey = new Uint8Array([
   162, 157, 129, 79, 108, 61, 30, 215, 88, 236, 186, 86, 81, 186, 190, 155,
 ]);
 
+export const cosmosAddress = new Uint8Array([
+  52, 41, 72, 76, 122, 249, 161, 223, 244, 3, 118, 53, 28, 27, 251, 68, 235, 31,
+  8, 76,
+]);
+
 export const initiaPublicKey = new Uint8Array([
   3, 120, 95, 163, 217, 82, 49, 93, 201, 111, 93, 92, 11, 194, 132, 219, 62,
   254, 49, 75, 244, 200, 222, 77, 13, 124, 93, 191, 255, 193, 95, 30, 155,
+]);
+
+export const initiaAddress = new Uint8Array([
+  127, 126, 200, 18, 41, 127, 116, 200, 15, 200, 188, 175, 17, 172, 136, 29,
+  200, 142, 178, 22,
 ]);
 
 // Expected addresses

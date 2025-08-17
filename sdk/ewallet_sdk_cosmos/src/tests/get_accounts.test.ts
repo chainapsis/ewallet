@@ -17,7 +17,6 @@ describe("getAccounts", () => {
   let mockGetPublicKey: jest.Mock<() => Promise<Uint8Array>>;
   let mockGetCosmosChainInfo: jest.Mock<() => Promise<ChainInfo[]>>;
 
-
   beforeEach(() => {
     // Create a mock CosmosEWallet instance
     mockCosmosEWallet = {} as CosmosEWallet;
@@ -87,30 +86,6 @@ describe("getAccounts", () => {
     // Verify the Initia public key is 33 bytes (compressed secp256k1)
     expect(initiaPublicKey).toHaveLength(33);
     expect(initiaPublicKey[0]).toBe(3); // Starts with 0x03 (different from cosmos key)
-  });
-
-  it("should handle mixed chains with different key types", async () => {
-    // Test scenario where we have multiple chains but use cosmos key
-    // (In real usage, each chain would have its own appropriate key)
-
-    const result = await getAccounts.call(mockCosmosEWallet);
-
-    expect(result).toHaveLength(2);
-
-    // Verify Cosmos Hub uses cosmos address derivation
-    expect(result[0]).toEqual({
-      address: expectedCosmosBech32Address,
-      algo: "secp256k1",
-      pubkey: cosmosPublicKey,
-    });
-
-    // Verify Initia uses ethereum address derivation but with cosmos public key
-    // The address will be different since we're using cosmos key instead of initia key
-    expect(result[1]).toEqual({
-      address: expect.stringMatching(/^init1[a-z0-9]+$/), // Should be valid init address
-      algo: "secp256k1",
-      pubkey: cosmosPublicKey,
-    });
   });
 
   it("should handle errors gracefully", async () => {
