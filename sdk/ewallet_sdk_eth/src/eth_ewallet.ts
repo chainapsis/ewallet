@@ -1,5 +1,5 @@
 import type { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
-import { isAddress, type Address, type Hex } from "viem";
+import { isAddress, isAddressEqual, type Address, type Hex } from "viem";
 
 import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import {
@@ -26,44 +26,8 @@ export class EthEWallet {
     this._address = null;
 
     this.eWallet.on("_accountsChanged", (payload: { publicKey: string }) => {
-      console.log(
-        "[keplr-ewallet-sdk-eth] _accountsChanged",
-        payload,
-        this._publicKey,
-        this._address,
-      );
-
-      if (this._provider) {
-        if (payload.publicKey) {
-          let publicKeyHex: Hex;
-          if (payload.publicKey.startsWith("0x")) {
-            publicKeyHex = payload.publicKey as Hex;
-          } else {
-            publicKeyHex = `0x${payload.publicKey}`;
-          }
-
-          try {
-            const address = publicKeyToEthereumAddress(publicKeyHex);
-            if (isAddress(address)) {
-              this._publicKey = publicKeyHex;
-              this._address = address;
-              this._provider.emit("accountsChanged", [address]);
-            }
-          } catch (e) {
-            console.error(
-              "[keplr-ewallet-sdk-eth] failed to get account from public key",
-              e,
-            );
-            this._publicKey = null;
-            this._address = null;
-            this._provider.emit("accountsChanged", []);
-          }
-        } else {
-          this._publicKey = null;
-          this._address = null;
-          this._provider.emit("accountsChanged", []);
-        }
-      }
+      console.log("[keplr-ewallet-sdk-eth] _accountsChanged", payload);
+      this.handleAccountChange(payload.publicKey);
     });
   }
 
@@ -110,4 +74,50 @@ export class EthEWallet {
   getPublicKey = getPublicKey.bind(this);
   getAddress = getAddress.bind(this);
   protected makeSignature = makeSignature.bind(this);
+
+  private handleAccountChange(publicKey: string | undefined) {
+    if (!this._provider) {
+      return;
+    }
+
+    if (!publicKey) {
+      this._publicKey = null;
+      this._address = null;
+      this._provider.emit("accountsChanged", []);
+      return;
+    }
+
+    try {
+      const publicKeyHex: Hex = publicKey.startsWith("0x")
+        ? (publicKey as Hex)
+        : `0x${publicKey}`;
+
+      const address = publicKeyToEthereumAddress(publicKeyHex);
+
+      if (!isAddress(address)) {
+        this._publicKey = null;
+        this._address = null;
+        this._provider.emit("accountsChanged", []);
+        return;
+      }
+
+      const shouldEmitChange =
+        this._address === null || !isAddressEqual(this._address, address);
+
+      this._publicKey = publicKeyHex;
+      this._address = address;
+
+      if (shouldEmitChange) {
+        this._provider.emit("accountsChanged", [address]);
+      }
+    } catch (error) {
+      console.error(
+        "[keplr-ewallet-sdk-eth] failed to get account from public key",
+        error,
+      );
+      this._publicKey = null;
+      this._address = null;
+      this._provider.emit("accountsChanged", []);
+    }
+  }
 }
