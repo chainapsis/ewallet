@@ -8,5 +8,8 @@ export async function signOut(this: KeplrEWallet) {
     payload: null,
   });
 
-  // TODO: emit accountsChanged event for clean up
+  this.eventEmitter.emit("_accountsChanged", {
+    email: "",
+    publicKey: "",
+  });
 }
