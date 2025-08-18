@@ -24,6 +24,14 @@ RUN yarn workspaces focus @keplr-ewallet/bytes
 WORKDIR /home/node/credential_vault/crypto/bytes
 RUN yarn run build
 
+# Install dependencies for cv_interface
+WORKDIR /home/node/credential_vault
+RUN yarn workspaces focus @keplr-ewallet/credential-vault-interface
+
+# Build cv_interface
+WORKDIR /home/node/credential_vault/credential_vault/cv_interface
+RUN yarn run build
+
 # Install dependencies for credential_vault server
 WORKDIR /home/node/credential_vault
 RUN yarn workspaces focus --production \
