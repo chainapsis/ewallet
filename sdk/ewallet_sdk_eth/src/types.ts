@@ -60,9 +60,6 @@ export type EthSignFunction = <P extends EthSignParams>(
 export interface EthSigner {
   getAddress: () => Promise<Address>;
   sign: EthSignFunction;
-  // TODO: detect account change using event emitter from core
-  // on: (event: string, listener: (...args: any[]) => void) => void;
-  // off: (event: string, listener: (...args: any[]) => void) => void;
 }
 
 /**
