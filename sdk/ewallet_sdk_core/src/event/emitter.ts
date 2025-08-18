@@ -15,8 +15,8 @@ export class EventEmitter2 {
   on<
     N extends KeplrWalletCoreEventNames,
     M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
-    H extends M["handler"],
-  >(eventName: N, handler: H) {
+  // H extends M["handler"],
+  >(eventName: N, handler: M["handler"]) {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
