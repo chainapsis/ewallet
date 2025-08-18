@@ -1,50 +1,35 @@
 import type {
-  KeplrEWalletEventTypeMap,
-  KeplrWalletCoreEventHandler,
-  KeplrWalletCoreEventType,
+  KeplrWalletCoreEventHandlerMap,
+  KeplrWalletCoreEventNames,
 } from "../types";
 
 export class EventEmitter2 {
-  listeners: { [key: string]: Function[] };
+  listeners: {
+    [key in KeplrWalletCoreEventNames]: KeplrWalletCoreEventHandlerMap["handler"][];
+  };
 
   constructor() {
-    this.listeners = {};
+    this.listeners = {} as any;
   }
 
-  on<N extends T, T, H>(eventName: N, listener: (event: H) => void) {
-    if (!this.listeners[eventName as any]) {
-      this.listeners[eventName as any] = [];
+  on<
+    N extends KeplrWalletCoreEventNames,
+    M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
+    H extends M["handler"],
+  >(eventName: N, handler: H) {
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = [];
     }
-    this.listeners[eventName as any].push(listener);
+    this.listeners[eventName].push(handler);
   }
 
-  emit(eventName: any, args: any) {
+  emit<
+    N extends KeplrWalletCoreEventNames,
+    M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
+    H extends M["handler"],
+  >(eventName: N, payload: Parameters<H>[0]) {
     if (this.listeners[eventName]) {
-      this.listeners[eventName].forEach((listener) => listener(args));
+      this.listeners[eventName].forEach((listener) => listener(payload as any));
     }
   }
-}
-
-export function a<T, H>() {
-  return class EventEmitter3 {
-    listeners: { [key: string]: Function[] };
-
-    constructor() {
-      this.listeners = {};
-    }
-
-    //   on<N extends T>(eventName: N, listener: (event: H<T>) => void) {
-    //     if (!this.listeners[eventName as any]) {
-    //       this.listeners[eventName as any] = [];
-    //     }
-    //     this.listeners[eventName as any].push(listener);
-    //   }
-    //
-    //   emit(eventName: any, args: any) {
-    //     if (this.listeners[eventName]) {
-    //       this.listeners[eventName].forEach((listener) => listener(args));
-    //     }
-    //   }
-    // };
-  };
 }

@@ -1,11 +1,14 @@
-import type { KeplrWalletCoreEventType } from "@keplr-ewallet-sdk-core/types";
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
+import type {
+  KeplrWalletCoreEventHandlerMap,
+  KeplrWalletCoreEventNames,
+} from "../types";
 
-export async function on<T extends KeplrWalletCoreEventType>(
-  this: KeplrEWallet,
-  eventType: T,
-  handler: (payload: T extends "_accountsChanged" ? any : any) => void,
-) {
+export async function on<
+  N extends KeplrWalletCoreEventNames,
+  M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
+  H extends M["handler"],
+>(this: KeplrEWallet, eventType: N, handler: H) {
   if (this.eventEmitter) {
     this.eventEmitter.on(eventType, (payload: any) => {
       console.log("core on", eventType, payload);

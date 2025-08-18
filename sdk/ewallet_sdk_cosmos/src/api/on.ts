@@ -11,10 +11,11 @@ export async function on<T extends KeplrCosmosEWalletEventType>(
   handler: (payload: KeplrCosmosEWalletEventTypeMap[T]) => void,
 ) {
   if (this.eventEmitter) {
-    this.eventEmitter.on(eventType, (payload: any) => {
-      console.log("cosmos on", payload);
-
-      handler(payload);
-    });
+    // TODO: @elden
+    // this.eventEmitter.on(eventType, (payload: any) => {
+    //   console.log("cosmos on", payload);
+    //
+    //   handler(payload);
+    // });
   }
 }
