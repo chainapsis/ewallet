@@ -68,6 +68,8 @@ export const useAppState = create(
           set({ keplr_sdk_cosmos: cosmosSDK });
 
           cosmosSDK.on("accountsChanged", async (payload) => {
+            console.log("ev - accountsChanged", payload);
+
             set({
               userInfo: payload,
             });

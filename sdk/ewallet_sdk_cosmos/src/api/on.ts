@@ -6,10 +6,10 @@ export async function on<
   M extends { eventName: N } & KeplrWalletCosmosEventHandlerMap,
 >(this: CosmosEWallet, eventName: N, handler: M["handler"]) {
   if (this.eventEmitter) {
-    (payload: any) => {
-      console.log("core on", eventName, payload);
+    this.eventEmitter.on(eventName, (payload: any) => {
+      console.log("cosmos on", eventName, payload);
 
       handler(payload);
-    };
+    });
   }
 }

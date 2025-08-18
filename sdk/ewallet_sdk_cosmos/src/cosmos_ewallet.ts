@@ -66,6 +66,8 @@ export class CosmosEWallet {
   protected makeSignature = makeSignature.bind(this);
 
   setupEventHandlers() {
+    console.log("[keplr] set up event handlers");
+
     this.eWallet.on("_accountsChanged", (payload) => {
       if (this.eventEmitter) {
         this.eventEmitter.emit("accountsChanged", payload);

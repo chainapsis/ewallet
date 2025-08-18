@@ -15,6 +15,8 @@ export class EventEmitter2 {
   }
 
   emit(eventName: string, payload: any) {
+    console.log("emit, eventName: %s", eventName, this.listeners);
+
     if (this.listeners[eventName]) {
       this.listeners[eventName].forEach((listener) => listener(payload));
     }
