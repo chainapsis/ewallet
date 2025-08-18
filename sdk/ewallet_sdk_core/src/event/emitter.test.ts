@@ -6,11 +6,11 @@ describe("sdk core event - static analysis", () => {
 
     emitter.emit("_accountsChanged", { email: "", publicKey: "" });
 
-    emitter.on("_accountsChanged", (payload) => {
+    emitter.on("_accountsChanged", (_payload: any) => {
       // typechecking
     });
-
-    emitter.on("_chainChanged", (payload) => {
+    //
+    emitter.on("_chainChanged", (_payload: any) => {
       // typechecking
     });
   });

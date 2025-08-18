@@ -5,31 +5,23 @@ import type {
 
 export class EventEmitter2 {
   listeners: {
-    [key in KeplrWalletCoreEventNames]: KeplrWalletCoreEventHandlerMap["handler"][];
+    [key: string]: Function[];
   };
 
   constructor() {
-    this.listeners = {} as any;
+    this.listeners = {};
   }
 
-  on<
-    N extends KeplrWalletCoreEventNames,
-    M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
-  // H extends M["handler"],
-  >(eventName: N, handler: M["handler"]) {
+  on(eventName: string, handler: Function) {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
     this.listeners[eventName].push(handler);
   }
 
-  emit<
-    N extends KeplrWalletCoreEventNames,
-    M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
-    H extends M["handler"],
-  >(eventName: N, payload: Parameters<H>[0]) {
+  emit(eventName: string, payload: any) {
     if (this.listeners[eventName]) {
-      this.listeners[eventName].forEach((listener) => listener(payload as any));
+      this.listeners[eventName].forEach((listener) => listener(payload));
     }
   }
 }

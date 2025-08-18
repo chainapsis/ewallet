@@ -9,11 +9,10 @@ export async function on<
   M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
 >(this: KeplrEWallet, eventType: N, handler: M["handler"]) {
   if (this.eventEmitter) {
-    this.eventEmitter.on(eventType, handler);
-    // (payload: any) => {
-    //   console.log("core on", eventType, payload);
-    //
-    //   handler(payload);
-    // });
+    (payload: any) => {
+      console.log("core on", eventType, payload);
+
+      handler(payload);
+    };
   }
 }
