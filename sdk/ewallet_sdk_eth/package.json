@@ -31,7 +31,8 @@
     "build": "yarn clean && tsc && tsc-alias",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "hardhat": "npx hardhat node",
-    "version": "yarn generate-version && git add src/provider/version.ts"
+    "version": "yarn generate-version && git add src/provider/version.ts",
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.41",
