@@ -68,14 +68,13 @@ export class CosmosEWallet {
   setupEventHandlers() {
     this.eWallet.on("_accountsChanged", (payload) => {
       if (this.eventEmitter) {
-        // TODO: @elden
-        // this.eventEmitter.emit("accountsChanged", payload);
+        this.eventEmitter.emit("accountsChanged", payload);
       }
     });
 
-    this.eWallet.on("_chainChanged", (payload: any) => {
+    this.eWallet.on("_chainChanged", (payload) => {
       if (this.eventEmitter) {
-        // this.eventEmitter.emit("chainChanged", payload);
+        this.eventEmitter.emit("chainChanged", payload);
       }
     });
   }
