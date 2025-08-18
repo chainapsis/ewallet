@@ -1,11 +1,11 @@
 import { sha256 } from "@noble/hashes/sha2";
 import type { StdSignature } from "@cosmjs/amino";
 import { serializeSignDoc } from "@cosmjs/amino";
-import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import { encodeCosmosSignature } from "@keplr-ewallet-sdk-cosmos/utils/sign";
 import { makeADR36AminoSignDoc } from "@keplr-ewallet-sdk-cosmos/utils/arbitrary";
+import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 export async function signArbitrary(
   this: CosmosEWallet,

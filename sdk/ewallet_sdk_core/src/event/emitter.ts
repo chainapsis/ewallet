@@ -1,8 +1,3 @@
-import type {
-  KeplrWalletCoreEventHandlerMap,
-  KeplrWalletCoreEventNames,
-} from "../types";
-
 export class EventEmitter2 {
   listeners: {
     [key: string]: Function[];

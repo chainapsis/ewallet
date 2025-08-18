@@ -9,10 +9,7 @@ import { makeSignature } from "./api/make_signature";
 import { initState } from "./api/init_state";
 import { on } from "./api/on";
 import { EventEmitter2 } from "./event/emitter";
-import type {
-  KeplrWalletCoreEventHandlerMap,
-  KeplrWalletCoreEventNames,
-} from "./types";
+import type { KeplrWalletCoreEventHandlerMap } from "./types";
 
 export class KeplrEWallet {
   apiKey: string;
@@ -22,7 +19,7 @@ export class KeplrEWallet {
   readonly origin: string;
 
   on: <
-    N extends KeplrWalletCoreEventNames,
+    N extends KeplrWalletCoreEventHandlerMap["eventName"],
     M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
   >(
     eventType: N,

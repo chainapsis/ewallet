@@ -4,6 +4,8 @@ import {
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
 
+import type { KeplrWalletCosmosEventNames } from "./types";
+import type { KeplrWalletCosmosEventHandlerMap } from "./types";
 import { enable } from "@keplr-ewallet-sdk-cosmos/api/enable";
 import { getCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/api/get_cosmos_chain_info";
 import { getAccounts } from "@keplr-ewallet-sdk-cosmos/api/get_accounts";
@@ -29,9 +31,18 @@ export class CosmosEWallet {
   protected _cacheTime: number = 0;
   eventEmitter: EventEmitter2 | null = null;
 
+  on: <
+    N extends KeplrWalletCosmosEventNames,
+    M extends { eventName: N } & KeplrWalletCosmosEventHandlerMap,
+  >(
+    eventType: N,
+    handler: M["handler"],
+  ) => void;
+
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
     this.eventEmitter = new EventEmitter2();
+    this.on = on.bind(this);
 
     this.setupEventHandlers();
   }
@@ -51,12 +62,11 @@ export class CosmosEWallet {
   signDirect = signDirect.bind(this);
   signArbitrary = signArbitrary.bind(this);
   verifyArbitrary = verifyArbitrary.bind(this);
-  on = on.bind(this);
   protected showModal = showModal.bind(this);
   protected makeSignature = makeSignature.bind(this);
 
   setupEventHandlers() {
-    this.eWallet.on("_accountsChanged", (payload: any) => {
+    this.eWallet.on("_accountsChanged", (payload) => {
       if (this.eventEmitter) {
         // TODO: @elden
         // this.eventEmitter.emit("accountsChanged", payload);
