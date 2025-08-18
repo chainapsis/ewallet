@@ -50,12 +50,6 @@ export const defaultWallets = [
   }),
 ];
 
-export const enabledChains = targetNetworks.find(
-  (network: Chain) => network.id === 11155111,
-)
-  ? targetNetworks
-  : ([...targetNetworks, sepolia] as const);
-
 export interface WalletConnectOptions {
   projectId: string;
 }
@@ -238,7 +232,7 @@ function keplrEWalletConnector(
 
 export const wagmiConfigWithKeplr = () => {
   return createConfig({
-    chains: enabledChains,
+    chains: [targetNetworks[0], ...targetNetworks.slice(1)],
     ssr: true,
     connectors: connectorsForWallets(
       [
