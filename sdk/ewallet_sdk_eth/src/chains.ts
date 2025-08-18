@@ -62,6 +62,7 @@ export const SUPPORTED_CHAINS = [
   },
   {
     ...optimism,
+    name: "Optimism",
     rpcUrls: {
       default: {
         http: ["https://evm-10.keplr.app"],
@@ -70,6 +71,7 @@ export const SUPPORTED_CHAINS = [
   },
   {
     ...arbitrum,
+    name: "Arbitrum",
     rpcUrls: {
       default: {
         http: ["https://evm-42161.keplr.app"],
@@ -182,15 +184,25 @@ export function getTokenLogoURI(
   const chainIdNumber = parseChainId(chainId);
   const baseUrl = `https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/eip155:${chainIdNumber}`;
 
-  let path = "";
   if (tokenAddress) {
-    path = `erc20/${tokenAddress.toLowerCase()}.png`;
-  } else {
-    path = `${chainIdNumber}-native.png`;
-    if (chainIdNumber === 11155111) {
-      path = `ethereum-${path}`;
-    }
+    return `${baseUrl}/erc20/${tokenAddress.toLowerCase()}.png`;
   }
 
-  return `${baseUrl}/${path}`;
+  switch (chainIdNumber) {
+    case 56:
+      return `${baseUrl}/binance-native.png`;
+    case 984122:
+      return `${baseUrl}/utia.png`;
+    case 11155111:
+      return `${baseUrl}/ethereum-sepolia-native.png`;
+    default:
+      const chain = SUPPORTED_CHAINS.find(
+        (chain) => chain.id === chainIdNumber,
+      );
+      if (chain) {
+        return `${baseUrl}/${chain.name.toLowerCase()}-native.png`;
+      }
+
+      return "";
+  }
 }
