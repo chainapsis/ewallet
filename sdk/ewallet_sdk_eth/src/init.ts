@@ -17,5 +17,8 @@ export async function initEthEWallet(
     return eWalletRes;
   }
 
-  return { success: true, data: new EthEWallet(eWalletRes.data) };
+  return {
+    success: true,
+    data: new EthEWallet(eWalletRes.data, args.use_testnet),
+  };
 }
