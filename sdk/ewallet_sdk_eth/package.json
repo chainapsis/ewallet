@@ -27,9 +27,11 @@
   },
   "scripts": {
     "clean": "del-cli dist",
+    "generate-version": "node scripts/generate-version.cjs",
     "build": "yarn clean && tsc && tsc-alias",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "hardhat": "npx hardhat node"
+    "hardhat": "npx hardhat node",
+    "version": "yarn generate-version"
   },
   "dependencies": {
     "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.39",
