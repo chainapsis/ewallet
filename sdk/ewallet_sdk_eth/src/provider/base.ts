@@ -11,20 +11,18 @@ import {
 } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
+import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 import { ErrorCodes, standardError } from "@keplr-ewallet-sdk-eth/errors";
 import type {
   RpcMethod,
+  RpcResponse,
+  RpcError,
   RpcRequestArgs,
   RpcResponseData,
   PublicRpcMethod,
   WalletRpcMethod,
 } from "@keplr-ewallet-sdk-eth/rpc";
-import {
-  RpcResponse,
-  RpcError,
-  UNSUPPORTED_RPC_METHODS,
-  PUBLIC_RPC_METHODS,
-} from "@keplr-ewallet-sdk-eth/rpc";
+import { PUBLIC_RPC_METHODS } from "@keplr-ewallet-sdk-eth/rpc";
 import {
   parseTypedData,
   isValidChainId,
@@ -36,9 +34,8 @@ import type {
   EWalletEIP1193ProviderOptions,
   ProviderConnectInfo,
   ChainWithStatus,
-} from "./types";
-import { ProviderEventEmitter } from "./types";
-import { VERSION } from "./version";
+} from "@keplr-ewallet-sdk-eth/provider";
+import { ProviderEventEmitter, VERSION } from "@keplr-ewallet-sdk-eth/provider";
 
 export class EWalletEIP1193Provider
   extends ProviderEventEmitter
@@ -46,7 +43,7 @@ export class EWalletEIP1193Provider
 {
   protected isInitialized: boolean;
 
-  protected signer: EWalletEIP1193ProviderOptions["signer"];
+  protected signer: EthSigner | undefined;
 
   protected activeChain: Chain;
   protected addedChains: ChainWithStatus[];
@@ -65,7 +62,6 @@ export class EWalletEIP1193Provider
     this.isInitialized = false;
     this.lastConnectedEmittedEvent = null;
 
-    // Initialize chains / active chain (without validation for now)
     this.addedChains = options.chains.map((chain) => ({
       ...chain,
       validationStatus: "pending",
@@ -74,7 +70,6 @@ export class EWalletEIP1193Provider
 
     this.activeChain = this.addedChains[0];
 
-    // Start initialization immediately and store the promise
     this.ready = this._init(options);
 
     this.request = this.request.bind(this);
@@ -101,12 +96,9 @@ export class EWalletEIP1193Provider
   ): Promise<RpcResponseData<M>> {
     this.validateRequestArgs(args);
 
-    this.checkMethodSupport(args);
-
     try {
       const result = await this.handleRequest(args);
 
-      // Set connected status upon successful request
       if (this.activeChain) {
         this._handleConnected(true, { chainId: this.activeChain.chainId });
       }
@@ -114,8 +106,7 @@ export class EWalletEIP1193Provider
       return result;
     } catch (error: any) {
       if (this.isConnectionError(error)) {
-        const rpcError = new RpcError({
-          code: ErrorCodes.rpc.resourceUnavailable,
+        const rpcError = standardError.rpc.resourceUnavailable({
           message: error?.message || "Resource unavailable",
           data: error,
         });
@@ -165,11 +156,9 @@ export class EWalletEIP1193Provider
           rpcUrls: [rpcUrl],
         } = this.activeChain;
         if (!rpcUrl) {
-          throw new RpcError(
-            standardError.provider.chainDisconnected({
-              message: "No RPC URL for the active chain",
-            }),
-          );
+          throw standardError.provider.chainDisconnected({
+            message: "No RPC URL for the active chain",
+          });
         }
 
         const requestBody = {
@@ -189,8 +178,8 @@ export class EWalletEIP1193Provider
 
         const data = (await res.json()) as RpcResponse<RpcResponseData<M>>;
 
-        if (RpcResponse.isError(data)) {
-          throw new RpcError(data.error);
+        if ("error" in data) {
+          throw data.error;
         }
         return data.result;
     }
@@ -216,15 +205,13 @@ export class EWalletEIP1193Provider
           (c) => c.chainId === newChain.chainId,
         );
         let chain: ChainWithStatus;
-        const isNew = chainIdx === -1; // new chain if not duplicated
+        const isNew = chainIdx === -1;
 
-        // check if the overwriting chain is the current active chain
         const wasActive =
           this.activeChain && this.activeChain.chainId === newChain.chainId;
         let original: ChainWithStatus | undefined = undefined;
 
         if (isNew) {
-          // new chain: push directly
           chain = {
             ...newChain,
             validationStatus: "pending",
@@ -233,7 +220,6 @@ export class EWalletEIP1193Provider
           this.addedChains.push(chain);
           chainIdx = this.addedChains.length - 1;
         } else {
-          // overwriting chain: backup original and overwrite
           chain = this.addedChains[chainIdx];
           original = { ...chain };
           Object.assign(chain, newChain);
@@ -247,10 +233,9 @@ export class EWalletEIP1193Provider
           await this._manageChain(chain, true, true, false);
           validationSucceeded = true;
           chain.validationStatus = "valid";
-          // if the overwriting chain is the current active chain, set connected to true
           if (wasActive) chain.connected = true;
         } catch (err) {
-          // failed: remove new chain or restore original
+          // remove new chain or restore original
           if (isNew) {
             this.addedChains.splice(chainIdx, 1);
           } else if (original) {
@@ -260,12 +245,10 @@ export class EWalletEIP1193Provider
         }
 
         if (!validationSucceeded) {
-          throw new RpcError(
-            standardError.rpc.invalidParams({
-              message: "Chain validation failed.",
-              data: { chainId: newChain.chainId },
-            }),
-          );
+          throw standardError.rpc.invalidParams({
+            message: "Chain validation failed.",
+            data: { chainId: newChain.chainId },
+          });
         }
 
         return null;
@@ -279,20 +262,17 @@ export class EWalletEIP1193Provider
         );
 
         if (!chain) {
-          throw new RpcError(
-            standardError.provider.unsupportedChain({
-              message: "Chain not found",
-              data: {
-                chainId: chainIdToSwitch,
-              },
-            }),
-          );
+          throw standardError.provider.unsupportedChain({
+            message: "Chain not found",
+            data: {
+              chainId: chainIdToSwitch,
+            },
+          });
         }
 
         const prevChainId = this.activeChain?.chainId;
         this.activeChain = chain;
 
-        // Emit events in logical order: chainChanged first, then connect
         if (prevChainId !== chainIdToSwitch) {
           this._handleChainChanged(chainIdToSwitch);
         }
@@ -305,24 +285,21 @@ export class EWalletEIP1193Provider
     }
 
     // Handle restricted wallet RPC methods
-    if (!this.signer) {
-      throw new RpcError(
-        standardError.provider.unsupportedMethod({
-          message: "Signer is required for wallet RPC methods",
-          data: args.method,
-        }),
-      );
-    }
-
     await this._validateActiveChain();
 
     switch (args.method) {
       case "eth_accounts":
-      // CHECK: request account needs user interaction,
-      // though we just return the signer address here as there's only one account
       case "eth_requestAccounts":
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
-        return [this.signer.address];
+
+        try {
+          const { address } = await this._getAuthenticatedSigner(args.method);
+          return [address];
+        } catch (error) {
+          // ignore error as it's expected for `eth_accounts` and `eth_requestAccounts`
+          // when no signer is provided or signer is not authenticated
+          return [];
+        }
       case "eth_sendTransaction":
         const [tx] =
           args.params as RpcRequestArgs<"eth_sendTransaction">["params"];
@@ -345,14 +322,17 @@ export class EWalletEIP1193Provider
 
         const signableTx = toSignableTransaction(tx);
 
-        const { signedTransaction } =
-          await this.signer.sign<"sign_transaction">({
-            type: "sign_transaction",
-            data: {
-              address: this.signer.address,
-              transaction: signableTx,
-            },
-          });
+        const { signer, address } = await this._getAuthenticatedSigner(
+          args.method,
+        );
+
+        const { signedTransaction } = await signer.sign({
+          type: "sign_transaction",
+          data: {
+            address,
+            transaction: signableTx,
+          },
+        });
 
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
 
@@ -362,28 +342,29 @@ export class EWalletEIP1193Provider
         const [signWith, rawTypedData] =
           args.params as RpcRequestArgs<"eth_signTypedData_v4">["params"];
 
-        if (!isAddressEqual(signWith, this.signer.address)) {
-          throw new RpcError(
-            standardError.rpc.invalidInput({
-              message: "Signer address mismatch",
-              data: {
-                signWith,
-                signerAddress: this.signer.address,
-              },
-            }),
-          );
+        const { signer, address } = await this._getAuthenticatedSigner(
+          args.method,
+        );
+
+        if (!isAddressEqual(signWith, address)) {
+          throw standardError.rpc.invalidInput({
+            message: "Signer address mismatch",
+            data: {
+              signWith,
+              signerAddress: address,
+            },
+          });
         }
 
-        // The client may pass serialized JSON; ensure we have an object
         const typedData =
           typeof rawTypedData === "string"
             ? parseTypedData<TypedDataDefinition>(rawTypedData)
             : rawTypedData;
 
-        const { signature } = await this.signer.sign<"sign_typedData_v4">({
+        const { signature } = await signer.sign({
           type: "sign_typedData_v4",
           data: {
-            address: this.signer.address,
+            address,
             serializedTypedData: serializeTypedData(typedData),
           },
         });
@@ -396,28 +377,28 @@ export class EWalletEIP1193Provider
         const [message, signWith] =
           args.params as RpcRequestArgs<"personal_sign">["params"];
 
-        if (!isAddressEqual(signWith, this.signer.address)) {
-          throw new RpcError(
-            standardError.rpc.invalidInput({
-              message: "Signer address mismatch",
-              data: {
-                signWith,
-                signerAddress: this.signer.address,
-              },
-            }),
-          );
+        const { signer, address } = await this._getAuthenticatedSigner(
+          args.method,
+        );
+
+        if (!isAddressEqual(signWith, address)) {
+          throw standardError.rpc.invalidInput({
+            message: "Signer address mismatch",
+            data: {
+              signWith,
+              signerAddress: address,
+            },
+          });
         }
 
-        // Decode hex-encoded UTF-8 string back to original message
-        // CHECK: is this enough?
         const originalMessage = message.startsWith("0x")
           ? hexToString(message)
           : message;
 
-        const { signature } = await this.signer.sign<"personal_sign">({
+        const { signature } = await signer.sign({
           type: "personal_sign",
           data: {
-            address: this.signer.address,
+            address,
             message: originalMessage,
           },
         });
@@ -427,12 +408,10 @@ export class EWalletEIP1193Provider
         return signature;
       }
       default:
-        throw new RpcError(
-          standardError.provider.unsupportedMethod({
-            message: "Method not supported",
-            data: args.method,
-          }),
-        );
+        throw standardError.provider.unsupportedMethod({
+          message: "Method not supported",
+          data: args.method,
+        });
     }
   }
 
@@ -441,7 +420,7 @@ export class EWalletEIP1193Provider
    */
   private async _validateActiveChain(): Promise<void> {
     if (!this.activeChain) {
-      throw new RpcError(standardError.rpc.invalidRequest({}));
+      throw standardError.rpc.invalidRequest({});
     }
 
     const activeChainStatus = this.addedChains.find(
@@ -449,12 +428,40 @@ export class EWalletEIP1193Provider
     );
 
     if (activeChainStatus?.validationStatus !== "valid") {
-      throw new RpcError(
-        standardError.rpc.invalidRequest({
-          message: "Active chain is not valid.",
-          data: { chainId: this.activeChain.chainId },
-        }),
-      );
+      throw standardError.rpc.invalidRequest({
+        message: "Active chain is not valid.",
+        data: { chainId: this.activeChain.chainId },
+      });
+    }
+  }
+
+  private async _getAuthenticatedSigner(
+    calledMethod: WalletRpcMethod,
+  ): Promise<{
+    signer: EthSigner;
+    address: Address;
+  }> {
+    const signer = this.signer;
+
+    if (!signer) {
+      throw standardError.provider.unsupportedMethod({
+        message: "Signer is required for wallet RPC methods",
+        data: calledMethod,
+      });
+    }
+
+    try {
+      const address = await signer.getAddress();
+      if (!address) {
+        throw new Error("Signer address is not available");
+      }
+      return { signer, address };
+    } catch (error) {
+      // If signer.getAddress() fails, it means the signer is not authenticated
+      throw standardError.provider.unsupportedMethod({
+        message: "No authenticated signer for wallet RPC methods",
+        data: calledMethod,
+      });
     }
   }
 
@@ -472,7 +479,6 @@ export class EWalletEIP1193Provider
     validationOnly = false,
     shouldSwitch = true,
   ): Promise<void> {
-    // Skip duplicate check during validation-only mode for initialization
     const chainsToCheck = validationOnly ? [] : this.addedChains;
     const result = validateChain(chain, chainsToCheck);
     if (!result.isValid) {
@@ -487,7 +493,6 @@ export class EWalletEIP1193Provider
       throw new Error("No RPC URL for the chain");
     }
 
-    // Validate chain by making a direct RPC call
     const requestBody = {
       method: "eth_chainId",
       jsonrpc: "2.0",
@@ -517,7 +522,6 @@ export class EWalletEIP1193Provider
       );
     }
 
-    // If validation only, mark as valid and stop here
     if (validationOnly) {
       const existingChain = this.addedChains.find(
         (c) => c.chainId === chain.chainId,
@@ -530,16 +534,13 @@ export class EWalletEIP1193Provider
       return;
     }
 
-    // Add chain and update state (original logic)
     const prevActiveChain = this.activeChain;
 
-    // Only switch to the new chain if shouldSwitch is true
     if (shouldSwitch) {
       this.activeChain = chain;
     }
 
     try {
-      // Add chain to the list only if not already added
       if (!skipDuplicateCheck) {
         const existingChain = this.addedChains.find(
           (c) => c.chainId === chain.chainId,
@@ -548,22 +549,20 @@ export class EWalletEIP1193Provider
           this.addedChains.push({
             ...chain,
             connected: false,
-            validationStatus: "valid", // Chain was just validated successfully
+            validationStatus: "valid",
           });
         } else {
-          // Mark existing chain as valid since validation passed
           existingChain.validationStatus = "valid";
         }
       }
 
-      // Emit events if we're switching to a different chain and shouldSwitch is true
       const prevChainId = prevActiveChain?.chainId;
       if (shouldSwitch && prevChainId !== rpcChainId && this.isInitialized) {
         this._handleChainChanged(rpcChainId);
         this._handleConnected(true, { chainId: rpcChainId });
       }
     } catch (error) {
-      // Only restore previous chain if we were switching
+      // Only restore previous chain if shouldSwitch is true
       if (shouldSwitch) {
         this.activeChain = prevActiveChain;
       }
@@ -573,18 +572,29 @@ export class EWalletEIP1193Provider
 
   /**
    * Initialize the provider asynchronously
+   * @param options - The options to initialize the provider
+   * @returns Promise that resolves when the provider is initialized
    */
   protected async _init(options: EWalletEIP1193ProviderOptions): Promise<void> {
     const { signer } = options;
 
-    // Set up signer
-    if (signer) {
-      if (!isAddress(signer.address)) {
-        throw new Error("Invalid signer address");
-      }
+    // signer may not have address at this point as it's not authenticated yet
+    let signerAddresses: Address[] = [];
 
-      if (typeof signer.sign !== "function") {
-        throw new Error("Invalid signer");
+    if (signer) {
+      try {
+        const signerAddress = await signer.getAddress();
+        if (!isAddress(signerAddress)) {
+          throw new Error("Invalid signer address");
+        }
+
+        if (typeof signer.sign !== "function") {
+          throw new Error("Invalid signer");
+        }
+
+        signerAddresses = [signerAddress];
+      } catch (error) {
+        signerAddresses = [];
       }
 
       this.signer = signer;
@@ -593,7 +603,7 @@ export class EWalletEIP1193Provider
     if (options.skipChainValidation) {
       this.addedChains.forEach((chain, idx) => {
         chain.validationStatus = "valid";
-        chain.connected = idx === 0; // set the first chain as connected
+        chain.connected = idx === 0;
       });
 
       this.activeChain = this.addedChains[0];
@@ -603,8 +613,8 @@ export class EWalletEIP1193Provider
 
       this._handleChainChanged(this.activeChain.chainId);
       this._handleConnected(true, { chainId: this.activeChain.chainId });
-      if (this.signer && isAddress(this.signer.address)) {
-        this._handleAccountsChanged(this.signer.address);
+      if (signerAddresses.length > 0) {
+        this._handleAccountsChanged(signerAddresses);
       }
       return;
     }
@@ -625,15 +635,14 @@ export class EWalletEIP1193Provider
     );
     if (firstValid) {
       this.activeChain = firstValid;
-      // Set initialized first so events can be emitted
       this.isInitialized = true;
 
       this.emit<any>("_initialized", {});
 
       this._handleChainChanged(this.activeChain.chainId);
       this._handleConnected(true, { chainId: this.activeChain.chainId });
-      if (this.signer && isAddress(this.signer.address)) {
-        this._handleAccountsChanged(this.signer.address);
+      if (signerAddresses.length > 0) {
+        this._handleAccountsChanged(signerAddresses);
       }
     } else {
       throw new Error("No valid chains found during provider initialization");
@@ -649,32 +658,26 @@ export class EWalletEIP1193Provider
     args: RpcRequestArgs<M>,
   ): void {
     if (!args || typeof args !== "object" || Array.isArray(args)) {
-      throw new RpcError(
-        standardError.rpc.invalidParams({
-          message: "Expected a single, non-array, object argument.",
-          data: args,
-        }),
-      );
+      throw standardError.rpc.invalidParams({
+        message: "Expected a single, non-array, object argument.",
+        data: args,
+      });
     }
 
     const { method, params } = args;
 
     if (typeof method !== "string" || method.length === 0) {
-      throw new RpcError(
-        standardError.rpc.invalidParams({
-          message: "Expected a non-empty string for method.",
-          data: args,
-        }),
-      );
+      throw standardError.rpc.invalidParams({
+        message: "Expected a non-empty string for method.",
+        data: args,
+      });
     }
 
     if (typeof params !== "undefined" && typeof params !== "object") {
-      throw new RpcError(
-        standardError.rpc.invalidParams({
-          message: "Expected a single, non-array, object argument.",
-          data: args,
-        }),
-      );
+      throw standardError.rpc.invalidParams({
+        message: "Expected a single, non-array, object argument.",
+        data: args,
+      });
     }
 
     if (
@@ -682,29 +685,10 @@ export class EWalletEIP1193Provider
       !Array.isArray(params) &&
       (typeof params !== "object" || params === null)
     ) {
-      throw new RpcError(
-        standardError.rpc.invalidParams({
-          message: "Expected a single, non-array, object argument.",
-          data: args,
-        }),
-      );
-    }
-  }
-
-  /**
-   * Checks if the given method is supported by this provider
-   * @param args - The RPC request arguments to check
-   * @throws RpcError if the method is not supported
-   */
-  protected checkMethodSupport<M extends RpcMethod>(
-    args: RpcRequestArgs<M>,
-  ): void {
-    if (UNSUPPORTED_RPC_METHODS.has(args.method)) {
-      throw new RpcError(
-        standardError.provider.unsupportedMethod({
-          data: args.method,
-        }),
-      );
+      throw standardError.rpc.invalidParams({
+        message: "Expected a single, non-array, object argument.",
+        data: args,
+      });
     }
   }
 
@@ -749,7 +733,6 @@ export class EWalletEIP1193Provider
    * @returns True if the error is a connection error, false otherwise
    */
   protected isConnectionError(error: any): boolean {
-    // Native fetch network errors (TypeError)
     if (error?.name === "TypeError" || error instanceof TypeError) {
       const message = error.message?.toLowerCase() || "";
       if (
@@ -763,12 +746,10 @@ export class EWalletEIP1193Provider
       }
     }
 
-    // JSON parsing errors could indicate malformed responses due to network issues
     if (error instanceof SyntaxError && error.message?.includes("JSON")) {
       return true;
     }
 
-    // Provider error codes for disconnection
     if (
       error?.code === ErrorCodes.provider.disconnected ||
       error?.code === ErrorCodes.provider.chainDisconnected
@@ -776,7 +757,6 @@ export class EWalletEIP1193Provider
       return true;
     }
 
-    // AbortError (when requests are cancelled due to timeouts)
     if (error?.name === "AbortError") {
       return true;
     }
@@ -787,14 +767,13 @@ export class EWalletEIP1193Provider
   /**
    * Handle chain changed event
    * @param chainId - The chain ID to handle
+   * @dev Only emit the event, don't modify state in this method
    */
   protected _handleChainChanged(chainId: string) {
     if (!isValidChainId(chainId)) {
       return;
     }
 
-    // Only emit the event, don't modify state here
-    // State should be managed by the caller
     if (this.isInitialized) {
       this.emit("chainChanged", chainId);
     }
@@ -802,10 +781,10 @@ export class EWalletEIP1193Provider
 
   /**
    * Handle accounts changed event
-   * @param newSelectedAddress - The new selected address
+   * @param newAddress - The new addresses
    */
-  protected _handleAccountsChanged(newSelectedAddress: Address): void {
-    this.emit("accountsChanged", [newSelectedAddress]);
+  protected _handleAccountsChanged(newAddress: Address[]): void {
+    this.emit("accountsChanged", newAddress);
   }
 }
 

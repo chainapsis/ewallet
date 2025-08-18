@@ -3,7 +3,6 @@ import { type Address, type Hex, serializeTypedData } from "viem";
 import type { EWalletAccount } from "@keplr-ewallet-sdk-eth/types";
 import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import { toRpcTransactionRequest } from "@keplr-ewallet-sdk-eth/utils";
-import { standardError } from "@keplr-ewallet-sdk-eth/errors";
 
 export async function toViemAccount(
   this: EthEWallet,
@@ -19,7 +18,7 @@ export async function toViemAccount(
     source: "ewallet",
     publicKey,
     signMessage: async ({ message }) => {
-      const result = await sign({
+      const { signature } = await sign({
         type: "personal_sign",
         data: {
           address,
@@ -27,16 +26,10 @@ export async function toViemAccount(
         },
       });
 
-      if (result.type !== "signature") {
-        throw standardError.ethEWallet.signResultMismatch({
-          message: "Expected signature result",
-        });
-      }
-
-      return result.signature;
+      return signature;
     },
     signTransaction: async (transaction) => {
-      const result = await sign({
+      const { signedTransaction } = await sign({
         type: "sign_transaction",
         data: {
           address,
@@ -44,16 +37,10 @@ export async function toViemAccount(
         },
       });
 
-      if (result.type !== "signed_transaction") {
-        throw standardError.ethEWallet.signResultMismatch({
-          message: "Expected signed transaction result",
-        });
-      }
-
-      return result.signedTransaction;
+      return signedTransaction;
     },
     signTypedData: async (typedData) => {
-      const result = await sign({
+      const { signature } = await sign({
         type: "sign_typedData_v4",
         data: {
           address,
@@ -61,13 +48,7 @@ export async function toViemAccount(
         },
       });
 
-      if (result.type !== "signature") {
-        throw standardError.ethEWallet.signResultMismatch({
-          message: "Expected signature result",
-        });
-      }
-
-      return result.signature;
+      return signature;
     },
   };
 

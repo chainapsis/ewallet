@@ -1,4 +1,4 @@
-import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
 export async function getPublicKey(this: CosmosEWallet): Promise<Uint8Array> {
   try {

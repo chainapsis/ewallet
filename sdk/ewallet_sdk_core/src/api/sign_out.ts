@@ -7,4 +7,9 @@ export async function signOut(this: KeplrEWallet) {
     msg_type: "sign_out",
     payload: null,
   });
+
+  this.eventEmitter.emit("_accountsChanged", {
+    email: "",
+    publicKey: "",
+  });
 }

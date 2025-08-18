@@ -20,72 +20,23 @@ import type {
   NetworkSync,
   AddEthereumChainParameter,
   TypedDataDefinition,
+  AccessList,
 } from "viem";
 
 import type { ErrorObject } from "@keplr-ewallet-sdk-eth/errors";
 
 export type RpcResponse<
   result = RpcResponseData<RpcMethod>,
-  error extends ErrorObject<unknown> = ErrorObject<unknown>,
+  error extends RpcError = RpcError,
 > = {
   id: number;
   jsonrpc: "2.0";
 } & ({ result: result } | { error: error });
 
-export class RpcError extends Error {
-  public readonly code: number;
-  public readonly data?: unknown;
+export type RpcError = ErrorObject<unknown>;
 
-  constructor(errorObject: ErrorObject<unknown>) {
-    super(errorObject.message);
-    this.code = errorObject.code;
-    this.data = errorObject.data;
-  }
-
-  toErrorObject(): ErrorObject<unknown> {
-    return {
-      code: this.code,
-      message: this.message,
-      data: this.data,
-    };
-  }
-}
-
-export namespace RpcResponse {
-  export function isSuccess<T>(
-    response: RpcResponse<T>,
-  ): response is { id: number; jsonrpc: "2.0" } & { result: T } {
-    return "result" in response;
-  }
-
-  export function isError<T>(response: RpcResponse<T>): response is {
-    id: number;
-    jsonrpc: "2.0";
-  } & {
-    error: ErrorObject<unknown>;
-  } {
-    return "error" in response;
-  }
-
-  export function getResult<T>(response: RpcResponse<T>): T {
-    if (isSuccess(response)) {
-      return response.result;
-    }
-    throw new RpcError(response.error);
-  }
-
-  export function getResultOrNull<T>(response: RpcResponse<T>): T | null {
-    return isSuccess(response) ? response.result : null;
-  }
-
-  export function getError<T>(
-    response: RpcResponse<T>,
-  ): ErrorObject<unknown> | null {
-    return isError(response) ? response.error : null;
-  }
-}
-
-export type RpcBlockRef = RpcBlockNumber | BlockTag | RpcBlockIdentifier;
+export type RpcBlockNumberOrTag = RpcBlockNumber | BlockTag;
+export type RpcBlockRef = RpcBlockNumberOrTag | RpcBlockIdentifier;
 
 type Web3ClientVersion = {
   Req: {
@@ -154,13 +105,10 @@ type EthEstimateGas = {
     method: "eth_estimateGas";
     params:
       | [transaction: RpcTransactionRequest]
+      | [transaction: RpcTransactionRequest, block: RpcBlockNumberOrTag]
       | [
           transaction: RpcTransactionRequest,
-          block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
-        ]
-      | [
-          transaction: RpcTransactionRequest,
-          block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
+          block: RpcBlockNumberOrTag,
           stateOverrides: RpcStateOverride,
         ];
   };
@@ -172,7 +120,7 @@ type EthFeeHistory = {
     method: "eth_feeHistory";
     params: [
       blockCount: Quantity,
-      newestBlock: Exclude<RpcBlockRef, RpcBlockIdentifier>,
+      newestBlock: RpcBlockNumberOrTag,
       rewardPercentiles: number[] | undefined,
     ];
   };
@@ -198,10 +146,7 @@ type EthGetBlockByHash = {
 type EthGetBlockByNumber = {
   Req: {
     method: "eth_getBlockByNumber";
-    params: [
-      block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
-      includeTransactionObjects: boolean,
-    ];
+    params: [block: RpcBlockNumberOrTag, includeTransactionObjects: boolean];
   };
   Res: RpcBlock | null;
 };
@@ -217,7 +162,7 @@ type EthGetBlockTransactionCountByHash = {
 type EthGetBlockTransactionCountByNumber = {
   Req: {
     method: "eth_getBlockTransactionCountByNumber";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>];
+    params: [block: RpcBlockNumberOrTag];
   };
   Res: Quantity;
 };
@@ -233,11 +178,7 @@ type EthGetCode = {
 type EthGetProof = {
   Req: {
     method: "eth_getProof";
-    params: [
-      address: Address,
-      storageKeys: Hash[],
-      block: Exclude<RpcBlockRef, RpcBlockIdentifier>,
-    ];
+    params: [address: Address, storageKeys: Hash[], block: RpcBlockNumberOrTag];
   };
   Res: RpcProof;
 };
@@ -261,7 +202,7 @@ type EthGetTransactionByBlockHashAndIndex = {
 type EthGetTransactionByBlockNumberAndIndex = {
   Req: {
     method: "eth_getTransactionByBlockNumberAndIndex";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>, index: Quantity];
+    params: [block: RpcBlockNumberOrTag, index: Quantity];
   };
   Res: RpcTransaction | null;
 };
@@ -301,7 +242,7 @@ type EthGetUncleByBlockHashAndIndex = {
 type EthGetUncleByBlockNumberAndIndex = {
   Req: {
     method: "eth_getUncleByBlockNumberAndIndex";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>, index: Quantity];
+    params: [block: RpcBlockNumberOrTag, index: Quantity];
   };
   Res: RpcUncle | null;
 };
@@ -317,7 +258,7 @@ type EthGetUncleCountByBlockHash = {
 type EthGetUncleCountByBlockNumber = {
   Req: {
     method: "eth_getUncleCountByBlockNumber";
-    params: [block: Exclude<RpcBlockRef, RpcBlockIdentifier>];
+    params: [block: RpcBlockNumberOrTag];
   };
   Res: Quantity;
 };
@@ -394,8 +335,8 @@ type EthGetLogs = {
       topics?: LogTopic[] | undefined;
     } & (
       | {
-          fromBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
-          toBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
+          fromBlock?: RpcBlockNumberOrTag | undefined;
+          toBlock?: RpcBlockNumberOrTag | undefined;
           blockHash?: undefined;
         }
       | {
@@ -421,8 +362,8 @@ type EthNewFilter = {
     method: "eth_newFilter";
     params: [
       filter: {
-        fromBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
-        toBlock?: Exclude<RpcBlockRef, RpcBlockIdentifier> | undefined;
+        fromBlock?: RpcBlockNumberOrTag | undefined;
+        toBlock?: RpcBlockNumberOrTag | undefined;
         address?: Address | Address[] | undefined;
         topics?: LogTopic[] | undefined;
       },
@@ -463,10 +404,21 @@ type EthSyncing = {
   Res: NetworkSync | false;
 };
 
-type EthPersonalSign = {
+type EthCreateAccessList = {
   Req: {
-    method: "eth_personalSign";
-    params: [address: Address, data: Hex];
+    method: "eth_createAccessList";
+    params: [transaction: RpcTransactionRequest, block: RpcBlockNumberOrTag];
+  };
+  Res: {
+    accessList: AccessList;
+    gasUsed: Quantity;
+  };
+};
+
+type PersonalSign = {
+  Req: {
+    method: "personal_sign";
+    params: [challenge: Hex, address: Address];
   };
   Res: Hex;
 };
@@ -525,6 +477,7 @@ export interface PublicRpcMethodMap {
   eth_protocolVersion: EthProtocolVersion;
   eth_sendRawTransaction: EthSendRawTransaction;
   eth_syncing: EthSyncing;
+  eth_createAccessList: EthCreateAccessList;
 }
 
 export interface WalletRpcMethodMap {
@@ -533,7 +486,7 @@ export interface WalletRpcMethodMap {
   eth_sendTransaction: EthSendTransaction;
   eth_signTransaction: EthSignTransaction;
   eth_signTypedData_v4: EthSignTypedDataV4;
-  personal_sign: EthPersonalSign;
+  personal_sign: PersonalSign;
   wallet_addEthereumChain: WalletAddEthereumChain;
   wallet_switchEthereumChain: WalletSwitchEthereumChain;
 }
@@ -544,19 +497,6 @@ export type PublicRpcMethod = keyof PublicRpcMethodMap;
 export type WalletRpcMethod = keyof WalletRpcMethodMap;
 
 export type RpcMethod = PublicRpcMethod | WalletRpcMethod;
-
-export type UnsupportedPublicRpcMethod = Exclude<
-  string,
-  keyof PublicRpcMethodMap
->;
-export type UnsupportedWalletRpcMethod = Exclude<
-  string,
-  keyof WalletRpcMethodMap
->;
-
-export type UnsupportedRpcMethod =
-  | UnsupportedPublicRpcMethod
-  | UnsupportedWalletRpcMethod;
 
 export type RpcRequestArgs<M extends RpcMethod> =
   RpcMethodMap[M]["Req"]["params"] extends undefined

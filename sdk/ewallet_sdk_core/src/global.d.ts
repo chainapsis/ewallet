@@ -1,3 +1,5 @@
+import type { KeplrEWallet } from "./keplr_ewallet";
+
 declare global {
   interface Window {
     __keplr_ewallet: KeplrEWallet | null | undefined;
@@ -5,4 +7,4 @@ declare global {
   }
 }
 
-export { }; // Ensures this file is treated as a module
+export {}; // Ensures this file is treated as a module

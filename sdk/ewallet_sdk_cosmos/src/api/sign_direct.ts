@@ -7,7 +7,7 @@ import {
 } from "@keplr-ewallet-sdk-cosmos/utils";
 import { makeSignBytes, type DirectSignResponse } from "@cosmjs/proto-signing";
 
-import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types";
 
 export async function signDirect(

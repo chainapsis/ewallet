@@ -27,6 +27,6 @@
       "@keplr-ewallet-sdk-core/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+  "include": ["src/**/*", "build.ts", "src/global.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }

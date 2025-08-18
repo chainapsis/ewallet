@@ -1,10 +1,10 @@
 import { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
 
-declare global {
-  interface Window {
-    // __keplr_ewallet: KeplrEWallet | null | undefined;
-  }
-}
+// declare global {
+//   interface Window {
+//     // __keplr_ewallet: KeplrEWallet | null | undefined;
+//   }
+// }
 
 declare global {
   namespace NodeJS {

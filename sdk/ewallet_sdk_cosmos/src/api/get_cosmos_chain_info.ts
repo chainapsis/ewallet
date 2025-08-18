@@ -1,7 +1,7 @@
 import type { ChainInfo } from "@keplr-wallet/types";
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
-import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
 const CACHE_TIME = 1000 * 60 * 60 * 1;
 

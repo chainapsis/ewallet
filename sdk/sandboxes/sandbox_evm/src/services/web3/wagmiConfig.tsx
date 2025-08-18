@@ -6,12 +6,12 @@ import {
   WalletDetailsParams,
   Wallet,
 } from "@rainbow-me/rainbowkit";
-import { coinbaseWallet, metaMaskWallet } from "@rainbow-me/rainbowkit/wallets";
-import { keplrWallet } from "@keplr-wallet/rainbow-connector";
+import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
 import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
 import {
+  initEthEWallet,
   type EIP1193Provider,
-  EthEWallet,
+  type EthEWallet,
 } from "@keplr-ewallet/ewallet-sdk-eth";
 
 import { getAlchemyHttpUrl } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
@@ -20,13 +20,28 @@ import scaffoldConfig, {
   DEFAULT_ALCHEMY_API_KEY,
   ScaffoldConfig,
 } from "@keplr-ewallet-sandbox-evm/../scaffold.config";
-import { useAppState } from "@keplr-ewallet-sandbox-evm/services/store/app";
 
 const { targetNetworks } = scaffoldConfig;
 
+const keplrEWallet = (): Wallet => ({
+  id: "keplr-ewallet",
+  name: "Keplr E-Wallet",
+  iconUrl: keplrIcon,
+  shortName: "Keplr",
+  rdns: "keplr-ewallet.com",
+  iconBackground: "#0c2f78",
+  downloadUrls: {
+    android:
+      "https://play.google.com/store/apps/details?id=com.chainapsis.keplr&pcampaignid=web_share",
+    chrome:
+      "https://chromewebstore.google.com/detail/dmkamcknogkgcdfhhbddcghachkejeap?utm_source=item-share-cb",
+  },
+  installed: true,
+  createConnector: keplrEWalletConnector,
+});
+
 export const defaultWallets = [
-  keplrWallet,
-  metaMaskWallet,
+  keplrEWallet,
   coinbaseWallet,
   toPrivyWallet({
     id: "cm04asygd041fmry9zmcyn5o5",
@@ -45,112 +60,167 @@ export interface WalletConnectOptions {
   projectId: string;
 }
 
-// TODO: move to ewallet/variants/rainbowkit or wagmi?
-const keplrEWalletConnector = (
+function keplrEWalletConnector(
   walletDetails: WalletDetailsParams,
-  ethEWallet: EthEWallet,
-): CreateConnectorFn => {
-  let provider: EIP1193Provider | null = null;
+): CreateConnectorFn {
+  let initPromise: Promise<EthEWallet> | null = null;
 
-  return createConnector((config) => {
-    console.log("keplr e-wallet connector init with chains:", config.chains);
+  let ethEWallet: EthEWallet | null = null;
+  let cachedProvider: EIP1193Provider | null = null;
 
+  const ensureInit = () => {
+    if (!initPromise) {
+      initPromise = (async () => {
+        console.log("keplr-ewallet: setup");
+
+        // TODO: enable to override chain info when init ethereum wallet
+        const initRes = await initEthEWallet({
+          api_key:
+            "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
+          sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
+        });
+        if (!initRes.success) {
+          throw new Error(`init fail: ${initRes.err}`);
+        }
+        console.log("keplr-ewallet: eth sdk init success");
+        ethEWallet = initRes.data;
+        return initRes.data;
+      })();
+    }
+    return initPromise;
+  };
+
+  return createConnector<EIP1193Provider>((config) => {
     const wallet = {
       id: "keplr-ewallet",
       name: "Keplr E-Wallet",
       type: "keplr-ewallet" as const,
       icon: keplrIcon,
-      connect: async () => {
-        console.log("connect keplr e-wallet!");
+      setup: async () => {
+        await ensureInit();
+      },
+      connect: async (parameters?: {
+        chainId?: number | undefined;
+        isReconnecting?: boolean | undefined;
+      }) => {
+        console.log("[sandbox-evm] try to connect keplr e-wallet!");
 
-        const providerInstance = await wallet.getProvider();
-        const accounts = await providerInstance.request({
-          method: "eth_requestAccounts",
-        });
-        const chainId = await providerInstance.request({
-          method: "eth_chainId",
-        });
+        const ethEWallet = await ensureInit();
 
-        // if provider is first time initialized,
-        // add listener for accountsChanged and chainChanged
+        let accounts = await wallet.getAccounts();
+
+        // if accounts is empty, try sign in
+        if (accounts.length === 0) {
+          // if is reconnecting, skip sign in with google
+          // only trigger by user manually interact with the connector
+          if (parameters?.isReconnecting) {
+            console.log(
+              "[sandbox-evm] reconnecting ewallet, skip sign in with google",
+            );
+            return {
+              accounts,
+              chainId: await wallet.getChainId(),
+            };
+          }
+
+          console.log(
+            "[sandbox-evm] no authenticated account, sign in with google",
+          );
+          await ethEWallet.eWallet.signIn("google");
+        }
+
+        const chainId = await wallet.getChainId();
+
+        if (parameters?.chainId && chainId !== parameters.chainId) {
+          await wallet.switchChain({ chainId: parameters.chainId });
+        }
+
+        // re-request accounts, there should be at least one account after sign in
+        accounts = await wallet.getAccounts();
+
+        console.log(
+          "[sandbox-evm] connected with accounts ",
+          accounts.length > 0,
+        );
 
         return {
-          accounts: accounts.map((x: string) => getAddress(x)),
-          chainId: Number(chainId),
+          accounts,
+          chainId,
         };
-
-        // return {
-        //   accounts: [],
-        //   chainId: 0,
-        // };
       },
       disconnect: async () => {
-        const providerInstance = await wallet.getProvider();
-        providerInstance.removeListener(
-          "accountsChanged",
-          wallet.onAccountsChanged,
-        );
-        providerInstance.removeListener("chainChanged", wallet.onChainChanged);
+        console.log("[sandbox-evm] disconnect keplr e-wallet");
+        const provider = await wallet.getProvider();
+        provider.removeListener("accountsChanged", wallet.onAccountsChanged);
+        provider.removeListener("chainChanged", wallet.onChainChanged);
+
+        await ethEWallet?.eWallet.signOut();
       },
       getAccounts: async () => {
-        console.log("getAccounts");
-        const providerInstance = await wallet.getProvider();
-        return await providerInstance.request({
+        console.log("[sandbox-evm] handle `getAccounts`");
+        const provider = await wallet.getProvider();
+        const accounts = await provider.request({
           method: "eth_accounts",
         });
+        return accounts.map((x: string) => getAddress(x));
       },
       getChainId: async () => {
-        console.log("getChainId");
-        const providerInstance = await wallet.getProvider();
-        const chainId = await providerInstance.request({
+        console.log("[sandbox-evm] handle `getChainId`");
+
+        const provider = await wallet.getProvider();
+        const chainId = await provider.request({
           method: "eth_chainId",
         });
         return Number(chainId);
-
-        // TODO: provider 초기화가 안돼서 값이 반환되지 않으면
-        // chainId를 먼저 체크하고 provider 초기화 처리를 해야 하므로, 우선 0을 반환함
-        // return 0;
       },
-      getProvider: async (): Promise<EIP1193Provider> => {
-        if (provider) {
-          return provider;
+      getProvider: async () => {
+        console.log("[sandbox-evm] handle `getProvider`");
+        if (cachedProvider) {
+          return cachedProvider;
         }
 
-        await ethEWallet.eWallet.signIn("google");
-        provider = await ethEWallet.getEthereumProvider();
+        const ethEWallet = await ensureInit();
 
-        return provider;
+        cachedProvider = await ethEWallet.getEthereumProvider();
+
+        cachedProvider.on("chainChanged", (chainId) => {
+          wallet.onChainChanged(chainId);
+        });
+
+        cachedProvider.on("accountsChanged", (accounts) => {
+          wallet.onAccountsChanged(accounts);
+        });
+
+        return cachedProvider;
       },
       isAuthorized: async () => {
-        try {
-          const accounts = await wallet.getAccounts();
-          return !!accounts && accounts.length > 0;
-        } catch (_) {
-          return false;
-        }
+        console.log("[sandbox-evm] handle `isAuthorized`");
+        const accounts = await wallet.getAccounts();
+        return accounts.length > 0;
       },
       switchChain: async ({ chainId }: { chainId: number }) => {
-        const chain = targetNetworks.find((network) => network.id === chainId);
+        console.log("[sandbox-evm] handle `switchChain`", chainId);
+        const chain = config.chains.find((network) => network.id === chainId);
         if (!chain) {
           throw new Error(`Chain ${chainId} not found`);
         }
 
-        const providerInstance = await wallet.getProvider();
-        await providerInstance.request({
+        const provider = await wallet.getProvider();
+        await provider.request({
           method: "wallet_switchEthereumChain",
           params: [{ chainId: toHex(chainId) }],
         });
 
-        wallet.onChainChanged(chainId);
-
         return chain;
       },
       onAccountsChanged: (accounts: string[]) => {
-        if (accounts.length === 0) wallet.onDisconnect();
-        else
+        if (accounts.length === 0) {
+          wallet.onDisconnect();
+        } else {
           config.emitter.emit("change", {
             accounts: accounts.map((x: string) => getAddress(x)),
           });
+        }
       },
       onChainChanged: (chainId: string | number) => {
         const chainIdNumber = Number(chainId);
@@ -164,38 +234,9 @@ const keplrEWalletConnector = (
 
     return wallet;
   });
-};
-
-// TODO: move to ewallet/variants/rainbowkit or wagmi?
-export const keplrEWallet = (eWallet: EthEWallet) => {
-  return (): Wallet => ({
-    id: "keplr-ewallet",
-    name: "Keplr E-Wallet",
-    iconUrl: keplrIcon,
-    shortName: "Keplr",
-    rdns: "keplr-ewallet.com",
-    iconBackground: "#0c2f78",
-    downloadUrls: {
-      android:
-        "https://play.google.com/store/apps/details?id=com.chainapsis.keplr&pcampaignid=web_share",
-      chrome:
-        "https://chromewebstore.google.com/detail/dmkamcknogkgcdfhhbddcghachkejeap?utm_source=item-share-cb",
-    },
-    installed: true,
-    createConnector: (walletDetails) =>
-      keplrEWalletConnector(walletDetails, eWallet),
-  });
-};
+}
 
 export const wagmiConfigWithKeplr = () => {
-  let wallets = [...defaultWallets];
-
-  const ethEWallet = useAppState((state) => state.keplr_sdk_eth);
-
-  if (ethEWallet) {
-    wallets.unshift(keplrEWallet(ethEWallet));
-  }
-
   return createConfig({
     chains: enabledChains,
     ssr: true,
@@ -203,7 +244,7 @@ export const wagmiConfigWithKeplr = () => {
       [
         {
           groupName: "Supported Wallets",
-          wallets,
+          wallets: defaultWallets,
         },
       ],
       {

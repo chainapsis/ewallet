@@ -7,6 +7,7 @@ type TextAreaInputProps = CommonInputProps<string> & {
   prefix?: ReactNode;
   suffix?: ReactNode;
   rows?: number;
+  readOnly?: boolean;
 };
 
 export const TextAreaInput = ({
@@ -19,6 +20,7 @@ export const TextAreaInput = ({
   prefix,
   suffix,
   rows = 4,
+  readOnly = false,
 }: TextAreaInputProps) => {
   let modifier = "";
   if (error) {
@@ -49,6 +51,7 @@ export const TextAreaInput = ({
         onChange={handleChange}
         disabled={disabled}
         rows={rows}
+        readOnly={readOnly}
       />
       {suffix}
     </div>

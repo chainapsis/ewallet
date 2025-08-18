@@ -11,7 +11,7 @@ import {
   makeMockSendTokenAminoSignDoc,
   makeMockSendTokenProtoSignDoc,
 } from "@/utils/cosmos";
-import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
+import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
 import {
   TEST_COSMOS_CHAIN_ID,
   TEST_COSMOS_CHAIN_REST,

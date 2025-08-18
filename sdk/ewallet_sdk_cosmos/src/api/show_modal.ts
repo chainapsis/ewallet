@@ -3,7 +3,7 @@ import type {
   MakeCosmosSigData,
 } from "@keplr-ewallet/ewallet-sdk-core";
 
-import type { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
 export async function showModal(
   this: CosmosEWallet,

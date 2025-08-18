@@ -78,7 +78,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.27.1":
+"@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.26.2, @babel/code-frame@npm:^7.27.1":
   version: 7.27.1
   resolution: "@babel/code-frame@npm:7.27.1"
   dependencies:
@@ -805,6 +805,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmjs/amino@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/amino@npm:0.36.0"
+  dependencies:
+    "@cosmjs/crypto": "npm:^0.36.0"
+    "@cosmjs/encoding": "npm:^0.36.0"
+    "@cosmjs/math": "npm:^0.36.0"
+    "@cosmjs/utils": "npm:^0.36.0"
+  checksum: 10c0/7f755eb59dba493b088303b6bea68a05443517de3abf20a05d2db64b5b6b9a63bd203097fc7e32ced3d48b4902bf82ae6da6233a3b4100930a0048a5bd219268
+  languageName: node
+  linkType: hard
+
 "@cosmjs/cosmwasm-stargate@npm:0.29.0":
   version: 0.29.0
   resolution: "@cosmjs/cosmwasm-stargate@npm:0.29.0"
@@ -922,6 +934,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmjs/crypto@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/crypto@npm:0.36.0"
+  dependencies:
+    "@cosmjs/encoding": "npm:^0.36.0"
+    "@cosmjs/math": "npm:^0.36.0"
+    "@cosmjs/utils": "npm:^0.36.0"
+    "@noble/ciphers": "npm:^1.3.0"
+    "@noble/curves": "npm:^1.9.2"
+    "@noble/hashes": "npm:^1"
+    hash-wasm: "npm:^4.12.0"
+  checksum: 10c0/3768e07175801fd170ca7691e611ad3af113c64ba980dde7781c1330ce02d2707d348fdf6c1b9858f9c61f767ee380b22a37e2a9afc05ebe3ad95735c494f84d
+  languageName: node
+  linkType: hard
+
 "@cosmjs/encoding@npm:0.29.0":
   version: 0.29.0
   resolution: "@cosmjs/encoding@npm:0.29.0"
@@ -996,6 +1023,17 @@ __metadata:
     bech32: "npm:^1.1.4"
     readonly-date: "npm:^1.0.0"
   checksum: 10c0/d35f4fc7eaffde9dd3a32f60a8b58a87c0c23b8901c3a4760156a0103739b862b14963f60eeef638ddacd0b4fab28fa46b4fc57b82fa14ee08d4786aab6d87fe
+  languageName: node
+  linkType: hard
+
+"@cosmjs/encoding@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/encoding@npm:0.36.0"
+  dependencies:
+    base64-js: "npm:^1.3.0"
+    bech32: "npm:^1.1.4"
+    readonly-date: "npm:^1.0.0"
+  checksum: 10c0/3e8038b8856d080acf7e233bfdde9ce1a90e5146e4a2104da30aeba7922a0a3bc2d732589a07554e0f5d201802a85cf63771e44841873846b2364b1fed594254
   languageName: node
   linkType: hard
 
@@ -1125,6 +1163,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmjs/math@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/math@npm:0.36.0"
+  checksum: 10c0/72fbbd8beeef9919775c213e8b2ce568b957c9f73a4a634a275f5bac7cb7a0b614dcc81d3d3593b4634ded1b36fea1fe1bc9aa689a706fd51e94320a919b06b5
+  languageName: node
+  linkType: hard
+
 "@cosmjs/proto-signing@npm:0.29.0":
   version: 0.29.0
   resolution: "@cosmjs/proto-signing@npm:0.29.0"
@@ -1205,6 +1250,20 @@ __metadata:
     "@cosmjs/utils": "npm:^0.34.0"
     cosmjs-types: "npm:^0.9.0"
   checksum: 10c0/48cfc459219d8922a63c2ded58bdeab08773a8a065190618b6f5ec59fc44afbc4153d600afd319993f24fe152b3f6305e05cfbd2c83c1849d92f0eae4f232583
+  languageName: node
+  linkType: hard
+
+"@cosmjs/proto-signing@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/proto-signing@npm:0.36.0"
+  dependencies:
+    "@cosmjs/amino": "npm:^0.36.0"
+    "@cosmjs/crypto": "npm:^0.36.0"
+    "@cosmjs/encoding": "npm:^0.36.0"
+    "@cosmjs/math": "npm:^0.36.0"
+    "@cosmjs/utils": "npm:^0.36.0"
+    cosmjs-types: "npm:^0.10.1"
+  checksum: 10c0/aecc5f7325ff30d3ab6d9667617b078935d8af79c21eb17438d7f4e4cd0f8c0a384fa1ed88ece902ed2f4495c01333bf0a17b9d0189b401cfc6eb7f5674e6228
   languageName: node
   linkType: hard
 
@@ -1497,6 +1556,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cosmjs/utils@npm:^0.36.0":
+  version: 0.36.0
+  resolution: "@cosmjs/utils@npm:0.36.0"
+  checksum: 10c0/ccc6c8ec8459d4e4cd37bef73df7a5e70d77ad0965e3a71710e390ec7cc74132dda875fc22a5f384a427480d0e79d6ed4a8ec451e0e7f5724c683a6501e35ee8
+  languageName: node
+  linkType: hard
+
 "@cosmos-kit/core@npm:2.2.2":
   version: 2.2.2
   resolution: "@cosmos-kit/core@npm:2.2.2"
@@ -1534,6 +1600,28 @@ __metadata:
     nock: "npm:13.5.4"
     uuid: "npm:^9.0.1"
   checksum: 10c0/ff5b9bb48b9c6f4c3f14268f67592a4c39dbee8e393d83805bc3e79f997e9ac83fbf563044043a2e34503e76e350b79e565944a5853cebb21ab2e5fa23d38f8b
+  languageName: node
+  linkType: hard
+
+"@cosmos-kit/core@npm:^2.16.3":
+  version: 2.16.3
+  resolution: "@cosmos-kit/core@npm:2.16.3"
+  dependencies:
+    "@chain-registry/client": "npm:^1.49.11"
+    "@chain-registry/keplr": "npm:^1.69.13"
+    "@chain-registry/types": "npm:^0.46.11"
+    "@cosmjs/amino": "npm:^0.32.3"
+    "@cosmjs/cosmwasm-stargate": "npm:^0.32.3"
+    "@cosmjs/proto-signing": "npm:^0.32.3"
+    "@cosmjs/stargate": "npm:^0.32.3"
+    "@dao-dao/cosmiframe": "npm:^1.0.0"
+    "@walletconnect/types": "npm:2.11.0"
+    bowser: "npm:2.11.0"
+    cosmjs-types: "npm:^0.9.0"
+    events: "npm:3.3.0"
+    nock: "npm:13.5.4"
+    uuid: "npm:^9.0.1"
+  checksum: 10c0/522d9a6320ca2cc84c38ead2528a88e3c0512388b79e843fa3e7b3fb23b9f885c4b53b4d3ad3c6c57d75d4d3cb808c608bd20e98d17b3dcbdef8bc7cf8d4086a
   languageName: node
   linkType: hard
 
@@ -1831,9 +1919,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/aix-ppc64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/aix-ppc64@npm:0.25.9"
+  conditions: os=aix & cpu=ppc64
+  languageName: node
+  linkType: hard
+
 "@esbuild/android-arm64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/android-arm64@npm:0.25.8"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/android-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/android-arm64@npm:0.25.9"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
@@ -1845,9 +1947,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/android-arm@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/android-arm@npm:0.25.9"
+  conditions: os=android & cpu=arm
+  languageName: node
+  linkType: hard
+
 "@esbuild/android-x64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/android-x64@npm:0.25.8"
+  conditions: os=android & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/android-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/android-x64@npm:0.25.9"
   conditions: os=android & cpu=x64
   languageName: node
   linkType: hard
@@ -1859,9 +1975,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/darwin-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/darwin-arm64@npm:0.25.9"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/darwin-x64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/darwin-x64@npm:0.25.8"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/darwin-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/darwin-x64@npm:0.25.9"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
@@ -1873,9 +2003,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/freebsd-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/freebsd-arm64@npm:0.25.9"
+  conditions: os=freebsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/freebsd-x64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/freebsd-x64@npm:0.25.8"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/freebsd-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/freebsd-x64@npm:0.25.9"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
@@ -1887,9 +2031,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-arm64@npm:0.25.9"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-arm@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/linux-arm@npm:0.25.8"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-arm@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-arm@npm:0.25.9"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
@@ -1901,9 +2059,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-ia32@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-ia32@npm:0.25.9"
+  conditions: os=linux & cpu=ia32
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-loong64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/linux-loong64@npm:0.25.8"
+  conditions: os=linux & cpu=loong64
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-loong64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-loong64@npm:0.25.9"
   conditions: os=linux & cpu=loong64
   languageName: node
   linkType: hard
@@ -1915,9 +2087,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-mips64el@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-mips64el@npm:0.25.9"
+  conditions: os=linux & cpu=mips64el
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-ppc64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/linux-ppc64@npm:0.25.8"
+  conditions: os=linux & cpu=ppc64
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-ppc64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-ppc64@npm:0.25.9"
   conditions: os=linux & cpu=ppc64
   languageName: node
   linkType: hard
@@ -1929,9 +2115,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-riscv64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-riscv64@npm:0.25.9"
+  conditions: os=linux & cpu=riscv64
+  languageName: node
+  linkType: hard
+
 "@esbuild/linux-s390x@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/linux-s390x@npm:0.25.8"
+  conditions: os=linux & cpu=s390x
+  languageName: node
+  linkType: hard
+
+"@esbuild/linux-s390x@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-s390x@npm:0.25.9"
   conditions: os=linux & cpu=s390x
   languageName: node
   linkType: hard
@@ -1943,9 +2143,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/linux-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/linux-x64@npm:0.25.9"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@esbuild/netbsd-arm64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/netbsd-arm64@npm:0.25.8"
+  conditions: os=netbsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/netbsd-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/netbsd-arm64@npm:0.25.9"
   conditions: os=netbsd & cpu=arm64
   languageName: node
   linkType: hard
@@ -1957,9 +2171,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/netbsd-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/netbsd-x64@npm:0.25.9"
+  conditions: os=netbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@esbuild/openbsd-arm64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/openbsd-arm64@npm:0.25.8"
+  conditions: os=openbsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/openbsd-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/openbsd-arm64@npm:0.25.9"
   conditions: os=openbsd & cpu=arm64
   languageName: node
   linkType: hard
@@ -1971,9 +2199,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/openbsd-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/openbsd-x64@npm:0.25.9"
+  conditions: os=openbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@esbuild/openharmony-arm64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/openharmony-arm64@npm:0.25.8"
+  conditions: os=openharmony & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/openharmony-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/openharmony-arm64@npm:0.25.9"
   conditions: os=openharmony & cpu=arm64
   languageName: node
   linkType: hard
@@ -1985,9 +2227,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/sunos-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/sunos-x64@npm:0.25.9"
+  conditions: os=sunos & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@esbuild/win32-arm64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/win32-arm64@npm:0.25.8"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@esbuild/win32-arm64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/win32-arm64@npm:0.25.9"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -1999,9 +2255,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@esbuild/win32-ia32@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/win32-ia32@npm:0.25.9"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
 "@esbuild/win32-x64@npm:0.25.8":
   version: 0.25.8
   resolution: "@esbuild/win32-x64@npm:0.25.8"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@esbuild/win32-x64@npm:0.25.9":
+  version: 0.25.9
+  resolution: "@esbuild/win32-x64@npm:0.25.9"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3368,15 +3638,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/bytes@npm:^0.0.3-alpha.20, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
+"@keplr-ewallet/bytes@npm:^0.0.3-alpha.22, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/bytes@workspace:crypto/bytes"
   dependencies:
     "@jest/globals": "npm:*"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.5"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
+    jest: "npm:*"
     ts-jest: "npm:*"
     typescript: "npm:*"
   languageName: unknown
@@ -3403,7 +3674,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/credential-vault-interface@workspace:credential_vault/cv_interface"
   dependencies:
-    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.20"
+    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.22"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3474,25 +3745,48 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.36, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
+"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.39, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core"
   dependencies:
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.5"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
     "@keplr-wallet/types": "npm:^0.12.257"
-    "@rollup/plugin-commonjs": "npm:^25.0.0"
-    "@rollup/plugin-node-resolve": "npm:^15.0.0"
-    "@rollup/plugin-typescript": "npm:^11.0.0"
+    "@rollup/plugin-commonjs": "npm:*"
+    "@rollup/plugin-node-resolve": "npm:*"
+    "@rollup/plugin-terser": "npm:*"
+    "@rollup/plugin-typescript": "npm:*"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
+    esbuild: "npm:*"
     jest: "npm:*"
-    rollup: "npm:^4.0.0"
-    rollup-plugin-terser: "npm:^7.0.0"
+    rollup: "npm:*"
+    rollup-plugin-dts: "npm:*"
+    rollup-plugin-tsconfig-paths: "npm:*"
     ts-jest: "npm:*"
+    tsc-alias: "npm:*"
+    tsx: "npm:*"
     typescript: "npm:*"
   languageName: unknown
   linkType: soft
+
+"@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49":
+  version: 0.0.6-rc.49
+  resolution: "@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49"
+  dependencies:
+    "@cosmjs/amino": "npm:^0.33.1"
+    "@cosmjs/proto-signing": "npm:^0.33.1"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.38"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
+    "@keplr-wallet/proto-types": "npm:^0.12.253"
+    "@keplr-wallet/types": "npm:^0.12.253"
+    "@noble/curves": "npm:^1.9.2"
+    "@noble/hashes": "npm:^1.8.0"
+    bech32: "npm:^2.0.0"
+    buffer: "npm:^6.0.3"
+  checksum: 10c0/e1805761e0a1e395e2fc82be9e83ed9b4e9ed113646a77de409afe835ca8729864b80996cebefc125c04734e64fb6a37ec47a89c6ccf6a7f456092d48ed59bd5
+  languageName: node
+  linkType: hard
 
 "@keplr-ewallet/ewallet-sdk-cosmos@workspace:*, @keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos":
   version: 0.0.0-use.local
@@ -3500,15 +3794,16 @@ __metadata:
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.36"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.5"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.39"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
     "@noble/curves": "npm:^1.9.2"
     "@noble/hashes": "npm:^1.8.0"
-    "@rollup/plugin-commonjs": "npm:^25.0.0"
-    "@rollup/plugin-node-resolve": "npm:^15.0.0"
-    "@rollup/plugin-typescript": "npm:^11.0.0"
+    "@rollup/plugin-commonjs": "npm:*"
+    "@rollup/plugin-node-resolve": "npm:*"
+    "@rollup/plugin-terser": "npm:*"
+    "@rollup/plugin-typescript": "npm:*"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3516,9 +3811,11 @@ __metadata:
     bech32: "npm:^2.0.0"
     buffer: "npm:^6.0.3"
     del-cli: "npm:*"
+    esbuild: "npm:*"
     jest: "npm:*"
-    rollup: "npm:^4.0.0"
-    rollup-plugin-terser: "npm:^7.0.0"
+    rollup: "npm:*"
+    rollup-plugin-dts: "npm:*"
+    rollup-plugin-tsconfig-paths: "npm:*"
     ts-jest: "npm:*"
     tsc-alias: "npm:*"
     typescript: "npm:*"
@@ -3529,8 +3826,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth"
   dependencies:
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.36"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.5"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.39"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3548,7 +3845,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/stdlib-js@npm:^0.0.2-rc.5, @keplr-ewallet/stdlib-js@workspace:*, @keplr-ewallet/stdlib-js@workspace:stdlib_js":
+"@keplr-ewallet/stdlib-js@npm:^0.0.2-rc.6, @keplr-ewallet/stdlib-js@workspace:*, @keplr-ewallet/stdlib-js@workspace:stdlib_js":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/stdlib-js@workspace:stdlib_js"
   dependencies:
@@ -3865,16 +4162,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-wallet/rainbow-connector@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "@keplr-wallet/rainbow-connector@npm:0.1.1"
-  peerDependencies:
-    "@rainbow-me/rainbowkit": ^2
-    wagmi: ^2
-  checksum: 10c0/bdd0c83a80cdc1a410b3f3bbe3ba742a4b614f649bbb7677f05070eb53e1f095e9e609f086e06e90fcf1d31918ff8ee2e22e319c99f319e22ecfb30b3be3806c
-  languageName: node
-  linkType: hard
-
 "@keplr-wallet/router@npm:0.10.24-ibc.go.v7.hot.fix":
   version: 0.10.24-ibc.go.v7.hot.fix
   resolution: "@keplr-wallet/router@npm:0.10.24-ibc.go.v7.hot.fix"
@@ -3976,6 +4263,17 @@ __metadata:
   peerDependencies:
     starknet: ^7
   checksum: 10c0/a995ef4d4aea9078d5521bbfc60f681f293fdf0d8c1e9824d9e68b224776160490964a54d6f05520742a096f0859f9777e112da19f657d377f6cb967514cc0f8
+  languageName: node
+  linkType: hard
+
+"@keplr-wallet/types@npm:^0.12.263":
+  version: 0.12.263
+  resolution: "@keplr-wallet/types@npm:0.12.263"
+  dependencies:
+    long: "npm:^4.0.0"
+  peerDependencies:
+    starknet: ^7
+  checksum: 10c0/8b734419416383adfa8d96203d6cb7bf47523da03e6f1f90f3da9043d3dacf5524dc7163a3d9f87b01df3698805f2d26a980d4cb1add96afd2cf16e67ba49d8a
   languageName: node
   linkType: hard
 
@@ -8109,6 +8407,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/plugin-commonjs@npm:*":
+  version: 28.0.6
+  resolution: "@rollup/plugin-commonjs@npm:28.0.6"
+  dependencies:
+    "@rollup/pluginutils": "npm:^5.0.1"
+    commondir: "npm:^1.0.1"
+    estree-walker: "npm:^2.0.2"
+    fdir: "npm:^6.2.0"
+    is-reference: "npm:1.2.1"
+    magic-string: "npm:^0.30.3"
+    picomatch: "npm:^4.0.2"
+  peerDependencies:
+    rollup: ^2.68.0||^3.0.0||^4.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: 10c0/67fa297384c2494c8f85df102c030e7f8ed8f600cfccdd1143266112ee4037d37faa1bda44a571dab35b48297342024551e995ad2f8a4d86da0aa1f33ec61868
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-commonjs@npm:^25.0.0":
   version: 25.0.8
   resolution: "@rollup/plugin-commonjs@npm:25.0.8"
@@ -8144,6 +8462,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/plugin-node-resolve@npm:*":
+  version: 16.0.1
+  resolution: "@rollup/plugin-node-resolve@npm:16.0.1"
+  dependencies:
+    "@rollup/pluginutils": "npm:^5.0.1"
+    "@types/resolve": "npm:1.20.2"
+    deepmerge: "npm:^4.2.2"
+    is-module: "npm:^1.0.0"
+    resolve: "npm:^1.22.1"
+  peerDependencies:
+    rollup: ^2.78.0||^3.0.0||^4.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: 10c0/54d33282321492fafec29b49c66dd1efd90c72a24f9d1569dcb57a72ab8de8a782810f39fdb917b96ec6a598c18f3416588b419bf7af331793a010de1fe28c60
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-node-resolve@npm:^15.0.0":
   version: 15.3.1
   resolution: "@rollup/plugin-node-resolve@npm:15.3.1"
@@ -8159,6 +8495,41 @@ __metadata:
     rollup:
       optional: true
   checksum: 10c0/ecf3abe890fc98ad665fdbfb1ea245253e0d1f2bc6d9f4e8f496f212c76a2ce7cd4b9bc0abd21e6bcaa16f72d1c67cc6b322ea12a6ec68e8a8834df8242a5ecd
+  languageName: node
+  linkType: hard
+
+"@rollup/plugin-terser@npm:*, @rollup/plugin-terser@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@rollup/plugin-terser@npm:0.4.4"
+  dependencies:
+    serialize-javascript: "npm:^6.0.1"
+    smob: "npm:^1.0.0"
+    terser: "npm:^5.17.4"
+  peerDependencies:
+    rollup: ^2.0.0||^3.0.0||^4.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: 10c0/b9cb6c8f02ac1c1344019e9fb854321b74f880efebc41b6bdd84f18331fce0f4a2aadcdb481042245cd3f409b429ac363af71f9efec4a2024731d67d32af36ee
+  languageName: node
+  linkType: hard
+
+"@rollup/plugin-typescript@npm:*":
+  version: 12.1.4
+  resolution: "@rollup/plugin-typescript@npm:12.1.4"
+  dependencies:
+    "@rollup/pluginutils": "npm:^5.1.0"
+    resolve: "npm:^1.22.1"
+  peerDependencies:
+    rollup: ^2.14.0||^3.0.0||^4.0.0
+    tslib: "*"
+    typescript: ">=3.7.0"
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+    tslib:
+      optional: true
+  checksum: 10c0/b5bf7f54794d0b33ae5441c5aa202a95beb7068c206f40102f94997e888756c06c2bfe00517eb74a58771078432f94e8a34e99f5c6dbf89a22b49431b83c4798
   languageName: node
   linkType: hard
 
@@ -12588,6 +12959,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cosmjs-types@npm:^0.10.1":
+  version: 0.10.1
+  resolution: "cosmjs-types@npm:0.10.1"
+  checksum: 10c0/f114cd1a0636034d93b97f61b049c5dc4929c81ff63855c6e56b0335be2b2d35475eee862ea5bd504288b33d3a918952dab11d4b6bed6bc2829f401cb5e6c797
+  languageName: node
+  linkType: hard
+
 "cosmjs-types@npm:^0.5.0, cosmjs-types@npm:^0.5.2":
   version: 0.5.2
   resolution: "cosmjs-types@npm:0.5.2"
@@ -13678,6 +14056,95 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esbuild@npm:*, esbuild@npm:^0.25.9":
+  version: 0.25.9
+  resolution: "esbuild@npm:0.25.9"
+  dependencies:
+    "@esbuild/aix-ppc64": "npm:0.25.9"
+    "@esbuild/android-arm": "npm:0.25.9"
+    "@esbuild/android-arm64": "npm:0.25.9"
+    "@esbuild/android-x64": "npm:0.25.9"
+    "@esbuild/darwin-arm64": "npm:0.25.9"
+    "@esbuild/darwin-x64": "npm:0.25.9"
+    "@esbuild/freebsd-arm64": "npm:0.25.9"
+    "@esbuild/freebsd-x64": "npm:0.25.9"
+    "@esbuild/linux-arm": "npm:0.25.9"
+    "@esbuild/linux-arm64": "npm:0.25.9"
+    "@esbuild/linux-ia32": "npm:0.25.9"
+    "@esbuild/linux-loong64": "npm:0.25.9"
+    "@esbuild/linux-mips64el": "npm:0.25.9"
+    "@esbuild/linux-ppc64": "npm:0.25.9"
+    "@esbuild/linux-riscv64": "npm:0.25.9"
+    "@esbuild/linux-s390x": "npm:0.25.9"
+    "@esbuild/linux-x64": "npm:0.25.9"
+    "@esbuild/netbsd-arm64": "npm:0.25.9"
+    "@esbuild/netbsd-x64": "npm:0.25.9"
+    "@esbuild/openbsd-arm64": "npm:0.25.9"
+    "@esbuild/openbsd-x64": "npm:0.25.9"
+    "@esbuild/openharmony-arm64": "npm:0.25.9"
+    "@esbuild/sunos-x64": "npm:0.25.9"
+    "@esbuild/win32-arm64": "npm:0.25.9"
+    "@esbuild/win32-ia32": "npm:0.25.9"
+    "@esbuild/win32-x64": "npm:0.25.9"
+  dependenciesMeta:
+    "@esbuild/aix-ppc64":
+      optional: true
+    "@esbuild/android-arm":
+      optional: true
+    "@esbuild/android-arm64":
+      optional: true
+    "@esbuild/android-x64":
+      optional: true
+    "@esbuild/darwin-arm64":
+      optional: true
+    "@esbuild/darwin-x64":
+      optional: true
+    "@esbuild/freebsd-arm64":
+      optional: true
+    "@esbuild/freebsd-x64":
+      optional: true
+    "@esbuild/linux-arm":
+      optional: true
+    "@esbuild/linux-arm64":
+      optional: true
+    "@esbuild/linux-ia32":
+      optional: true
+    "@esbuild/linux-loong64":
+      optional: true
+    "@esbuild/linux-mips64el":
+      optional: true
+    "@esbuild/linux-ppc64":
+      optional: true
+    "@esbuild/linux-riscv64":
+      optional: true
+    "@esbuild/linux-s390x":
+      optional: true
+    "@esbuild/linux-x64":
+      optional: true
+    "@esbuild/netbsd-arm64":
+      optional: true
+    "@esbuild/netbsd-x64":
+      optional: true
+    "@esbuild/openbsd-arm64":
+      optional: true
+    "@esbuild/openbsd-x64":
+      optional: true
+    "@esbuild/openharmony-arm64":
+      optional: true
+    "@esbuild/sunos-x64":
+      optional: true
+    "@esbuild/win32-arm64":
+      optional: true
+    "@esbuild/win32-ia32":
+      optional: true
+    "@esbuild/win32-x64":
+      optional: true
+  bin:
+    esbuild: bin/esbuild
+  checksum: 10c0/aaa1284c75fcf45c82f9a1a117fe8dc5c45628e3386bda7d64916ae27730910b51c5aec7dd45a6ba19256be30ba2935e64a8f011a3f0539833071e06bf76d5b3
+  languageName: node
+  linkType: hard
+
 "esbuild@npm:^0.25.0, esbuild@npm:~0.25.0":
   version: 0.25.8
   resolution: "esbuild@npm:0.25.8"
@@ -13986,6 +14453,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ewallet_cosmos_kit@workspace:sdk/ewallet_cosmos_kit":
+  version: 0.0.0-use.local
+  resolution: "ewallet_cosmos_kit@workspace:sdk/ewallet_cosmos_kit"
+  dependencies:
+    "@cosmjs/amino": "npm:^0.36.0"
+    "@cosmjs/proto-signing": "npm:^0.36.0"
+    "@cosmos-kit/core": "npm:^2.16.3"
+    "@keplr-ewallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.49"
+    "@keplr-wallet/types": "npm:^0.12.263"
+  languageName: unknown
+  linkType: soft
+
 "execa@npm:5.0.0":
   version: 5.0.0
   resolution: "execa@npm:5.0.0"
@@ -14198,6 +14677,18 @@ __metadata:
   dependencies:
     bser: "npm:2.1.1"
   checksum: 10c0/feae89ac148adb8f6ae8ccd87632e62b13563e6fb114cacb5265c51f585b17e2e268084519fb2edd133872f1d47a18e6bfd7e5e08625c0d41b93149694187581
+  languageName: node
+  linkType: hard
+
+"fdir@npm:^6.2.0":
+  version: 6.5.0
+  resolution: "fdir@npm:6.5.0"
+  peerDependencies:
+    picomatch: ^3 || ^4
+  peerDependenciesMeta:
+    picomatch:
+      optional: true
+  checksum: 10c0/e345083c4306b3aed6cb8ec551e26c36bab5c511e99ea4576a16750ddc8d3240e63826cc624f5ae17ad4dc82e68a253213b60d556c11bfad064b7607847ed07f
   languageName: node
   linkType: hard
 
@@ -14873,7 +15364,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"handlebars@npm:^4.7.7":
+"handlebars@npm:^4.7.7, handlebars@npm:^4.7.8":
   version: 4.7.8
   resolution: "handlebars@npm:4.7.8"
   dependencies:
@@ -15021,6 +15512,13 @@ __metadata:
     inherits: "npm:^2.0.4"
     safe-buffer: "npm:^5.2.1"
   checksum: 10c0/6dc185b79bad9b6d525cd132a588e4215380fdc36fec6f7a8a58c5db8e3b642557d02ad9c367f5e476c7c3ad3ccffa3607f308b124e1ed80e3b80a1b254db61e
+  languageName: node
+  linkType: hard
+
+"hash-wasm@npm:^4.12.0":
+  version: 4.12.0
+  resolution: "hash-wasm@npm:4.12.0"
+  checksum: 10c0/6cb95055319810b6f673de755289960683a9831807690795f0e8918b2fd7e6ae5b82a9dc47cbace171cf2814b412ef68c315a0ead0b4d96bd3e56a05e4bde136
   languageName: node
   linkType: hard
 
@@ -16391,18 +16889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-worker@npm:^26.2.1":
-  version: 26.6.2
-  resolution: "jest-worker@npm:26.6.2"
-  dependencies:
-    "@types/node": "npm:*"
-    merge-stream: "npm:^2.0.0"
-    supports-color: "npm:^7.0.0"
-  checksum: 10c0/07e4dba650381604cda253ab6d5837fe0279c8d68c25884995b45bfe149a7a1e1b5a97f304b4518f257dac2a9ddc1808d57d650649c3ab855e9e60cf824d2970
-  languageName: node
-  linkType: hard
-
-"jest@npm:*":
+"jest@npm:*, jest@npm:^30.0.5":
   version: 30.0.5
   resolution: "jest@npm:30.0.5"
   dependencies:
@@ -20814,21 +21301,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-terser@npm:^7.0.0":
-  version: 7.0.2
-  resolution: "rollup-plugin-terser@npm:7.0.2"
+"rollup-plugin-dts@npm:*, rollup-plugin-dts@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "rollup-plugin-dts@npm:6.2.1"
   dependencies:
-    "@babel/code-frame": "npm:^7.10.4"
-    jest-worker: "npm:^26.2.1"
-    serialize-javascript: "npm:^4.0.0"
-    terser: "npm:^5.0.0"
+    "@babel/code-frame": "npm:^7.26.2"
+    magic-string: "npm:^0.30.17"
   peerDependencies:
-    rollup: ^2.0.0
-  checksum: 10c0/f79b851c6f7b06555d3a8ce7a4e32abd2b7cb8318e89fb8db73e662fa6e3af1a59920e881d111efc65a7437fd9582b61b1f4859b6fd839ba948616829d92432d
+    rollup: ^3.29.4 || ^4
+    typescript: ^4.5 || ^5.0
+  dependenciesMeta:
+    "@babel/code-frame":
+      optional: true
+  checksum: 10c0/f21c8726470851a40e6ca68ae580261cee8bc6275775291b9c0fdf93b868ed54f12b11c8c0dddce2c14f5691d6032b6647d094835ab9b6789226efa60e1aa71e
   languageName: node
   linkType: hard
 
-"rollup@npm:^4.0.0, rollup@npm:^4.43.0":
+"rollup-plugin-tsconfig-paths@npm:*, rollup-plugin-tsconfig-paths@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "rollup-plugin-tsconfig-paths@npm:1.5.2"
+  dependencies:
+    typescript-paths: "npm:^1.5.1"
+  peerDependencies:
+    rollup: ^2 || ^3 || ^4
+  checksum: 10c0/14b0e60b2a6b32a7581a52bfa4dabfc71a5e15a68107f12a1b7e7986343676a869e454d43283c758cb45770369be661bf3df43f8c03d0944a09804e53b281333
+  languageName: node
+  linkType: hard
+
+"rollup@npm:*, rollup@npm:^4.0.0, rollup@npm:^4.43.0":
   version: 4.46.2
   resolution: "rollup@npm:4.46.2"
   dependencies:
@@ -20908,6 +21408,10 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@jest/globals": "npm:^30.0.4"
+    "@rollup/plugin-commonjs": "npm:^25.0.0"
+    "@rollup/plugin-node-resolve": "npm:^15.0.0"
+    "@rollup/plugin-terser": "npm:^0.4.4"
+    "@rollup/plugin-typescript": "npm:^11.0.0"
     "@types/bcrypt": "npm:^5.0.2"
     "@types/cors": "npm:^2.8.17"
     "@types/express": "npm:^5"
@@ -20925,9 +21429,15 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.35.1"
     chalk: "npm:^5.5.0"
     del-cli: "npm:^6.0.0"
+    esbuild: "npm:^0.25.9"
     hardhat: "npm:^2.25.0"
+    jest: "npm:^30.0.5"
     lerna: "npm:8.2.3"
     prettier: "npm:^3.6.2"
+    rollup: "npm:^4.0.0"
+    rollup-plugin-dts: "npm:^6.2.1"
+    rollup-plugin-tsconfig-paths: "npm:^1.5.2"
+    ts-jest: "npm:^29.4.1"
     tsc-alias: "npm:^1.8.16"
     tsx: "npm:^4.20.3"
     typescript: "npm:^5.8.3"
@@ -21017,7 +21527,6 @@ __metadata:
     "@keplr-ewallet/ewallet-sdk-core": "workspace:*"
     "@keplr-ewallet/ewallet-sdk-eth": "workspace:*"
     "@keplr-wallet/proto-types": "npm:^0.12.250"
-    "@keplr-wallet/rainbow-connector": "npm:^0.1.1"
     "@nomicfoundation/hardhat-ethers": "npm:^3.0.9"
     "@nomicfoundation/hardhat-ignition": "npm:^0.15.12"
     "@nomicfoundation/hardhat-ignition-ethers": "npm:^0.15.13"
@@ -21244,16 +21753,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serialize-javascript@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "serialize-javascript@npm:4.0.0"
-  dependencies:
-    randombytes: "npm:^2.1.0"
-  checksum: 10c0/510dfe7f0311c0b2f7ab06311afa1668ba2969ab2f1faaac0a4924ede76b7f22ba85cfdeaa0052ec5a047bca42c8cd8ac8df8f0efe52f9bd290b3a39ae69fe9d
-  languageName: node
-  linkType: hard
-
-"serialize-javascript@npm:^6.0.2":
+"serialize-javascript@npm:^6.0.1, serialize-javascript@npm:^6.0.2":
   version: 6.0.2
   resolution: "serialize-javascript@npm:6.0.2"
   dependencies:
@@ -21562,6 +22062,13 @@ __metadata:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: 10c0/a16775323e1404dd43fabafe7460be13a471e021637bc7889468eb45ce6a6b207261f454e4e530a19500cc962c4cc5348583520843b363f4193cee5c00e1e539
+  languageName: node
+  linkType: hard
+
+"smob@npm:^1.0.0":
+  version: 1.5.0
+  resolution: "smob@npm:1.5.0"
+  checksum: 10c0/a1067f23265812de8357ed27312101af49b89129eb973e3f26ab5856ea774f88cace13342e66e32470f933ccfa916e0e9d0f7ca8bbd4f92dfab2af45c15956c2
   languageName: node
   linkType: hard
 
@@ -22023,7 +22530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^7.0.0, supports-color@npm:^7.1.0":
+"supports-color@npm:^7.1.0":
   version: 7.2.0
   resolution: "supports-color@npm:7.2.0"
   dependencies:
@@ -22231,7 +22738,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:^5.0.0":
+"terser@npm:^5.17.4":
   version: 5.43.1
   resolution: "terser@npm:5.43.1"
   dependencies:
@@ -22523,6 +23030,46 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-jest@npm:^29.4.1":
+  version: 29.4.1
+  resolution: "ts-jest@npm:29.4.1"
+  dependencies:
+    bs-logger: "npm:^0.2.6"
+    fast-json-stable-stringify: "npm:^2.1.0"
+    handlebars: "npm:^4.7.8"
+    json5: "npm:^2.2.3"
+    lodash.memoize: "npm:^4.1.2"
+    make-error: "npm:^1.3.6"
+    semver: "npm:^7.7.2"
+    type-fest: "npm:^4.41.0"
+    yargs-parser: "npm:^21.1.1"
+  peerDependencies:
+    "@babel/core": ">=7.0.0-beta.0 <8"
+    "@jest/transform": ^29.0.0 || ^30.0.0
+    "@jest/types": ^29.0.0 || ^30.0.0
+    babel-jest: ^29.0.0 || ^30.0.0
+    jest: ^29.0.0 || ^30.0.0
+    jest-util: ^29.0.0 || ^30.0.0
+    typescript: ">=4.3 <6"
+  peerDependenciesMeta:
+    "@babel/core":
+      optional: true
+    "@jest/transform":
+      optional: true
+    "@jest/types":
+      optional: true
+    babel-jest:
+      optional: true
+    esbuild:
+      optional: true
+    jest-util:
+      optional: true
+  bin:
+    ts-jest: cli.js
+  checksum: 10c0/e4881717323c9e03ba9ad2f8726872cd0bede7f3f34095754aa850688b319f50294211cfd330edad878005e70601cbbbb0bb489ed0949a9aa545491e1083e923
+  languageName: node
+  linkType: hard
+
 "tsc-alias@npm:*, tsc-alias@npm:^1.8.16":
   version: 1.8.16
   resolution: "tsc-alias@npm:1.8.16"
@@ -22743,6 +23290,15 @@ __metadata:
   version: 1.18.0
   resolution: "typeforce@npm:1.18.0"
   checksum: 10c0/011f57effd9ae6d3dd8bb249e09b4ecadb2c2a3f803b27f977ac8b7782834855930bff971ba549bcd5a8cedc8136d8a977c0b7e050cc67deded948181b7ba3e8
+  languageName: node
+  linkType: hard
+
+"typescript-paths@npm:^1.5.1":
+  version: 1.5.1
+  resolution: "typescript-paths@npm:1.5.1"
+  peerDependencies:
+    typescript: ^4.7.2 || ^5
+  checksum: 10c0/68b7cdf0c8a11e4555e172ccec85fb342d1e19029cce761979087b3509a1b320ccbce4be666cea7acac03ecdce23cc69b2afb8a4847f1bfc25bb49201fdbe5ad
   languageName: node
   linkType: hard
 

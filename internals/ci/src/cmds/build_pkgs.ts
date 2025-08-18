@@ -12,17 +12,17 @@ export function buildPkgs(..._args: any[]) {
 export function doBuildPkgs() {
   // Order matters!
   const pkgsInOrder = [
-    [paths.stdlib],
-    [paths.sdk_core],
-    [paths.sdk_cosmos],
-    [paths.sdk_eth],
-    [paths.crypto_bytes],
-    [paths.cv_interface],
+    paths.stdlib,
+    paths.sdk_core,
+    paths.sdk_cosmos,
+    paths.sdk_eth,
+    paths.crypto_bytes,
+    paths.cv_interface,
   ];
 
   console.log("Building packages, total (%s)", pkgsInOrder.length);
 
-  for (const [path] of pkgsInOrder) {
+  for (const path of pkgsInOrder) {
     console.log("Building %s", path);
 
     const coreRet = spawnSync("yarn", ["run", "build"], {

@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "start": "COMMITTEE_ID=1 tsx src/bin/index.ts",
-    "start_2": "DB_NAME=credential_vault_dev2 COMMITTEE_ID=2 PORT=4202 tsx src/bin/index.ts",
+    "create_env": "tsx src/bin/create_env.ts",
+    "start": "COMMITTEE_ID=1 tsx src/bin/launch.ts",
+    "start_2": "DB_NAME=credential_vault_dev2 COMMITTEE_ID=2 PORT=4202 tsx src/bin/launch.ts",
     "jest": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {

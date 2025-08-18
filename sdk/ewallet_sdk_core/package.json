@@ -1,12 +1,14 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-core",
-  "version": "0.0.6-rc.36",
+  "version": "0.0.6-rc.39",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc --build --force && tsc-alias",
-    "build2": "yarn clean && tsc --build --force && rollup -c"
+    "typecheck": "tsc --noEmit",
+    "build": "yarn clean && node build.mjs && tsc --build --force --emitDeclarationOnly && tsc-alias",
+    "build2": "yarn clean && tsc --build --force && rollup --c",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "publishConfig": {
     "access": "public"
@@ -14,8 +16,11 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist/"
   ],
+  "imports": {
+    "@keplr-ewallet-sdk-core/*": "./dist/*.js"
+  },
   "keywords": [
     "keplr",
     "ewallet",
@@ -28,22 +33,27 @@
     "url": "https://github.com/chainapsis/ewallet.git",
     "directory": "sdk/ewallet_sdk_core"
   },
+  "dependencies": {
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.6",
+    "@keplr-wallet/types": "^0.12.257"
+  },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.0",
-    "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-commonjs": "*",
+    "@rollup/plugin-node-resolve": "*",
+    "@rollup/plugin-terser": "*",
+    "@rollup/plugin-typescript": "*",
     "@types/jest": "*",
     "@types/node": "*",
     "del-cli": "*",
+    "esbuild": "*",
     "jest": "*",
-    "rollup": "^4.0.0",
-    "rollup-plugin-terser": "^7.0.0",
+    "rollup": "*",
+    "rollup-plugin-dts": "*",
+    "rollup-plugin-tsconfig-paths": "*",
     "ts-jest": "*",
+    "tsc-alias": "*",
+    "tsx": "*",
     "typescript": "*"
   },
-  "gitHead": "5c82fc2b9b670d82a53e5aef0d8550537a03dccc",
-  "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.5",
-    "@keplr-wallet/types": "^0.12.257"
-  }
+  "gitHead": "5c82fc2b9b670d82a53e5aef0d8550537a03dccc"
 }

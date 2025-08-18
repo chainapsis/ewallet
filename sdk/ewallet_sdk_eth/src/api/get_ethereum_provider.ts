@@ -18,8 +18,6 @@ export async function getEthereumProvider(
     return this.provider;
   }
 
-  const address = await this.getAddress();
-
   const activeChain =
     SUPPORTED_CHAINS.find((chain) => chain.id === DEFAULT_CHAIN_ID) ??
     SUPPORTED_CHAINS[0];
@@ -41,7 +39,7 @@ export async function getEthereumProvider(
     id: uuidv4(),
     signer: {
       sign: this.makeSignature,
-      address,
+      getAddress: this.getAddress,
     },
     chains: addEthereumChainParameters,
     skipChainValidation: true, // skip chain validation as the chains are already validated

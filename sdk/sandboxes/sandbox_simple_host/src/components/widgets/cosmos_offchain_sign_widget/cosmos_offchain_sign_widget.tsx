@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { SignWidget } from "../sign_widget/sign_widget";
-import { useKeplrEwallet } from "@/components/keplr_ewallet_provider/use_keplr_ewallet";
+import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
 
 const COSMOS_CHAIN_ID = "cosmoshub-4";
 

@@ -26,10 +26,12 @@ export function PermitSignWidget() {
   const {
     signPermit,
     signature: permitSignature,
+    signedTypedData,
     error: permitError,
     name,
     version,
     nonce,
+    reset,
   } = usePermit({
     contractAddress: permitContractAddress as Hex,
     chainId: Number(chainId),
@@ -58,6 +60,21 @@ export function PermitSignWidget() {
     try {
       await navigator.clipboard.writeText(permitSignature);
     } catch {}
+  };
+
+  const copyPermitTypedData = async () => {
+    if (!signedTypedData) return;
+    try {
+      await navigator.clipboard.writeText(signedTypedData);
+    } catch {}
+  };
+
+  const resetPermitSign = () => {
+    setPermitContractAddress("0x");
+    setPermitSpenderAddress("0x");
+    setPermitValue("0");
+    setPermitDeadline("");
+    reset();
   };
 
   const disabled = !walletClient || !address || isPermitSigning;
@@ -168,22 +185,40 @@ export function PermitSignWidget() {
           </div>
         )}
 
-        {permitSignature && (
-          <div className="alert alert-success">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex flex-col gap-2 w-full">
-                <div className="font-medium">Permit Signature (hex)</div>
-                <div className="bg-base-200 rounded p-3 w-full max-h-40 overflow-auto">
-                  <code className="text-xs whitespace-pre-wrap break-all font-mono text-base-content">
-                    {permitSignature}
-                  </code>
-                </div>
+        {permitSignature && signedTypedData && (
+          <div className="alert alert-success flex flex-col items-start gap-2">
+            <div className="font-medium">SIWE Signature Generated</div>
+            <div className="bg-base-200 rounded p-3 w-full max-h-40 overflow-x-auto overflow-y-auto">
+              <code className="text-xs whitespace-pre font-mono text-base-content">
+                {permitSignature}
+              </code>
+            </div>
+            <div className="w-full">
+              <div className="text-sm font-medium mb-2">Signed Message:</div>
+              <div className="bg-base-200 rounded p-3 w-full max-h-40 overflow-x-auto overflow-y-auto">
+                <code className="text-xs whitespace-pre font-mono text-base-content">
+                  {signedTypedData}
+                </code>
               </div>
+            </div>
+            <div className="flex gap-2">
               <button
                 onClick={copyPermitSignature}
-                className="btn btn-xs btn-outline self-start"
+                className="btn btn-xs btn-outline"
               >
-                Copy
+                Copy Signature
+              </button>
+              <button
+                onClick={copyPermitTypedData}
+                className="btn btn-xs btn-outline"
+              >
+                Copy Typed Data
+              </button>
+              <button
+                onClick={resetPermitSign}
+                className="btn btn-xs btn-ghost"
+              >
+                Reset
               </button>
             </div>
           </div>

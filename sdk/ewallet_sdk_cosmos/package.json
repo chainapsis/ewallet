@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-cosmos",
-  "version": "0.0.6-rc.47",
+  "version": "0.0.6-rc.50",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "publishConfig": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn clean && tsc && tsc-alias",
+    "build": "yarn clean && node build.mjs && tsc --build --force --emitDeclarationOnly && tsc-alias",
     "build2": "yarn clean && tsc && rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
@@ -30,8 +30,8 @@
   "dependencies": {
     "@cosmjs/amino": "^0.33.1",
     "@cosmjs/proto-signing": "^0.33.1",
-    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.36",
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.5",
+    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.39",
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.6",
     "@keplr-wallet/proto-types": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
     "@noble/curves": "^1.9.2",
@@ -40,17 +40,20 @@
     "buffer": "^6.0.3"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.0",
-    "@rollup/plugin-typescript": "^11.0.0",
+    "@rollup/plugin-commonjs": "*",
+    "@rollup/plugin-node-resolve": "*",
+    "@rollup/plugin-terser": "*",
+    "@rollup/plugin-typescript": "*",
     "@types/jest": "*",
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
     "del-cli": "*",
+    "esbuild": "*",
     "jest": "*",
-    "rollup": "^4.0.0",
-    "rollup-plugin-terser": "^7.0.0",
+    "rollup": "*",
+    "rollup-plugin-dts": "*",
+    "rollup-plugin-tsconfig-paths": "*",
     "ts-jest": "*",
     "tsc-alias": "*",
     "typescript": "*"

@@ -7,6 +7,7 @@ import {
   WalletClient,
   zeroAddress,
   isAddress,
+  TypedDataDefinition,
 } from "viem";
 import { useReadContract, useWalletClient } from "wagmi";
 
@@ -22,6 +23,7 @@ export function usePermit({
 }: UsePermitProps) {
   const [signature, setSignature] = useState<Hex | undefined>();
   const [error, setError] = useState<Error>();
+  const [signedTypedData, setSignedTypedData] = useState<string | undefined>();
 
   const { data: defaultWalletClient } = useWalletClient();
   const walletClientToUse = walletClient ?? defaultWalletClient;
@@ -68,6 +70,12 @@ export function usePermit({
     : null;
 
   const version = permitVersion ?? validatedVersionFromContract ?? "1";
+
+  const reset = () => {
+    setSignature(undefined);
+    setSignedTypedData(undefined);
+    setError(undefined);
+  };
 
   const ready =
     walletClientToUse !== null &&
@@ -133,7 +141,7 @@ export function usePermit({
           },
         ) => {
           try {
-            const signature = await signPermit(
+            const { signature, typedData } = await signPermit(
               props.walletClient ?? walletClientToUse,
               {
                 chainId,
@@ -151,6 +159,18 @@ export function usePermit({
               },
             );
             setSignature(signature);
+            setSignedTypedData(
+              JSON.stringify(
+                typedData,
+                (_, value) => {
+                  if (typeof value === "bigint") {
+                    return value.toString();
+                  }
+                  return value;
+                },
+                2,
+              ),
+            );
             return signature;
           } catch (error) {
             setError(error as Error);
@@ -159,10 +179,12 @@ export function usePermit({
         }
       : undefined,
     signature,
+    signedTypedData,
     name,
     version,
     nonce,
     error,
+    reset,
   };
 }
 
@@ -231,7 +253,7 @@ export const signPermit = async (
     chainId,
     permitVersion,
   }: Eip2612Props,
-): Promise<Hex> => {
+): Promise<{ signature: Hex; typedData: TypedDataDefinition }> => {
   const types = {
     Permit: [
       { name: "owner", type: "address" },
@@ -240,7 +262,7 @@ export const signPermit = async (
       { name: "nonce", type: "uint256" },
       { name: "deadline", type: "uint256" },
     ],
-  };
+  } as const;
 
   const domainData = {
     name: erc20Name,
@@ -248,7 +270,7 @@ export const signPermit = async (
     version: permitVersion ?? "1",
     chainId: chainId,
     verifyingContract: contractAddress,
-  };
+  } as const;
 
   const message = {
     owner: ownerAddress,
@@ -256,15 +278,25 @@ export const signPermit = async (
     value,
     nonce,
     deadline,
-  };
+  } as const;
 
-  return await walletClient.signTypedData({
+  const signature = await walletClient.signTypedData({
     account: ownerAddress,
     message,
     domain: domainData,
     primaryType: "Permit",
     types,
   });
+
+  return {
+    signature,
+    typedData: {
+      domain: domainData,
+      types,
+      message,
+      primaryType: "Permit",
+    },
+  };
 };
 
 export const signPermitDai =
