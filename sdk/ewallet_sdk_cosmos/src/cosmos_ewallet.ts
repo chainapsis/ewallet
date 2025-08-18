@@ -1,6 +1,5 @@
 import {
   type KeplrEWallet,
-  type KeplrEWalletEventType,
   EventEmitter2,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
@@ -28,7 +27,7 @@ export class CosmosEWallet {
   public eWallet: KeplrEWallet;
   protected _cosmosChainInfo: ChainInfo[] | null = null;
   protected _cacheTime: number = 0;
-  eventEmitter: EventEmitter2<KeplrEWalletEventType, any> | null = null;
+  eventEmitter: EventEmitter2 | null = null;
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;

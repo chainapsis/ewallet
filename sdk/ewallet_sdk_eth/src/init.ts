@@ -7,7 +7,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 
 export async function initEthEWallet(
-  args: KeplrEwalletInitArgs,
+  args: KeplrEwalletInitArgs & { use_testnet?: boolean },
 ): Promise<Result<EthEWallet, string>> {
   const eWalletRes = await initKeplrEwalletCore(args);
 

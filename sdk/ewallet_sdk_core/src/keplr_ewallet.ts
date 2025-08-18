@@ -14,7 +14,7 @@ export class KeplrEWallet {
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
-  eventEmitter: EventEmitter2<any, any>;
+  eventEmitter: EventEmitter2;
   readonly origin: string;
 
   public constructor(
