@@ -2,6 +2,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ModalResult, ShowModalPayload } from "./modal";
 import type { EWalletMakeSignaturePayload, SignOutput } from "./sign";
+import type { ChainInfo } from "@keplr-wallet/types";
 
 export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
 
@@ -132,6 +133,20 @@ export type EWalletMsgInitStateAck = {
   payload: null;
 };
 
+export type EWalletMsgGetCosmosChainInfo = {
+  target: "keplr_ewallet_attached";
+  msg_type: "get_cosmos_chain_info";
+  payload: {
+    chain_id: string;
+  };
+};
+
+export type EWalletMsgGetCosmosChainInfoAck = {
+  target: "keplr_ewallet_sdk";
+  msg_type: "get_cosmos_chain_info_ack";
+  payload: AckPayload<ChainInfo[]>;
+};
+
 export type EWalletMsg =
   | EWalletMsgInit
   | EWalletMsgInitAck
@@ -153,6 +168,8 @@ export type EWalletMsg =
   | EWalletMsgGetEmailAck
   | EWalletMsgInitState
   | EWalletMsgInitStateAck
+  | EWalletMsgGetCosmosChainInfo
+  | EWalletMsgGetCosmosChainInfoAck
   | {
       target: "keplr_ewallet_sdk";
       msg_type: "unknown_msg_type";

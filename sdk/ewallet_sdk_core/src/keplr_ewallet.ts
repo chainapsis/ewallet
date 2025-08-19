@@ -10,6 +10,7 @@ import { initState } from "./api/init_state";
 import { on } from "./api/on";
 import { EventEmitter2 } from "./event/emitter";
 import type { KeplrWalletCoreEventHandlerMap } from "./types";
+import { getCosmosChainInfo } from "./api/get_cosmos_chain_info";
 
 export class KeplrEWallet {
   apiKey: string;
@@ -44,6 +45,7 @@ export class KeplrEWallet {
   sendMsgToIframe = sendMsgToIframe.bind(this);
   signIn = signIn.bind(this);
   signOut = signOut.bind(this);
+  getCosmosChainInfo = getCosmosChainInfo.bind(this);
   getPublicKey = getPublicKey.bind(this);
   getEmail = getEmail.bind(this);
   makeSignature = makeSignature.bind(this);
