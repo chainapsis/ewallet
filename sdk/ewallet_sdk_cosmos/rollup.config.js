@@ -2,6 +2,7 @@ import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 import dts from "rollup-plugin-dts";
+import commonjs from "@rollup/plugin-commonjs";
 // import commonjs from "@rollup/plugin-commonjs";
 // import terser from "@rollup/plugin-terser";
 
@@ -26,7 +27,7 @@ export default [
       "@cosmjs/amino",
       "@cosmjs/proto-signing",
       "@keplr-ewallet/stdlib-js",
-      // "@keplr-wallet/proto-types",
+      "@keplr-wallet/proto-types",
       "@keplr-wallet/types",
       "@noble/curves",
       "@noble/hashes",
@@ -35,6 +36,7 @@ export default [
     ],
     plugins: [
       nodeResolve(),
+      commonjs(),
       typescript({
         tsconfig: "./tsconfig.json",
         declaration: true,
