@@ -8,13 +8,14 @@ esbuild
     minify: false,
     sourcemap: true,
     format: "esm",
+    // platform: "browser",
     loader: {
       ".ts": "ts", // Handle TypeScript files (optional, as esbuild does this by default)
     },
     define: {
       // "process.env.NODE_ENV": '"production"', // Define environment variables
     },
-    external: ["crypto"],
+    external: ["crypto", "@cosmjs/crypto"],
     plugins: [],
   })
   .catch(() => process.exit(1));

@@ -48,29 +48,3 @@ export default [
     plugins: [tsConfigPaths(), nodeResolve(), dts()],
   },
 ];
-
-// {
-//   input: "src/index.ts",
-//   output: {
-//     file: "dist/index.js",
-//     format: "esm",
-//     sourcemap: true,
-//   },
-//   external: ["@keplr-ewallet/stdlib-js", "@keplr-wallet/types"],
-//   plugins: [
-//     nodeResolve(),
-//     // commonjs(),
-//     typescript({
-//       tsconfig: "./tsconfig.json",
-//       declaration: true,
-//     }),
-//   ],
-// },
-// {
-//   input: "src/index.ts",
-//   output: {
-//     file: "dist/index.d.ts", // Output path for the bundled declaration file
-//     format: "esm",
-//   },
-//   plugins: [tsConfigPaths(), nodeResolve(), dts()],
-// },
