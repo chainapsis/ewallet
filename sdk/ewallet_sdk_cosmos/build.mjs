@@ -1,9 +1,4 @@
 import esbuild from "esbuild";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 esbuild
   .build({
@@ -13,23 +8,11 @@ esbuild
     minify: false,
     sourcemap: true,
     format: "esm",
-    banner: {
-      js: `
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const global = globalThis;
-      `.trim(),
-    },
     loader: {
-      ".ts": "ts",
+      ".ts": "ts", // Handle TypeScript files (optional, as esbuild does this by default)
     },
     define: {
-      // ESM polyfills for CommonJS globals
-      __dirname: `"${__dirname}"`,
-      __filename: `"${__filename}"`,
-      global: "globalThis",
+      // "process.env.NODE_ENV": '"production"', // Define environment variables
     },
     external: ["crypto"],
     plugins: [],
