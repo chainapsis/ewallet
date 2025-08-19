@@ -50,12 +50,6 @@ export const defaultWallets = [
   }),
 ];
 
-export const enabledChains = targetNetworks.find(
-  (network: Chain) => network.id === 11155111,
-)
-  ? targetNetworks
-  : ([...targetNetworks, sepolia] as const);
-
 export interface WalletConnectOptions {
   projectId: string;
 }
@@ -78,6 +72,7 @@ function keplrEWalletConnector(
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
           sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
+          use_testnet: true,
         });
         if (!initRes.success) {
           throw new Error(`init fail: ${initRes.err}`);
@@ -238,7 +233,7 @@ function keplrEWalletConnector(
 
 export const wagmiConfigWithKeplr = () => {
   return createConfig({
-    chains: enabledChains,
+    chains: [targetNetworks[0], ...targetNetworks.slice(1)],
     ssr: true,
     connectors: connectorsForWallets(
       [

@@ -1,4 +1,3 @@
-import type { KeplrCosmosEWalletEventTypeMap } from "@keplr-ewallet/ewallet-sdk-core";
 import {
   CosmosEWallet,
   initCosmosEWallet,
@@ -69,9 +68,10 @@ export const useAppState = create(
           set({ keplr_sdk_cosmos: cosmosSDK });
 
           cosmosSDK.on("accountsChanged", async (payload) => {
+            console.log("ev - accountsChanged", payload);
+
             set({
-              userInfo:
-                payload as KeplrCosmosEWalletEventTypeMap["accountsChanged"],
+              userInfo: payload,
             });
           });
 

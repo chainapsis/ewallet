@@ -1,10 +1,11 @@
 import {
   type KeplrEWallet,
-  type KeplrEWalletEventType,
   EventEmitter2,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
 
+import type { KeplrWalletCosmosEventNames } from "./types";
+import type { KeplrWalletCosmosEventHandlerMap } from "./types";
 import { enable } from "@keplr-ewallet-sdk-cosmos/api/enable";
 import { getCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/api/get_cosmos_chain_info";
 import { getAccounts } from "@keplr-ewallet-sdk-cosmos/api/get_accounts";
@@ -28,11 +29,20 @@ export class CosmosEWallet {
   public eWallet: KeplrEWallet;
   protected _cosmosChainInfo: ChainInfo[] | null = null;
   protected _cacheTime: number = 0;
-  eventEmitter: EventEmitter2<KeplrEWalletEventType, any> | null = null;
+  eventEmitter: EventEmitter2 | null = null;
+
+  on: <
+    N extends KeplrWalletCosmosEventNames,
+    M extends { eventName: N } & KeplrWalletCosmosEventHandlerMap,
+  >(
+    eventType: N,
+    handler: M["handler"],
+  ) => void;
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
     this.eventEmitter = new EventEmitter2();
+    this.on = on.bind(this);
 
     this.setupEventHandlers();
   }
@@ -52,18 +62,19 @@ export class CosmosEWallet {
   signDirect = signDirect.bind(this);
   signArbitrary = signArbitrary.bind(this);
   verifyArbitrary = verifyArbitrary.bind(this);
-  on = on.bind(this);
   protected showModal = showModal.bind(this);
   protected makeSignature = makeSignature.bind(this);
 
   setupEventHandlers() {
-    this.eWallet.on("_accountsChanged", (payload: any) => {
+    console.log("[keplr] set up event handlers");
+
+    this.eWallet.on("_accountsChanged", (payload) => {
       if (this.eventEmitter) {
         this.eventEmitter.emit("accountsChanged", payload);
       }
     });
 
-    this.eWallet.on("_chainChanged", (payload: any) => {
+    this.eWallet.on("_chainChanged", (payload) => {
       if (this.eventEmitter) {
         this.eventEmitter.emit("chainChanged", payload);
       }

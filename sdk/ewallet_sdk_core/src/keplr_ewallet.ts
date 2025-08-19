@@ -9,13 +9,22 @@ import { makeSignature } from "./api/make_signature";
 import { initState } from "./api/init_state";
 import { on } from "./api/on";
 import { EventEmitter2 } from "./event/emitter";
+import type { KeplrWalletCoreEventHandlerMap } from "./types";
 
 export class KeplrEWallet {
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
-  eventEmitter: EventEmitter2<any, any>;
+  eventEmitter: EventEmitter2;
   readonly origin: string;
+
+  on: <
+    N extends KeplrWalletCoreEventHandlerMap["eventName"],
+    M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
+  >(
+    eventType: N,
+    handler: M["handler"],
+  ) => void;
 
   public constructor(
     apiKey: string,
@@ -27,6 +36,7 @@ export class KeplrEWallet {
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
     this.eventEmitter = new EventEmitter2();
+    this.on = on.bind(this);
   }
 
   showModal = showModal.bind(this);
@@ -38,5 +48,5 @@ export class KeplrEWallet {
   getEmail = getEmail.bind(this);
   makeSignature = makeSignature.bind(this);
   initState = initState.bind(this);
-  on = on.bind(this);
+  // on = on.bind(this);
 }

@@ -25,6 +25,11 @@ export const paths = (function() {
 
   const crypto_bytes = path.join(__dirname, "../../../crypto/bytes/");
 
+  const tecdsa_interface = path.join(
+    __dirname,
+    "../../../crypto/tecdsa/tecdsa_interface/",
+  );
+
   const credential_vault_pg_interface = path.join(
     __dirname,
     "../../../credential_vault/pg_interface/",
@@ -41,5 +46,6 @@ export const paths = (function() {
     cv_server,
     credential_vault_pg_interface,
     sandbox_simple_host,
+    tecdsa_interface,
   };
 })();

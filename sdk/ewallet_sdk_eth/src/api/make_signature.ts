@@ -7,7 +7,7 @@ import type {
   MakeSignatureModalResult,
   SignOutput,
 } from "@keplr-ewallet/ewallet-sdk-core";
-import { serializeSignature, serializeTransaction } from "viem";
+import { serializeSignature, serializeTransaction, type Chain } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
 import type {
@@ -29,6 +29,7 @@ import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import {
   getChainIconUrl,
   SUPPORTED_CHAINS,
+  TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
 import { standardError } from "@keplr-ewallet-sdk-eth/errors";
 
@@ -267,10 +268,13 @@ async function _makeSignature<P extends EthSignParams>(
   const chainId = provider.chainId;
   const chainIdNumber = parseInt(chainId, 16);
 
+  let chains: Chain[] = SUPPORTED_CHAINS;
+  if (this.useTestnet) {
+    chains = [...chains, ...TESTNET_CHAINS];
+  }
+
   // CHECK: custom chains added to the provider can be used later
-  const activeChain = SUPPORTED_CHAINS.find(
-    (chain) => chain.id === chainIdNumber,
-  );
+  const activeChain = chains.find((chain) => chain.id === chainIdNumber);
   if (!activeChain) {
     throw standardError.ethEWallet.invalidMessage({
       message: "Chain not found in the supported chains",

@@ -15,12 +15,17 @@ import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
 
 export class EthEWallet {
   readonly eWallet: KeplrEWallet;
+
+  readonly useTestnet: boolean;
+
   private _provider: EWalletEIP1193Provider | null;
+
   private _publicKey: Hex | null;
   private _address: Address | null;
 
-  constructor(eWallet: KeplrEWallet) {
+  constructor(eWallet: KeplrEWallet, useTestnet: boolean = false) {
     this.eWallet = eWallet;
+    this.useTestnet = useTestnet;
     this._provider = null;
     this._publicKey = null;
     this._address = null;

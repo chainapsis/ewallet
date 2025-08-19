@@ -17,7 +17,10 @@ async function main() {
 
   command.command("publish").action(publish);
 
-  command.command("db_migrate").action(dbMigrate);
+  command
+    .command("db_migrate")
+    .option("--use-env", "use env file config instead of test config", false)
+    .action(dbMigrate);
 
   program.parse(process.argv);
 }

@@ -1,10 +1,10 @@
 import type { StdSignDoc } from "@cosmjs/amino";
+import type { SignDoc } from "@keplr-ewallet/ewallet-sdk-cosmos/dist/types/sign";
 import {
   TxBody,
   AuthInfo,
 } from "@keplr-wallet/proto-types/cosmos/tx/v1beta1/tx";
 import { Any } from "@keplr-wallet/proto-types/google/protobuf/any";
-import type { SignDoc } from "@keplr-ewallet/ewallet-sdk-cosmos";
 
 export type AnyWithUnpacked = Any | (Any & { unpacked: unknown });
 
@@ -25,7 +25,7 @@ export class SignDocWrapper {
   private _aminoSignDoc?: StdSignDoc;
   private _protoSignDoc?: ProtoSignDoc;
 
-  private constructor(private readonly signDoc: SupportedSignDoc) {}
+  private constructor(private readonly signDoc: SupportedSignDoc) { }
 
   static fromAminoSignDoc(signDoc: StdSignDoc): SignDocWrapper {
     const wrapper = new SignDocWrapper(signDoc);

@@ -1,4 +1,4 @@
-import { toHex } from "viem";
+import { toHex, type Chain } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -9,6 +9,7 @@ import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import {
   DEFAULT_CHAIN_ID,
   SUPPORTED_CHAINS,
+  TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
 
 export async function getEthereumProvider(
@@ -18,13 +19,18 @@ export async function getEthereumProvider(
     return this.provider;
   }
 
-  const activeChain =
-    SUPPORTED_CHAINS.find((chain) => chain.id === DEFAULT_CHAIN_ID) ??
-    SUPPORTED_CHAINS[0];
+  let chains: Chain[] = SUPPORTED_CHAINS;
 
-  const addEthereumChainParameters = [
+  if (this.useTestnet) {
+    chains = [...chains, ...TESTNET_CHAINS];
+  }
+
+  const activeChain =
+    chains.find((chain) => chain.id === DEFAULT_CHAIN_ID) ?? chains[0];
+
+  const addEthereumChains = [
     activeChain,
-    ...SUPPORTED_CHAINS.filter((chain) => chain.id !== DEFAULT_CHAIN_ID),
+    ...chains.filter((chain) => chain.id !== DEFAULT_CHAIN_ID),
   ].map((chain) => ({
     chainId: toHex(chain.id),
     chainName: chain.name,
@@ -41,8 +47,8 @@ export async function getEthereumProvider(
       sign: this.makeSignature,
       getAddress: this.getAddress,
     },
-    chains: addEthereumChainParameters,
-    skipChainValidation: true, // skip chain validation as the chains are already validated
+    chains: addEthereumChains,
+    skipChainValidation: true,
   });
 
   return this.provider;

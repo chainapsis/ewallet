@@ -18,6 +18,7 @@ export function doBuildPkgs() {
     paths.sdk_eth,
     paths.crypto_bytes,
     paths.cv_interface,
+    paths.tecdsa_interface,
   ];
 
   console.log("Building packages, total (%s)", pkgsInOrder.length);

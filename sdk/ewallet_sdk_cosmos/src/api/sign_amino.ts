@@ -5,13 +5,13 @@ import {
 } from "@cosmjs/amino";
 import { sha256 } from "@noble/hashes/sha2";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
-import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import {
   encodeCosmosSignature,
   SignDocWrapper,
 } from "@keplr-ewallet-sdk-cosmos/utils";
+import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 export async function signAmino(
   this: CosmosEWallet,
