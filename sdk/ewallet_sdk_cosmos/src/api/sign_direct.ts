@@ -2,6 +2,7 @@ import { sha256 } from "@noble/hashes/sha2";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
 import {
   encodeCosmosSignature,
+  extractTxBodyFromSignDoc,
   signDocToJson,
 } from "@keplr-ewallet-sdk-cosmos/utils";
 import { makeSignBytes, type DirectSignResponse } from "@cosmjs/proto-signing";
@@ -41,7 +42,7 @@ export async function signDirect(
           currencies: chainInfo?.currencies,
         },
         signer,
-        msgs: signDocJson.txBody.messages,
+        msgs: extractTxBodyFromSignDoc(signDoc)?.messages ?? [],
         signDocString: JSON.stringify(signDocJson, null, 2),
         origin,
       },
