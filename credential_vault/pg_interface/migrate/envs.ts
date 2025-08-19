@@ -8,11 +8,11 @@ import type { PgDatabaseConfig } from "./utils";
 const ENV_FILE_NAME_STEM = "credential_vault";
 
 const envSchema = z.object({
-  DB_HOST: z.string().min(1, "DB_HOST is required"),
+  DB_HOST: z.string("DB_HOST is required"),
   DB_PORT: z.number().min(1, "DB_PORT is required"),
-  DB_USER: z.string().min(1, "DB_USER is required"),
-  DB_PASSWORD: z.string().min(1, "DB_PASSWORD is required"),
-  DB_NAME: z.string().min(1, "DB_NAME is required"),
+  DB_USER: z.string("DB_USER is required"),
+  DB_PASSWORD: z.string("DB_PASSWORD is required"),
+  DB_NAME: z.string("DB_NAME is required"),
   DB_SSL: z.boolean(),
 });
 
