@@ -14,7 +14,8 @@
       "sdk/sandboxes/sandbox_evm",
       "sdk/sandboxes/sandbox_osmosis",
       "sdk/sandboxes/sandbox_simple_host",
-      "crypto/bytes"
+      "crypto/bytes",
+      "crypto/tecdsa/tecdsa_interface"
     ]
   },
   "packageManager": "yarn@4.7.0",

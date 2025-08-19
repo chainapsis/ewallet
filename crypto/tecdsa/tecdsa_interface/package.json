@@ -1,0 +1,23 @@
+{
+  "name": "@keplr-ewallet/tecdsa-interface",
+  "packageManager": "yarn@4.7.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "yarn clean && tsc && tsc-alias"
+  },
+  "devDependencies": {
+    "@jest/globals": "*",
+    "@types/jest": "*",
+    "@types/node": "*",
+    "del-cli": "*",
+    "ts-jest": "*",
+    "tsc-alias": "*",
+    "typescript": "*"
+  }
+}
