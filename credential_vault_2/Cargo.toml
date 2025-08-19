@@ -1,3 +1,0 @@
-[workspace]
-resolver = "2"
-members = ["core", "pg_interface", "server"]
