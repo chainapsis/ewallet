@@ -5,7 +5,7 @@ import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/send
 export async function getCosmosChainInfo(
   this: KeplrEWallet,
   chainId: string,
-): Promise<ChainInfo> {
+): Promise<ChainInfo[]> {
   try {
     const res = await this.sendMsgToIframe({
       target: EWALLET_ATTACHED_TARGET,

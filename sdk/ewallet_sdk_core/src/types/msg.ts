@@ -144,7 +144,7 @@ export type EWalletMsgGetCosmosChainInfo = {
 export type EWalletMsgGetCosmosChainInfoAck = {
   target: "keplr_ewallet_sdk";
   msg_type: "get_cosmos_chain_info_ack";
-  payload: AckPayload<ChainInfo>;
+  payload: AckPayload<ChainInfo[]>;
 };
 
 export type EWalletMsg =
