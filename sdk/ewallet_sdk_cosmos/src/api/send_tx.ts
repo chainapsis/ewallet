@@ -17,8 +17,8 @@ export async function sendTx(
     onFulfill?: (tx: any) => void;
   } = {},
 ): Promise<Uint8Array> {
-  const chainInfoList = await this.eWallet.getCosmosChainInfo(chainId);
-  const chainInfo = chainInfoList[0];
+  const chainInfoList = await this.getCosmosChainInfo();
+  const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
 
   if (!chainInfo) {
     throw new Error(`Chain info not found for chainId: ${chainId}`);

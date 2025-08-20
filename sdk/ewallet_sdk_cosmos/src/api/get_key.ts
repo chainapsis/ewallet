@@ -13,10 +13,11 @@ export async function getKey(
   chainId: string,
 ): Promise<Key> {
   const pubKey = await this.getPublicKey();
-  const chainInfoList = await this.eWallet.getCosmosChainInfo(chainId);
+  const chainInfoList = await this.getCosmosChainInfo();
 
-  const chainInfo = chainInfoList[0];
-
+  const chainInfo = chainInfoList.find(
+    (chainInfo) => chainInfo.chainId === chainId,
+  );
   if (!chainInfo || !chainInfo.bech32Config?.bech32PrefixAccAddr) {
     throw new Error("Chain info not found");
   }

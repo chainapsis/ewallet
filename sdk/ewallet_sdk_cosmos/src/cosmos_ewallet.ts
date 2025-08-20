@@ -7,6 +7,7 @@ import type { ChainInfo } from "@keplr-wallet/types";
 import type { KeplrWalletCosmosEventNames } from "./types";
 import type { KeplrWalletCosmosEventHandlerMap } from "./types";
 import { enable } from "@keplr-ewallet-sdk-cosmos/api/enable";
+import { getCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/api/get_cosmos_chain_info";
 import { getAccounts } from "@keplr-ewallet-sdk-cosmos/api/get_accounts";
 import { experimentalSuggestChain } from "@keplr-ewallet-sdk-cosmos/api/experimental_suggest_chain";
 import { getKey } from "@keplr-ewallet-sdk-cosmos/api/get_key";
@@ -48,6 +49,7 @@ export class CosmosEWallet {
 
   enable = enable;
   getPublicKey = getPublicKey.bind(this);
+  getCosmosChainInfo = getCosmosChainInfo.bind(this);
   experimentalSuggestChain = experimentalSuggestChain;
   getAccounts = getAccounts.bind(this);
   getOfflineSigner = getOfflineSigner.bind(this);
