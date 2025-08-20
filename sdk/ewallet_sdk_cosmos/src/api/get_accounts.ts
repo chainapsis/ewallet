@@ -11,7 +11,7 @@ import {
 export async function getAccounts(this: CosmosEWallet): Promise<AccountData[]> {
   try {
     const pubKey = await this.getPublicKey();
-    const chainInfoList = await this.getCosmosChainInfo();
+    const chainInfoList = await this.eWallet.getCosmosChainInfo();
 
     const accounts: AccountData[] = [];
     for (const chainInfo of chainInfoList) {

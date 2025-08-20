@@ -137,7 +137,7 @@ export type EWalletMsgGetCosmosChainInfo = {
   target: "keplr_ewallet_attached";
   msg_type: "get_cosmos_chain_info";
   payload: {
-    chain_id: string;
+    chain_id: string | null;
   };
 };
 
