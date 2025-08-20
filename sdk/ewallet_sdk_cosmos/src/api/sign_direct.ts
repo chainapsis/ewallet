@@ -27,8 +27,8 @@ export async function signDirect(
 
     const signDocJson = signDocToJson(signDoc);
 
-    const chainInfoList = await this.getCosmosChainInfo();
-    const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
+    const chainInfoList = await this.eWallet.getCosmosChainInfo(chainId);
+    const chainInfo = chainInfoList[0];
 
     const showModalData: MakeCosmosSigData = {
       chain_type: "cosmos",

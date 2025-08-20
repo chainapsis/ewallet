@@ -12,9 +12,8 @@ export async function verifyArbitrary(
   signature: StdSignature,
 ): Promise<boolean> {
   try {
-    // Get chain info to determine the bech32 prefix
-    const chainInfoList = await this.getCosmosChainInfo();
-    const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
+    const chainInfoList = await this.eWallet.getCosmosChainInfo(chainId);
+    const chainInfo = chainInfoList[0];
 
     if (!chainInfo || !chainInfo.bech32Config?.bech32PrefixAccAddr) {
       throw new Error(`Chain info not found for chainId: ${chainId}`);
