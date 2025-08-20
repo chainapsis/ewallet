@@ -40,6 +40,7 @@ export async function signDirect(
           chain_symbol_image_url: chainInfo?.stakeCurrency?.coinImageUrl ?? "",
           fee_currencies: chainInfo?.feeCurrencies,
           currencies: chainInfo?.currencies,
+          bech32_config: chainInfo?.bech32Config,
         },
         signer,
         msgs: extractTxBodyFromSignDoc(signDoc)?.messages ?? [],

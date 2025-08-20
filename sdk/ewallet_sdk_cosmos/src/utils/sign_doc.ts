@@ -51,7 +51,12 @@ export function signDocToJson(signDoc: SignDoc): any {
     txBody: {
       ...(TxBody.toJSON(txBody) as any),
       ...{
-        messages: txBody.messages,
+        messages: txBody.messages.map((msg) => {
+          return {
+            typeUrl: msg.typeUrl,
+            value: Buffer.from(msg.value).toString("base64"),
+          };
+        }),
       },
     },
     authInfo: AuthInfo.toJSON(authInfo),
