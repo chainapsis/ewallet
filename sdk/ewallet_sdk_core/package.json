@@ -45,7 +45,6 @@
     "@types/jest": "*",
     "@types/node": "*",
     "del-cli": "*",
-    "esbuild": "*",
     "jest": "*",
     "rollup": "*",
     "rollup-plugin-dts": "*",

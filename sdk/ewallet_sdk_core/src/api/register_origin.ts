@@ -2,7 +2,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 
-export async function initState(
+export async function registerOrigin(
   this: KeplrEWallet,
   hostOrigin: string,
 ): Promise<Result<boolean, string>> {
@@ -11,11 +11,11 @@ export async function initState(
 
     const res = await this.sendMsgToIframe({
       target: "keplr_ewallet_attached",
-      msg_type: "init_state",
-      payload: hostOrigin,
+      msg_type: "register_origin",
+      payload: { origin: hostOrigin },
     });
 
-    if (res.msg_type === "init_state_ack") {
+    if (res.msg_type === "register_origin_ack") {
       return {
         success: true,
         data: true,

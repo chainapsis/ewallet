@@ -66,7 +66,7 @@ export async function initKeplrEwalletCore(
   }
 
   const hostOrigin = hostOriginRes.data;
-  const initStateRes = await ewalletCore.initState(hostOrigin);
+  const initStateRes = await ewalletCore.registerOrigin(hostOrigin);
   if (!initStateRes.success) {
     return initStateRes;
   }

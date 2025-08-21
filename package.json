@@ -53,7 +53,6 @@
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
     "del-cli": "^6.0.0",
-    "esbuild": "^0.25.9",
     "hardhat": "^2.25.0",
     "jest": "^30.0.5",
     "lerna": "8.2.3",

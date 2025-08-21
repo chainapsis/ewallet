@@ -121,15 +121,15 @@ export type EWalletMsgGetEmailAck = {
   payload: AckPayload<string>;
 };
 
-export type EWalletMsgInitState = {
+export type EWalletMsgRegisterOrigin = {
   target: "keplr_ewallet_attached";
-  msg_type: "init_state";
-  payload: string;
+  msg_type: "register_origin";
+  payload: { origin: string };
 };
 
-export type EWalletMsgInitStateAck = {
+export type EWalletMsgRegisterOriginAck = {
   target: "keplr_ewallet_sdk";
-  msg_type: "init_state_ack";
+  msg_type: "register_origin_ack";
   payload: null;
 };
 
@@ -166,8 +166,8 @@ export type EWalletMsg =
   | EWalletMsgHideModalAck
   | EWalletMsgGetEmail
   | EWalletMsgGetEmailAck
-  | EWalletMsgInitState
-  | EWalletMsgInitStateAck
+  | EWalletMsgRegisterOrigin
+  | EWalletMsgRegisterOriginAck
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
   | {

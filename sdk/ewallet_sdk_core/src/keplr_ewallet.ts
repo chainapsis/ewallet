@@ -6,11 +6,11 @@ import { getPublicKey } from "./api/get_public_key";
 import { getEmail } from "./api/get_email";
 import { hideModal } from "./api/hide_modal";
 import { makeSignature } from "./api/make_signature";
-import { initState } from "./api/init_state";
+import { registerOrigin } from "./api/register_origin";
 import { on } from "./api/on";
-import { EventEmitter2 } from "./event/emitter";
-import type { KeplrWalletCoreEventHandlerMap } from "./types";
 import { getCosmosChainInfo } from "./api/get_cosmos_chain_info";
+import { EventEmitter2 } from "./event/emitter";
+import type { KeplrEWalletCoreEventHandlerMap } from "./types";
 
 export class KeplrEWallet {
   apiKey: string;
@@ -20,8 +20,8 @@ export class KeplrEWallet {
   readonly origin: string;
 
   on: <
-    N extends KeplrWalletCoreEventHandlerMap["eventName"],
-    M extends { eventName: N } & KeplrWalletCoreEventHandlerMap,
+    N extends KeplrEWalletCoreEventHandlerMap["eventName"],
+    M extends { eventName: N } & KeplrEWalletCoreEventHandlerMap,
   >(
     eventType: N,
     handler: M["handler"],
@@ -49,6 +49,6 @@ export class KeplrEWallet {
   getPublicKey = getPublicKey.bind(this);
   getEmail = getEmail.bind(this);
   makeSignature = makeSignature.bind(this);
-  initState = initState.bind(this);
+  registerOrigin = registerOrigin.bind(this);
   // on = on.bind(this);
 }
