@@ -1,6 +1,7 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { join } from "node:path";
+import os from "node:os";
 
 import { loadEnvs } from "@keplr-ewallet-cv-server/envs";
 
@@ -62,7 +63,8 @@ async function main() {
     console.log("Starting pg_dump...");
     console.log(`Database: ${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`);
 
-    const backupDir = join(process.cwd(), "backups");
+    const backupDir =
+      process.env.BACKUP_DIR || join(os.homedir(), "pg_backups");
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const backupPath = join(backupDir, `${env.DB_NAME}_${timestamp}.dump`);
 

@@ -35,6 +35,8 @@ services:
       # Please change it to your own secret.
       ENCRYPTION_SECRET: "temp_enc_secret"
 
+    volumes:
+      - ~/pg_backups:/home/node/pg_backups
     depends_on:
       - credential_vault_pg
 

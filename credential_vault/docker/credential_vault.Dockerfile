@@ -1,12 +1,17 @@
-FROM node:22.0.0-alpine
+FROM node:22-alpine3.21
+
+# Install PostgreSQL client tools for pg_dump
+RUN apk add --no-cache postgresql17-client
+
+# Enable Corepack for Yarn version management
+RUN corepack enable
 
 # Create working directory and copy source code
 USER node
 RUN mkdir -p /home/node/credential_vault/node_modules && chown -R node:node /home/node/credential_vault
+RUN mkdir -p /home/node/pg_backups && chown -R node:node /home/node/pg_backups
 WORKDIR /home/node/credential_vault
 COPY --chown=node:node . .
-
-RUN yarn set version 4.7.0
 
 # Install dependencies for stdlib-js
 WORKDIR /home/node/credential_vault
