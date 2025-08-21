@@ -9,7 +9,7 @@ RUN corepack enable
 # Create working directory and copy source code
 USER node
 RUN mkdir -p /home/node/credential_vault/node_modules && chown -R node:node /home/node/credential_vault
-RUN mkdir -p /home/node/pg_backups && chown -R node:node /home/node/pg_backups
+RUN mkdir -p /home/node/pg_dumps && chown -R node:node /home/node/pg_dumps
 WORKDIR /home/node/credential_vault
 COPY --chown=node:node . .
 

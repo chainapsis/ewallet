@@ -36,7 +36,7 @@ services:
       ENCRYPTION_SECRET: "temp_enc_secret"
 
     volumes:
-      - ~/pg_backups:/home/node/pg_backups
+      - ~/pg_dumps:/home/node/pg_dumps
     depends_on:
       - credential_vault_pg
 

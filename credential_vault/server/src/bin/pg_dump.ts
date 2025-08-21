@@ -7,7 +7,7 @@ import { loadEnvs } from "@keplr-ewallet-cv-server/envs";
 
 const execAsync = promisify(exec);
 
-interface BackupOptions {
+interface DumpOptions {
   host: string;
   port: number;
   user: string;
@@ -15,7 +15,7 @@ interface BackupOptions {
   database: string;
 }
 
-async function dump(options: BackupOptions, outputPath: string): Promise<void> {
+async function dump(options: DumpOptions, outputPath: string): Promise<void> {
   const command = `pg_dump -h ${options.host} -p ${options.port} -U ${options.user} -d ${options.database} -Fc -f ${outputPath}`;
 
   const { stdout, stderr } = await execAsync(command, {
@@ -34,10 +34,7 @@ async function dump(options: BackupOptions, outputPath: string): Promise<void> {
   }
 }
 
-async function restore(
-  options: BackupOptions,
-  inputPath: string,
-): Promise<void> {
+async function restore(options: DumpOptions, inputPath: string): Promise<void> {
   const command = `pg_restore -h ${options.host} -p ${options.port} -U ${options.user} -d ${options.database} --clean --if-exists --verbose ${inputPath}`;
 
   const { stdout, stderr } = await execAsync(command, {
@@ -63,12 +60,11 @@ async function main() {
     console.log("Starting pg_dump...");
     console.log(`Database: ${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`);
 
-    const backupDir =
-      process.env.BACKUP_DIR || join(os.homedir(), "pg_backups");
+    const dumpDir = process.env.DUMP_DIR || join(os.homedir(), "pg_dumps");
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const backupPath = join(backupDir, `${env.DB_NAME}_${timestamp}.dump`);
+    const dumpPath = join(dumpDir, `${env.DB_NAME}_${timestamp}.dump`);
 
-    const options: BackupOptions = {
+    const options: DumpOptions = {
       host: env.DB_HOST,
       port: env.DB_PORT,
       user: env.DB_USER,
@@ -76,11 +72,11 @@ async function main() {
       database: env.DB_NAME,
     };
 
-    await dump(options, backupPath);
+    await dump(options, dumpPath);
 
-    console.log(`Backup completed successfully: ${backupPath}`);
+    console.log(`Dump completed successfully: ${dumpPath}`);
   } catch (error) {
-    console.error("Backup failed:", error);
+    console.error("Dump failed:", error);
     process.exit(1);
   }
 }
