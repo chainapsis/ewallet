@@ -7,8 +7,8 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import {
   dump,
   createPgDumpLog,
-  getOldBackupLogs,
-  markBackupLogAsDeleted,
+  getOldPgDumpLogs,
+  markPgDumpLogAsDeleted,
   type DumpOptions,
 } from "@keplr-ewallet/credential-vault-pg-interface";
 
@@ -21,7 +21,7 @@ interface PgDumpResult {
   timestamp: Date;
 }
 
-async function performPgDump(
+export async function runPgDump(
   pool: Pool,
   dumpOptions: DumpOptions,
 ): Promise<Result<PgDumpResult, string>> {
@@ -66,12 +66,12 @@ async function performPgDump(
   }
 }
 
-async function cleanupOldDumps(
+export async function cleanupOldPgDumps(
   pool: Pool,
   retentionDays: number,
 ): Promise<Result<number, string>> {
   try {
-    const oldLogsResult = await getOldBackupLogs(pool, retentionDays);
+    const oldLogsResult = await getOldPgDumpLogs(pool, retentionDays);
     if (oldLogsResult.success === false) {
       return {
         success: false,
@@ -82,9 +82,9 @@ async function cleanupOldDumps(
     for (const log of oldLogsResult.data) {
       try {
         await fs.unlink(log.dump_path);
-        await markBackupLogAsDeleted(pool, log.log_id);
+        await markPgDumpLogAsDeleted(pool, log.log_id);
       } catch {
-        await markBackupLogAsDeleted(pool, log.log_id);
+        await markPgDumpLogAsDeleted(pool, log.log_id);
       }
     }
 

@@ -41,7 +41,7 @@ RETURNING *
   }
 }
 
-export async function getOldBackupLogs(
+export async function getOldPgDumpLogs(
   db: Pool,
   retentionDays: number,
 ): Promise<Result<PgDumpLog[], string>> {
@@ -63,7 +63,7 @@ export async function getOldBackupLogs(
   }
 }
 
-export async function markBackupLogAsDeleted(
+export async function markPgDumpLogAsDeleted(
   db: Pool,
   logId: string,
 ): Promise<Result<void, string>> {
@@ -82,7 +82,7 @@ WHERE log_id = $1
   }
 }
 
-export async function getBackupLogByPath(
+export async function getPgDumpLogByPath(
   db: Pool,
   dumpPath: string,
 ): Promise<Result<PgDumpLog | null, string>> {
