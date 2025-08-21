@@ -43,10 +43,16 @@ export async function initKeplrEwalletCore(
 
   const registering = registerMsgListener();
 
-  const sdkEndpoint = checkURLRes.data;
-  console.log("[keplr] resolved sdk endpoint: %s", sdkEndpoint);
+  const hostOrigin = new URL(window.location.toString()).origin;
 
-  const iframeRes = setupIframeElement(sdkEndpoint);
+  const sdkEndpoint = checkURLRes.data;
+  const sdkEndpointURL = new URL(sdkEndpoint);
+  sdkEndpointURL.searchParams.append("host_origin", hostOrigin);
+
+  console.log("[keplr] resolved sdk endpoint: %s", sdkEndpoint);
+  console.log("[keplr] host origin: %s", hostOrigin);
+
+  const iframeRes = setupIframeElement(sdkEndpointURL);
   if (!iframeRes.success) {
     return iframeRes;
   }
@@ -66,12 +72,6 @@ export async function initKeplrEwalletCore(
 
   window.__keplr_ewallet = ewalletCore;
 
-  const hostOriginRes = await getHostOrigin();
-  if (!hostOriginRes.success) {
-    return hostOriginRes;
-  }
-
-  const hostOrigin = hostOriginRes.data;
   const initStateRes = await ewalletCore.registerOrigin(hostOrigin);
   if (!initStateRes.success) {
     return initStateRes;
@@ -97,20 +97,5 @@ async function checkURL(url?: string): Promise<Result<string, string>> {
     console.error("[keplr] check url fail, url: %s", _url);
 
     return { success: false, err: `check url fail, ${err.toString()}` };
-  }
-}
-
-async function getHostOrigin(): Promise<Result<string, string>> {
-  try {
-    const hostOrigin = new URL(window.location.toString()).origin;
-
-    return { success: true, data: hostOrigin };
-  } catch (err: any) {
-    console.error("[keplr] get host origin fail");
-
-    return {
-      success: false,
-      err: `get host origin fail, ${err.toString()}`,
-    };
   }
 }
