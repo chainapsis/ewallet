@@ -100,7 +100,7 @@ export type EWalletMsgHideModalAck = {
 export type EWalletMsgInit = {
   target: "keplr_ewallet_attached";
   msg_type: "init";
-  payload: boolean;
+  payload: { success: true } | { success: false; err: string };
 };
 
 export type EWalletMsgInitAck = {

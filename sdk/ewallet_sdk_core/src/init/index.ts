@@ -54,7 +54,13 @@ export async function initKeplrEwalletCore(
   const iframe = iframeRes.data;
 
   // Wait till the "init" message is sent from the being-loaded iframe document.
-  await registering;
+  const listenerRes = await registering;
+  if (!listenerRes) {
+    return {
+      success: false,
+      err: "Attached initialize fail",
+    };
+  }
 
   const ewalletCore = new KeplrEWallet(args.api_key, iframe, sdkEndpoint);
 
@@ -96,11 +102,12 @@ async function checkURL(url?: string): Promise<Result<string, string>> {
 
 async function getHostOrigin(): Promise<Result<string, string>> {
   try {
-    const myUrl = window.location.toString();
-    const normalizedIframeOrigin = new URL(myUrl).origin;
-    return { success: true, data: normalizedIframeOrigin };
+    const hostOrigin = new URL(window.location.toString()).origin;
+
+    return { success: true, data: hostOrigin };
   } catch (err: any) {
     console.error("[keplr] get host origin fail");
+
     return {
       success: false,
       err: `get host origin fail, ${err.toString()}`,
