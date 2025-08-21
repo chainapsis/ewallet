@@ -8,8 +8,8 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build2": "yarn clean && node build.mjs && tsc --build --force --emitDeclarationOnly && tsc-alias",
-    "build": "yarn clean && tsc && rollup -c",
+    "build": "yarn rollup-build && tsc --build --force --emitDeclarationOnly && tsc-alias",
+    "rollup-build": "yarn clean && tsc && rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "main": "./dist/index.js",

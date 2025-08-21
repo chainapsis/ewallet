@@ -6,8 +6,8 @@
   "scripts": {
     "clean": "del-cli dist",
     "typecheck": "tsc --noEmit",
-    "build": "yarn clean && node build.mjs && tsc --build --force --emitDeclarationOnly && tsc-alias",
-    "build2": "yarn clean && tsc --build --force && rollup --c",
+    "build": "yarn rollup-build && tsc --build --force --emitDeclarationOnly && tsc-alias",
+    "rollup-build": "yarn clean && tsc --build --force && rollup --c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "publishConfig": {
