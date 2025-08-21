@@ -46,15 +46,17 @@ export async function getOldBackupLogs(
   retentionDays: number,
 ): Promise<Result<PgDumpLog[], string>> {
   try {
+    const retentionSeconds = Math.max(0, Math.trunc(retentionDays)) * 86400;
+
     const query = `
-SELECT * FROM pg_dump_logs 
-WHERE deleted_at IS NULL 
-AND created_at < NOW() - INTERVAL '${retentionDays} days'
-ORDER BY created_at ASC
-`;
+        SELECT *
+        FROM pg_dump_logs
+        WHERE deleted_at IS NULL
+          AND created_at < NOW() - ($1 * INTERVAL '1 second')
+        ORDER BY created_at ASC
+      `;
 
-    const result = await db.query(query);
-
+    const result = await db.query(query, [retentionSeconds]);
     return { success: true, data: result.rows as PgDumpLog[] };
   } catch (error) {
     return { success: false, err: String(error) };
