@@ -1,5 +1,7 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
+import fs from "node:fs/promises";
+import { join } from "node:path";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 const execAsync = promisify(exec);
@@ -14,25 +16,26 @@ export interface DumpOptions {
 
 export async function dump(
   options: DumpOptions,
-  outputPath: string,
-): Promise<Result<void, string>> {
-  const command = `pg_dump -h ${options.host} -p ${options.port} -U ${options.user} -d ${options.database} -Fc -f ${outputPath}`;
+  dumpDir: string,
+  dumpFile: string,
+): Promise<Result<{ dumpPath: string }, string>> {
+  try {
+    await fs.mkdir(dumpDir, { recursive: true });
 
-  const { stdout, stderr } = await execAsync(command, {
-    env: {
-      PGPASSWORD: options.password,
-    },
-  });
+    const dumpPath = join(dumpDir, dumpFile);
+    const command = `pg_dump -h ${options.host} -p ${options.port} -U ${options.user} -d ${options.database} -Fc -f ${dumpPath}`;
 
-  if (stderr.length > 0) {
-    return { success: false, err: stderr };
+    await execAsync(command, {
+      env: {
+        ...process.env,
+        PGPASSWORD: options.password,
+      },
+    });
+
+    return { success: true, data: { dumpPath } };
+  } catch (error) {
+    return { success: false, err: String(error) };
   }
-
-  if (stdout.length > 0) {
-    return { success: true, data: void 0 };
-  }
-
-  return { success: false, err: "Unknown error" };
 }
 
 export async function restore(
@@ -43,6 +46,7 @@ export async function restore(
 
   const { stdout, stderr } = await execAsync(command, {
     env: {
+      ...process.env,
       PGPASSWORD: options.password,
     },
   });

@@ -46,7 +46,12 @@ export async function getOldPgDumpLogs(
   retentionDays: number,
 ): Promise<Result<PgDumpLog[], string>> {
   try {
-    const retentionSeconds = Math.max(0, Math.trunc(retentionDays)) * 86400;
+    if (retentionDays <= 0) {
+      return { success: true, data: [] };
+    }
+
+    const retentionSeconds = Math.trunc(retentionDays) * 86400;
+    // const retentionSeconds = retentionDays * 60; // for testing
 
     const query = `
         SELECT *
