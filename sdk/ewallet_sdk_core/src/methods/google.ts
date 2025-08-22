@@ -4,7 +4,7 @@ import {
   RedirectUriSearchParamsKey,
 } from "@keplr-ewallet-sdk-core/oauth";
 import type { EWalletMsg } from "@keplr-ewallet-sdk-core/types";
-import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/send_msg_to_iframe";
+import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/target";
 
 const GoogleClientId =
   "239646646986-8on7ql1vmbcshbjk12bdtopmto99iipm.apps.googleusercontent.com";

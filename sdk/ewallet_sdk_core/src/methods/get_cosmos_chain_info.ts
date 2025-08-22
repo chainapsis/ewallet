@@ -1,7 +1,7 @@
 import type { ChainInfo } from "@keplr-wallet/types";
 
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
-import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/send_msg_to_iframe";
+import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/target";
 
 export async function getCosmosChainInfo(
   this: KeplrEWallet,

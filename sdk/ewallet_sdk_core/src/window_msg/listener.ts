@@ -5,7 +5,7 @@ import type { EWalletMsg } from "@keplr-ewallet-sdk-core/types";
 // by parent window and child replies on the dedicated channel
 export function registerMsgListener(): Promise<boolean> {
   if (window.__keplr_ewallet_ev) {
-    return Promise.resolve(false);
+    console.warn("[keplr] isn't it already initailized?");
   }
 
   // Callback ref to remember
@@ -20,7 +20,9 @@ export function registerMsgListener(): Promise<boolean> {
     switch (msg.msg_type) {
       case "init": {
         if (callback.length > 1) {
-          throw new Error("Callback should exist");
+          throw new Error(
+            "[keplr] ewallet msg handler init callback should exist",
+          );
         }
 
         const cb = callback[0];
@@ -38,7 +40,7 @@ export function registerMsgListener(): Promise<boolean> {
   window.addEventListener("message", msgHandler);
   window.__keplr_ewallet_ev = msgHandler;
 
-  console.debug("[keplr] msg listener registered");
+  console.log("[keplr] msg listener registered");
 
   return prom;
 }

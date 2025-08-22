@@ -1,13 +1,14 @@
-import { sendMsgToIframe } from "./window_msg/send_msg_to_iframe";
-import { showModal } from "./api/show_modal";
-import { signIn } from "./api/sign_in";
-import { signOut } from "./api/sign_out";
-import { getPublicKey } from "./api/get_public_key";
-import { getEmail } from "./api/get_email";
-import { hideModal } from "./api/hide_modal";
-import { makeSignature } from "./api/make_signature";
-import { on } from "./api/on";
-import { getCosmosChainInfo } from "./api/get_cosmos_chain_info";
+import { sendMsgToIframe } from "./methods/send_msg_to_iframe";
+import { showModal } from "./methods/show_modal";
+import { signIn } from "./methods/sign_in";
+import { signOut } from "./methods/sign_out";
+import { getPublicKey } from "./methods/get_public_key";
+import { getEmail } from "./methods/get_email";
+import { hideModal } from "./methods/hide_modal";
+import { makeSignature } from "./methods/make_signature";
+import { on } from "./methods/on";
+import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
+import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
 import type { KeplrEWalletCoreEventHandlerMap } from "./types";
 
@@ -18,9 +19,9 @@ export class KeplrEWallet {
   eventEmitter: EventEmitter2;
   readonly origin: string;
 
-  private initializationPromise: Promise<boolean>;
-  private initialized: boolean = false;
-  private initializationError: Error | null = null;
+  // private initializationPromise: Promise<boolean>;
+  // private initialized: boolean = false;
+  // private initializationError: Error | null = null;
 
   on: <
     N extends KeplrEWalletCoreEventHandlerMap["eventName"],
@@ -34,28 +35,40 @@ export class KeplrEWallet {
     apiKey: string,
     iframe: HTMLIFrameElement,
     sdkEndpoint: string,
-    initPromise: Promise<boolean>,
+    // initPromise: Promise<boolean>,
   ) {
     this.apiKey = apiKey;
     this.iframe = iframe;
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
     this.eventEmitter = new EventEmitter2();
+    // TODO: @elden
     this.on = on.bind(this);
 
-    this.initializationPromise = initPromise
-      .then((res) => {
-        this.initialized = res;
-        return res;
+    this.lazyInit()
+      .then((isInitialized) => {
+        if (!isInitialized) {
+          console.error("[keplr] lazy init fail");
+        }
       })
       .catch((err: any) => {
-        this.initialized = false;
-        this.initializationError =
-          err instanceof Error ? err : new Error(String(err));
-        throw this.initializationError;
+        console.error("[keplr] lazy init fail, err: %s", err.toString());
       });
+
+    // this.initializationPromise = initPromise
+    //   .then((res) => {
+    //     this.initialized = res;
+    //     return res;
+    //   })
+    //   .catch((err: any) => {
+    //     this.initialized = false;
+    //     this.initializationError =
+    //       err instanceof Error ? err : new Error(String(err));
+    //     throw this.initializationError;
+    //   });
   }
 
+  lazyInit = lazyInit.bind(this);
   showModal = showModal.bind(this);
   hideModal = hideModal.bind(this);
   sendMsgToIframe = sendMsgToIframe.bind(this);
@@ -68,10 +81,13 @@ export class KeplrEWallet {
   // on = on.bind(this);
 
   isInitialized(): boolean {
-    return this.initialized;
+    // TODO: @elden
+    return true;
+    // return this.initialized;
   }
 
   waitUntilInitialized(): Promise<boolean> {
-    return this.initializationPromise;
+    return Promise.resolve(true);
+    // return this.initializationPromise;
   }
 }
