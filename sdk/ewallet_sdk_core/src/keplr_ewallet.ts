@@ -73,11 +73,11 @@ export class KeplrEWallet {
   makeSignature = makeSignature.bind(this);
   // on = on.bind(this);
 
-  isInitialized(): boolean {
-    // TODO: @elden
-    return true;
-    // return this.initialized;
-  }
+  // isInitialized(): boolean {
+  //   // TODO: @elden
+  //   return true;
+  //   // return this.initialized;
+  // }
 
   waitUntilInitialized(): Promise<boolean> {
     return Promise.resolve(true);

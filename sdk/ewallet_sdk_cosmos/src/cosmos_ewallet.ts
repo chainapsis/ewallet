@@ -24,12 +24,16 @@ import { showModal } from "./methods/show_modal";
 import { makeSignature } from "./methods/make_signature";
 import { getPublicKey } from "./methods/get_public_key";
 import { on } from "./methods/on";
+import { setUpEventHandlers } from "./methods/set_up_event_handlers";
+import { waitUntilInitialized } from "./methods/wait_until_initialized";
 
 export class CosmosEWallet {
   public eWallet: KeplrEWallet;
-  protected _cosmosChainInfo: ChainInfo[] | null = null;
-  protected _cacheTime: number = 0;
-  eventEmitter: EventEmitter2 | null = null;
+  eventEmitter: EventEmitter2;
+
+  protected _cosmosChainInfo: ChainInfo[];
+  protected _cacheTime: number;
+  protected lazyInitSubscribers: any[];
 
   on: <
     N extends KeplrWalletCosmosEventNames,
@@ -41,10 +45,12 @@ export class CosmosEWallet {
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
+    this._cosmosChainInfo = [];
+    this._cacheTime = 0;
     this.eventEmitter = new EventEmitter2();
     this.on = on.bind(this);
-
-    this.setupEventHandlers();
+    this.lazyInitSubscribers = [];
+    this.setUpEventHandlers();
   }
 
   enable = enable;
@@ -62,22 +68,8 @@ export class CosmosEWallet {
   signDirect = signDirect.bind(this);
   signArbitrary = signArbitrary.bind(this);
   verifyArbitrary = verifyArbitrary.bind(this);
+  setUpEventHandlers = setUpEventHandlers.bind(this);
+  waitUntilInitialized = waitUntilInitialized.bind(this);
   protected showModal = showModal.bind(this);
   protected makeSignature = makeSignature.bind(this);
-
-  setupEventHandlers() {
-    console.log("[keplr] set up event handlers");
-
-    this.eWallet.on("_accountsChanged", (payload: any) => {
-      if (this.eventEmitter) {
-        this.eventEmitter.emit("accountsChanged", payload);
-      }
-    });
-
-    this.eWallet.on("_chainChanged", (payload: any) => {
-      if (this.eventEmitter) {
-        this.eventEmitter.emit("chainChanged", payload);
-      }
-    });
-  }
 }
