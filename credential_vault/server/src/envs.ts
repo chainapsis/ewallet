@@ -20,6 +20,7 @@ export interface EnvType {
   DB_NAME: string;
   DB_SSL: boolean;
   ENCRYPTION_SECRET: string;
+  ADMIN_PASSWORD: string;
 }
 
 const envSchema = z.object({
@@ -31,6 +32,7 @@ const envSchema = z.object({
   DB_NAME: z.string().min(1, "DB_NAME is required"),
   DB_SSL: z.boolean(),
   ENCRYPTION_SECRET: z.string().min(1, "ENCRYPTION_SECRET is required"),
+  ADMIN_PASSWORD: z.string().min(1, "ADMIN_PASSWORD is required"),
 });
 
 export function loadEnvs(): EnvType {
@@ -53,6 +55,7 @@ export function loadEnvs(): EnvType {
     DB_NAME: process.env.DB_NAME || "credential_vault_dev",
     DB_SSL: (process.env.DB_SSL || "false") === "true",
     ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET || "temp_enc_secret",
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "admin_password",
   };
 
   const envs = envSchema.parse(rawEnv);

@@ -34,6 +34,8 @@ services:
       DB_SSL: "false"
       # Please change it to your own secret.
       ENCRYPTION_SECRET: "temp_enc_secret"
+      # Please change it to your own password.
+      ADMIN_PASSWORD: "admin_password"
 
     volumes:
       - ~/pg_dumps:/home/node/pg_dumps
