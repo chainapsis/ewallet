@@ -44,6 +44,12 @@ export async function initKeplrEwalletCore(
   const registering = registerMsgListener();
 
   const hostOrigin = new URL(window.location.toString()).origin;
+  if (hostOrigin.length === 0) {
+    return {
+      success: false,
+      err: "Host origin empty",
+    };
+  }
 
   const sdkEndpoint = checkURLRes.data;
   const sdkEndpointURL = new URL(sdkEndpoint);
