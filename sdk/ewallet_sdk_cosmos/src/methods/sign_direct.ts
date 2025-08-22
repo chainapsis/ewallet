@@ -1,10 +1,4 @@
-import { sha256 } from "@noble/hashes/sha2";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
-import {
-  encodeCosmosSignature,
-  extractTxBodyFromSignDoc,
-  signDocToJson,
-} from "@keplr-ewallet-sdk-cosmos/utils";
 import { makeSignBytes, type DirectSignResponse } from "@cosmjs/proto-signing";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
@@ -20,12 +14,6 @@ export async function signDirect(
 ): Promise<DirectSignResponse> {
   try {
     const origin = this.eWallet.origin;
-
-    const signBytes = makeSignBytes(signDoc);
-    const hashedMessage = sha256(signBytes);
-    const publicKey = await this.getPublicKey();
-
-    const signDocJson = signDocToJson(signDoc);
 
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
@@ -49,17 +37,15 @@ export async function signDirect(
     };
     const showModalResponse = await this.showModal(showModalData);
 
-    if (showModalResponse === "reject") {
-      throw new Error("User rejected the signature request");
+    if (showModalResponse.approved === false) {
+      throw new Error(
+        showModalResponse.reason ?? "User rejected the signature request",
+      );
     }
-
-    const signOutput = await this.makeSignature(hashedMessage);
-
-    const signature = encodeCosmosSignature(signOutput, publicKey);
 
     return {
       signed: signDoc,
-      signature,
+      signature: showModalResponse.data.signature,
     };
   } catch (error) {
     console.error("[signDirect cosmos] [error] @@@@@", error);

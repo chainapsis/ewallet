@@ -78,8 +78,7 @@ type CosmosTxSignAminoPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
-  signDocString: string;
-  msgs: readonly Msg[];
+  signDoc: StdSignDoc;
 };
 
 export type CosmosArbitrarySignPayload = {

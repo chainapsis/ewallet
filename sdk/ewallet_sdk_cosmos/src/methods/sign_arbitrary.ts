@@ -40,7 +40,7 @@ export async function signArbitrary(
     };
     const showModalResponse = await this.showModal(showModalMsg);
 
-    if (showModalResponse === "reject") {
+    if (showModalResponse.approved === false) {
       throw new Error("User rejected the signature request");
     }
 

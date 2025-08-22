@@ -36,26 +36,23 @@ export async function signAmino(
           fee_currencies: chainInfo?.feeCurrencies,
           currencies: chainInfo?.currencies,
         },
-        msgs: signDoc.msgs,
+        signDoc,
         signer,
-        signDocString: JSON.stringify(signDoc, null, 2),
         origin,
       },
     };
 
     const showModalResponse = await this.showModal(data);
 
-    if (showModalResponse === "reject") {
-      throw new Error("User rejected the signature request");
+    if (showModalResponse.approved === false) {
+      throw new Error(
+        showModalResponse.reason ?? "User rejected the signature request",
+      );
     }
-
-    const signOutput = await this.makeSignature(signDocHash);
-
-    const signature = encodeCosmosSignature(signOutput, publicKey);
 
     return {
       signed: signDoc,
-      signature,
+      signature: showModalResponse.data.signature,
     };
   } catch (error) {
     console.error("[signAmino cosmos] [error] @@@@@", error);
