@@ -20,11 +20,7 @@ export function setPgDumpRoutes(router: Router) {
    *       content:
    *         application/json:
    *           schema:
-   *             type: object
-   *             properties:
-   *               password:
-   *                 type: string
-   *                 description: The admin password
+   *             $ref: '#/components/schemas/PgDumpRequestBody'
    *     responses:
    *       200:
    *         description: Successfully requested pg dump
@@ -36,21 +32,7 @@ export function setPgDumpRoutes(router: Router) {
    *                 - type: object
    *                   properties:
    *                     data:
-   *                       type: "object"
-   *                       description: The pg dump result
-   *                       properties:
-   *                         dump_id:
-   *                           type: string
-   *                           description: The id of the pg dump
-   *                         dump_path:
-   *                           type: string
-   *                           description: The path to the pg dump
-   *                         dump_size:
-   *                           type: number
-   *                           description: The size of the pg dump
-   *                         dump_duration:
-   *                           type: number
-   *                           description: The duration of the pg dump
+   *                       $ref: '#/components/schemas/PgDumpResponse'
    *       500:
    *         description: Failed to process pg dump
    *         content:

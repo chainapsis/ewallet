@@ -8,9 +8,9 @@ export function setRoutes(app: Express) {
   const keyshareRouter = makeKeyshareRouter();
   app.use("/keyshare/v1", keyshareRouter);
 
-  const commitRouter = makeCommitRouter();
-  app.use("/commit/v1", commitRouter);
-
   const pgDumpRouter = makePgDumpRouter();
   app.use("/pg_dump/v1", pgDumpRouter);
+
+  const commitRouter = makeCommitRouter();
+  app.use("/commit/v1", commitRouter);
 }
