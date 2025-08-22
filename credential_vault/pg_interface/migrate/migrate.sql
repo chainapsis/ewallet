@@ -47,37 +47,20 @@ CREATE TABLE IF NOT EXISTS public.key_shares (
     CONSTRAINT key_shares_pkey PRIMARY KEY (share_id)
 );
 
--- public.tasks definition
+-- public.pg_dumps definition
 
 -- Drop table
 
--- DROP TABLE public.tasks;
+-- DROP TABLE public.pg_dumps;
 
-CREATE TABLE IF NOT EXISTS public.tasks (
-    task_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    task_type varchar(255) NOT NULL,
-    status varchar(16) NOT NULL,
+CREATE TABLE IF NOT EXISTS public.pg_dumps (
+    dump_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    dump_status varchar(16) NOT NULL,
+    dump_path varchar(255) NULL,
     meta jsonb NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
-    CONSTRAINT tasks_pkey PRIMARY KEY (task_id)
-);
-
--- public.pg_dump_logs definition
-
--- Drop table
-
--- DROP TABLE public.pg_dump_logs;
-
-CREATE TABLE IF NOT EXISTS public.pg_dump_logs (
-    log_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    dump_path varchar(255) NOT NULL,
-    dump_size bigint NOT NULL,
-    meta jsonb NULL,
-    deleted_at timestamptz NULL,
-	created_at timestamptz DEFAULT now() NOT NULL,
-	updated_at timestamptz DEFAULT now() NOT NULL,
-    CONSTRAINT pg_dump_logs_pkey PRIMARY KEY (log_id)
+    CONSTRAINT pg_dumps_pkey PRIMARY KEY (dump_id)
 );
 
 -- public.witnessed_id_tokens definition
