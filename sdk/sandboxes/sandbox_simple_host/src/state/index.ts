@@ -47,7 +47,8 @@ export const useAppState = create(
           set({ keplr_sdk_eth: initRes.data });
           return initRes.data;
         } else {
-          console.error("sdk init fail");
+          console.error("sdk init fail, err: %s", initRes.err);
+
           return null;
         }
       },
@@ -77,7 +78,7 @@ export const useAppState = create(
 
           return initRes.data;
         } else {
-          console.error("sdk init fail");
+          console.error("sdk init fail, err: %s", initRes.err);
 
           return null;
         }

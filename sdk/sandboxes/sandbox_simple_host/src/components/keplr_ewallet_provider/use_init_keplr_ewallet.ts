@@ -9,15 +9,16 @@ export function useInitKeplrEWallet() {
     async function fn() {
       try {
         const cosmosSDK = await appState.initKeplrSdkCosmos();
-        console.log("cosmosSDK", cosmosSDK);
+
         if (!cosmosSDK) {
-          console.error("something wrong");
+          console.error("cosmos ewallet not exists");
+
           return;
         }
 
         const isEthReady = await appState.initKeplrSdkEth();
         if (!isEthReady) {
-          console.error("something wrong");
+          console.error("eth ewallet not exists");
         }
 
         if (cosmosSDK && isEthReady) {
