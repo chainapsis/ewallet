@@ -2,6 +2,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ModalResult, ShowModalPayload } from "./modal";
 import type { EWalletMakeSignaturePayload, SignOutput } from "./sign";
+import type { ChainInfo } from "@keplr-wallet/types";
 
 export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
 
@@ -99,7 +100,7 @@ export type EWalletMsgHideModalAck = {
 export type EWalletMsgInit = {
   target: "keplr_ewallet_attached";
   msg_type: "init";
-  payload: boolean;
+  payload: { success: true } | { success: false; err: string };
 };
 
 export type EWalletMsgInitAck = {
@@ -120,16 +121,30 @@ export type EWalletMsgGetEmailAck = {
   payload: AckPayload<string>;
 };
 
-export type EWalletMsgInitState = {
+export type EWalletMsgRegisterOrigin = {
   target: "keplr_ewallet_attached";
-  msg_type: "init_state";
-  payload: string;
+  msg_type: "register_origin";
+  payload: { origin: string };
 };
 
-export type EWalletMsgInitStateAck = {
+export type EWalletMsgRegisterOriginAck = {
   target: "keplr_ewallet_sdk";
-  msg_type: "init_state_ack";
+  msg_type: "register_origin_ack";
   payload: null;
+};
+
+export type EWalletMsgGetCosmosChainInfo = {
+  target: "keplr_ewallet_attached";
+  msg_type: "get_cosmos_chain_info";
+  payload: {
+    chain_id: string | null;
+  };
+};
+
+export type EWalletMsgGetCosmosChainInfoAck = {
+  target: "keplr_ewallet_sdk";
+  msg_type: "get_cosmos_chain_info_ack";
+  payload: AckPayload<ChainInfo[]>;
 };
 
 export type EWalletMsg =
@@ -151,8 +166,10 @@ export type EWalletMsg =
   | EWalletMsgHideModalAck
   | EWalletMsgGetEmail
   | EWalletMsgGetEmailAck
-  | EWalletMsgInitState
-  | EWalletMsgInitStateAck
+  | EWalletMsgRegisterOrigin
+  | EWalletMsgRegisterOriginAck
+  | EWalletMsgGetCosmosChainInfo
+  | EWalletMsgGetCosmosChainInfoAck
   | {
       target: "keplr_ewallet_sdk";
       msg_type: "unknown_msg_type";

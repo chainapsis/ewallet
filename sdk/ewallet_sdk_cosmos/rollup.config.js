@@ -1,5 +1,8 @@
 import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
+import tsConfigPaths from "rollup-plugin-tsconfig-paths";
+import dts from "rollup-plugin-dts";
+import commonjs from "@rollup/plugin-commonjs";
 // import commonjs from "@rollup/plugin-commonjs";
 // import terser from "@rollup/plugin-terser";
 
@@ -33,6 +36,7 @@ export default [
     ],
     plugins: [
       nodeResolve(),
+      commonjs(),
       typescript({
         tsconfig: "./tsconfig.json",
         declaration: true,
@@ -48,29 +52,3 @@ export default [
     plugins: [tsConfigPaths(), nodeResolve(), dts()],
   },
 ];
-
-// {
-//   input: "src/index.ts",
-//   output: {
-//     file: "dist/index.js",
-//     format: "esm",
-//     sourcemap: true,
-//   },
-//   external: ["@keplr-ewallet/stdlib-js", "@keplr-wallet/types"],
-//   plugins: [
-//     nodeResolve(),
-//     // commonjs(),
-//     typescript({
-//       tsconfig: "./tsconfig.json",
-//       declaration: true,
-//     }),
-//   ],
-// },
-// {
-//   input: "src/index.ts",
-//   output: {
-//     file: "dist/index.d.ts", // Output path for the bundled declaration file
-//     format: "esm",
-//   },
-//   plugins: [tsConfigPaths(), nodeResolve(), dts()],
-// },

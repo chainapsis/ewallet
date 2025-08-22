@@ -149,6 +149,8 @@ export class EWalletEIP1193Provider
     switch (args.method) {
       case "web3_clientVersion":
         return `${this.name}/${this.version}`;
+      case "eth_chainId":
+        return this.activeChain.chainId;
       default:
         await this._validateActiveChain();
 
@@ -583,8 +585,8 @@ export class EWalletEIP1193Provider
 
     if (signer) {
       try {
-        const signerAddress = await signer.getAddress();
-        if (!isAddress(signerAddress)) {
+        const signerAddress = signer.getAddress();
+        if (!signerAddress || !isAddress(signerAddress)) {
           throw new Error("Invalid signer address");
         }
 

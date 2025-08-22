@@ -22,7 +22,7 @@ export function createMockSigner({
   }
 
   return {
-    getAddress: () => Promise.resolve(MOCK_ADDRESS),
+    getAddress: () => MOCK_ADDRESS,
     sign: async () =>
       Promise.resolve({
         type: "signature",

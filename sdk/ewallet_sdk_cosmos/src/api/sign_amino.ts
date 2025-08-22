@@ -7,10 +7,7 @@ import { sha256 } from "@noble/hashes/sha2";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
-import {
-  encodeCosmosSignature,
-  SignDocWrapper,
-} from "@keplr-ewallet-sdk-cosmos/utils";
+import { encodeCosmosSignature } from "@keplr-ewallet-sdk-cosmos/utils";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 export async function signAmino(
@@ -28,8 +25,6 @@ export async function signAmino(
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
 
-    const signDocWrapper = SignDocWrapper.fromAminoSignDoc(signDoc);
-
     const data: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "tx",
@@ -41,9 +36,9 @@ export async function signAmino(
           fee_currencies: chainInfo?.feeCurrencies,
           currencies: chainInfo?.currencies,
         },
-        msgs: signDocWrapper.aminoSignDoc.msgs,
+        msgs: signDoc.msgs,
         signer,
-        signDocString: JSON.stringify(signDocWrapper.aminoSignDoc, null, 2),
+        signDocString: JSON.stringify(signDoc, null, 2),
         origin,
       },
     };

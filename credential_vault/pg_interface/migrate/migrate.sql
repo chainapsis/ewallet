@@ -47,6 +47,22 @@ CREATE TABLE IF NOT EXISTS public.key_shares (
     CONSTRAINT key_shares_pkey PRIMARY KEY (share_id)
 );
 
+-- public.pg_dumps definition
+
+-- Drop table
+
+-- DROP TABLE public.pg_dumps;
+
+CREATE TABLE IF NOT EXISTS public.pg_dumps (
+    dump_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    status varchar(16) NOT NULL,
+    dump_path varchar(255) NULL,
+    meta jsonb NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT pg_dumps_pkey PRIMARY KEY (dump_id)
+);
+
 -- public.witnessed_id_tokens definition
 
 -- Drop table

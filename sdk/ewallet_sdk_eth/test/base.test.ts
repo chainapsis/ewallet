@@ -423,10 +423,10 @@ describe("EWallet Provider - Base", () => {
         expect(accounts).toBeDefined();
         expect(accounts[0]).toEqual(MOCK_ADDRESS);
 
-        const address = await mockSigner.getAddress();
+        const address = mockSigner.getAddress();
         const signature = await walletProvider.request({
           method: "personal_sign",
-          params: [toHex("test"), address],
+          params: [toHex("test"), address!],
         });
 
         expect(signature).toBeDefined();

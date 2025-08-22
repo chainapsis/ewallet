@@ -15,16 +15,22 @@ export function registerMsgListener(): Promise<boolean> {
   });
 
   async function msgHandler(event: MessageEvent) {
-    const message = event.data as EWalletMsg;
+    const msg = event.data as EWalletMsg;
 
-    switch (message.msg_type) {
+    switch (msg.msg_type) {
       case "init": {
         if (callback.length > 1) {
           throw new Error("Callback should exist");
         }
 
         const cb = callback[0];
-        cb(true);
+        if (!msg.payload.success) {
+          console.error(`[keplr] attached init fail, err: ${msg.payload.err}`);
+
+          cb(false);
+        } else {
+          cb(true);
+        }
       }
     }
   }

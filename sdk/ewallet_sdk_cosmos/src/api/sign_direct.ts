@@ -2,7 +2,8 @@ import { sha256 } from "@noble/hashes/sha2";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
 import {
   encodeCosmosSignature,
-  SignDocWrapper,
+  extractTxBodyFromSignDoc,
+  signDocToJson,
 } from "@keplr-ewallet-sdk-cosmos/utils";
 import { makeSignBytes, type DirectSignResponse } from "@cosmjs/proto-signing";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
@@ -24,7 +25,7 @@ export async function signDirect(
     const hashedMessage = sha256(signBytes);
     const publicKey = await this.getPublicKey();
 
-    const signDocWrapper = SignDocWrapper.fromDirectSignDoc(signDoc);
+    const signDocJson = signDocToJson(signDoc);
 
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
@@ -39,14 +40,11 @@ export async function signDirect(
           chain_symbol_image_url: chainInfo?.stakeCurrency?.coinImageUrl ?? "",
           fee_currencies: chainInfo?.feeCurrencies,
           currencies: chainInfo?.currencies,
+          bech32_config: chainInfo?.bech32Config,
         },
         signer,
-        msgs: signDocWrapper.protoSignDoc.txMsgs,
-        signDocString: JSON.stringify(
-          signDocWrapper.protoSignDoc.toJSON(),
-          null,
-          2,
-        ),
+        msgs: extractTxBodyFromSignDoc(signDoc)?.messages ?? [],
+        signDocString: JSON.stringify(signDocJson, null, 2),
         origin,
       },
     };

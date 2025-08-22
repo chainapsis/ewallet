@@ -73,7 +73,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
 
       const signature = await provider.request({
         method: "personal_sign",
-        params: [hexMessage, await golf.getAddress()],
+        params: [hexMessage, golf.getAddress()!],
       });
 
       expect(signature).toBeDefined();
@@ -84,9 +84,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         signature,
       });
 
-      expect(isAddressEqual(recoveredAddress, await golf.getAddress())).toBe(
-        true,
-      );
+      expect(isAddressEqual(recoveredAddress, golf.getAddress()!)).toBe(true);
     });
 
     it("should successfully perform eth_signTypedData_v4", async () => {
@@ -114,7 +112,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
 
       const signature = await provider.request({
         method: "eth_signTypedData_v4",
-        params: [await golf.getAddress(), typedData],
+        params: [golf.getAddress()!, typedData],
       });
 
       expect(signature).toBeDefined();
@@ -125,9 +123,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         signature,
       });
 
-      expect(isAddressEqual(recoveredAddress, await golf.getAddress())).toBe(
-        true,
-      );
+      expect(isAddressEqual(recoveredAddress, golf.getAddress()!)).toBe(true);
     });
 
     it("should successfully perform eth_signTransaction", async () => {
@@ -150,8 +146,8 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       );
 
       const transaction: RpcTransactionRequest = {
-        from: await golf.getAddress(),
-        to: await hotel.getAddress(),
+        from: golf.getAddress()!,
+        to: hotel.getAddress()!,
         value: toHex(parseEther("0.001")),
         gas: toHex(21000),
         maxFeePerGas: toHex(10000000),
@@ -173,9 +169,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         serializedTransaction: signedTransaction as `0x02${string}`,
       });
 
-      expect(isAddressEqual(recoveredAddress, await golf.getAddress())).toBe(
-        true,
-      );
+      expect(isAddressEqual(recoveredAddress, golf.getAddress()!)).toBe(true);
     });
   });
 
@@ -395,7 +389,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       events.length = 0;
 
       // First request should succeed (no additional connect event)
-      await provider.request({ method: "eth_chainId" });
+      await provider.request({ method: "eth_blockNumber" });
       expect(events).toHaveLength(0); // No events, already connected
 
       // Change mock to simulate network failure
@@ -403,7 +397,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
 
       // Second request should fail and trigger disconnect
       await expect(
-        provider.request({ method: "eth_chainId" }),
+        provider.request({ method: "eth_blockNumber" }),
       ).rejects.toMatchObject({
         code: ErrorCodes.rpc.resourceUnavailable,
       });
@@ -418,7 +412,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       });
 
       // Third request should succeed and trigger reconnect
-      await provider.request({ method: "eth_chainId" });
+      await provider.request({ method: "eth_blockNumber" });
 
       // Should have connect event now
       expect(events).toHaveLength(2);

@@ -43,10 +43,22 @@ export async function initKeplrEwalletCore(
 
   const registering = registerMsgListener();
 
-  const sdkEndpoint = checkURLRes.data;
-  console.log("[keplr] resolved sdk endpoint: %s", sdkEndpoint);
+  const hostOrigin = new URL(window.location.toString()).origin;
+  if (hostOrigin.length === 0) {
+    return {
+      success: false,
+      err: "Host origin empty",
+    };
+  }
 
-  const iframeRes = setupIframeElement(sdkEndpoint);
+  const sdkEndpoint = checkURLRes.data;
+  const sdkEndpointURL = new URL(sdkEndpoint);
+  sdkEndpointURL.searchParams.append("host_origin", hostOrigin);
+
+  console.log("[keplr] resolved sdk endpoint: %s", sdkEndpoint);
+  console.log("[keplr] host origin: %s", hostOrigin);
+
+  const iframeRes = setupIframeElement(sdkEndpointURL);
   if (!iframeRes.success) {
     return iframeRes;
   }
@@ -54,19 +66,19 @@ export async function initKeplrEwalletCore(
   const iframe = iframeRes.data;
 
   // Wait till the "init" message is sent from the being-loaded iframe document.
-  await registering;
+  const listenerRes = await registering;
+  if (!listenerRes) {
+    return {
+      success: false,
+      err: "Attached initialize fail",
+    };
+  }
 
   const ewalletCore = new KeplrEWallet(args.api_key, iframe, sdkEndpoint);
 
   window.__keplr_ewallet = ewalletCore;
 
-  const hostOriginRes = await getHostOrigin();
-  if (!hostOriginRes.success) {
-    return hostOriginRes;
-  }
-
-  const hostOrigin = hostOriginRes.data;
-  const initStateRes = await ewalletCore.initState(hostOrigin);
+  const initStateRes = await ewalletCore.registerOrigin(hostOrigin);
   if (!initStateRes.success) {
     return initStateRes;
   }
@@ -91,19 +103,5 @@ async function checkURL(url?: string): Promise<Result<string, string>> {
     console.error("[keplr] check url fail, url: %s", _url);
 
     return { success: false, err: `check url fail, ${err.toString()}` };
-  }
-}
-
-async function getHostOrigin(): Promise<Result<string, string>> {
-  try {
-    const myUrl = window.location.toString();
-    const normalizedIframeOrigin = new URL(myUrl).origin;
-    return { success: true, data: normalizedIframeOrigin };
-  } catch (err: any) {
-    console.error("[keplr] get host origin fail");
-    return {
-      success: false,
-      err: `get host origin fail, ${err.toString()}`,
-    };
   }
 }

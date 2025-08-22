@@ -3,7 +3,7 @@ import { type Result } from "@keplr-ewallet/stdlib-js";
 const KEPLR_IFRAME = "keplr-ewallet-attached";
 
 export function setupIframeElement(
-  url: string,
+  url: URL,
 ): Result<HTMLIFrameElement, string> {
   const bodyEls = document.getElementsByTagName("body");
   if (bodyEls[0] === undefined) {
@@ -30,7 +30,7 @@ export function setupIframeElement(
 
   // iframe setup
   const iframe = document.createElement("iframe");
-  iframe.src = url;
+  iframe.src = url.toString();
 
   // iframe style
   iframe.id = KEPLR_IFRAME;

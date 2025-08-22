@@ -41,11 +41,15 @@ export async function getEthereumProvider(
       : [],
   }));
 
+  // ensure init address here to avoid missing address when page reload or reconnecting
+  // address change should be handled by event listener not by signer interface
+  await this.getAddress();
+
   this.provider = await initEWalletEIP1193Provider({
     id: uuidv4(),
     signer: {
       sign: this.makeSignature,
-      getAddress: this.getAddress,
+      getAddress: () => this.address, // address change should be handled by event listener
     },
     chains: addEthereumChains,
     skipChainValidation: true,
