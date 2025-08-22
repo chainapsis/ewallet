@@ -19,7 +19,9 @@ export class KeplrEWallet {
   eventEmitter: EventEmitter2<KeplrEWalletCoreEventMap>;
   readonly origin: string;
 
+  email: string | null;
   publicKey: string | null;
+
   isInitialized: boolean;
   initError: string | null;
 
@@ -35,9 +37,10 @@ export class KeplrEWallet {
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
     this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
+    this.email = null;
+    this.publicKey = null;
     this.isInitialized = false;
     this.initError = null;
-    this.publicKey = null;
     this.on = on.bind(this);
 
     this.lazyInit()
@@ -51,10 +54,12 @@ export class KeplrEWallet {
         console.log("[keplr] lazy init success");
 
         this.isInitialized = true;
+        this.email = initPayload.data.email;
         this.publicKey = initPayload.data.public_key;
         this.eventEmitter.emit("_init", {
           success: true,
           data: {
+            email: initPayload.data.email,
             publicKey: initPayload.data.public_key,
           },
         });

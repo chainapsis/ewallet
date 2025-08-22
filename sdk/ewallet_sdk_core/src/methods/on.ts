@@ -18,6 +18,7 @@ async function _on<N extends KeplrEWalletCoreEventName>(
         initHandler({
           success: true,
           data: {
+            email: this.email,
             publicKey: this.publicKey,
           },
         });

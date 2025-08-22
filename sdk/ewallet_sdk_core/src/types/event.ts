@@ -5,6 +5,7 @@ export type KeplrEWalletCoreEventMap = {
   _chainChanged: {};
   _init: Result<
     {
+      email: string | null;
       publicKey: string | null;
     },
     string

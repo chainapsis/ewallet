@@ -6,5 +6,6 @@ export interface KeplrEwalletInitArgs {
 export interface InitMsgHandlerArgs {}
 
 export interface InitResult {
+  email: string | null;
   public_key: string | null;
 }
