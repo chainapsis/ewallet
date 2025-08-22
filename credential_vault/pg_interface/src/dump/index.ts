@@ -6,7 +6,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 
 const execAsync = promisify(exec);
 
-export interface DumpOptions {
+export interface PgDumpConfig {
   host: string;
   port: number;
   user: string;
@@ -15,39 +15,43 @@ export interface DumpOptions {
 }
 
 export async function dump(
-  options: DumpOptions,
+  pgConfig: PgDumpConfig,
   dumpDir: string,
-  dumpFile: string,
-): Promise<Result<{ dumpPath: string }, string>> {
+): Promise<Result<{ dumpPath: string; dumpSize: number }, string>> {
   try {
     await fs.mkdir(dumpDir, { recursive: true });
 
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
-    const command = `pg_dump -h ${options.host} -p ${options.port} -U ${options.user} -d ${options.database} -Fc -f ${dumpPath}`;
+    const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
 
     await execAsync(command, {
       env: {
         ...process.env,
-        PGPASSWORD: options.password,
+        PGPASSWORD: pgConfig.password,
       },
     });
 
-    return { success: true, data: { dumpPath } };
+    const stats = await fs.stat(dumpPath);
+    const dumpSize = stats.size;
+
+    return { success: true, data: { dumpPath, dumpSize } };
   } catch (error) {
     return { success: false, err: String(error) };
   }
 }
 
 export async function restore(
-  options: DumpOptions,
-  inputPath: string,
+  pgConfig: PgDumpConfig,
+  dumpPath: string,
 ): Promise<Result<void, string>> {
-  const command = `pg_restore -h ${options.host} -p ${options.port} -U ${options.user} -d ${options.database} --clean --if-exists --verbose ${inputPath}`;
+  const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose ${dumpPath}`;
 
   const { stdout, stderr } = await execAsync(command, {
     env: {
       ...process.env,
-      PGPASSWORD: options.password,
+      PGPASSWORD: pgConfig.password,
     },
   });
 

@@ -1,9 +1,11 @@
 import { Pool } from "pg";
+import { v4 as uuidv4 } from "uuid";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export type PgDumpStatus = "IN_PROGRESS" | "COMPLETED" | "FAILED" | "DELETED";
 
 export type PgDumpMeta = {
+  dump_duration?: number;
   dump_size?: number;
   error?: string;
 };
@@ -21,14 +23,14 @@ export async function createPgDump(db: Pool): Promise<Result<PgDump, string>> {
   try {
     const query = `
 INSERT INTO pg_dumps (
-  status
+  dump_id, status
 ) VALUES (
-  $1
+  $1, $2
 )
 RETURNING *
 `;
 
-    const values = ["IN_PROGRESS"];
+    const values = [uuidv4(), "IN_PROGRESS"];
 
     const result = await db.query(query, values);
 
