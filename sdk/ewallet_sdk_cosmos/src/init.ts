@@ -8,10 +8,10 @@ import { CosmosEWallet } from "./cosmos_ewallet";
 
 export type CosmosEWalletArgs = KeplrEwalletInitArgs;
 
-export async function initCosmosEWallet(
+export function initCosmosEWallet(
   args: CosmosEWalletArgs,
-): Promise<Result<CosmosEWallet, string>> {
-  const eWalletRes = await initKeplrEwalletCore(args);
+): Result<CosmosEWallet, string> {
+  const eWalletRes = initKeplrEwalletCore(args);
   if (!eWalletRes.success) {
     console.error(
       "[keplr] cosmos, ewallet core init fail, err: %s",
