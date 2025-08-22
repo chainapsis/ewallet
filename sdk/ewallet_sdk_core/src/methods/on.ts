@@ -11,26 +11,24 @@ async function _on<N extends KeplrEWalletCoreEventName>(
   handler: KeplrEWalletCoreEventHandler<N>,
 ) {
   if (this.eventEmitter) {
+    // if already initialized or init failed, call handler immediately
     if (eventName === "_init") {
+      const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
       if (this.isInitialized) {
-        const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
         initHandler({
           success: true,
           data: {
             publicKey: this.publicKey,
           },
         });
+        return;
       } else if (this.initError) {
-        const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
         initHandler({
           success: false,
           err: this.initError,
         });
-      } else {
-        const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
-        this.eventEmitter.on("_init", initHandler);
+        return;
       }
-      return;
     }
 
     this.eventEmitter.on(eventName, handler);
