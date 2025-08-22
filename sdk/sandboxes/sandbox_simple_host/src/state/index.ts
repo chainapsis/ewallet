@@ -12,8 +12,8 @@ interface AppState {
 }
 
 interface AppActions {
-  initKeplrSdkEth: () => Promise<EthEWallet | null>;
-  initKeplrSdkCosmos: () => Promise<CosmosEWallet | null>;
+  initKeplrSdkEth: () => EthEWallet | null;
+  initKeplrSdkCosmos: () => CosmosEWallet | null;
 }
 
 export const useAppState = create(
@@ -23,7 +23,7 @@ export const useAppState = create(
       keplr_sdk_cosmos: null,
     },
     (set, get) => ({
-      initKeplrSdkEth: async () => {
+      initKeplrSdkEth: () => {
         const initRes = initEthEWallet({
           // TODO: replace with actual apiKey
           api_key:
@@ -40,12 +40,8 @@ export const useAppState = create(
           return null;
         }
       },
-      initKeplrSdkCosmos: async () => {
-        if (get().keplr_sdk_cosmos) {
-          return get().keplr_sdk_cosmos;
-        }
-
-        const initRes = await initCosmosEWallet({
+      initKeplrSdkCosmos: () => {
+        const initRes = initCosmosEWallet({
           // TODO: replace with actual apiKey
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
@@ -54,6 +50,7 @@ export const useAppState = create(
 
         if (initRes.success) {
           const cosmosSDK = initRes.data;
+
           set({ keplr_sdk_cosmos: cosmosSDK });
 
           cosmosSDK.on("accountsChanged", async (payload) => {

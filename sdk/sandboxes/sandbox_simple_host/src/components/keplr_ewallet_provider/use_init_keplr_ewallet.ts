@@ -8,20 +8,13 @@ export function useInitKeplrEWallet() {
   useEffect(() => {
     async function fn() {
       try {
-        const cosmosSDK = await appState.initKeplrSdkCosmos();
-
-        if (!cosmosSDK) {
-          console.error("cosmos ewallet not exists");
-
-          return;
-        }
-
-        const isEthReady = await appState.initKeplrSdkEth();
-        if (!isEthReady) {
-          console.error("eth ewallet not exists");
-        }
+        const cosmosSDK = appState.initKeplrSdkCosmos();
+        const isEthReady = appState.initKeplrSdkEth();
 
         if (cosmosSDK && isEthReady) {
+          const pk = await cosmosSDK.getPublicKey();
+          console.log(22, pk);
+
           setIsInitialized(true);
         }
       } catch (err: any) {

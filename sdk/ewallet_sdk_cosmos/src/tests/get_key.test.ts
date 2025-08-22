@@ -2,7 +2,7 @@ import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import type { ChainInfo } from "@keplr-wallet/types";
 
 import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
-import { getKey } from "@keplr-ewallet-sdk-cosmos/api/get_key";
+import { getKey } from "@keplr-ewallet-sdk-cosmos/methods/get_key";
 import {
   cosmosPublicKey,
   initiaPublicKey,
