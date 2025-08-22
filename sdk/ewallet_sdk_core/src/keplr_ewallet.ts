@@ -59,18 +59,6 @@ export class KeplrEWallet {
       .catch((err: any) => {
         console.error("[keplr] lazy init fail, err: %s", err.toString());
       });
-
-    // this.initializationPromise = initPromise
-    //   .then((res) => {
-    //     this.initialized = res;
-    //     return res;
-    //   })
-    //   .catch((err: any) => {
-    //     this.initialized = false;
-    //     this.initializationError =
-    //       err instanceof Error ? err : new Error(String(err));
-    //     throw this.initializationError;
-    //   });
   }
 
   lazyInit = lazyInit.bind(this);
