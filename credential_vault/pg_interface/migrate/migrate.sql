@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS public.key_shares (
 
 CREATE TABLE IF NOT EXISTS public.pg_dumps (
     dump_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    dump_status varchar(16) NOT NULL,
+    status varchar(16) NOT NULL,
     dump_path varchar(255) NULL,
     meta jsonb NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
