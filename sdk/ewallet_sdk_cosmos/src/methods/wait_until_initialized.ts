@@ -6,15 +6,12 @@ export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
 
   return new Promise((resolve, reject) => {
     try {
-      if (this.eWallet.isLazyInit) {
+      if (this.eWallet.isInitialized) {
         console.log("[cosmos] waitUntilInitialized: already initialized");
         resolve(void 0);
       } else {
         this.eWallet.on("_init", (initResult) => {
-          console.log(
-            "[cosmos] _init callback, initSuccess: %s",
-            initResult.success,
-          );
+          console.log("[cosmos] _init callback, initSuccess: %s", initResult);
 
           // TODO: if pubkey is not null, resolve with public key
           if (initResult.success) {

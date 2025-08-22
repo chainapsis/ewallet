@@ -1,30 +1,25 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { InitResult } from "./ewallet";
 
-export type KeplrEWalletCoreEventHandlerMap =
-  | {
-      eventName: "_accountsChanged";
-      handler: (args: { email: any; publicKey: string }) => void;
-    }
-  | {
-      eventName: "_chainChanged";
-      handler: (args: {}) => void;
-    }
-  | {
-      eventName: "_init";
-      handler: (args: Result<InitResult, string>) => void;
-    };
+export type KeplrEWalletCoreEventMap = {
+  _accountsChanged: { email: string; publicKey: string };
+  _chainChanged: {};
+  _init: Result<
+    {
+      publicKey: string | null;
+    },
+    string
+  >;
+};
 
-export type KeplrEWalletCoreEvent =
-  | {
-      name: "_accountsChanged";
-      payload: { email: any; publicKey: string };
-    }
-  | {
-      name: "_chainChanged";
-      payload: {};
-    }
-  | {
-      name: "_init";
-      payload: Result<InitResult, string>;
-    };
+export type KeplrEWalletCoreEventName = keyof KeplrEWalletCoreEventMap;
+
+export type KeplrEWalletCoreEventPayload =
+  KeplrEWalletCoreEventMap[KeplrEWalletCoreEventName];
+
+export type KeplrEWalletCoreEventHandler<K extends KeplrEWalletCoreEventName> =
+  (payload: KeplrEWalletCoreEventMap[K]) => void;
+
+export type KeplrEWalletCoreOn = <N extends KeplrEWalletCoreEventName>(
+  eventName: N,
+  handler: KeplrEWalletCoreEventHandler<N>,
+) => void;

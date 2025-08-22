@@ -1,24 +1,23 @@
-export class EventEmitter2 {
+export class EventEmitter2<EventMap extends Record<string, any>> {
   listeners: {
-    [key: string]: Function[];
-  };
+    [K in keyof EventMap]?: Array<(payload: EventMap[K]) => void>;
+  } = {};
 
-  constructor() {
-    this.listeners = {};
-  }
-
-  on(eventName: string, handler: Function) {
+  on<K extends keyof EventMap>(
+    eventName: K,
+    handler: (payload: EventMap[K]) => void,
+  ) {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
     this.listeners[eventName].push(handler);
   }
 
-  emit(eventName: string, payload: any) {
-    console.log("emit, eventName: %s", eventName, this.listeners);
-
-    if (this.listeners[eventName]) {
-      this.listeners[eventName].forEach((listener) => listener(payload));
+  emit<K extends keyof EventMap>(eventName: K, payload: EventMap[K]) {
+    console.log("emit, eventName: %s", String(eventName), this.listeners);
+    const handlers = this.listeners[eventName];
+    if (handlers && handlers.length > 0) {
+      handlers.forEach((listener) => listener(payload));
     }
   }
 }

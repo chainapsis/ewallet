@@ -2,7 +2,7 @@ import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
 export async function getPublicKey(this: CosmosEWallet): Promise<Uint8Array> {
   try {
-    console.log("getPublicKey()", this.eWallet.isLazyInit);
+    console.log("getPublicKey()", this.eWallet.isInitialized);
 
     await this.waitUntilInitialized();
 

@@ -4,8 +4,6 @@ import {
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
 
-import type { KeplrWalletCosmosEventNames } from "./types";
-import type { KeplrWalletCosmosEventHandlerMap } from "./types";
 import { enable } from "@keplr-ewallet-sdk-cosmos/methods/enable";
 import { getCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/methods/get_cosmos_chain_info";
 import { getAccounts } from "@keplr-ewallet-sdk-cosmos/methods/get_accounts";
@@ -24,29 +22,24 @@ import { showModal } from "./methods/show_modal";
 import { makeSignature } from "./methods/make_signature";
 import { getPublicKey } from "./methods/get_public_key";
 import { on } from "./methods/on";
+import type { KeplrWalletCosmosEventMap, KeplrWalletCosmosOn } from "./types";
 import { setUpEventHandlers } from "./methods/set_up_event_handlers";
 import { waitUntilInitialized } from "./methods/wait_until_initialized";
 
 export class CosmosEWallet {
   public eWallet: KeplrEWallet;
-  eventEmitter: EventEmitter2;
+  eventEmitter: EventEmitter2<KeplrWalletCosmosEventMap>;
 
   protected _cosmosChainInfo: ChainInfo[];
   protected _cacheTime: number;
 
-  on: <
-    N extends KeplrWalletCosmosEventNames,
-    M extends { eventName: N } & KeplrWalletCosmosEventHandlerMap,
-  >(
-    eventType: N,
-    handler: M["handler"],
-  ) => void;
+  on: KeplrWalletCosmosOn;
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
     this._cosmosChainInfo = [];
     this._cacheTime = 0;
-    this.eventEmitter = new EventEmitter2();
+    this.eventEmitter = new EventEmitter2<KeplrWalletCosmosEventMap>();
     this.on = on.bind(this);
     this.setUpEventHandlers();
   }

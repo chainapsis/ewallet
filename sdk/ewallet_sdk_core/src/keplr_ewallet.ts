@@ -10,23 +10,20 @@ import { on } from "./methods/on";
 import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
 import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
-import type { KeplrEWalletCoreEventHandlerMap } from "./types";
+import type { KeplrEWalletCoreEventMap, KeplrEWalletCoreOn } from "./types";
 
 export class KeplrEWallet {
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
-  eventEmitter: EventEmitter2;
+  eventEmitter: EventEmitter2<KeplrEWalletCoreEventMap>;
   readonly origin: string;
-  isLazyInit: boolean;
 
-  on: <
-    N extends KeplrEWalletCoreEventHandlerMap["eventName"],
-    M extends { eventName: N } & KeplrEWalletCoreEventHandlerMap,
-  >(
-    eventType: N,
-    handler: M["handler"],
-  ) => void;
+  publicKey: string | null;
+  isInitialized: boolean;
+  initError: string | null;
+
+  on: KeplrEWalletCoreOn;
 
   public constructor(
     apiKey: string,
@@ -37,27 +34,39 @@ export class KeplrEWallet {
     this.iframe = iframe;
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
-    this.eventEmitter = new EventEmitter2();
-    this.isLazyInit = false;
-
-    // TODO: @elden
+    this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
+    this.isInitialized = false;
+    this.initError = null;
+    this.publicKey = null;
     this.on = on.bind(this);
 
     this.lazyInit()
       .then((initPayload) => {
         if (!initPayload.success) {
           console.error("[keplr] lazy init fail");
+          this.initError = initPayload.err;
+          this.eventEmitter.emit("_init", {
+            success: false,
+            err: initPayload.err,
+          });
         } else {
           console.log("[keplr] lazy init success");
 
-          this.isLazyInit = true;
+          this.isInitialized = true;
+          this.publicKey = initPayload.data.public_key;
+          this.eventEmitter.emit("_init", {
+            success: true,
+            data: {
+              publicKey: initPayload.data.public_key,
+            },
+          });
         }
 
         // CHECK: there might be a timing gap between subscription and event emission
-        this.eventEmitter.emit("_init", initPayload);
       })
       .catch((err: any) => {
         console.error("[keplr] lazy init fail, err: %s", err.toString());
+        this.initError = err.toString();
       });
   }
 
@@ -71,8 +80,6 @@ export class KeplrEWallet {
   getPublicKey = getPublicKey.bind(this);
   getEmail = getEmail.bind(this);
   makeSignature = makeSignature.bind(this);
-  // on = on.bind(this);
-
   // waitUntilInitialized(): Promise<boolean> {
   //   return Promise.resolve(true);
   //   // return this.initializationPromise;

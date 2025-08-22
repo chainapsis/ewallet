@@ -1,15 +1,40 @@
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
-import type { KeplrEWalletCoreEventHandlerMap } from "@keplr-ewallet-sdk-core/types";
+import type {
+  KeplrEWalletCoreEventHandler,
+  KeplrEWalletCoreEventName,
+  KeplrEWalletCoreOn,
+} from "@keplr-ewallet-sdk-core/types";
 
-export async function on<
-  N extends KeplrEWalletCoreEventHandlerMap["eventName"],
-  M extends { eventName: N } & KeplrEWalletCoreEventHandlerMap,
->(this: KeplrEWallet, eventName: N, handler: M["handler"]) {
+async function _on<N extends KeplrEWalletCoreEventName>(
+  this: KeplrEWallet,
+  eventName: N,
+  handler: KeplrEWalletCoreEventHandler<N>,
+) {
   if (this.eventEmitter) {
-    this.eventEmitter.on(eventName, (payload: any) => {
-      console.log("core on", eventName, payload);
+    if (eventName === "_init") {
+      if (this.isInitialized) {
+        const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
+        initHandler({
+          success: true,
+          data: {
+            publicKey: this.publicKey,
+          },
+        });
+      } else if (this.initError) {
+        const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
+        initHandler({
+          success: false,
+          err: this.initError,
+        });
+      } else {
+        const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
+        this.eventEmitter.on("_init", initHandler);
+      }
+      return;
+    }
 
-      handler(payload);
-    });
+    this.eventEmitter.on(eventName, handler);
   }
 }
+
+export const on = _on as KeplrEWalletCoreOn;
