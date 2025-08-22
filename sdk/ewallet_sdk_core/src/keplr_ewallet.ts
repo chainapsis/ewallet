@@ -18,6 +18,7 @@ export class KeplrEWallet {
   sdkEndpoint: string;
   eventEmitter: EventEmitter2;
   readonly origin: string;
+  isLazyInit: boolean;
 
   // private initializationPromise: Promise<boolean>;
   // private initialized: boolean = false;
@@ -42,6 +43,7 @@ export class KeplrEWallet {
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
     this.eventEmitter = new EventEmitter2();
+    this.isLazyInit = false;
     // TODO: @elden
     this.on = on.bind(this);
 
@@ -49,6 +51,9 @@ export class KeplrEWallet {
       .then((isInitialized) => {
         if (!isInitialized) {
           console.error("[keplr] lazy init fail");
+        } else {
+          console.log("[keplr] lazy init success");
+          this.isLazyInit = true;
         }
       })
       .catch((err: any) => {

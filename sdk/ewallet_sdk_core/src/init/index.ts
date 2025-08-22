@@ -97,7 +97,6 @@ export function initKeplrEwalletCore(
   } catch (err) {
     throw new Error("[keplr] sdk init fail, unreachable");
   } finally {
-    console.log(123123);
   }
 }
 
