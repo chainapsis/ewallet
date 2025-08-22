@@ -1,26 +1,26 @@
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
-const KEPLR_IFRAME = "keplr-ewallet-attached";
+export const KEPLR_IFRAME_ID = "keplr-ewallet-attached";
 
-export function setupIframeElement(
+export function setUpIframeElement(
   url: URL,
 ): Result<HTMLIFrameElement, string> {
-  const bodyEls = document.getElementsByTagName("body");
-  if (bodyEls[0] === undefined) {
-    console.error("body element not found");
-    return {
-      success: false,
-      err: "body element not found",
-    };
-  }
-
-  const oldEl = document.getElementById(KEPLR_IFRAME);
+  const oldEl = document.getElementById(KEPLR_IFRAME_ID);
   if (oldEl !== null) {
     console.warn("[keplr] iframe already exists");
 
     return {
       success: true,
       data: oldEl as HTMLIFrameElement,
+    };
+  }
+
+  const bodyEls = document.getElementsByTagName("body");
+  if (bodyEls.length < 1 || bodyEls[0] === undefined) {
+    console.error("body element not found");
+    return {
+      success: false,
+      err: "body element not found",
     };
   }
 
@@ -33,7 +33,7 @@ export function setupIframeElement(
   iframe.src = url.toString();
 
   // iframe style
-  iframe.id = KEPLR_IFRAME;
+  iframe.id = KEPLR_IFRAME_ID;
   iframe.style.position = "fixed";
   iframe.style.top = "0";
   iframe.style.left = "0";

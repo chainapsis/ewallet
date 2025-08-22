@@ -1,19 +1,17 @@
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
-import { setupIframeElement } from "./iframe";
+import { setUpIframeElement } from "./iframe";
 import type { KeplrEwalletInitArgs } from "@keplr-ewallet-sdk-core/types";
-import { registerMsgListener } from "@keplr-ewallet-sdk-core/window_msg/listener";
 import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 
 const SDK_ENDPOINT = `https://attached.embed.keplr.app`;
-const KEPLR_EWALLET_ELEM_ID = "keplr-ewallet";
 
 export function initKeplrEwalletCore(
   args: KeplrEwalletInitArgs,
 ): Result<KeplrEWallet, string> {
   try {
-    console.debug("[keplr] init");
-    console.debug("[keplr] sdk endpoint: %s", args.sdk_endpoint);
+    console.log("[keplr] init");
+    console.log("[keplr] sdk endpoint: %s", args.sdk_endpoint);
 
     if (window === undefined) {
       console.error("[keplr] EWallet can only be initialized in the browser");
@@ -25,23 +23,10 @@ export function initKeplrEwalletCore(
     }
 
     if (window.__keplr_ewallet) {
-      // If keplr_ewallet is initialized, iframe should exist
-      const el = document.getElementById(KEPLR_EWALLET_ELEM_ID);
-      if (el !== null) {
-        return {
-          success: false,
-          err: "iframe not exists even after Keplr eWallet initialization",
-        };
-      }
-
       console.warn("[keplr] already initialized");
+
       return { success: true, data: window.__keplr_ewallet };
     }
-
-    // const checkURLRes = await checkURL(args.sdk_endpoint);
-    // if (!checkURLRes.success) {
-    //   return checkURLRes;
-    // }
 
     const hostOrigin = new URL(window.location.toString()).origin;
     if (hostOrigin.length === 0) {
@@ -65,12 +50,10 @@ export function initKeplrEwalletCore(
       };
     }
 
-    // const initPromise = registerMsgListener();
-
     console.log("[keplr] resolved sdk endpoint: %s", sdkEndpoint);
     console.log("[keplr] host origin: %s", hostOrigin);
 
-    const iframeRes = setupIframeElement(sdkEndpointURL);
+    const iframeRes = setUpIframeElement(sdkEndpointURL);
     if (!iframeRes.success) {
       return iframeRes;
     }
@@ -99,23 +82,3 @@ export function initKeplrEwalletCore(
   } finally {
   }
 }
-
-// async function checkURL(url?: string): Promise<Result<string, string>> {
-//   const _url = url ?? SDK_ENDPOINT;
-
-//   try {
-//     const response = await fetch(_url, { mode: "no-cors" });
-//     if (!response.ok) {
-//       return { success: true, data: _url };
-//     } else {
-//       return {
-//         success: false,
-//         err: `SDK endpoint, resp contains err, url: ${_url}`,
-//       };
-//     }
-//   } catch (err: any) {
-//     console.error("[keplr] check url fail, url: %s", _url);
-
-//     return { success: false, err: `check url fail, ${err.toString()}` };
-//   }
-// }
