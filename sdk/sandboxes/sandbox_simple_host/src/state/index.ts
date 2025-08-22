@@ -59,9 +59,9 @@ export const useAppState = create(
           cosmosSDK.on("accountsChanged", async (payload) => {
             console.log("ev - accountsChanged", payload);
 
-            set({
-              userInfo: payload,
-            });
+            // set({
+            //   userInfo: payload,
+            // });
           });
 
           return initRes.data;
