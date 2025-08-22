@@ -36,9 +36,22 @@ export async function initKeplrEwalletCore(
     return { success: true, data: window.__keplr_ewallet };
   }
 
-  const checkURLRes = await checkURL(args.sdk_endpoint);
-  if (!checkURLRes.success) {
-    return checkURLRes;
+  // not sure sdk endpoint is valid just by fetching it
+  // const checkURLRes = await checkURL(args.sdk_endpoint);
+  // if (!checkURLRes.success) {
+  //   return checkURLRes;
+  // }
+
+  // just check if sdk endpoint is valid url format
+  const sdkEndpoint = args.sdk_endpoint ?? SDK_ENDPOINT;
+
+  try {
+    new URL(sdkEndpoint);
+  } catch (err) {
+    return {
+      success: false,
+      err: "SDK endpoint is not a valid url",
+    };
   }
 
   const registering = registerMsgListener();
@@ -51,7 +64,6 @@ export async function initKeplrEwalletCore(
     };
   }
 
-  const sdkEndpoint = checkURLRes.data;
   const sdkEndpointURL = new URL(sdkEndpoint);
   sdkEndpointURL.searchParams.append("host_origin", hostOrigin);
 
@@ -78,30 +90,25 @@ export async function initKeplrEwalletCore(
 
   window.__keplr_ewallet = ewalletCore;
 
-  const initStateRes = await ewalletCore.registerOrigin(hostOrigin);
-  if (!initStateRes.success) {
-    return initStateRes;
-  }
-
   return { success: true, data: ewalletCore };
 }
 
-async function checkURL(url?: string): Promise<Result<string, string>> {
-  const _url = url ?? SDK_ENDPOINT;
+// async function checkURL(url?: string): Promise<Result<string, string>> {
+//   const _url = url ?? SDK_ENDPOINT;
 
-  try {
-    const response = await fetch(_url, { mode: "no-cors" });
-    if (!response.ok) {
-      return { success: true, data: _url };
-    } else {
-      return {
-        success: false,
-        err: `SDK endpoint, resp contains err, url: ${_url}`,
-      };
-    }
-  } catch (err: any) {
-    console.error("[keplr] check url fail, url: %s", _url);
+//   try {
+//     const response = await fetch(_url, { mode: "no-cors" });
+//     if (!response.ok) {
+//       return { success: true, data: _url };
+//     } else {
+//       return {
+//         success: false,
+//         err: `SDK endpoint, resp contains err, url: ${_url}`,
+//       };
+//     }
+//   } catch (err: any) {
+//     console.error("[keplr] check url fail, url: %s", _url);
 
-    return { success: false, err: `check url fail, ${err.toString()}` };
-  }
-}
+//     return { success: false, err: `check url fail, ${err.toString()}` };
+//   }
+// }
