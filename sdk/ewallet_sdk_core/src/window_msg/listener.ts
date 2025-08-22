@@ -1,46 +1,24 @@
-import type { EWalletMsg } from "@keplr-ewallet-sdk-core/types";
+import type { EWalletMsg, EWalletMsgInit } from "@keplr-ewallet-sdk-core/types";
 
 // Only used for "init" message which is triggered by the child.
 // After initialization, message communication is only triggered
 // by parent window and child replies on the dedicated channel
-export function registerMsgListener(): Promise<boolean> {
+export function registerMsgListener(): Promise<EWalletMsgInit["payload"]> {
   if (window.__keplr_ewallet_ev) {
     console.warn("[keplr] isn't it already initailized?");
   }
 
-  // Callback ref to remember
-  const callback: ((b: boolean) => void)[] = [];
-  const prom = new Promise<boolean>((resolve) => {
-    callback.push(resolve);
-  });
-
-  async function msgHandler(event: MessageEvent) {
-    const msg = event.data as EWalletMsg;
-
-    switch (msg.msg_type) {
-      case "init": {
-        if (callback.length > 1) {
-          throw new Error(
-            "[keplr] ewallet msg handler init callback should exist",
-          );
-        }
-
-        const cb = callback[0];
-        if (!msg.payload.success) {
-          console.error(`[keplr] attached init fail, err: ${msg.payload.err}`);
-
-          cb(false);
-        } else {
-          cb(true);
-        }
+  return new Promise<EWalletMsgInit["payload"]>((resolve) => {
+    const handler = (event: MessageEvent) => {
+      const msg = event.data as EWalletMsg;
+      if (msg.msg_type === "init") {
+        window.removeEventListener("message", handler);
+        // Resolve regardless, caller can branch on payload.success
+        resolve(msg.payload);
       }
-    }
-  }
-
-  window.addEventListener("message", msgHandler);
-  window.__keplr_ewallet_ev = msgHandler;
-
-  console.log("[keplr] msg listener registered");
-
-  return prom;
+    };
+    window.addEventListener("message", handler);
+    window.__keplr_ewallet_ev = handler;
+    console.log("[keplr] msg listener registered");
+  });
 }

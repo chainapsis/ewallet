@@ -10,7 +10,10 @@ import { on } from "./methods/on";
 import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
 import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
-import type { KeplrEWalletCoreEventHandlerMap } from "./types";
+import type {
+  KeplrEWalletCoreEventHandlerMap,
+  LazyInitSubscriberFn,
+} from "./types";
 import { onInit } from "./methods/on_init";
 
 export class KeplrEWallet {
@@ -20,7 +23,7 @@ export class KeplrEWallet {
   eventEmitter: EventEmitter2;
   readonly origin: string;
   isLazyInit: boolean;
-  initSubscribers: ((initSuccess: boolean) => void)[];
+  initSubscribers: LazyInitSubscriberFn[];
 
   on: <
     N extends KeplrEWalletCoreEventHandlerMap["eventName"],
@@ -47,8 +50,8 @@ export class KeplrEWallet {
     this.on = on.bind(this);
 
     this.lazyInit()
-      .then((initSuccess) => {
-        if (!initSuccess) {
+      .then((initPayload) => {
+        if (!initPayload.success) {
           console.error("[keplr] lazy init fail");
         } else {
           console.log("[keplr] lazy init success");
@@ -56,14 +59,10 @@ export class KeplrEWallet {
           this.isLazyInit = true;
         }
 
-        for (let idx = 0; idx < this.initSubscribers.length; idx += 1) {
-          this.initSubscribers[idx](initSuccess);
-        }
-
         while (this.initSubscribers.length > 0) {
           const fn = this.initSubscribers.shift();
           if (fn) {
-            fn(initSuccess);
+            fn(initPayload);
           }
         }
       })

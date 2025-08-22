@@ -1,8 +1,11 @@
 import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/init/iframe";
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import { registerMsgListener } from "@keplr-ewallet-sdk-core/window_msg/listener";
+import type { EWalletMsgInit } from "@keplr-ewallet-sdk-core/types";
 
-export async function lazyInit(this: KeplrEWallet) {
+export async function lazyInit(
+  this: KeplrEWallet,
+): Promise<EWalletMsgInit["payload"]> {
   // If keplr_ewallet is initialized, iframe should exist
   // const el = document.getElementById(KEPLR_IFRAME_ID);
   // if (el !== null) {
