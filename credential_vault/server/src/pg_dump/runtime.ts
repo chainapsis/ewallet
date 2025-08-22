@@ -14,8 +14,11 @@ export async function startPgDumpRuntime(
   pgConfig: PgDumpConfig,
   pgDumpRuntimeOptions: PgDumpRuntimeOptions,
 ) {
+  const sleepTime = pgDumpRuntimeOptions.intervalDays * 86400 * 1000;
+  console.log("Starting pg dump runtime with sleep time:", sleepTime);
+
   while (true) {
-    await sleep(pgDumpRuntimeOptions.intervalDays * 86400 * 1000);
+    await sleep(sleepTime);
 
     const processPgDumpRes = await processPgDump(pool, pgConfig);
     if (processPgDumpRes.success === false) {
