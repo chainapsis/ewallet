@@ -1,5 +1,5 @@
 import type { KeplrSignOptions } from "@keplr-wallet/types";
-import { makeSignBytes, type DirectSignResponse } from "@cosmjs/proto-signing";
+import { type DirectSignResponse } from "@cosmjs/proto-signing";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
