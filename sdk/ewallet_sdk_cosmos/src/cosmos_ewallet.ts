@@ -33,7 +33,6 @@ export class CosmosEWallet {
 
   protected _cosmosChainInfo: ChainInfo[];
   protected _cacheTime: number;
-  protected lazyInitSubscribers: any[];
 
   on: <
     N extends KeplrWalletCosmosEventNames,
@@ -49,7 +48,6 @@ export class CosmosEWallet {
     this._cacheTime = 0;
     this.eventEmitter = new EventEmitter2();
     this.on = on.bind(this);
-    this.lazyInitSubscribers = [];
     this.setUpEventHandlers();
   }
 

@@ -4,6 +4,7 @@ export async function onInit(
   this: KeplrEWallet,
   subscriber: (initSuccess: boolean) => void,
 ) {
-  console.log("[keplr] onInit registered");
+  console.log("[keplr] init subscriber registered");
+
   this.initSubscribers.push(subscriber);
 }
