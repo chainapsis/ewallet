@@ -1,7 +1,7 @@
 import { createPgDatabase } from "@keplr-ewallet-cv-server/database";
 import { makeApp } from "@keplr-ewallet-cv-server/app";
 import { loadEnvs } from "@keplr-ewallet-cv-server/envs";
-import { registerPgDumpScheduler } from "@keplr-ewallet-cv-server/pg_dump";
+import { registerPgDumpScheduler } from "@keplr-ewallet-cv-server/scheduler";
 
 async function main() {
   const env = loadEnvs();
