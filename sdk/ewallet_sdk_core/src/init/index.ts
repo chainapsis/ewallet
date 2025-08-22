@@ -10,6 +10,14 @@ export function initKeplrEwalletCore(
   args: KeplrEwalletInitArgs,
 ): Result<KeplrEWallet, string> {
   try {
+    if (window.__keplr_ewallet_locked === true) {
+      console.warn(
+        "keplr ewallet init is locked. Is init being exeucted concurrently?",
+      );
+    } else {
+      window.__keplr_ewallet_locked = true;
+    }
+
     console.log("[keplr] init");
     console.log("[keplr] sdk endpoint: %s", args.sdk_endpoint);
 
@@ -60,17 +68,10 @@ export function initKeplrEwalletCore(
 
     const iframe = iframeRes.data;
 
-    const ewalletCore = new KeplrEWallet(
-      args.api_key,
-      iframe,
-      sdkEndpoint,
-      // initPromise,
-    );
+    const ewalletCore = new KeplrEWallet(args.api_key, iframe, sdkEndpoint);
 
     if (window.__keplr_ewallet) {
-      console.warn(
-        "[keplr] ewallet initialized while being initialized in this thread",
-      );
+      console.warn("[keplr] ewallet has been initialized by another process");
 
       return { success: true, data: window.__keplr_ewallet };
     } else {
@@ -80,5 +81,8 @@ export function initKeplrEwalletCore(
   } catch (err) {
     throw new Error("[keplr] sdk init fail, unreachable");
   } finally {
+    if (window.__keplr_ewallet_locked === true) {
+      window.__keplr_ewallet_locked = false;
+    }
   }
 }
