@@ -114,6 +114,8 @@ function keplrEWalletConnector(
         chainId?: number | undefined;
         isReconnecting?: boolean | undefined;
       }) => {
+        console.log("connect(), ts: %s", performance.now());
+
         console.log("[sandbox-evm] try to connect keplr e-wallet!");
 
         if (ethEWallet === null) {
@@ -192,6 +194,8 @@ function keplrEWalletConnector(
         }
       },
       getChainId: async () => {
+        console.log("getchainid(), ts: %s", performance.now());
+
         console.log("[sandbox-evm] handle `getChainId`");
 
         const provider = await wallet.getProvider();
@@ -206,6 +210,8 @@ function keplrEWalletConnector(
         }
       },
       getProvider: async () => {
+        console.log("getprovider(), ts: %s", performance.now());
+
         console.log("[sandbox-evm] handle `getProvider`");
         if (cachedProvider) {
           return cachedProvider;
