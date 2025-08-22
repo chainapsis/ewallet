@@ -47,6 +47,22 @@ CREATE TABLE IF NOT EXISTS public.key_shares (
     CONSTRAINT key_shares_pkey PRIMARY KEY (share_id)
 );
 
+-- public.tasks definition
+
+-- Drop table
+
+-- DROP TABLE public.tasks;
+
+CREATE TABLE IF NOT EXISTS public.tasks (
+    task_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    task_type varchar(255) NOT NULL,
+    status varchar(16) NOT NULL,
+    meta jsonb NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+    CONSTRAINT tasks_pkey PRIMARY KEY (task_id)
+);
+
 -- public.pg_dump_logs definition
 
 -- Drop table
