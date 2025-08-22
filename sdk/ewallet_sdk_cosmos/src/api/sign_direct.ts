@@ -42,9 +42,8 @@ export async function signDirect(
           currencies: chainInfo?.currencies,
           bech32_config: chainInfo?.bech32Config,
         },
+        signDoc,
         signer,
-        msgs: extractTxBodyFromSignDoc(signDoc)?.messages ?? [],
-        signDocString: JSON.stringify(signDocJson, null, 2),
         origin,
       },
     };

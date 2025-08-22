@@ -1,6 +1,7 @@
 import type { RpcTransactionRequest, SignableMessage } from "viem";
-import type { StdSignDoc } from "@cosmjs/amino";
+import type { StdSignDoc, StdSignature } from "@cosmjs/amino";
 import type { Bech32Config, ChainInfo, Msg } from "@keplr-wallet/types";
+import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
 type Any = {
   typeUrl: string;
@@ -71,8 +72,7 @@ type CosmosTxSignDirectPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
-  signDocString: string;
-  msgs: AnyWithUnpacked[];
+  signDoc: SignDoc;
 };
 type CosmosTxSignAminoPayload = {
   origin: string;
@@ -160,4 +160,6 @@ export type EthereumTxSignResult = {
 };
 
 // TODO: define the response type for cosmos signature
-export type MakeCosmosSigResult = {};
+export type MakeCosmosSigResult = {
+  signature: StdSignature;
+};
