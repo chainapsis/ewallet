@@ -149,6 +149,8 @@ export class EWalletEIP1193Provider
     switch (args.method) {
       case "web3_clientVersion":
         return `${this.name}/${this.version}`;
+      case "eth_chainId":
+        return this.activeChain.chainId;
       default:
         await this._validateActiveChain();
 
