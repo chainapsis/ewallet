@@ -10,11 +10,7 @@ import { on } from "./methods/on";
 import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
 import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
-import type {
-  KeplrEWalletCoreEventHandlerMap,
-  LazyInitSubscriberFn,
-} from "./types";
-import { onInit } from "./methods/on_init";
+import type { KeplrEWalletCoreEventHandlerMap } from "./types";
 
 export class KeplrEWallet {
   apiKey: string;
@@ -23,7 +19,6 @@ export class KeplrEWallet {
   eventEmitter: EventEmitter2;
   readonly origin: string;
   isLazyInit: boolean;
-  initSubscribers: LazyInitSubscriberFn[];
 
   on: <
     N extends KeplrEWalletCoreEventHandlerMap["eventName"],
@@ -44,7 +39,6 @@ export class KeplrEWallet {
     this.origin = window.location.origin;
     this.eventEmitter = new EventEmitter2();
     this.isLazyInit = false;
-    this.initSubscribers = [];
 
     // TODO: @elden
     this.on = on.bind(this);
@@ -59,12 +53,8 @@ export class KeplrEWallet {
           this.isLazyInit = true;
         }
 
-        while (this.initSubscribers.length > 0) {
-          const fn = this.initSubscribers.shift();
-          if (fn) {
-            fn(initPayload);
-          }
-        }
+        // CHECK: there might be a timing gap between subscription and event emission
+        this.eventEmitter.emit("_init", initPayload);
       })
       .catch((err: any) => {
         console.error("[keplr] lazy init fail, err: %s", err.toString());
@@ -81,7 +71,6 @@ export class KeplrEWallet {
   getPublicKey = getPublicKey.bind(this);
   getEmail = getEmail.bind(this);
   makeSignature = makeSignature.bind(this);
-  onInit = onInit.bind(this);
   // on = on.bind(this);
 
   // waitUntilInitialized(): Promise<boolean> {
