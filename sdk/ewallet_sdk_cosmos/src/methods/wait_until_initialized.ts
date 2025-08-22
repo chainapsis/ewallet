@@ -4,6 +4,8 @@ export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       this.eWallet.onInit((initSuccess) => {
+        console.log("onInit callback, initSuccess: %s", initSuccess);
+
         if (initSuccess) {
           resolve(void 0);
         } else {
