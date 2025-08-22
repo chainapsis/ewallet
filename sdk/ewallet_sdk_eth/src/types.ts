@@ -58,7 +58,7 @@ export type EthSignFunction = <P extends EthSignParams>(
  * Signer interface for Ethereum
  */
 export interface EthSigner {
-  getAddress: () => Promise<Address>;
+  getAddress: () => Address | null;
   sign: EthSignFunction;
 }
 
