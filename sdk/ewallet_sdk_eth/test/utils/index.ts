@@ -74,7 +74,7 @@ export const createChainParam = (
 // Create a dummy signer for testing
 export const createDummySigner = (): EthSigner => {
   return {
-    getAddress: () => Promise.resolve(DUMMY_ADDRESS),
+    getAddress: () => DUMMY_ADDRESS,
     sign: async function <P extends EthSignParams>(
       parameters: P,
     ): Promise<EthSignResult<P>> {
@@ -119,7 +119,7 @@ export const createEthSigner = (
 ): EthSigner & { signHash: ({ hash }: { hash: Hex }) => Promise<Hex> } => {
   const account = privateKeyToAccount(privateKey);
   return {
-    getAddress: () => Promise.resolve(account.address),
+    getAddress: () => account.address,
     sign: async function <P extends EthSignParams>(
       parameters: P,
     ): Promise<EthSignResult<P>> {
