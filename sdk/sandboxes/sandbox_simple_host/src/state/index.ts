@@ -9,20 +9,11 @@ import { combine } from "zustand/middleware";
 interface AppState {
   keplr_sdk_eth: EthEWallet | null;
   keplr_sdk_cosmos: CosmosEWallet | null;
-  userInfo: {
-    email: string;
-    publicKey: string;
-  } | null;
-  ethAddress: string | null;
-  cosmosAddress: string | null;
 }
 
 interface AppActions {
   initKeplrSdkEth: () => Promise<EthEWallet | null>;
   initKeplrSdkCosmos: () => Promise<CosmosEWallet | null>;
-  setUserInfo: (userInfo: { email: string; publicKey: string }) => void;
-  setEthAddress: (ethAddress: string) => void;
-  setCosmosAddress: (cosmosAddress: string) => void;
 }
 
 export const useAppState = create(
@@ -30,9 +21,6 @@ export const useAppState = create(
     {
       keplr_sdk_eth: null,
       keplr_sdk_cosmos: null,
-      ethAddress: null,
-      cosmosAddress: null,
-      userInfo: null,
     },
     (set, get) => ({
       initKeplrSdkEth: async () => {
@@ -82,15 +70,6 @@ export const useAppState = create(
 
           return null;
         }
-      },
-      setUserInfo: (userInfo: { email: string; publicKey: string }) => {
-        set({ userInfo });
-      },
-      setEthAddress: (ethAddress: string) => {
-        set({ ethAddress });
-      },
-      setCosmosAddress: (cosmosAddress: string) => {
-        set({ cosmosAddress });
       },
     }),
   ),
