@@ -8,9 +8,9 @@ import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 const SDK_ENDPOINT = `https://attached.embed.keplr.app`;
 const KEPLR_EWALLET_ELEM_ID = "keplr-ewallet";
 
-export async function initKeplrEwalletCore(
+export function initKeplrEwalletCore(
   args: KeplrEwalletInitArgs,
-): Promise<Result<KeplrEWallet, string>> {
+): Result<KeplrEWallet, string> {
   console.debug("[keplr] init");
   console.debug("[keplr] sdk endpoint: %s", args.sdk_endpoint);
 
@@ -54,7 +54,7 @@ export async function initKeplrEwalletCore(
     };
   }
 
-  const registering = registerMsgListener();
+  const initPromise = registerMsgListener();
 
   const hostOrigin = new URL(window.location.toString()).origin;
   if (hostOrigin.length === 0) {
@@ -77,16 +77,13 @@ export async function initKeplrEwalletCore(
 
   const iframe = iframeRes.data;
 
-  // Wait till the "init" message is sent from the being-loaded iframe document.
-  const listenerRes = await registering;
-  if (!listenerRes) {
-    return {
-      success: false,
-      err: "Attached initialize fail",
-    };
-  }
-
-  const ewalletCore = new KeplrEWallet(args.api_key, iframe, sdkEndpoint);
+  // Do not await initialization here; expose it to the consumer for lazy init
+  const ewalletCore = new KeplrEWallet(
+    args.api_key,
+    iframe,
+    sdkEndpoint,
+    initPromise,
+  );
 
   window.__keplr_ewallet = ewalletCore;
 
