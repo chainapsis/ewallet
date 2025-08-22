@@ -44,29 +44,29 @@ export class KeplrEWallet {
       .then((initPayload) => {
         if (!initPayload.success) {
           console.error("[keplr] lazy init fail");
-          this.initError = initPayload.err;
-          this.eventEmitter.emit("_init", {
-            success: false,
-            err: initPayload.err,
-          });
-        } else {
-          console.log("[keplr] lazy init success");
-
-          this.isInitialized = true;
-          this.publicKey = initPayload.data.public_key;
-          this.eventEmitter.emit("_init", {
-            success: true,
-            data: {
-              publicKey: initPayload.data.public_key,
-            },
-          });
+          throw new Error(initPayload.err);
         }
 
         // CHECK: there might be a timing gap between subscription and event emission
+        console.log("[keplr] lazy init success");
+
+        this.isInitialized = true;
+        this.publicKey = initPayload.data.public_key;
+        this.eventEmitter.emit("_init", {
+          success: true,
+          data: {
+            publicKey: initPayload.data.public_key,
+          },
+        });
       })
       .catch((err: any) => {
         console.error("[keplr] lazy init fail, err: %s", err.toString());
+        this.isInitialized = false;
         this.initError = err.toString();
+        this.eventEmitter.emit("_init", {
+          success: false,
+          err: err.toString(),
+        });
       });
   }
 
