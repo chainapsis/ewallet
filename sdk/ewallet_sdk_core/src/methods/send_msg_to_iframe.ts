@@ -9,7 +9,7 @@ export async function sendMsgToIframe(
     if (this.initError) {
       throw new Error(this.initError);
     }
-    await this.initPromise;
+    await this.waitUntilInitialized;
   }
 
   const contentWindow = this.iframe.contentWindow;

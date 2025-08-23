@@ -13,8 +13,8 @@ export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
           reject(new Error(this.eWallet.initError));
         }
 
-        if (this.eWallet.initPromise) {
-          this.eWallet.initPromise
+        if (this.eWallet.waitUntilInitialized) {
+          this.eWallet.waitUntilInitialized
             .then(() => {
               resolve(void 0);
             })

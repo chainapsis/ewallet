@@ -19,12 +19,12 @@ export class KeplrEWallet {
   eventEmitter: EventEmitter2<KeplrEWalletCoreEventMap>;
   readonly origin: string;
 
-  email: string | null;
-  publicKey: string | null;
+  protected _email: string | null;
+  protected _publicKey: string | null;
 
-  isInitialized: boolean;
-  initError: string | null;
-  initPromise: Promise<void>;
+  protected _isInitialized: boolean;
+  protected _initError: string | null;
+  protected _initPromise: Promise<void>;
 
   public constructor(
     apiKey: string,
@@ -36,11 +36,11 @@ export class KeplrEWallet {
     this.sdkEndpoint = sdkEndpoint;
     this.origin = window.location.origin;
     this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
-    this.email = null;
-    this.publicKey = null;
-    this.isInitialized = false;
-    this.initError = null;
-    this.initPromise = this.lazyInit()
+    this._email = null;
+    this._publicKey = null;
+    this._isInitialized = false;
+    this._initError = null;
+    this._initPromise = this.lazyInit()
       .then((initPayload) => {
         if (!initPayload.success) {
           console.error("[keplr] lazy init fail");
@@ -71,6 +71,42 @@ export class KeplrEWallet {
         });
         throw err;
       });
+  }
+
+  get email(): string | null {
+    return this._email;
+  }
+
+  get publicKey(): string | null {
+    return this._publicKey;
+  }
+
+  protected set email(value: string | null) {
+    this._email = value;
+  }
+
+  protected set publicKey(value: string | null) {
+    this._publicKey = value;
+  }
+
+  get isInitialized(): boolean {
+    return this._isInitialized;
+  }
+
+  get initError(): string | null {
+    return this._initError;
+  }
+
+  get waitUntilInitialized(): Promise<void> {
+    return this._initPromise;
+  }
+
+  protected set isInitialized(value: boolean) {
+    this._isInitialized = value;
+  }
+
+  protected set initError(value: string | null) {
+    this._initError = value;
   }
 
   lazyInit = lazyInit.bind(this);
