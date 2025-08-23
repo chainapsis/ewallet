@@ -295,7 +295,7 @@ export class EWalletEIP1193Provider
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
 
         try {
-          const { address } = await this._getAuthenticatedSigner(args.method);
+          const { address } = this._getAuthenticatedSigner(args.method);
           return [address];
         } catch (error) {
           // ignore error as it's expected for `eth_accounts` and `eth_requestAccounts`
@@ -324,9 +324,7 @@ export class EWalletEIP1193Provider
 
         const signableTx = toSignableTransaction(tx);
 
-        const { signer, address } = await this._getAuthenticatedSigner(
-          args.method,
-        );
+        const { signer, address } = this._getAuthenticatedSigner(args.method);
 
         const { signedTransaction } = await signer.sign({
           type: "sign_transaction",
@@ -344,9 +342,7 @@ export class EWalletEIP1193Provider
         const [signWith, rawTypedData] =
           args.params as RpcRequestArgs<"eth_signTypedData_v4">["params"];
 
-        const { signer, address } = await this._getAuthenticatedSigner(
-          args.method,
-        );
+        const { signer, address } = this._getAuthenticatedSigner(args.method);
 
         if (!isAddressEqual(signWith, address)) {
           throw standardError.rpc.invalidInput({
@@ -379,9 +375,7 @@ export class EWalletEIP1193Provider
         const [message, signWith] =
           args.params as RpcRequestArgs<"personal_sign">["params"];
 
-        const { signer, address } = await this._getAuthenticatedSigner(
-          args.method,
-        );
+        const { signer, address } = this._getAuthenticatedSigner(args.method);
 
         if (!isAddressEqual(signWith, address)) {
           throw standardError.rpc.invalidInput({
@@ -437,12 +431,10 @@ export class EWalletEIP1193Provider
     }
   }
 
-  private async _getAuthenticatedSigner(
-    calledMethod: WalletRpcMethod,
-  ): Promise<{
+  private _getAuthenticatedSigner(calledMethod: WalletRpcMethod): {
     signer: EthSigner;
     address: Address;
-  }> {
+  } {
     const signer = this.signer;
 
     if (!signer) {
@@ -452,19 +444,14 @@ export class EWalletEIP1193Provider
       });
     }
 
-    try {
-      const address = await signer.getAddress();
-      if (!address) {
-        throw new Error("Signer address is not available");
-      }
-      return { signer, address };
-    } catch (error) {
-      // If signer.getAddress() fails, it means the signer is not authenticated
+    const address = signer.getAddress();
+    if (!address) {
       throw standardError.provider.unsupportedMethod({
         message: "No authenticated signer for wallet RPC methods",
         data: calledMethod,
       });
     }
+    return { signer, address };
   }
 
   /**

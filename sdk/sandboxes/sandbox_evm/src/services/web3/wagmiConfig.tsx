@@ -122,7 +122,13 @@ function keplrEWalletConnector(
       }) => {
         console.log("[sandbox-evm] try to connect keplr e-wallet!");
 
-        const ethEWallet = await initEthEWalletOnce();
+        if (!ethEWallet) {
+          await initEthEWalletOnce();
+
+          // DO NOT fallthrough here to manually retry connect
+          // as popup on safari will be blocked by async initialization
+          throw new Error("keplr e-wallet just initialized");
+        }
 
         // cached accounts retrieved from provider
         let accounts = await wallet.getAccounts();

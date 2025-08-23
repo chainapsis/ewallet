@@ -12,9 +12,7 @@ export function createMockSigner({
 }: { noAccount?: boolean } = {}): EthSigner {
   if (noAccount) {
     return {
-      getAddress: () => {
-        throw new Error(NO_ACCOUNT_ERROR);
-      },
+      getAddress: () => null,
       sign: async () => {
         throw new Error(NO_ACCOUNT_ERROR);
       },

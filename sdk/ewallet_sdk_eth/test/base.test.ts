@@ -439,7 +439,6 @@ describe("EWallet Provider - Base", () => {
           createProviderOptions([createChainParam(mainnet)], mockSigner),
         );
 
-        // CHECK: try-catch in provider.request is required?
         await expect(
           walletProvider.request({
             method: "personal_sign",
