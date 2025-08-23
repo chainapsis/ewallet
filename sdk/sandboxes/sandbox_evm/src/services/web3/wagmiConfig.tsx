@@ -54,37 +54,58 @@ export interface WalletConnectOptions {
   projectId: string;
 }
 
+const createEthEWallet = async (): Promise<EthEWallet> => {
+  console.log("keplr-ewallet: setup");
+
+  // CHECK: enable to override chain info when init ethereum wallet
+  const initRes = initEthEWallet({
+    api_key: "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
+    sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
+    use_testnet: true,
+  });
+  if (!initRes.success) {
+    throw new Error(`init fail: ${initRes.err}`);
+  }
+  console.log("keplr-ewallet: eth sdk init success");
+  const instance = initRes.data;
+
+  // ensure init to cache address and provider at first time
+  await instance.waitUntilInitialized();
+
+  return instance;
+};
+
 function keplrEWalletConnector(
   walletDetails: WalletDetailsParams,
 ): CreateConnectorFn {
-  // let initPromise: Promise<EthEWallet> | null = null;
+  let initPromise: Promise<EthEWallet> | null = null;
 
   let ethEWallet: EthEWallet | null = null;
   let cachedProvider: EIP1193Provider | null = null;
 
-  // function ensureInit() {
-  //   return;
-  //   // if (!initPromise) {
-  //   //   initPromise = (async () => {
-  //   //     console.log("keplr-ewallet: setup");
-  //   //
-  //   //     // TODO: enable to override chain info when init ethereum wallet
-  //   //     const initRes = await initEthEWallet({
-  //   //       api_key:
-  //   //         "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-  //   //       sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
-  //   //       use_testnet: true,
-  //   //     });
-  //   //     if (!initRes.success) {
-  //   //       throw new Error(`init fail: ${initRes.err}`);
-  //   //     }
-  //   //     console.log("keplr-ewallet: eth sdk init success");
-  //   //     ethEWallet = initRes.data;
-  //   //     return initRes.data;
-  //   //   })();
-  //   // }
-  //   // return initPromise;
-  // }
+  const initEthEWalletOnce = (): Promise<EthEWallet> => {
+    if (ethEWallet) {
+      return Promise.resolve(ethEWallet);
+    }
+    if (initPromise) {
+      return initPromise;
+    }
+
+    initPromise = (async () => {
+      const instance = await createEthEWallet();
+      ethEWallet = instance;
+      return instance;
+    })();
+
+    // If initialization fails, clear the promise to allow retry.
+    initPromise.finally(() => {
+      if (!ethEWallet) {
+        initPromise = null;
+      }
+    });
+
+    return initPromise;
+  };
 
   return createConnector<EIP1193Provider>((config) => {
     const wallet = {
@@ -93,35 +114,17 @@ function keplrEWalletConnector(
       type: "keplr-ewallet" as const,
       icon: keplrIcon,
       setup: async () => {
-        const initRes = await initEthEWallet({
-          api_key:
-            "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-          sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
-          use_testnet: true,
-        });
-        if (!initRes.success) {
-          throw new Error(`init fail: ${initRes.err}`);
-        } else {
-          console.log("keplr-ewallet: eth sdk init success");
-
-          ethEWallet = initRes.data;
-          return initRes.data;
-        }
-        // await ensureInit();
-        console.log(13123, "setup()!!");
+        await initEthEWalletOnce();
       },
       connect: async (parameters?: {
         chainId?: number | undefined;
         isReconnecting?: boolean | undefined;
       }) => {
-        console.log("connect(), ts: %s", performance.now());
-
         console.log("[sandbox-evm] try to connect keplr e-wallet!");
 
-        if (ethEWallet === null) {
-          throw new Error("eth ewallet should exist at this point");
-        }
+        const ethEWallet = await initEthEWalletOnce();
 
+        // cached accounts retrieved from provider
         let accounts = await wallet.getAccounts();
 
         // if accounts is empty, try sign in
@@ -138,6 +141,7 @@ function keplrEWalletConnector(
             };
           }
 
+          // popup on safari works fine here as we use cached states
           console.log(
             "[sandbox-evm] no authenticated account, sign in with google",
           );
@@ -166,75 +170,47 @@ function keplrEWalletConnector(
       disconnect: async () => {
         console.log("[sandbox-evm] disconnect keplr e-wallet");
         const provider = await wallet.getProvider();
+        provider.removeListener("accountsChanged", wallet.onAccountsChanged);
+        provider.removeListener("chainChanged", wallet.onChainChanged);
 
-        if (provider !== null) {
-          provider.removeListener("accountsChanged", wallet.onAccountsChanged);
-          provider.removeListener("chainChanged", wallet.onChainChanged);
-
-          if (ethEWallet === null) {
-            throw new Error("eth ewallet should exist at this point");
-          } else {
-            await ethEWallet.eWallet.signOut();
-          }
-        } else {
-          throw new Error("provider should exist at this point");
-        }
+        await ethEWallet?.eWallet.signOut();
       },
       getAccounts: async () => {
         console.log("[sandbox-evm] handle `getAccounts`");
-
         const provider = await wallet.getProvider();
-        if (provider !== null) {
-          const accounts = await provider.request({
-            method: "eth_accounts",
-          });
-          return accounts.map((x: string) => getAddress(x));
-        } else {
-          throw new Error("provider should exist at this point");
-        }
+        const accounts = await provider.request({
+          method: "eth_accounts",
+        });
+        return accounts.map((x: string) => getAddress(x));
       },
       getChainId: async () => {
-        console.log("getchainid(), ts: %s", performance.now());
-
         console.log("[sandbox-evm] handle `getChainId`");
 
         const provider = await wallet.getProvider();
-
-        if (provider !== null) {
-          const chainId = await provider.request({
-            method: "eth_chainId",
-          });
-          return Number(chainId);
-        } else {
-          throw new Error("eth ewallet should exist at this point");
-        }
+        const chainId = await provider.request({
+          method: "eth_chainId",
+        });
+        return Number(chainId);
       },
       getProvider: async () => {
-        console.log("getprovider(), ts: %s", performance.now());
-
         console.log("[sandbox-evm] handle `getProvider`");
         if (cachedProvider) {
           return cachedProvider;
         }
 
-        if (ethEWallet === null) {
-          // TODO: @elden
-          // what's the fallback?
-          throw new Error("eth ewallet should exist at this point");
-        } else {
-          const provider = await ethEWallet.getEthereumProvider();
-          cachedProvider = provider;
+        const ethEWallet = await initEthEWalletOnce();
 
-          provider.on("chainChanged", (chainId: any) => {
-            wallet.onChainChanged(chainId);
-          });
+        cachedProvider = await ethEWallet.getEthereumProvider();
 
-          provider.on("accountsChanged", (accounts: any) => {
-            wallet.onAccountsChanged(accounts);
-          });
+        cachedProvider.on("chainChanged", (chainId) => {
+          wallet.onChainChanged(chainId);
+        });
 
-          return provider;
-        }
+        cachedProvider.on("accountsChanged", (accounts) => {
+          wallet.onAccountsChanged(accounts);
+        });
+
+        return cachedProvider;
       },
       isAuthorized: async () => {
         console.log("[sandbox-evm] handle `isAuthorized`");
@@ -249,16 +225,12 @@ function keplrEWalletConnector(
         }
 
         const provider = await wallet.getProvider();
-        if (provider !== null) {
-          await provider.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: toHex(chainId) }],
-          });
+        await provider.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: toHex(chainId) }],
+        });
 
-          return chain;
-        } else {
-          throw new Error("provider should exist at this point");
-        }
+        return chain;
       },
       onAccountsChanged: (accounts: string[]) => {
         if (accounts.length === 0) {
