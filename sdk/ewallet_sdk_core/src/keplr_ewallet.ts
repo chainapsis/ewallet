@@ -10,7 +10,7 @@ import { on } from "./methods/on";
 import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
 import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
-import type { KeplrEWalletCoreEventMap, KeplrEWalletCoreOn } from "./types";
+import type { KeplrEWalletCoreEventMap } from "./types";
 
 export class KeplrEWallet {
   apiKey: string;
@@ -26,8 +26,6 @@ export class KeplrEWallet {
   initError: string | null;
   initPromise: Promise<void>;
 
-  on: KeplrEWalletCoreOn;
-
   public constructor(
     apiKey: string,
     iframe: HTMLIFrameElement,
@@ -42,8 +40,6 @@ export class KeplrEWallet {
     this.publicKey = null;
     this.isInitialized = false;
     this.initError = null;
-    this.on = on.bind(this);
-
     this.initPromise = this.lazyInit()
       .then((initPayload) => {
         if (!initPayload.success) {
@@ -55,15 +51,14 @@ export class KeplrEWallet {
         console.log("[keplr] lazy init success");
 
         this.isInitialized = true;
-        // TODO: ref error handling, data should be passed from attached
-        // this.email = initPayload.data.email;
-        // this.publicKey = initPayload.data.public_key;
+        this.email = initPayload.data.email;
+        this.publicKey = initPayload.data.public_key;
         this.eventEmitter.emit("_init", {
           success: true,
           data: {
-            // email: initPayload.data.email,
-            // publicKey: initPayload.data.public_key,
-          } as any,
+            email: initPayload.data.email,
+            publicKey: initPayload.data.public_key,
+          },
         });
       })
       .catch((err: any) => {
@@ -88,6 +83,7 @@ export class KeplrEWallet {
   getPublicKey = getPublicKey.bind(this);
   getEmail = getEmail.bind(this);
   makeSignature = makeSignature.bind(this);
+  on = on.bind(this);
   // waitUntilInitialized(): Promise<boolean> {
   //   return Promise.resolve(true);
   //   // return this.initializationPromise;

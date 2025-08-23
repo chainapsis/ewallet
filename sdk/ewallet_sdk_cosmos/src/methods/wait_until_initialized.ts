@@ -1,6 +1,5 @@
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
-// CHECK: only check initialized in core as a single source of truth for better error handling
 export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
   console.log("[cosmos] waitUntilInitialized: start");
 
@@ -10,16 +9,21 @@ export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
         console.log("[cosmos] waitUntilInitialized: already initialized");
         resolve(void 0);
       } else {
-        this.eWallet.on("_init", (initResult) => {
-          console.log("[cosmos] _init callback, initSuccess: %s", initResult);
+        if (this.eWallet.initError) {
+          reject(new Error(this.eWallet.initError));
+        }
 
-          // TODO: if pubkey is not null, resolve with public key
-          if (initResult.success) {
-            resolve(void 0);
-          } else {
-            reject();
-          }
-        });
+        if (this.eWallet.initPromise) {
+          this.eWallet.initPromise
+            .then(() => {
+              resolve(void 0);
+            })
+            .catch((error: any) => {
+              reject(error);
+            });
+        } else {
+          reject(new Error("initPromise is not set"));
+        }
       }
     } catch (error: any) {
       console.error("[cosmos] waitUntilInitialized failed with error:", error);

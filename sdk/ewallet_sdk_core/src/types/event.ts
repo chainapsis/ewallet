@@ -19,8 +19,3 @@ export type KeplrEWalletCoreEventPayload =
 
 export type KeplrEWalletCoreEventHandler<K extends KeplrEWalletCoreEventName> =
   (payload: KeplrEWalletCoreEventMap[K]) => void;
-
-export type KeplrEWalletCoreOn = <N extends KeplrEWalletCoreEventName>(
-  eventName: N,
-  handler: KeplrEWalletCoreEventHandler<N>,
-) => void;

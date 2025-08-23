@@ -11,8 +11,3 @@ export type KeplrWalletCosmosEventPayload =
 export type KeplrWalletCosmosEventHandler<
   K extends KeplrWalletCosmosEventName,
 > = (payload: KeplrWalletCosmosEventMap[K]) => void;
-
-export type KeplrWalletCosmosOn = <N extends KeplrWalletCosmosEventName>(
-  eventName: N,
-  handler: KeplrWalletCosmosEventHandler<N>,
-) => void;

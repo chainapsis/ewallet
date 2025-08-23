@@ -22,7 +22,7 @@ import { showModal } from "./methods/show_modal";
 import { makeSignature } from "./methods/make_signature";
 import { getPublicKey } from "./methods/get_public_key";
 import { on } from "./methods/on";
-import type { KeplrWalletCosmosEventMap, KeplrWalletCosmosOn } from "./types";
+import type { KeplrWalletCosmosEventMap } from "./types";
 import { setUpEventHandlers } from "./methods/set_up_event_handlers";
 import { waitUntilInitialized } from "./methods/wait_until_initialized";
 
@@ -33,18 +33,31 @@ export class CosmosEWallet {
   protected _cosmosChainInfo: ChainInfo[];
   protected _cacheTime: number;
 
-  on: KeplrWalletCosmosOn;
+  protected _publicKey: Uint8Array | null;
 
   constructor(eWallet: KeplrEWallet) {
     this.eWallet = eWallet;
     this._cosmosChainInfo = [];
     this._cacheTime = 0;
     this.eventEmitter = new EventEmitter2<KeplrWalletCosmosEventMap>();
-    this.on = on.bind(this);
+    this._publicKey = null;
     this.setUpEventHandlers();
   }
 
+  get isInitialized(): boolean {
+    return this.eWallet.isInitialized;
+  }
+
+  get publicKey(): Uint8Array | null {
+    return this._publicKey;
+  }
+
+  protected set publicKey(value: Uint8Array | null) {
+    this._publicKey = value;
+  }
+
   enable = enable;
+  on = on.bind(this);
   getPublicKey = getPublicKey.bind(this);
   getCosmosChainInfo = getCosmosChainInfo.bind(this);
   experimentalSuggestChain = experimentalSuggestChain;

@@ -2,7 +2,6 @@ import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import type {
   KeplrEWalletCoreEventHandler,
   KeplrEWalletCoreEventName,
-  KeplrEWalletCoreOn,
 } from "@keplr-ewallet-sdk-core/types";
 
 async function _on<N extends KeplrEWalletCoreEventName>(
@@ -36,4 +35,7 @@ async function _on<N extends KeplrEWalletCoreEventName>(
   }
 }
 
-export const on = _on as KeplrEWalletCoreOn;
+export const on = _on as <N extends KeplrEWalletCoreEventName>(
+  eventName: N,
+  handler: KeplrEWalletCoreEventHandler<N>,
+) => void;
