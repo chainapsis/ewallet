@@ -24,6 +24,7 @@ export class KeplrEWallet {
 
   isInitialized: boolean;
   initError: string | null;
+  initPromise: Promise<void>;
 
   on: KeplrEWalletCoreOn;
 
@@ -43,7 +44,7 @@ export class KeplrEWallet {
     this.initError = null;
     this.on = on.bind(this);
 
-    this.lazyInit()
+    this.initPromise = this.lazyInit()
       .then((initPayload) => {
         if (!initPayload.success) {
           console.error("[keplr] lazy init fail");
@@ -54,14 +55,15 @@ export class KeplrEWallet {
         console.log("[keplr] lazy init success");
 
         this.isInitialized = true;
-        this.email = initPayload.data.email;
-        this.publicKey = initPayload.data.public_key;
+        // TODO: ref error handling, data should be passed from attached
+        // this.email = initPayload.data.email;
+        // this.publicKey = initPayload.data.public_key;
         this.eventEmitter.emit("_init", {
           success: true,
           data: {
-            email: initPayload.data.email,
-            publicKey: initPayload.data.public_key,
-          },
+            // email: initPayload.data.email,
+            // publicKey: initPayload.data.public_key,
+          } as any,
         });
       })
       .catch((err: any) => {
@@ -72,6 +74,7 @@ export class KeplrEWallet {
           success: false,
           err: err.toString(),
         });
+        throw err;
       });
   }
 

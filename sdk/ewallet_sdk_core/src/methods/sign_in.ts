@@ -3,12 +3,6 @@ import { tryGoogleSignIn } from "./google";
 
 export async function signIn(this: KeplrEWallet, type: "google") {
   const isSuccess = await (async () => {
-    // cannot await init, because it will block the popup window
-    // CHECK: open popup first, then await init?
-    if (!this.isInitialized) {
-      throw new Error(this.initError ?? "EWallet is not initialized");
-    }
-
     switch (type) {
       case "google": {
         await tryGoogleSignIn(

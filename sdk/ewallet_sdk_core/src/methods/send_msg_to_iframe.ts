@@ -1,20 +1,27 @@
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import type { EWalletMsg } from "@keplr-ewallet-sdk-core/types";
 
-export function sendMsgToIframe(this: KeplrEWallet, msg: EWalletMsg) {
-  return new Promise<EWalletMsg>((resolve, reject) => {
-    if (this.iframe.contentWindow === null) {
-      reject("iframe contentWindow is null");
-
-      return;
+export async function sendMsgToIframe(
+  this: KeplrEWallet,
+  msg: EWalletMsg,
+): Promise<EWalletMsg> {
+  if (!this.isInitialized) {
+    if (this.initError) {
+      throw new Error(this.initError);
     }
+    await this.initPromise;
+  }
 
-    const contentWindow = this.iframe.contentWindow;
+  const contentWindow = this.iframe.contentWindow;
+  if (contentWindow === null) {
+    throw new Error("iframe contentWindow is null");
+  }
 
+  return new Promise<EWalletMsg>((resolve) => {
     const channel = new MessageChannel();
 
-    channel.port1.onmessage = (obj: any) => {
-      const data = obj.data as EWalletMsg;
+    channel.port1.onmessage = (event: MessageEvent) => {
+      const data = event.data as EWalletMsg;
 
       console.debug("[keplr] reply recv", data);
 
@@ -22,7 +29,6 @@ export function sendMsgToIframe(this: KeplrEWallet, msg: EWalletMsg) {
         resolve(data);
       } else {
         console.error("[keplr] unknown msg type");
-
         resolve({
           target: "keplr_ewallet_sdk",
           msg_type: "unknown_msg_type",
