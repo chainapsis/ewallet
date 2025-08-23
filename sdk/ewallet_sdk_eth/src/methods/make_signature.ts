@@ -248,6 +248,9 @@ async function handleSigningFlow(
 
     return config.processMakeSignatureResult(signOutput, processedData);
   } catch (error) {
+    // make sure to hide modal even if error thrown from modal
+    await eWallet.hideModal();
+
     if (error && typeof error === "object" && "code" in error) {
       throw error;
     }
