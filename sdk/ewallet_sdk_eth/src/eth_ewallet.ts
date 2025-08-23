@@ -1,5 +1,5 @@
 import type { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
-import { isAddress, isAddressEqual, type Address, type Hex } from "viem";
+import type { Address, Hex } from "viem";
 
 import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import {
@@ -10,8 +10,8 @@ import {
   switchChain,
   toViemAccount,
   getAddress,
-} from "@keplr-ewallet-sdk-eth/api";
-import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
+  setUpEventHandlers,
+} from "@keplr-ewallet-sdk-eth/methods";
 
 export class EthEWallet {
   readonly eWallet: KeplrEWallet;
@@ -19,7 +19,6 @@ export class EthEWallet {
   readonly useTestnet: boolean;
 
   private _provider: EWalletEIP1193Provider | null;
-
   private _publicKey: Hex | null;
   private _address: Address | null;
 
@@ -29,11 +28,7 @@ export class EthEWallet {
     this._provider = null;
     this._publicKey = null;
     this._address = null;
-
-    this.eWallet.on("_accountsChanged", (payload: { publicKey: string }) => {
-      console.log("[keplr-ewallet-sdk-eth] _accountsChanged", payload);
-      this.handleAccountChange(payload.publicKey);
-    });
+    this.setUpEventHandlers();
   }
 
   get type(): "ethereum" {
@@ -52,7 +47,7 @@ export class EthEWallet {
     return this._publicKey;
   }
 
-  protected set publicKey(publicKey: Hex) {
+  protected set publicKey(publicKey: Hex | null) {
     this._publicKey = publicKey;
   }
 
@@ -60,7 +55,7 @@ export class EthEWallet {
     return this._address;
   }
 
-  protected set address(address: Address) {
+  protected set address(address: Address | null) {
     this._address = address;
   }
 
@@ -79,50 +74,5 @@ export class EthEWallet {
   getPublicKey = getPublicKey.bind(this);
   getAddress = getAddress.bind(this);
   protected makeSignature = makeSignature.bind(this);
-
-  private handleAccountChange(publicKey: string | undefined) {
-    if (!this._provider) {
-      return;
-    }
-
-    if (!publicKey) {
-      this._publicKey = null;
-      this._address = null;
-      this._provider.emit("accountsChanged", []);
-      return;
-    }
-
-    try {
-      const publicKeyHex: Hex = publicKey.startsWith("0x")
-        ? (publicKey as Hex)
-        : `0x${publicKey}`;
-
-      const address = publicKeyToEthereumAddress(publicKeyHex);
-
-      if (!isAddress(address)) {
-        this._publicKey = null;
-        this._address = null;
-        this._provider.emit("accountsChanged", []);
-        return;
-      }
-
-      const shouldEmitChange =
-        this._address === null || !isAddressEqual(this._address, address);
-
-      this._publicKey = publicKeyHex;
-      this._address = address;
-
-      if (shouldEmitChange) {
-        this._provider.emit("accountsChanged", [address]);
-      }
-    } catch (error) {
-      console.error(
-        "[keplr-ewallet-sdk-eth] failed to get account from public key",
-        error,
-      );
-      this._publicKey = null;
-      this._address = null;
-      this._provider.emit("accountsChanged", []);
-    }
-  }
+  protected setUpEventHandlers = setUpEventHandlers.bind(this);
 }

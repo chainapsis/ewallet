@@ -9,6 +9,8 @@ export async function getPublicKey(this: CosmosEWallet): Promise<Uint8Array> {
       return this.publicKey;
     }
 
+    console.log("[cosmos] getPublicKey: getPublicKey from eWallet");
+
     const pubKey = await this.eWallet.getPublicKey();
 
     if (pubKey === null) {
