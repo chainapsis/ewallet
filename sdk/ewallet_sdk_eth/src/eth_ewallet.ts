@@ -11,6 +11,7 @@ import {
   toViemAccount,
   getAddress,
   setUpEventHandlers,
+  waitUntilInitialized,
 } from "@keplr-ewallet-sdk-eth/methods";
 
 export class EthEWallet {
@@ -43,6 +44,10 @@ export class EthEWallet {
     return `eip155:${parseInt(this._provider.chainId, 16)}`;
   }
 
+  get isInitialized(): boolean {
+    return this.eWallet.isInitialized;
+  }
+
   get publicKey(): Hex | null {
     return this._publicKey;
   }
@@ -73,6 +78,7 @@ export class EthEWallet {
   toViemAccount = toViemAccount.bind(this);
   getPublicKey = getPublicKey.bind(this);
   getAddress = getAddress.bind(this);
+  waitUntilInitialized = waitUntilInitialized.bind(this);
   protected makeSignature = makeSignature.bind(this);
   protected setUpEventHandlers = setUpEventHandlers.bind(this);
 }
