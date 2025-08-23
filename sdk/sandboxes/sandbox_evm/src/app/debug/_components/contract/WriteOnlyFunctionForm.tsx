@@ -138,14 +138,7 @@ export const WriteOnlyFunctionForm = ({
             />
           </div>
         ) : null}
-        <div className="flex justify-between gap-2">
-          {!zeroInputs && (
-            <div className="grow basis-0">
-              {displayedTxResult ? (
-                <TxReceipt txResult={displayedTxResult} />
-              ) : null}
-            </div>
-          )}
+        <div className="flex justify-end">
           <div
             className={`flex ${
               writeDisabled &&
@@ -158,19 +151,23 @@ export const WriteOnlyFunctionForm = ({
               disabled={writeDisabled || isPending}
               onClick={handleWrite}
             >
-              {isPending && (
-                <span className="loading loading-spinner loading-xs"></span>
+              {isPending ? (
+                <>
+                  <span className="loading loading-spinner loading-xs"></span>
+                  <span className="ml-1">Sending...</span>
+                </>
+              ) : (
+                "Send 💸"
               )}
-              Send 💸
             </button>
           </div>
         </div>
+        {displayedTxResult && (
+          <div className="mt-3">
+            <TxReceipt txResult={displayedTxResult} />
+          </div>
+        )}
       </div>
-      {zeroInputs && txResult ? (
-        <div className="grow basis-0">
-          <TxReceipt txResult={txResult} />
-        </div>
-      ) : null}
     </div>
   );
 };

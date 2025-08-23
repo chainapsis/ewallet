@@ -170,23 +170,19 @@ export function PermitSignWidget() {
         <button
           onClick={handlePermitSign}
           disabled={disabled}
-          className="btn btn-success w-full"
+          className="btn btn-success w-full mt-4"
         >
-          {isPermitSigning ? (
-            <span className="loading loading-spinner loading-sm"></span>
-          ) : (
-            "Sign Permit"
-          )}
+          {isPermitSigning ? "Signing..." : "Sign Permit"}
         </button>
 
         {permitError && (
-          <div className="alert alert-error">
+          <div className="alert alert-error mt-4">
             <span className="text-sm">{permitError.message}</span>
           </div>
         )}
 
         {permitSignature && signedTypedData && (
-          <div className="alert alert-success flex flex-col items-start gap-2">
+          <div className="alert alert-success flex flex-col items-start gap-2 mt-4">
             <div className="font-medium">SIWE Signature Generated</div>
             <div className="bg-base-200 rounded p-3 w-full max-h-40 overflow-x-auto overflow-y-auto">
               <code className="text-xs whitespace-pre font-mono text-base-content">

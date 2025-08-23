@@ -1,23 +1,7 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-@theme {
-  --shadow-center: 0 0 12px -2px rgb(0 0 0 / 0.05);
-  --animate-pulse-fast: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@plugin "daisyui" {
-  themes:
-    light,
-    dark --prefersdark;
-}
-
-@plugin "daisyui/theme" {
-  name: "light";
-
+/* Theme tokens */
+:root {
   --color-primary: #93bbfb;
   --color-primary-content: #212638;
   --color-secondary: #dae8ff;
@@ -37,12 +21,10 @@
 
   --radius-field: 9999rem;
   --radius-box: 1rem;
-  --tt-tailw: 6px;
+  --shadow-center: 0 0 12px -2px rgb(0 0 0 / 0.05);
 }
 
-@plugin "daisyui/theme" {
-  name: "dark";
-
+[data-theme="dark"] {
   --color-primary: #212638;
   --color-primary-content: #f9fbff;
   --color-secondary: #323f61;
@@ -59,22 +41,14 @@
   --color-success: #34eeb6;
   --color-warning: #ffcf72;
   --color-error: #ff8863;
-
-  --radius-field: 9999rem;
-  --radius-box: 1rem;
-
-  --tt-tailw: 6px;
-  --tt-bg: var(--color-primary);
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* Base */
+:root,
+[data-theme] {
+  background: var(--color-base-200);
+}
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -83,15 +57,12 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-
   p {
     margin: 1rem 0;
   }
-
   body {
     min-height: 100vh;
   }
-
   h1,
   h2,
   h3,
@@ -101,23 +72,335 @@
   }
 }
 
-:root,
-[data-theme] {
-  background: var(--color-base-200);
-}
-
+/* Buttons */
 .btn {
-  @apply shadow-md;
+  @apply inline-flex items-center justify-center rounded-md font-medium transition-colors duration-150 select-none border border-transparent shadow-md px-4 py-2;
+  color: var(--color-neutral-content);
+  background-color: var(--color-neutral);
+}
+.btn:hover {
+  opacity: 0.95;
+}
+.btn:disabled {
+  @apply opacity-50 pointer-events-none;
+}
+.btn-primary {
+  color: var(--color-primary-content);
+  background-color: var(--color-primary);
+}
+.btn-secondary {
+  color: var(--color-secondary-content);
+  background-color: var(--color-secondary);
+}
+.btn-success {
+  color: #0b111f;
+  background-color: var(--color-success);
+}
+.btn-warning {
+  color: #0b111f;
+  background-color: var(--color-warning);
+}
+.btn-info {
+  color: #0b111f;
+  background-color: var(--color-info);
+}
+.btn-outline {
+  @apply bg-transparent border-current text-current;
+}
+.btn-ghost {
+  @apply bg-transparent border-transparent text-current shadow-none;
+}
+.btn-xs {
+  @apply text-xs px-2 py-1 rounded;
+}
+.btn-sm {
+  @apply text-sm px-3 py-1.5 rounded;
 }
 
-.btn.btn-ghost {
-  @apply shadow-none;
+/* Cards */
+.card {
+  @apply rounded-lg border border-black/5;
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+}
+.card-body {
+  @apply p-6;
+}
+.card-title {
+  @apply text-lg font-semibold;
 }
 
-.link {
-  text-underline-offset: 2px;
+/* Alerts */
+.alert {
+  @apply rounded-lg p-4 border;
+}
+.alert-success {
+  background-color: color-mix(in srgb, var(--color-success) 20%, transparent);
+  border-color: var(--color-success);
+  color: var(--color-base-content);
+}
+.alert-error {
+  background-color: color-mix(in srgb, var(--color-error) 15%, transparent);
+  border-color: var(--color-error);
+  color: var(--color-base-content);
 }
 
-.link:hover {
-  opacity: 80%;
+/* Badges */
+.badge {
+  @apply inline-flex items-center px-2 py-0.5 text-xs rounded-full border;
+  background-color: color-mix(
+    in srgb,
+    var(--color-base-content) 8%,
+    transparent
+  );
+  color: var(--color-base-content);
+  border-color: color-mix(in srgb, var(--color-base-content) 20%, transparent);
+}
+.badge-outline {
+  @apply bg-transparent;
+}
+.badge-sm {
+  @apply text-[10px] px-1.5 py-0.5;
+}
+
+/* Tabs */
+.tabs {
+  @apply flex gap-2;
+}
+.tabs-boxed {
+  @apply bg-black/5 p-1 rounded-lg;
+}
+.tabs-border {
+  @apply border border-black/10 rounded-lg;
+}
+.tab {
+  @apply px-3 py-1.5 rounded-md cursor-pointer select-none;
+  color: var(--color-base-content);
+}
+.tab-active {
+  @apply bg-white shadow;
+  color: var(--color-base-content);
+}
+
+/* Utilities bridging */
+.bg-base-100 {
+  background-color: var(--color-base-100);
+}
+.bg-base-200 {
+  background-color: var(--color-base-200);
+}
+.bg-base-300 {
+  background-color: var(--color-base-300);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-info {
+  background-color: var(--color-info);
+}
+.bg-warning {
+  background-color: var(--color-warning);
+}
+.bg-success {
+  background-color: var(--color-success);
+}
+.bg-error {
+  background-color: var(--color-error);
+}
+.text-base-content {
+  color: var(--color-base-content);
+}
+.text-base-content\/60 {
+  color: color-mix(in srgb, var(--color-base-content) 60%, transparent);
+}
+.text-base-content\/70 {
+  color: color-mix(in srgb, var(--color-base-content) 70%, transparent);
+}
+.text-base-content\/80 {
+  color: color-mix(in srgb, var(--color-base-content) 80%, transparent);
+}
+.text-primary-content {
+  color: var(--color-primary-content);
+}
+.text-primary-content\/50 {
+  color: color-mix(in srgb, var(--color-primary-content) 50%, transparent);
+}
+.text-neutral {
+  color: var(--color-neutral);
+}
+.text-neutral-content {
+  color: var(--color-neutral-content);
+}
+.border-base-200 {
+  border-color: var(--color-base-200);
+}
+.border-base-300 {
+  border-color: var(--color-base-300);
+}
+.border-secondary {
+  border-color: var(--color-secondary);
+}
+.border-secondary\/70 {
+  border-color: color-mix(in srgb, var(--color-secondary) 70%, transparent);
+}
+.border-secondary\/80 {
+  border-color: color-mix(in srgb, var(--color-secondary) 80%, transparent);
+}
+.shadow-center {
+  box-shadow: var(--shadow-center);
+}
+.shadow-secondary {
+  box-shadow:
+    0 10px 15px -3px color-mix(in srgb, var(--color-secondary) 20%, transparent),
+    0 4px 6px -4px color-mix(in srgb, var(--color-secondary) 25%, transparent);
+}
+.shadow-base-300 {
+  box-shadow:
+    0 10px 15px -3px color-mix(in srgb, var(--color-base-300) 22%, transparent),
+    0 4px 6px -4px color-mix(in srgb, var(--color-base-300) 26%, transparent);
+}
+
+/* Inputs */
+.input,
+.textarea,
+.select {
+  @apply w-full border rounded-md outline-none transition-colors duration-150;
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  border-color: color-mix(in srgb, var(--color-base-content) 12%, transparent);
+}
+.input {
+  @apply h-9 px-3;
+}
+.textarea {
+  @apply px-3 py-2;
+}
+.select {
+  @apply h-9 px-3;
+}
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: color-mix(in srgb, var(--color-primary) 60%, transparent);
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+.input-ghost,
+.textarea-ghost {
+  background-color: transparent;
+  border-color: transparent;
+}
+.select-bordered {
+  border-color: color-mix(in srgb, var(--color-base-content) 12%, transparent);
+}
+
+/* Focus outline fallback for focus:outline-hidden */
+.focus\:outline-hidden:focus {
+  outline: none;
+}
+
+/* Labels */
+.label {
+  @apply mb-1;
+  color: color-mix(in srgb, var(--color-base-content) 80%, transparent);
+}
+.label-text {
+  @apply text-sm;
+}
+
+/* Navbar */
+.navbar {
+  @apply w-full flex items-center px-4 h-16;
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+}
+.navbar-start {
+  @apply flex items-center;
+}
+.navbar-end {
+  @apply flex items-center justify-end;
+}
+
+/* Dropdown */
+.dropdown {
+  @apply relative inline-block;
+}
+.dropdown-content {
+  @apply absolute mt-2 rounded-lg border shadow-md;
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  display: none;
+}
+details.dropdown[open] .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+  display: block;
+}
+
+/* Tooltip (data-tip attr) */
+.tooltip {
+  position: relative;
+}
+.tooltip::before {
+  content: attr(data-tip);
+  @apply pointer-events-none absolute px-2 py-1 rounded text-xs whitespace-nowrap z-10 hidden;
+  background-color: #000000;
+  color: #ffffff;
+  width: max-content;
+  max-width: 90vw;
+}
+.tooltip:hover::before {
+  @apply block;
+}
+.tooltip-top::before {
+  @apply bottom-full mb-2 left-1/2 -translate-x-1/2;
+}
+.tooltip-bottom::before {
+  @apply top-full mt-2 left-1/2 -translate-x-1/2;
+}
+.tooltip-secondary::before {
+  background-color: #000000;
+  color: #ffffff;
+}
+.tooltip-accent::before {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Collapse */
+.collapse {
+  @apply rounded-lg border;
+  background-color: var(--color-base-200);
+  position: relative;
+}
+.collapse-title {
+  @apply px-4 py-2 cursor-pointer;
+  position: relative;
+}
+.collapse-arrow .collapse-title::after {
+  content: "▾";
+  @apply absolute right-4 top-3 transition-transform;
+}
+.collapse > input {
+  @apply absolute opacity-0 pointer-events-none;
+}
+.collapse > .collapse-content {
+  display: none;
+}
+.collapse > input:checked ~ .collapse-content {
+  display: block;
+}
+.collapse > input:checked ~ .collapse-title::after {
+  transform: rotate(180deg);
+}
+
+/* Skeleton */
+.skeleton {
+  background-color: color-mix(
+    in srgb,
+    var(--color-base-content) 10%,
+    transparent
+  );
 }
