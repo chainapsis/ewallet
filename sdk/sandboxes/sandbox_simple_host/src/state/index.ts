@@ -9,7 +9,6 @@ import { combine } from "zustand/middleware";
 interface AppState {
   keplr_sdk_eth: EthEWallet | null;
   keplr_sdk_cosmos: CosmosEWallet | null;
-  isInitialized: boolean;
   isEthInitializing: boolean;
   isCosmosInitializing: boolean;
 }
@@ -24,7 +23,6 @@ export const useAppState = create(
     {
       keplr_sdk_eth: null,
       keplr_sdk_cosmos: null,
-      isInitialized: false,
       isEthInitializing: false,
       isCosmosInitializing: false,
     },
@@ -50,10 +48,13 @@ export const useAppState = create(
         });
 
         if (initRes.success) {
+          console.log("Eth sdk initialized");
+
           set({
             keplr_sdk_eth: initRes.data,
             isEthInitializing: false,
           });
+
           // initRes.data.eWallet.on("_init", (result) => {
           //   if (result.success) {
           //     set({ isInitialized: true });
@@ -69,8 +70,6 @@ export const useAppState = create(
         }
       },
       initKeplrSdkCosmos: () => {
-        console.log(123123);
-
         const state = get();
 
         if (state.keplr_sdk_cosmos || state.isCosmosInitializing) {
@@ -91,18 +90,14 @@ export const useAppState = create(
         });
 
         if (initRes.success) {
+          console.log("Cosmos SDK initialized");
+
           const cosmosSDK = initRes.data;
 
           set({
             keplr_sdk_cosmos: cosmosSDK,
             isCosmosInitializing: false,
           });
-
-          // cosmosSDK.eWallet.on("_init", (result) => {
-          //   if (result.success) {
-          //     set({ isInitialized: true });
-          //   }
-          // });
 
           cosmosSDK.on("accountsChanged", async (payload: any) => {
             console.log("ev - accountsChanged", payload);
@@ -114,7 +109,8 @@ export const useAppState = create(
 
           return initRes.data;
         } else {
-          console.error("sdk init fail, err: %s", initRes.err);
+          console.error("Cosmos sdk init fail, err: %s", initRes.err);
+
           set({ isCosmosInitializing: false });
 
           return null;
