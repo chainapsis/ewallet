@@ -1,5 +1,4 @@
-import { Chain, createClient, fallback, getAddress, http, toHex } from "viem";
-import { sepolia } from "viem/chains";
+import { createClient, fallback, getAddress, http, toHex } from "viem";
 import { createConfig, CreateConnectorFn, createConnector } from "wagmi";
 import {
   connectorsForWallets,
@@ -9,9 +8,10 @@ import {
 import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
 import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
 import {
-  initEthEWallet,
+  initEthEWalletAsync,
   type EIP1193Provider,
   type EthEWallet,
+  type EthEWalletInitArgs,
 } from "@keplr-ewallet/ewallet-sdk-eth";
 
 import { getAlchemyHttpUrl } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
@@ -23,25 +23,12 @@ import scaffoldConfig, {
 
 const { targetNetworks } = scaffoldConfig;
 
-const keplrEWallet = (): Wallet => ({
-  id: "keplr-ewallet",
-  name: "Keplr E-Wallet",
-  iconUrl: keplrIcon,
-  shortName: "Keplr",
-  rdns: "keplr-ewallet.com",
-  iconBackground: "#0c2f78",
-  downloadUrls: {
-    android:
-      "https://play.google.com/store/apps/details?id=com.chainapsis.keplr&pcampaignid=web_share",
-    chrome:
-      "https://chromewebstore.google.com/detail/dmkamcknogkgcdfhhbddcghachkejeap?utm_source=item-share-cb",
-  },
-  installed: true,
-  createConnector: keplrEWalletConnector,
-});
-
 export const defaultWallets = [
-  keplrEWallet,
+  toKeplrEWallet({
+    api_key: "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
+    sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
+    use_testnet: true,
+  }),
   coinbaseWallet,
   toPrivyWallet({
     id: "cm04asygd041fmry9zmcyn5o5",
@@ -50,33 +37,27 @@ export const defaultWallets = [
   }),
 ];
 
+function toKeplrEWallet(args: EthEWalletInitArgs): () => Wallet {
+  return () => ({
+    id: "keplr-ewallet",
+    name: "Keplr Embedded",
+    iconUrl: keplrIcon,
+    shortName: "Keplr",
+    rdns: "embed.keplr.app",
+    iconBackground: "#0c2f78",
+    installed: true,
+    createConnector: (walletDetails) =>
+      keplrEWalletConnector(walletDetails, args),
+  });
+}
+
 export interface WalletConnectOptions {
   projectId: string;
 }
 
-const createEthEWallet = async (): Promise<EthEWallet> => {
-  console.log("keplr-ewallet: setup");
-
-  // CHECK: enable to override chain info when init ethereum wallet
-  const initRes = initEthEWallet({
-    api_key: "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-    sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
-    use_testnet: true,
-  });
-  if (!initRes.success) {
-    throw new Error(`init fail: ${initRes.err}`);
-  }
-  console.log("keplr-ewallet: eth sdk init success");
-  const instance = initRes.data;
-
-  // ensure init to cache address and provider at first time
-  await instance.waitUntilInitialized();
-
-  return instance;
-};
-
 function keplrEWalletConnector(
   walletDetails: WalletDetailsParams,
+  args: EthEWalletInitArgs,
 ): CreateConnectorFn {
   let initPromise: Promise<EthEWallet> | null = null;
 
@@ -92,9 +73,14 @@ function keplrEWalletConnector(
     }
 
     initPromise = (async () => {
-      const instance = await createEthEWallet();
-      ethEWallet = instance;
-      return instance;
+      const initRes = await initEthEWalletAsync(args);
+
+      if (!initRes.success) {
+        throw new Error(`init fail: ${initRes.err}`);
+      }
+
+      ethEWallet = initRes.data;
+      return ethEWallet;
     })();
 
     // If initialization fails, clear the promise to allow retry.
@@ -156,9 +142,10 @@ function keplrEWalletConnector(
 
         const chainId = await wallet.getChainId();
 
-        if (parameters?.chainId && chainId !== parameters.chainId) {
-          await wallet.switchChain({ chainId: parameters.chainId });
-        }
+        // TODO: after enable to override chain info
+        // if (parameters?.chainId && chainId !== parameters.chainId) {
+        //   await wallet.switchChain({ chainId: parameters.chainId });
+        // }
 
         // re-request accounts, there should be at least one account after sign in
         accounts = await wallet.getAccounts();

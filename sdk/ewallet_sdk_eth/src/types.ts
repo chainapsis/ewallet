@@ -1,3 +1,4 @@
+import type { KeplrEwalletInitArgs } from "@keplr-ewallet/ewallet-sdk-core";
 import type {
   Address,
   CustomSource,
@@ -77,6 +78,10 @@ export type EWalletAccount<
     type: "local";
   }
 >;
+
+export type EthEWalletInitArgs = KeplrEwalletInitArgs & {
+  use_testnet?: boolean; // TODO: replace with chain param
+};
 
 // export interface IEthEWallet {
 //   type: "ethereum";
