@@ -72,14 +72,15 @@ describe("pg_dump_runtime_test", () => {
       // check if old dumps are set correctly
       const oldDumps = await getAllPgDumps(pool);
       expect(oldDumps.success).toBe(true);
-      if (oldDumps.success) {
-        const oldCompletedDumps = oldDumps.data.filter(
-          (dump) =>
-            dump.status === "COMPLETED" &&
-            initialDumpIds.includes(dump.dump_id),
-        );
-        expect(oldCompletedDumps.length).toBe(3);
+      if (oldDumps.success === false) {
+        throw new Error(`getAllPgDumps failed: ${oldDumps.err}`);
       }
+
+      const oldCompletedDumps = oldDumps.data.filter(
+        (dump) =>
+          dump.status === "COMPLETED" && initialDumpIds.includes(dump.dump_id),
+      );
+      expect(oldCompletedDumps.length).toBe(3);
 
       // start runtime (1 day retention)
       const runtimeOptions = {
