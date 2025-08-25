@@ -69,6 +69,26 @@ WHERE dump_id = $4
   }
 }
 
+export async function updatePgDumpStatus(
+  db: Pool,
+  dumpId: string,
+  status: PgDumpStatus,
+): Promise<Result<void, string>> {
+  try {
+    const query = `
+UPDATE pg_dumps
+SET status = $1, updated_at = NOW()
+WHERE dump_id = $2
+`;
+
+    await db.query(query, [status, dumpId]);
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}
+
 export async function getOldPgDumps(
   db: Pool,
   retentionDays: number,
@@ -91,25 +111,6 @@ export async function getOldPgDumps(
 
     const result = await db.query(query, [retentionSeconds]);
     return { success: true, data: result.rows as PgDump[] };
-  } catch (error) {
-    return { success: false, err: String(error) };
-  }
-}
-
-export async function markPgDumpAsDeleted(
-  db: Pool,
-  dumpId: string,
-): Promise<Result<void, string>> {
-  try {
-    const query = `
-UPDATE pg_dumps 
-SET status = 'DELETED', updated_at = NOW()
-WHERE dump_id = $1
-`;
-
-    await db.query(query, [dumpId]);
-
-    return { success: true, data: undefined };
   } catch (error) {
     return { success: false, err: String(error) };
   }

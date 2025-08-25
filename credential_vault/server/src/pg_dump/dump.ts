@@ -8,8 +8,8 @@ import {
   createPgDump,
   updatePgDump,
   getOldPgDumps,
-  markPgDumpAsDeleted,
   type PgDumpConfig,
+  updatePgDumpStatus,
 } from "@keplr-ewallet/credential-vault-pg-interface";
 
 import { getSecondsFromNow } from "@keplr-ewallet-cv-server/utils";
@@ -92,9 +92,9 @@ export async function deleteOldPgDumps(
         if (dump.dump_path) {
           await fs.unlink(dump.dump_path);
         }
-        await markPgDumpAsDeleted(pool, dump.dump_id);
+        await updatePgDumpStatus(pool, dump.dump_id, "DELETED");
       } catch {
-        await markPgDumpAsDeleted(pool, dump.dump_id);
+        await updatePgDumpStatus(pool, dump.dump_id, "DELETED");
       }
     }
 
