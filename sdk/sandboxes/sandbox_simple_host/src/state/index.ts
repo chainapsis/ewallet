@@ -9,6 +9,7 @@ import { combine } from "zustand/middleware";
 interface AppState {
   keplr_sdk_eth: EthEWallet | null;
   keplr_sdk_cosmos: CosmosEWallet | null;
+  isInitialized: boolean;
 }
 
 interface AppActions {
@@ -21,8 +22,9 @@ export const useAppState = create(
     {
       keplr_sdk_eth: null,
       keplr_sdk_cosmos: null,
+      isInitialized: false,
     },
-    (set, get) => ({
+    (set) => ({
       initKeplrSdkEth: () => {
         const initRes = initEthEWallet({
           // TODO: replace with actual apiKey
@@ -33,6 +35,12 @@ export const useAppState = create(
 
         if (initRes.success) {
           set({ keplr_sdk_eth: initRes.data });
+          initRes.data.eWallet.on("_init", (result) => {
+            if (result.success) {
+              set({ isInitialized: true });
+            }
+          });
+
           return initRes.data;
         } else {
           console.error("sdk init fail, err: %s", initRes.err);
@@ -52,6 +60,12 @@ export const useAppState = create(
           const cosmosSDK = initRes.data;
 
           set({ keplr_sdk_cosmos: cosmosSDK });
+
+          cosmosSDK.eWallet.on("_init", (result) => {
+            if (result.success) {
+              set({ isInitialized: true });
+            }
+          });
 
           cosmosSDK.on("accountsChanged", async (payload) => {
             console.log("ev - accountsChanged", payload);

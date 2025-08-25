@@ -1,29 +1,18 @@
+import { useEffect } from "react";
+
 import { useAppState } from "@/state";
-import { useEffect, useState } from "react";
 
 export function useInitKeplrEWallet() {
-  const [isInitialized, setIsInitialized] = useState(false);
-  const appState = useAppState.getState();
+  console.log("rerender init keplr ewallet");
+
+  const initKeplrSdkCosmos = useAppState((state) => state.initKeplrSdkCosmos);
+  const initKeplrSdkEth = useAppState((state) => state.initKeplrSdkEth);
+  const isInitialized = useAppState((state) => state.isInitialized);
 
   useEffect(() => {
-    async function fn() {
-      try {
-        const cosmosSDK = appState.initKeplrSdkCosmos();
-        const isEthReady = appState.initKeplrSdkEth();
-
-        if (cosmosSDK && isEthReady) {
-          const pk = await cosmosSDK.getPublicKey();
-          console.log(22, pk);
-
-          setIsInitialized(true);
-        }
-      } catch (err: any) {
-        console.error(err);
-      }
-    }
-
-    fn().then();
-  }, [setIsInitialized, appState]);
+    initKeplrSdkCosmos();
+    initKeplrSdkEth();
+  }, []);
 
   return { isInitialized };
 }
