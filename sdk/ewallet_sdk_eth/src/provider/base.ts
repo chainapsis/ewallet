@@ -1,22 +1,29 @@
 import type {
   Address,
   AddEthereumChainParameter as Chain,
+  RpcError,
   TypedDataDefinition,
 } from "viem";
 import {
   hexToString,
+  InvalidInputRpcError,
+  InvalidParamsRpcError,
+  InvalidRequestRpcError,
   isAddress,
   isAddressEqual,
+  ProviderDisconnectedError,
+  ChainDisconnectedError,
+  ResourceUnavailableRpcError,
   serializeTypedData,
+  UnsupportedChainIdError,
+  UnsupportedProviderMethodError,
 } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
-import { ErrorCodes, standardError } from "@keplr-ewallet-sdk-eth/errors";
 import type {
   RpcMethod,
   RpcResponse,
-  RpcError,
   RpcRequestArgs,
   RpcResponseData,
   PublicRpcMethod,
@@ -106,10 +113,9 @@ export class EWalletEIP1193Provider
       return result;
     } catch (error: any) {
       if (this.isConnectionError(error)) {
-        const rpcError = standardError.rpc.resourceUnavailable({
-          message: error?.message || "Resource unavailable",
-          data: error,
-        });
+        const rpcError = new ResourceUnavailableRpcError(
+          new Error(error?.message || "Resource unavailable"),
+        );
 
         this._handleConnected(false, rpcError);
         throw rpcError;
@@ -158,9 +164,9 @@ export class EWalletEIP1193Provider
           rpcUrls: [rpcUrl],
         } = this.activeChain;
         if (!rpcUrl) {
-          throw standardError.provider.chainDisconnected({
-            message: "No RPC URL for the active chain",
-          });
+          throw new ProviderDisconnectedError(
+            new Error("No RPC URL for the active chain"),
+          );
         }
 
         const requestBody = {
@@ -247,10 +253,9 @@ export class EWalletEIP1193Provider
         }
 
         if (!validationSucceeded) {
-          throw standardError.rpc.invalidParams({
-            message: "Chain validation failed.",
-            data: { chainId: newChain.chainId },
-          });
+          throw new InvalidParamsRpcError(
+            new Error("Chain validation failed."),
+          );
         }
 
         return null;
@@ -264,12 +269,7 @@ export class EWalletEIP1193Provider
         );
 
         if (!chain) {
-          throw standardError.provider.unsupportedChain({
-            message: "Chain not found",
-            data: {
-              chainId: chainIdToSwitch,
-            },
-          });
+          throw new UnsupportedChainIdError(new Error("Chain not found"));
         }
 
         const prevChainId = this.activeChain?.chainId;
@@ -349,13 +349,7 @@ export class EWalletEIP1193Provider
         const { signer, address } = this._getAuthenticatedSigner(args.method);
 
         if (!isAddressEqual(signWith, address)) {
-          throw standardError.rpc.invalidInput({
-            message: "Signer address mismatch",
-            data: {
-              signWith,
-              signerAddress: address,
-            },
-          });
+          throw new InvalidInputRpcError(new Error("Signer address mismatch"));
         }
 
         const typedData =
@@ -386,13 +380,7 @@ export class EWalletEIP1193Provider
         const { signer, address } = this._getAuthenticatedSigner(args.method);
 
         if (!isAddressEqual(signWith, address)) {
-          throw standardError.rpc.invalidInput({
-            message: "Signer address mismatch",
-            data: {
-              signWith,
-              signerAddress: address,
-            },
-          });
+          throw new InvalidInputRpcError(new Error("Signer address mismatch"));
         }
 
         const originalMessage = message.startsWith("0x")
@@ -416,10 +404,9 @@ export class EWalletEIP1193Provider
         return result.signature;
       }
       default:
-        throw standardError.provider.unsupportedMethod({
-          message: "Method not supported",
-          data: args.method,
-        });
+        throw new UnsupportedProviderMethodError(
+          new Error("Method not supported"),
+        );
     }
   }
 
@@ -428,7 +415,7 @@ export class EWalletEIP1193Provider
    */
   private async _validateActiveChain(): Promise<void> {
     if (!this.activeChain) {
-      throw standardError.rpc.invalidRequest({});
+      throw new InvalidRequestRpcError(new Error("Invalid request"));
     }
 
     const activeChainStatus = this.addedChains.find(
@@ -436,10 +423,7 @@ export class EWalletEIP1193Provider
     );
 
     if (activeChainStatus?.validationStatus !== "valid") {
-      throw standardError.rpc.invalidRequest({
-        message: "Active chain is not valid.",
-        data: { chainId: this.activeChain.chainId },
-      });
+      throw new InvalidRequestRpcError(new Error("Active chain is not valid."));
     }
   }
 
@@ -450,18 +434,16 @@ export class EWalletEIP1193Provider
     const signer = this.signer;
 
     if (!signer) {
-      throw standardError.provider.unsupportedMethod({
-        message: "Signer is required for wallet RPC methods",
-        data: calledMethod,
-      });
+      throw new UnsupportedProviderMethodError(
+        new Error("Signer is required for wallet RPC methods"),
+      );
     }
 
     const address = signer.getAddress();
     if (!address) {
-      throw standardError.provider.unsupportedMethod({
-        message: "No authenticated signer for wallet RPC methods",
-        data: calledMethod,
-      });
+      throw new UnsupportedProviderMethodError(
+        new Error("No authenticated signer for wallet RPC methods"),
+      );
     }
     return { signer, address };
   }
@@ -659,26 +641,23 @@ export class EWalletEIP1193Provider
     args: RpcRequestArgs<M>,
   ): void {
     if (!args || typeof args !== "object" || Array.isArray(args)) {
-      throw standardError.rpc.invalidParams({
-        message: "Expected a single, non-array, object argument.",
-        data: args,
-      });
+      throw new InvalidParamsRpcError(
+        new Error("Expected a single, non-array, object argument."),
+      );
     }
 
     const { method, params } = args;
 
     if (typeof method !== "string" || method.length === 0) {
-      throw standardError.rpc.invalidParams({
-        message: "Expected a non-empty string for method.",
-        data: args,
-      });
+      throw new InvalidParamsRpcError(
+        new Error("Expected a non-empty string for method."),
+      );
     }
 
     if (typeof params !== "undefined" && typeof params !== "object") {
-      throw standardError.rpc.invalidParams({
-        message: "Expected a single, non-array, object argument.",
-        data: args,
-      });
+      throw new InvalidParamsRpcError(
+        new Error("Expected a single, non-array, object argument."),
+      );
     }
 
     if (
@@ -686,10 +665,9 @@ export class EWalletEIP1193Provider
       !Array.isArray(params) &&
       (typeof params !== "object" || params === null)
     ) {
-      throw standardError.rpc.invalidParams({
-        message: "Expected a single, non-array, object argument.",
-        data: args,
-      });
+      throw new InvalidParamsRpcError(
+        new Error("Expected a single, non-array, object argument."),
+      );
     }
   }
 
@@ -752,8 +730,8 @@ export class EWalletEIP1193Provider
     }
 
     if (
-      error?.code === ErrorCodes.provider.disconnected ||
-      error?.code === ErrorCodes.provider.chainDisconnected
+      error?.code === ProviderDisconnectedError.code ||
+      error?.code === ChainDisconnectedError.code
     ) {
       return true;
     }

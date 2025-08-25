@@ -1,6 +1,5 @@
 import { type Hex } from "viem";
 
-import { standardError } from "@keplr-ewallet-sdk-eth/errors";
 import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
 export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
@@ -15,7 +14,7 @@ export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
 
   const ret = await this.eWallet.getPublicKey();
   if (ret === null) {
-    throw standardError.ethEWallet.publicKeyFetchFailed({});
+    throw new Error("Failed to fetch public key");
   }
 
   this.publicKey = `0x${ret}`;

@@ -11,6 +11,7 @@ import {
   createWalletClient,
   encodeFunctionData,
   parseSignature,
+  MethodNotSupportedRpcError,
 } from "viem";
 import { sepolia, mainnet } from "viem/chains";
 import { hashAuthorization } from "viem/utils";
@@ -32,7 +33,6 @@ import {
   initEWalletEIP1193Provider,
   type EWalletEIP1193Provider,
 } from "@keplr-ewallet-sdk-eth/provider";
-import { ErrorCodes } from "@keplr-ewallet-sdk-eth/errors";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 
 describe("EWallet Provider - Viem Integration", () => {
@@ -71,7 +71,7 @@ describe("EWallet Provider - Viem Integration", () => {
       });
 
       await expect(client.getBlockNumber()).rejects.toMatchObject({
-        code: ErrorCodes.rpc.methodNotSupported,
+        code: MethodNotSupportedRpcError.code,
       });
     });
   });

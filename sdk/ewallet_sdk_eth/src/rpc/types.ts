@@ -21,9 +21,8 @@ import type {
   AddEthereumChainParameter,
   TypedDataDefinition,
   AccessList,
+  RpcError,
 } from "viem";
-
-import type { ErrorObject } from "@keplr-ewallet-sdk-eth/errors";
 
 export type RpcResponse<
   result = RpcResponseData<RpcMethod>,
@@ -32,8 +31,6 @@ export type RpcResponse<
   id: number;
   jsonrpc: "2.0";
 } & ({ result: result } | { error: error });
-
-export type RpcError = ErrorObject<unknown>;
 
 export type RpcBlockNumberOrTag = RpcBlockNumber | BlockTag;
 export type RpcBlockRef = RpcBlockNumberOrTag | RpcBlockIdentifier;

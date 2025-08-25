@@ -1,52 +1,12 @@
 import { type Hex } from "viem";
 
-import { type EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
 import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
 export function setUpEventHandlers(this: EthEWalletInterface): void {
   console.log("[eth] set up event handlers");
 
-  // this.eWallet.on("_init", (payload) => {
-  //   console.log("[eth] _init callback, payload: %s", JSON.stringify(payload));
-  //
-  //   if (!payload.success) {
-  //     console.log("[eth] _init callback, error: %s", payload.err);
-  //     this.publicKey = null;
-  //     return;
-  //   }
-  //
-  //   const { changed, next } = computePublicKeyChange(
-  //     this.publicKey,
-  //     payload.data.publicKey,
-  //   );
-  //   if (changed) {
-  //     console.log(
-  //       "[eth] _init callback, public key changed from: %s to: %s",
-  //       this.publicKey ? this.publicKey : "null",
-  //       next ? next : "null",
-  //     );
-  //
-  //     if (next === null) {
-  //       this.publicKey = null;
-  //       this.address = null;
-  //       if (this.provider) {
-  //         this.provider.emit("accountsChanged", []);
-  //       }
-  //       return;
-  //     }
-  //
-  //     const nextAddress = publicKeyToEthereumAddress(next);
-  //
-  //     this.publicKey = next;
-  //     this.address = nextAddress;
-  //     if (this.provider) {
-  //       this.provider.emit("accountsChanged", [nextAddress]);
-  //     }
-  //   }
-  // });
-
-  this.eWallet.on("_accountsChanged", (payload: any) => {
+  this.eWallet.on("_accountsChanged", (payload) => {
     const { changed, next } = computePublicKeyChange(
       this.publicKey,
       payload.publicKey,

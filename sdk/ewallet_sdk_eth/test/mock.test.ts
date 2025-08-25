@@ -7,6 +7,7 @@ import {
   recoverTransactionAddress,
   toHex,
   parseEther,
+  ResourceUnavailableRpcError,
 } from "viem";
 import { sepolia, mainnet, hardhat } from "viem/chains";
 
@@ -26,7 +27,6 @@ import {
 } from "./mock";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 import { initEWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
-import { ErrorCodes } from "@keplr-ewallet-sdk-eth/errors";
 
 describe("EWallet Provider - Mock RPC Testing", () => {
   let mockServer: MockRpcServer;
@@ -399,7 +399,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       await expect(
         provider.request({ method: "eth_blockNumber" }),
       ).rejects.toMatchObject({
-        code: ErrorCodes.rpc.resourceUnavailable,
+        code: ResourceUnavailableRpcError.code,
       });
 
       // Should have disconnect event
