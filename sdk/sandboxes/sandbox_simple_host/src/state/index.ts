@@ -10,6 +10,8 @@ interface AppState {
   keplr_sdk_eth: EthEWallet | null;
   keplr_sdk_cosmos: CosmosEWallet | null;
   isInitialized: boolean;
+  isEthInitializing: boolean;
+  isCosmosInitializing: boolean;
 }
 
 interface AppActions {
@@ -23,9 +25,23 @@ export const useAppState = create(
       keplr_sdk_eth: null,
       keplr_sdk_cosmos: null,
       isInitialized: false,
+      isEthInitializing: false,
+      isCosmosInitializing: false,
     },
-    (set) => ({
+    (set, get) => ({
       initKeplrSdkEth: () => {
+        const state = get();
+
+        if (state.keplr_sdk_eth || state.isEthInitializing) {
+          console.log(
+            "ETH SDK already initialized or initializing, skipping...",
+          );
+          return state.keplr_sdk_eth;
+        }
+
+        console.log("Initializing ETH SDK...");
+        set({ isEthInitializing: true });
+
         const initRes = initEthEWallet({
           // TODO: replace with actual apiKey
           api_key:
@@ -34,7 +50,10 @@ export const useAppState = create(
         });
 
         if (initRes.success) {
-          set({ keplr_sdk_eth: initRes.data });
+          set({
+            keplr_sdk_eth: initRes.data,
+            isEthInitializing: false,
+          });
           initRes.data.eWallet.on("_init", (result) => {
             if (result.success) {
               set({ isInitialized: true });
@@ -44,11 +63,24 @@ export const useAppState = create(
           return initRes.data;
         } else {
           console.error("sdk init fail, err: %s", initRes.err);
+          set({ isEthInitializing: false });
 
           return null;
         }
       },
       initKeplrSdkCosmos: () => {
+        const state = get();
+
+        if (state.keplr_sdk_cosmos || state.isCosmosInitializing) {
+          console.log(
+            "Cosmos SDK already initialized or initializing, skipping...",
+          );
+          return state.keplr_sdk_cosmos;
+        }
+
+        console.log("Initializing Cosmos SDK...");
+        set({ isCosmosInitializing: true });
+
         const initRes = initCosmosEWallet({
           // TODO: replace with actual apiKey
           api_key:
@@ -59,7 +91,10 @@ export const useAppState = create(
         if (initRes.success) {
           const cosmosSDK = initRes.data;
 
-          set({ keplr_sdk_cosmos: cosmosSDK });
+          set({
+            keplr_sdk_cosmos: cosmosSDK,
+            isCosmosInitializing: false,
+          });
 
           cosmosSDK.eWallet.on("_init", (result) => {
             if (result.success) {
@@ -78,6 +113,7 @@ export const useAppState = create(
           return initRes.data;
         } else {
           console.error("sdk init fail, err: %s", initRes.err);
+          set({ isCosmosInitializing: false });
 
           return null;
         }
