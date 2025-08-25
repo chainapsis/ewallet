@@ -69,6 +69,8 @@ export const useAppState = create(
         }
       },
       initKeplrSdkCosmos: () => {
+        console.log(123123);
+
         const state = get();
 
         if (state.keplr_sdk_cosmos || state.isCosmosInitializing) {

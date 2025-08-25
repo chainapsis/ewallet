@@ -1,7 +1,7 @@
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
 export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
-  console.log("[cosmos] waitUntilInitialized: start");
+  console.log("[keplr] waitUntilInitialized: start");
 
   try {
     // if (!this.eWallet.isInitialized) {
@@ -16,7 +16,7 @@ export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
     //   console.log("[cosmos] waitUntilInitialized: core already initialized");
     // }
   } catch (error: any) {
-    console.error("[cosmos] waitUntilInitialized failed with error:", error);
+    console.error("[keplr] waitUntilInitialized failed with error:", error);
     throw error;
   }
 }

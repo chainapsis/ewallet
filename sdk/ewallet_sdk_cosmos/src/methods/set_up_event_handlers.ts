@@ -1,7 +1,7 @@
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
 export function setUpEventHandlers(this: CosmosEWallet): void {
-  console.log("[cosmos] set up event handlers");
+  console.log("[keplr] set up event handlers");
 
   // this.eWallet.on("_init", (payload) => {
   //   console.log(
@@ -46,7 +46,7 @@ export function setUpEventHandlers(this: CosmosEWallet): void {
     if (changed) {
       this.publicKey = next;
       console.log(
-        "[cosmos] _accountsChanged callback, public key changed from: %s to: %s",
+        "[keplr] _accountsChanged callback, public key changed from: %s to: %s",
         this.publicKey ? Buffer.from(this.publicKey).toString("hex") : "null",
         nextHex,
       );
