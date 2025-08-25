@@ -8,10 +8,10 @@ import {
 import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
 import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
 import {
-  initEthEWalletAsync,
-  type EIP1193Provider,
-  type EthEWallet,
+  EthEWallet,
   type EthEWalletInitArgs,
+  EthEWalletInterface,
+  EWalletEIP1193Provider,
 } from "@keplr-ewallet/ewallet-sdk-eth";
 
 import { getAlchemyHttpUrl } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
@@ -59,48 +59,32 @@ function keplrEWalletConnector(
   walletDetails: WalletDetailsParams,
   args: EthEWalletInitArgs,
 ): CreateConnectorFn {
-  let initPromise: Promise<EthEWallet> | null = null;
+  let ethEWallet: EthEWalletInterface | null = null;
+  let cachedProvider: EWalletEIP1193Provider | null = null;
 
-  let ethEWallet: EthEWallet | null = null;
-  let cachedProvider: EIP1193Provider | null = null;
-
-  const initEthEWalletOnce = (): Promise<EthEWallet> => {
+  const initEthEWalletOnce = (): EthEWalletInterface => {
     if (ethEWallet) {
-      return Promise.resolve(ethEWallet);
-    }
-    if (initPromise) {
-      return initPromise;
-    }
-
-    initPromise = (async () => {
-      const initRes = await initEthEWalletAsync(args);
-
-      if (!initRes.success) {
-        throw new Error(`init fail: ${initRes.err}`);
-      }
-
-      ethEWallet = initRes.data;
       return ethEWallet;
-    })();
+    }
 
-    // If initialization fails, clear the promise to allow retry.
-    initPromise.finally(() => {
-      if (!ethEWallet) {
-        initPromise = null;
-      }
-    });
+    const initRes = EthEWallet.init(args);
 
-    return initPromise;
+    if (!initRes.success) {
+      throw new Error(`init fail: ${initRes.err}`);
+    }
+
+    ethEWallet = initRes.data;
+    return ethEWallet;
   };
 
-  return createConnector<EIP1193Provider>((config) => {
+  return createConnector<EWalletEIP1193Provider>((config) => {
     const wallet = {
       id: "keplr-ewallet",
       name: "Keplr E-Wallet",
       type: "keplr-ewallet" as const,
       icon: keplrIcon,
       setup: async () => {
-        await initEthEWalletOnce();
+        initEthEWalletOnce();
       },
       connect: async (parameters?: {
         chainId?: number | undefined;
@@ -109,7 +93,7 @@ function keplrEWalletConnector(
         console.log("[sandbox-evm] try to connect keplr e-wallet!");
 
         if (!ethEWallet) {
-          await initEthEWalletOnce();
+          initEthEWalletOnce();
 
           // DO NOT fallthrough here to manually retry connect
           // as popup on safari will be blocked by async initialization
@@ -165,8 +149,6 @@ function keplrEWalletConnector(
         const provider = await wallet.getProvider();
         provider.removeListener("accountsChanged", wallet.onAccountsChanged);
         provider.removeListener("chainChanged", wallet.onChainChanged);
-
-        await ethEWallet?.eWallet.signOut();
       },
       getAccounts: async () => {
         console.log("[sandbox-evm] handle `getAccounts`");
@@ -191,9 +173,9 @@ function keplrEWalletConnector(
           return cachedProvider;
         }
 
-        const ethEWallet = await initEthEWalletOnce();
+        const ethEWallet = initEthEWalletOnce();
 
-        cachedProvider = await ethEWallet.getEthereumProvider();
+        cachedProvider = ethEWallet.getEthereumProvider();
 
         cachedProvider.on("chainChanged", (chainId) => {
           wallet.onChainChanged(chainId);

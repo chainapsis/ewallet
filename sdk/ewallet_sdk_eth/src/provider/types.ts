@@ -86,11 +86,8 @@ export interface EIP1193Provider extends ProviderEventEmitter {
   ): Promise<RpcResponseData<M>>;
 }
 
-export type ChainValidationStatus = "pending" | "valid" | "invalid";
-
-export type ChainWithStatus = RpcChain & {
+export type RpcChainWithStatus = RpcChain & {
   connected: boolean;
-  validationStatus: ChainValidationStatus;
 };
 
 // CHECK: we might need to provide default values with specific chains
@@ -98,5 +95,4 @@ export type EWalletEIP1193ProviderOptions = {
   id: string;
   chains: RpcChain[];
   signer?: EthSigner;
-  skipChainValidation?: boolean;
 };

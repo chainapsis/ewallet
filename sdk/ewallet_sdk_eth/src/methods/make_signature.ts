@@ -22,7 +22,6 @@ import {
   toTransactionSerializable,
   parseTypedDataDefinition,
 } from "@keplr-ewallet-sdk-eth/utils";
-import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import {
   getChainIconUrl,
   SUPPORTED_CHAINS,

@@ -1,11 +1,7 @@
 import { toHex, type Chain } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  initEWalletEIP1193Provider,
-  type EWalletEIP1193Provider,
-} from "@keplr-ewallet-sdk-eth/provider";
-import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
+import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import {
   DEFAULT_CHAIN_ID,
   SUPPORTED_CHAINS,
@@ -13,9 +9,9 @@ import {
 } from "@keplr-ewallet-sdk-eth/chains";
 import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
-export async function getEthereumProvider(
+export function getEthereumProvider(
   this: EthEWalletInterface,
-): Promise<EWalletEIP1193Provider> {
+): EWalletEIP1193Provider {
   if (this.provider !== null) {
     return this.provider;
   }
@@ -42,14 +38,13 @@ export async function getEthereumProvider(
       : [],
   }));
 
-  this.provider = await initEWalletEIP1193Provider({
+  this.provider = new EWalletEIP1193Provider({
     id: uuidv4(),
     signer: {
       sign: this.makeSignature,
-      getAddress: () => this.address, // address change should be handled by event listener
+      getAddress: () => this.address,
     },
     chains: addEthereumChains,
-    skipChainValidation: true,
   });
 
   return this.provider;

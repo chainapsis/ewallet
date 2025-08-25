@@ -15,7 +15,7 @@ export interface EthEWalletInterface {
   publicKey: Hex | null;
   address: Address | null;
 
-  getEthereumProvider: () => Promise<EWalletEIP1193Provider>;
+  getEthereumProvider: () => EWalletEIP1193Provider;
   sign: (message: string) => Promise<Hex>;
   switchChain: (chainId: Hex | number) => Promise<void>;
   toViemAccount: () => Promise<any>;
