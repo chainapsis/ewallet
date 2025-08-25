@@ -1,4 +1,4 @@
-import { initKeplrEwalletCore } from "@keplr-ewallet/ewallet-sdk-core";
+import { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
@@ -7,7 +7,7 @@ import type { EthEWalletInitArgs } from "@keplr-ewallet-sdk-eth/types";
 export function initEthEWallet(
   args: EthEWalletInitArgs,
 ): Result<EthEWallet, string> {
-  const eWalletRes = initKeplrEwalletCore(args);
+  const eWalletRes = KeplrEWallet.init(args);
 
   if (!eWalletRes.success) {
     console.error(
@@ -27,7 +27,7 @@ export function initEthEWallet(
 export async function initEthEWalletAsync(
   args: EthEWalletInitArgs,
 ): Promise<Result<EthEWallet, string>> {
-  const eWalletRes = initKeplrEwalletCore(args);
+  const eWalletRes = KeplrEWallet.init(args);
 
   if (!eWalletRes.success) {
     console.error(

@@ -1,13 +1,10 @@
-import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/init/iframe";
-import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import { registerMsgListener } from "@keplr-ewallet-sdk-core/window_msg/listener";
 import type {
-  AckPayload,
-  EWalletMsgInit,
   KeplrEWalletInterface,
   KeplrEWalletState,
 } from "@keplr-ewallet-sdk-core/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/iframe";
 
 export async function lazyInit(
   this: KeplrEWalletInterface,

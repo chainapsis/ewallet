@@ -1,6 +1,6 @@
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
-import { setUpIframeElement } from "./iframe";
+import { setUpIframeElement } from "@keplr-ewallet-sdk-core/iframe";
 import type {
   KeplrEwalletInitArgs,
   KeplrEWalletInterface,
@@ -9,7 +9,7 @@ import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 
 const SDK_ENDPOINT = `https://attached.embed.keplr.app`;
 
-export function initKeplrEwalletCore(
+export function init(
   args: KeplrEwalletInitArgs,
 ): Result<KeplrEWalletInterface, string> {
   try {

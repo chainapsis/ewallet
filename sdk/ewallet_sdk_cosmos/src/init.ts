@@ -1,6 +1,6 @@
 import {
-  initKeplrEwalletCore,
   type KeplrEwalletInitArgs,
+  KeplrEWallet,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
@@ -11,7 +11,7 @@ export type CosmosEWalletArgs = KeplrEwalletInitArgs;
 export function initCosmosEWallet(
   args: CosmosEWalletArgs,
 ): Result<CosmosEWallet, string> {
-  const eWalletRes = initKeplrEwalletCore(args);
+  const eWalletRes = KeplrEWallet.init(args);
   if (!eWalletRes.success) {
     console.error(
       "[keplr] cosmos, ewallet core init fail, err: %s",
