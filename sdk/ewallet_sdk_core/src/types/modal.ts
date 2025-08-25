@@ -1,6 +1,6 @@
 import type { RpcTransactionRequest, SignableMessage } from "viem";
 import type { StdSignDoc, StdSignature } from "@cosmjs/amino";
-import type { Bech32Config, ChainInfo, Msg } from "@keplr-wallet/types";
+import type { Bech32Config, BIP44, ChainInfo } from "@keplr-wallet/types";
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
 type Any = {
@@ -48,6 +48,10 @@ export type ChainInfoForAttachedModal = {
   readonly fee_currencies?: ChainInfo["feeCurrencies"];
   readonly currencies?: ChainInfo["currencies"];
   readonly bech32_config?: Bech32Config;
+
+  readonly bip44?: ChainInfo["bip44"];
+  readonly features?: ChainInfo["features"];
+  readonly evm?: ChainInfo["evm"];
 };
 
 export type MakeCosmosSignType = MakeCosmosSigData["sign_type"];

@@ -80,7 +80,7 @@ export async function makeMockSendTokenProtoSignDoc(
       amount: [
         {
           denom: "uosmo",
-          amount: "1000",
+          amount: "3000",
         },
       ],
       gas: "200000",
