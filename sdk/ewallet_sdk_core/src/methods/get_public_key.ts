@@ -1,7 +1,10 @@
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
+import type { KeplrEWalletInterface } from "@keplr-ewallet-sdk-core/types";
 import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/target";
 
-export async function getPublicKey(this: KeplrEWallet): Promise<string | null> {
+export async function getPublicKey(
+  this: KeplrEWalletInterface,
+): Promise<string | null> {
   try {
     const res = await this.sendMsgToIframe({
       target: EWALLET_ATTACHED_TARGET,

@@ -1,6 +1,6 @@
 import {
-  type KeplrEWallet,
   EventEmitter2,
+  type KeplrEWalletInterface,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { ChainInfo } from "@keplr-wallet/types";
 
@@ -25,10 +25,9 @@ import { on } from "./methods/on";
 import type { KeplrWalletCosmosEventMap } from "./types";
 import { setUpEventHandlers } from "./methods/set_up_event_handlers";
 import { waitUntilInitialized } from "./methods/wait_until_initialized";
-import { init } from "./methods/init";
 
 export class CosmosEWallet {
-  public eWallet: KeplrEWallet;
+  public eWallet: KeplrEWalletInterface;
   eventEmitter: EventEmitter2<KeplrWalletCosmosEventMap>;
 
   protected _cosmosChainInfo: ChainInfo[];
@@ -36,7 +35,7 @@ export class CosmosEWallet {
 
   protected _publicKey: Uint8Array | null;
 
-  constructor(eWallet: KeplrEWallet) {
+  constructor(eWallet: KeplrEWalletInterface) {
     this.eWallet = eWallet;
     this._cosmosChainInfo = [];
     this._cacheTime = 0;
@@ -45,11 +44,9 @@ export class CosmosEWallet {
     this.setUpEventHandlers();
   }
 
-  static initCosmosWallet = initCosmosEWallet.bind(this);
-
-  get isInitialized(): boolean {
-    return this.eWallet.isInitialized;
-  }
+  // get isInitialized(): boolean {
+  //   return this.eWallet.isInitialized;
+  // }
 
   get publicKey(): Uint8Array | null {
     return this._publicKey;
@@ -77,6 +74,6 @@ export class CosmosEWallet {
   verifyArbitrary = verifyArbitrary.bind(this);
   setUpEventHandlers = setUpEventHandlers.bind(this);
   waitUntilInitialized = waitUntilInitialized.bind(this);
-  protected showModal = showModal.bind(this);
-  protected makeSignature = makeSignature.bind(this);
+  showModal = showModal.bind(this);
+  makeSignature = makeSignature.bind(this);
 }

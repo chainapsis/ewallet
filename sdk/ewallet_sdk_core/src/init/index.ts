@@ -1,14 +1,17 @@
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
 import { setUpIframeElement } from "./iframe";
-import type { KeplrEwalletInitArgs } from "@keplr-ewallet-sdk-core/types";
+import type {
+  KeplrEwalletInitArgs,
+  KeplrEWalletInterface,
+} from "@keplr-ewallet-sdk-core/types";
 import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 
 const SDK_ENDPOINT = `https://attached.embed.keplr.app`;
 
 export function initKeplrEwalletCore(
   args: KeplrEwalletInitArgs,
-): Result<KeplrEWallet, string> {
+): Result<KeplrEWalletInterface, string> {
   try {
     if (window.__keplr_ewallet_locked === true) {
       console.warn(
@@ -68,7 +71,11 @@ export function initKeplrEwalletCore(
 
     const iframe = iframeRes.data;
 
-    const ewalletCore = new KeplrEWallet(args.api_key, iframe, sdkEndpoint);
+    const ewalletCore = new (KeplrEWallet as any)(
+      args.api_key,
+      iframe,
+      sdkEndpoint,
+    );
 
     if (window.__keplr_ewallet) {
       console.warn("[keplr] ewallet has been initialized by another process");

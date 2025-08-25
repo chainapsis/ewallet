@@ -1,7 +1,4 @@
-import {
-  CosmosEWallet,
-  // initCosmosEWallet,
-} from "@keplr-ewallet/ewallet-sdk-cosmos";
+import { CosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { EthEWallet, initEthEWallet } from "@keplr-ewallet/ewallet-sdk-eth";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
@@ -81,7 +78,7 @@ export const useAppState = create(
         console.log("Initializing Cosmos SDK...");
         set({ isCosmosInitializing: true });
 
-        const initRes = CosmosEWallet.init({
+        const initRes = initCosmosEWallet({
           // TODO: replace with actual apiKey
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
@@ -96,13 +93,13 @@ export const useAppState = create(
             isCosmosInitializing: false,
           });
 
-          cosmosSDK.eWallet.on("_init", (result) => {
-            if (result.success) {
-              set({ isInitialized: true });
-            }
-          });
+          // cosmosSDK.eWallet.on("_init", (result) => {
+          //   if (result.success) {
+          //     set({ isInitialized: true });
+          //   }
+          // });
 
-          cosmosSDK.on("accountsChanged", async (payload) => {
+          cosmosSDK.on("accountsChanged", async (payload: any) => {
             console.log("ev - accountsChanged", payload);
 
             // set({

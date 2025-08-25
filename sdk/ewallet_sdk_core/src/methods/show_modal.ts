@@ -1,14 +1,15 @@
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import type {
   EWalletMsgShowModal,
+  KeplrEWalletInterface,
   ModalResult,
 } from "@keplr-ewallet-sdk-core/types";
 
-// 5 minutes
-const WAIT_TIME = 300000;
+// 5 minutes in ms
+const WAIT_TIME = 60 * 5 * 1000;
 
 export async function showModal(
-  this: KeplrEWallet,
+  this: KeplrEWalletInterface,
   msg: EWalletMsgShowModal,
 ): Promise<ModalResult> {
   let timeoutId: NodeJS.Timeout | null = null;

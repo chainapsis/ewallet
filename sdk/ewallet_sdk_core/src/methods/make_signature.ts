@@ -1,11 +1,12 @@
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import type {
   EWalletMsgMakeSignature,
+  KeplrEWalletInterface,
   SignOutput,
 } from "@keplr-ewallet-sdk-core/types";
 
 export async function makeSignature(
-  this: KeplrEWallet,
+  this: KeplrEWalletInterface,
   msg: EWalletMsgMakeSignature,
 ): Promise<SignOutput> {
   const res = await this.sendMsgToIframe(msg);

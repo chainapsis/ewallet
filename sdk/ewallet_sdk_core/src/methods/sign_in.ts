@@ -1,7 +1,8 @@
 import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import { tryGoogleSignIn } from "./google";
+import type { KeplrEWalletInterface } from "@keplr-ewallet-sdk-core/types";
 
-export async function signIn(this: KeplrEWallet, type: "google") {
+export async function signIn(this: KeplrEWalletInterface, type: "google") {
   const isSuccess = await (async () => {
     switch (type) {
       case "google": {

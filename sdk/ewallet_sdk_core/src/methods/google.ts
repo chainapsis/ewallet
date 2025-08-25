@@ -12,7 +12,7 @@ const GoogleClientId =
 export async function tryGoogleSignIn(
   sdkEndpoint: string,
   apiKey: string,
-  sendMsgToIframe: KeplrEWallet["sendMsgToIframe"],
+  sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>,
 ) {
   const clientId = GoogleClientId;
   const redirectUri = `${new URL(sdkEndpoint).origin}/google/callback`;
