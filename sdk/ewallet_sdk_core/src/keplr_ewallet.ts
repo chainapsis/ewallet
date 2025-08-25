@@ -8,7 +8,7 @@ import { hideModal } from "./methods/hide_modal";
 import { makeSignature } from "./methods/make_signature";
 import { on } from "./methods/on";
 import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
-import { lazyInit } from "./methods/lazy_init";
+import { lazyInit } from "./lazy_init";
 import { EventEmitter2 } from "./event/emitter";
 import type { KeplrEWalletCoreEventMap, KeplrEWalletInterface } from "./types";
 
@@ -23,9 +23,11 @@ export function KeplrEWallet(
   this.sdkEndpoint = sdkEndpoint;
   this.origin = window.location.origin;
   this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
+
+  this.lazyInit.then();
 }
 
-KeplrEWallet.init = function () {};
+KeplrEWallet.init = function() { };
 
 KeplrEWallet.prototype.lazyInit = lazyInit;
 KeplrEWallet.prototype.showModal = showModal;
@@ -38,6 +40,8 @@ KeplrEWallet.prototype.getPublicKey = getPublicKey;
 KeplrEWallet.prototype.getEmail = getEmail;
 KeplrEWallet.prototype.makeSignature = makeSignature;
 KeplrEWallet.prototype.on = on;
+
+// KeplrEWallet.prototype.waitUntilInitialized = waitUntilInitialized;
 
 // export class KeplrEWallet2 {
 //   apiKey: string;

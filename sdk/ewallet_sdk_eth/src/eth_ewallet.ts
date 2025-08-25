@@ -1,4 +1,7 @@
-import type { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
+import type {
+  KeplrEWallet,
+  KeplrEWalletInterface,
+} from "@keplr-ewallet/ewallet-sdk-core";
 import type { Address, Hex } from "viem";
 
 import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
@@ -15,7 +18,7 @@ import {
 } from "@keplr-ewallet-sdk-eth/methods";
 
 export class EthEWallet {
-  readonly eWallet: KeplrEWallet;
+  readonly eWallet: KeplrEWalletInterface;
 
   readonly useTestnet: boolean;
 
@@ -23,7 +26,7 @@ export class EthEWallet {
   private _publicKey: Hex | null;
   private _address: Address | null;
 
-  constructor(eWallet: KeplrEWallet, useTestnet: boolean = false) {
+  constructor(eWallet: KeplrEWalletInterface, useTestnet: boolean = false) {
     this.eWallet = eWallet;
     this.useTestnet = useTestnet;
     this._provider = null;
@@ -44,9 +47,9 @@ export class EthEWallet {
     return `eip155:${parseInt(this._provider.chainId, 16)}`;
   }
 
-  get isInitialized(): boolean {
-    return this.eWallet.isInitialized;
-  }
+  // get isInitialized(): boolean {
+  //   return this.eWallet.isInitialized;
+  // }
 
   get publicKey(): Hex | null {
     return this._publicKey;

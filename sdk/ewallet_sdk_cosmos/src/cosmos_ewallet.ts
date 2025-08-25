@@ -44,10 +44,6 @@ export class CosmosEWallet {
     this.setUpEventHandlers();
   }
 
-  // get isInitialized(): boolean {
-  //   return this.eWallet.isInitialized;
-  // }
-
   get publicKey(): Uint8Array | null {
     return this._publicKey;
   }

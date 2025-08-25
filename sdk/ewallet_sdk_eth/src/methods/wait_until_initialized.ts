@@ -4,15 +4,15 @@ export async function waitUntilInitialized(this: EthEWallet): Promise<void> {
   console.log("[eth] waitUntilInitialized: start");
 
   try {
-    if (!this.eWallet.isInitialized) {
-      if (this.eWallet.initError) {
-        throw new Error(this.eWallet.initError);
-      }
-      console.log("[eth] waitUntilInitialized: awaiting core initialization");
-      await this.eWallet.waitUntilInitialized;
-    } else {
-      console.log("[eth] waitUntilInitialized: core already initialized");
-    }
+    // if (!this.eWallet.isInitialized) {
+    //   if (this.eWallet.initError) {
+    //     throw new Error(this.eWallet.initError);
+    //   }
+    //   console.log("[eth] waitUntilInitialized: awaiting core initialization");
+    //   await this.eWallet.waitUntilInitialized;
+    // } else {
+    //   console.log("[eth] waitUntilInitialized: core already initialized");
+    // }
 
     if (!this.provider) {
       console.log("[eth] waitUntilInitialized: initializing provider");

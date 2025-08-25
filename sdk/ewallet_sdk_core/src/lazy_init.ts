@@ -6,12 +6,17 @@ import type {
   EWalletMsgInit,
   InitResult,
   KeplrEWalletInterface,
+  KeplrEWalletState,
 } from "@keplr-ewallet-sdk-core/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function lazyInit(
   this: KeplrEWalletInterface,
-): Promise<Result<InitResult, string>> {
+): Promise<Result<void, string>> {
+  if (this.state !== null) {
+    return { success: true, data: void 0 };
+    // return { success: true, data: this.state };
+  }
   // If keplr_ewallet is initialized, iframe should exist
   // const el = document.getElementById(KEPLR_IFRAME_ID);
   // if (el !== null) {
@@ -26,8 +31,15 @@ export async function lazyInit(
   //   return checkURLRes;
   // }
   //
-  const registered = await registerMsgListener();
-  return registered;
+  const registerRes = await registerMsgListener();
+  if (registerRes.success) {
+    return { success: true, data: void 0 };
+  } else {
+    return {
+      success: false,
+      err: "msg listener register fail",
+    };
+  }
 }
 
 // async function checkURL(url?: string): Promise<Result<string, string>> {

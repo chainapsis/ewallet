@@ -4,17 +4,17 @@ export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
   console.log("[cosmos] waitUntilInitialized: start");
 
   try {
-    if (!this.eWallet.isInitialized) {
-      if (this.eWallet.initError) {
-        throw new Error(this.eWallet.initError);
-      }
-      console.log(
-        "[cosmos] waitUntilInitialized: awaiting core initialization",
-      );
-      await this.eWallet.waitUntilInitialized;
-    } else {
-      console.log("[cosmos] waitUntilInitialized: core already initialized");
-    }
+    // if (!this.eWallet.isInitialized) {
+    //   if (this.eWallet.initError) {
+    //     throw new Error(this.eWallet.initError);
+    //   }
+    //   console.log(
+    //     "[cosmos] waitUntilInitialized: awaiting core initialization",
+    //   );
+    //   await this.eWallet.waitUntilInitialized;
+    // } else {
+    //   console.log("[cosmos] waitUntilInitialized: core already initialized");
+    // }
   } catch (error: any) {
     console.error("[cosmos] waitUntilInitialized failed with error:", error);
     throw error;

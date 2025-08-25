@@ -1,4 +1,7 @@
-import { CosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
+import {
+  CosmosEWallet,
+  initCosmosEWallet,
+} from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { EthEWallet, initEthEWallet } from "@keplr-ewallet/ewallet-sdk-eth";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
@@ -51,11 +54,11 @@ export const useAppState = create(
             keplr_sdk_eth: initRes.data,
             isEthInitializing: false,
           });
-          initRes.data.eWallet.on("_init", (result) => {
-            if (result.success) {
-              set({ isInitialized: true });
-            }
-          });
+          // initRes.data.eWallet.on("_init", (result) => {
+          //   if (result.success) {
+          //     set({ isInitialized: true });
+          //   }
+          // });
 
           return initRes.data;
         } else {
