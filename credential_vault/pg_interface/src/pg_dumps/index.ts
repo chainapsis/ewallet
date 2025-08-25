@@ -115,3 +115,19 @@ export async function getOldPgDumps(
     return { success: false, err: String(error) };
   }
 }
+
+export async function getPgDumpById(
+  db: Pool,
+  dumpId: string,
+): Promise<Result<PgDump | null, string>> {
+  try {
+    const query = `SELECT * FROM pg_dumps WHERE dump_id = $1`;
+    const result = await db.query(query, [dumpId]);
+    if (result.rows.length === 0) {
+      return { success: true, data: null };
+    }
+    return { success: true, data: result.rows[0] as PgDump };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}

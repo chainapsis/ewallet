@@ -46,7 +46,7 @@ export async function processPgDump(
       });
       return {
         success: false,
-        err: dumpResult.err,
+        err: `Failed to dump database: dumpId: ${pgDump.dump_id}, error: ${dumpResult.err}`,
       };
     }
 
