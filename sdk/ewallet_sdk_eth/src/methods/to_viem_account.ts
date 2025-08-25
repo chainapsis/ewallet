@@ -20,7 +20,7 @@ export async function toViemAccount(
     source: "ewallet",
     publicKey,
     signMessage: async ({ message }) => {
-      const { signature } = await sign({
+      const result = await sign({
         type: "personal_sign",
         data: {
           address,
@@ -28,10 +28,14 @@ export async function toViemAccount(
         },
       });
 
-      return signature;
+      if (result.type !== "signature") {
+        throw new Error("Invalid result type");
+      }
+
+      return result.signature;
     },
     signTransaction: async (transaction) => {
-      const { signedTransaction } = await sign({
+      const result = await sign({
         type: "sign_transaction",
         data: {
           address,
@@ -39,10 +43,14 @@ export async function toViemAccount(
         },
       });
 
-      return signedTransaction;
+      if (result.type !== "signed_transaction") {
+        throw new Error("Invalid result type");
+      }
+
+      return result.signedTransaction;
     },
     signTypedData: async (typedData) => {
-      const { signature } = await sign({
+      const result = await sign({
         type: "sign_typedData_v4",
         data: {
           address,
@@ -50,7 +58,11 @@ export async function toViemAccount(
         },
       });
 
-      return signature;
+      if (result.type !== "signature") {
+        throw new Error("Invalid result type");
+      }
+
+      return result.signature;
     },
   };
 

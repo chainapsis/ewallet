@@ -1,6 +1,5 @@
 import { type Hex } from "viem";
 
-import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import { standardError } from "@keplr-ewallet-sdk-eth/errors";
 import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 

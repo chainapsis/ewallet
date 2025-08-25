@@ -39,7 +39,8 @@ import { ProviderEventEmitter, VERSION } from "@keplr-ewallet-sdk-eth/provider";
 
 export class EWalletEIP1193Provider
   extends ProviderEventEmitter
-  implements EIP1193Provider {
+  implements EIP1193Provider
+{
   protected isInitialized: boolean;
 
   protected signer: EthSigner | undefined;
@@ -325,7 +326,7 @@ export class EWalletEIP1193Provider
 
         const { signer, address } = this._getAuthenticatedSigner(args.method);
 
-        const { signedTransaction } = await signer.sign({
+        const result = await signer.sign({
           type: "sign_transaction",
           data: {
             address,
@@ -333,9 +334,13 @@ export class EWalletEIP1193Provider
           },
         });
 
+        if (result.type !== "signed_transaction") {
+          throw new Error("Invalid result type");
+        }
+
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
 
-        return signedTransaction;
+        return result.signedTransaction;
       }
       case "eth_signTypedData_v4": {
         const [signWith, rawTypedData] =
@@ -358,7 +363,7 @@ export class EWalletEIP1193Provider
             ? parseTypedData<TypedDataDefinition>(rawTypedData)
             : rawTypedData;
 
-        const { signature } = await signer.sign({
+        const result = await signer.sign({
           type: "sign_typedData_v4",
           data: {
             address,
@@ -366,9 +371,13 @@ export class EWalletEIP1193Provider
           },
         });
 
+        if (result.type !== "signature") {
+          throw new Error("Invalid result type");
+        }
+
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
 
-        return signature;
+        return result.signature;
       }
       case "personal_sign": {
         const [message, signWith] =
@@ -390,7 +399,7 @@ export class EWalletEIP1193Provider
           ? hexToString(message)
           : message;
 
-        const { signature } = await signer.sign({
+        const result = await signer.sign({
           type: "personal_sign",
           data: {
             address,
@@ -398,9 +407,13 @@ export class EWalletEIP1193Provider
           },
         });
 
+        if (result.type !== "signature") {
+          throw new Error("Invalid result type");
+        }
+
         this._handleConnected(true, { chainId: this.activeChain?.chainId });
 
-        return signature;
+        return result.signature;
       }
       default:
         throw standardError.provider.unsupportedMethod({

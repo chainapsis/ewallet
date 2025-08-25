@@ -7,7 +7,7 @@ export async function personalSign(
   this: EthEWalletInterface,
   message: string,
 ): Promise<Hex> {
-  const { signature } = await this.makeSignature({
+  const result = await this.makeSignature({
     type: "personal_sign",
     data: {
       address: await this.getAddress(),
@@ -15,5 +15,9 @@ export async function personalSign(
     },
   });
 
-  return signature;
+  if (result.type !== "signature") {
+    throw new Error("Invalid result type");
+  }
+
+  return result.signature;
 }
