@@ -1,9 +1,10 @@
 import { toHex, type Hex } from "viem";
 
 import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
+import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
 export async function switchChain(
-  this: EthEWallet,
+  this: EthEWalletInterface,
   chainId: Hex | number,
 ): Promise<void> {
   const provider = await this.getEthereumProvider();

@@ -1,6 +1,9 @@
 import { type EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
+import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
-export async function waitUntilInitialized(this: EthEWallet): Promise<void> {
+export async function waitUntilInitialized(
+  this: EthEWalletInterface,
+): Promise<void> {
   console.log("[eth] waitUntilInitialized: start");
 
   try {

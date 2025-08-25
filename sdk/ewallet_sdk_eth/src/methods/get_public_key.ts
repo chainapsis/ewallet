@@ -2,8 +2,9 @@ import { type Hex } from "viem";
 
 import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import { standardError } from "@keplr-ewallet-sdk-eth/errors";
+import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
-export async function getPublicKey(this: EthEWallet): Promise<Hex> {
+export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
   console.log("[eth] getPublicKey: start");
 
   if (this.publicKey !== null) {

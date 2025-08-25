@@ -11,9 +11,10 @@ import {
   SUPPORTED_CHAINS,
   TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
+import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
 export async function getEthereumProvider(
-  this: EthEWallet,
+  this: EthEWalletInterface,
 ): Promise<EWalletEIP1193Provider> {
   if (this.provider !== null) {
     return this.provider;

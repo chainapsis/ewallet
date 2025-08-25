@@ -1,9 +1,10 @@
 import type { Hex } from "viem";
 
 import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
+import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
 export async function personalSign(
-  this: EthEWallet,
+  this: EthEWalletInterface,
   message: string,
 ): Promise<Hex> {
   const { signature } = await this.makeSignature({

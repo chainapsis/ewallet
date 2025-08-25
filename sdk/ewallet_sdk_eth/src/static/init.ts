@@ -2,11 +2,14 @@ import { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
-import type { EthEWalletInitArgs } from "@keplr-ewallet-sdk-eth/types";
+import type {
+  EthEWalletInitArgs,
+  EthEWalletInterface,
+} from "@keplr-ewallet-sdk-eth/types";
 
-export function initEthEWallet(
+export function init(
   args: EthEWalletInitArgs,
-): Result<EthEWallet, string> {
+): Result<EthEWalletInterface, string> {
   const eWalletRes = KeplrEWallet.init(args);
 
   if (!eWalletRes.success) {
@@ -20,13 +23,13 @@ export function initEthEWallet(
 
   return {
     success: true,
-    data: new EthEWallet(eWalletRes.data, args.use_testnet),
+    data: new (EthEWallet as any)(eWalletRes.data, args.use_testnet),
   };
 }
 
-export async function initEthEWalletAsync(
+export async function initAsync(
   args: EthEWalletInitArgs,
-): Promise<Result<EthEWallet, string>> {
+): Promise<Result<EthEWalletInterface, string>> {
   const eWalletRes = KeplrEWallet.init(args);
 
   if (!eWalletRes.success) {
@@ -38,7 +41,7 @@ export async function initEthEWalletAsync(
     return eWalletRes;
   }
 
-  const ethEWallet = new EthEWallet(eWalletRes.data, args.use_testnet);
+  const ethEWallet = new (EthEWallet as any)(eWalletRes.data, args.use_testnet);
 
   await ethEWallet.waitUntilInitialized();
 

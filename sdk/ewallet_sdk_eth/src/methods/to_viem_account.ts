@@ -1,12 +1,18 @@
 import { type Address, type Hex, serializeTypedData } from "viem";
 
-import type { EWalletAccount } from "@keplr-ewallet-sdk-eth/types";
+import type {
+  EthEWalletInterface,
+  EWalletAccount,
+} from "@keplr-ewallet-sdk-eth/types";
 import type { EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import { toRpcTransactionRequest } from "@keplr-ewallet-sdk-eth/utils";
 
 export async function toViemAccount(
-  this: EthEWallet,
-): Promise<EWalletAccount<"ewallet", Hex>> {
+  this: EthEWalletInterface,
+): Promise<// TODO: @rowan
+  // EWalletAccount<"ewallet", Hex>
+  // Please write concretely
+  any> {
   const publicKey = await this.getPublicKey();
   const address = await this.getAddress();
 

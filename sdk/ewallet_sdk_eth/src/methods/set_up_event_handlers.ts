@@ -2,8 +2,9 @@ import { type Hex } from "viem";
 
 import { type EthEWallet } from "@keplr-ewallet-sdk-eth/eth_ewallet";
 import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
+import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
-export function setUpEventHandlers(this: EthEWallet): void {
+export function setUpEventHandlers(this: EthEWalletInterface): void {
   console.log("[eth] set up event handlers");
 
   // this.eWallet.on("_init", (payload) => {

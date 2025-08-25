@@ -2,19 +2,22 @@ import {
   CosmosEWallet,
   initCosmosEWallet,
 } from "@keplr-ewallet/ewallet-sdk-cosmos";
-import { EthEWallet, initEthEWallet } from "@keplr-ewallet/ewallet-sdk-eth";
+import {
+  EthEWallet,
+  type EthEWalletInterface,
+} from "@keplr-ewallet/ewallet-sdk-eth";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 interface AppState {
-  keplr_sdk_eth: EthEWallet | null;
+  keplr_sdk_eth: EthEWalletInterface | null;
   keplr_sdk_cosmos: CosmosEWallet | null;
   isEthInitializing: boolean;
   isCosmosInitializing: boolean;
 }
 
 interface AppActions {
-  initKeplrSdkEth: () => EthEWallet | null;
+  initKeplrSdkEth: () => EthEWalletInterface | null;
   initKeplrSdkCosmos: () => CosmosEWallet | null;
 }
 
@@ -40,7 +43,7 @@ export const useAppState = create(
         console.log("Initializing ETH SDK...");
         set({ isEthInitializing: true });
 
-        const initRes = initEthEWallet({
+        const initRes = EthEWallet.init({
           // TODO: replace with actual apiKey
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",

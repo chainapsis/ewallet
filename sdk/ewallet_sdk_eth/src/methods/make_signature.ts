@@ -16,6 +16,7 @@ import type {
   EthSignParams,
   EthSignResult,
   EthSignFunction,
+  EthEWalletInterface,
 } from "@keplr-ewallet-sdk-eth/types";
 import {
   hashEthereumMessage,
@@ -203,7 +204,7 @@ const signTypeConfig: Record<EthSignMethod, SignTypeConfig<EthSignMethod>> = {
 };
 
 async function handleSigningFlow(
-  ethEWallet: EthEWallet,
+  ethEWallet: EthEWalletInterface,
   config: SignTypeConfig<EthSignMethod>,
   data: MakeEthereumSigData,
 ): Promise<EthSignMethodMap[EthSignMethod]["result"]> {
@@ -262,7 +263,7 @@ async function handleSigningFlow(
 }
 
 async function _makeSignature<P extends EthSignParams>(
-  this: EthEWallet,
+  this: EthEWalletInterface,
   parameters: P,
 ): Promise<EthSignResult<P>> {
   const origin = this.eWallet.origin;
