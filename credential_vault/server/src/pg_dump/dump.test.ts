@@ -2,6 +2,7 @@ import { Pool } from "pg";
 import fs from "node:fs/promises";
 import {
   getPgDumpById,
+  getAllPgDumps,
   type PgDumpConfig,
 } from "@keplr-ewallet/credential-vault-pg-interface";
 
@@ -70,7 +71,7 @@ describe("pg_dump_test", () => {
       expect(stats.size).toBe(result.data.dumpSize);
 
       const dump = await getPgDumpById(pool, result.data.dumpId);
-      if (!dump.success) {
+      if (dump.success === false) {
         throw new Error(`getPgDumpById failed: ${dump.err}`);
       }
       expect(dump.data?.status).toBe("COMPLETED");
@@ -95,21 +96,16 @@ describe("pg_dump_test", () => {
         throw new Error(`processPgDump should fail: ${result.data}`);
       }
 
-      const dumpIdMatch = result.err.match(/dumpId: ([^,]+)/);
-      if (!dumpIdMatch) {
-        throw new Error(
-          `Could not extract dumpId from error message: ${result.err}`,
-        );
+      const getAllPgDumpsRes = await getAllPgDumps(pool);
+      if (getAllPgDumpsRes.success === false) {
+        throw new Error(`getAllPgDumps failed: ${getAllPgDumpsRes.err}`);
       }
-      const dumpId = dumpIdMatch[1];
-      const dump = await getPgDumpById(pool, dumpId);
-      if (!dump.success) {
-        throw new Error(`getPgDumpById failed: ${dump.err}`);
-      }
-      expect(dump.data?.status).toBe("FAILED");
-      expect(dump.data?.dump_path).toBeNull();
-      expect(dump.data?.meta.dump_size).toBeUndefined();
-      expect(dump.data?.meta.dump_duration).toBeUndefined();
+
+      expect(getAllPgDumpsRes.data.length).toBe(1);
+      expect(getAllPgDumpsRes.data[0].status).toBe("FAILED");
+      expect(getAllPgDumpsRes.data[0].dump_path).toBeNull();
+      expect(getAllPgDumpsRes.data[0].meta.dump_size).toBeUndefined();
+      expect(getAllPgDumpsRes.data[0].meta.dump_duration).toBeUndefined();
     });
   });
 });

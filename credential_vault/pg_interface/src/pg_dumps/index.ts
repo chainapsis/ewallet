@@ -131,3 +131,15 @@ export async function getPgDumpById(
     return { success: false, err: String(error) };
   }
 }
+
+export async function getAllPgDumps(
+  db: Pool,
+): Promise<Result<PgDump[], string>> {
+  try {
+    const query = `SELECT * FROM pg_dumps ORDER BY created_at DESC`;
+    const result = await db.query(query);
+    return { success: true, data: result.rows as PgDump[] };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}
