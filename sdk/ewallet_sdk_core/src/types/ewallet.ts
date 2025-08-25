@@ -13,6 +13,7 @@ import type {
 } from "./msg";
 import type { ModalResult } from "./modal";
 import type { SignOutput } from "./sign";
+import type { InitPayload } from "./init";
 
 export interface KeplrEWalletInterface {
   apiKey: string;
@@ -21,7 +22,8 @@ export interface KeplrEWalletInterface {
   eventEmitter: EventEmitter2<KeplrEWalletCoreEventMap>;
   origin: string;
   state: null | KeplrEWalletState;
-  lazyInit: Promise<Result<InitResult, string>>;
+  isInitialized: Promise<Result<KeplrEWalletState, string>>;
+  lazyInit: () => Promise<Result<KeplrEWalletState, string>>;
 
   // _email: string | null;
   // _publicKey: string | null;
@@ -53,12 +55,12 @@ export interface KeplrEwalletInitArgs {
 
 export interface InitMsgHandlerArgs { }
 
-export interface InitResult {
-  email: string | null;
-  public_key: string | null;
-}
+// export interface InitResult {
+//   email: string | null;
+//   public_key: string | null;
+// }
 
 export interface KeplrEWalletState {
-  email: string;
-  publicKey: string;
+  email: string | null;
+  publicKey: string | null;
 }

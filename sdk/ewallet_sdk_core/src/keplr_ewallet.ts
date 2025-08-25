@@ -8,7 +8,7 @@ import { hideModal } from "./methods/hide_modal";
 import { makeSignature } from "./methods/make_signature";
 import { on } from "./methods/on";
 import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
-import { lazyInit } from "./lazy_init";
+import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
 import type { KeplrEWalletCoreEventMap, KeplrEWalletInterface } from "./types";
 
@@ -24,7 +24,7 @@ export function KeplrEWallet(
   this.origin = window.location.origin;
   this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
 
-  this.lazyInit.then();
+  this.isInitialized = this.lazyInit();
 }
 
 KeplrEWallet.init = function() { };

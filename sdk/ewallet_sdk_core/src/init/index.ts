@@ -85,7 +85,9 @@ export function initKeplrEwalletCore(
       window.__keplr_ewallet = ewalletCore;
       return { success: true, data: ewalletCore };
     }
-  } catch (err) {
+  } catch (err: any) {
+    console.error("[keplr] init fail", err);
+
     throw new Error("[keplr] sdk init fail, unreachable");
   } finally {
     if (window.__keplr_ewallet_locked === true) {
