@@ -1,6 +1,11 @@
 import request from "supertest";
 import express from "express";
 import { Pool } from "pg";
+import fs from "node:fs/promises";
+import {
+  getPgDumpById,
+  getAllPgDumps,
+} from "@keplr-ewallet/credential-vault-pg-interface";
 
 import {
   createPgDatabase,
@@ -69,6 +74,30 @@ describe("pg_dump_route_test", () => {
       expect(response.body.data.dumpPath).toBeDefined();
       expect(response.body.data.dumpSize).toBeGreaterThan(0);
       expect(response.body.data.dumpDuration).toBeGreaterThanOrEqual(0);
+
+      const dbDump = await getPgDumpById(pool, response.body.data.dumpId);
+      expect(dbDump.success).toBe(true);
+      if (dbDump.success === false) {
+        throw new Error(`getPgDumpById failed: ${dbDump.err}`);
+      }
+      expect(dbDump.data?.status).toBe("COMPLETED");
+      expect(dbDump.data?.dump_path).toBe(response.body.data.dumpPath);
+      expect(dbDump.data?.meta.dump_size).toBe(response.body.data.dumpSize);
+      expect(dbDump.data?.meta.dump_duration).toBe(
+        response.body.data.dumpDuration,
+      );
+
+      const fileExists = await fs
+        .access(response.body.data.dumpPath)
+        .then(() => true)
+        .catch(() => false);
+      expect(fileExists).toBe(true);
+
+      const stats = await fs.stat(response.body.data.dumpPath);
+      expect(stats.size).toBe(response.body.data.dumpSize);
+
+      const fileBuffer = await fs.readFile(response.body.data.dumpPath);
+      expect(fileBuffer.toString("ascii", 0, 5)).toBe("PGDMP");
     });
 
     it("should fail with invalid password", async () => {
@@ -132,6 +161,19 @@ describe("pg_dump_route_test", () => {
       expect(response.body.success).toBe(false);
       expect(response.body.code).toBe("PG_DUMP_FAILED");
       expect(response.body.msg).toContain("database");
+
+      const allDumps = await getAllPgDumps(pool);
+      expect(allDumps.success).toBe(true);
+      if (allDumps.success === false) {
+        throw new Error(`getAllPgDumps failed: ${allDumps.err}`);
+      }
+
+      const failedDumps = allDumps.data.filter(
+        (dump) => dump.status === "FAILED",
+      );
+      expect(failedDumps.length).toBe(1);
+      expect(failedDumps[0].dump_path).toBeNull();
+      expect(failedDumps[0].meta.error).toContain("database");
     });
 
     it("should handle authentication errors", async () => {
@@ -162,6 +204,19 @@ describe("pg_dump_route_test", () => {
       expect(response.body.success).toBe(false);
       expect(response.body.code).toBe("PG_DUMP_FAILED");
       expect(response.body.msg).toContain("authentication");
+
+      const allDumps = await getAllPgDumps(pool);
+      expect(allDumps.success).toBe(true);
+      if (allDumps.success === false) {
+        throw new Error(`getAllPgDumps failed: ${allDumps.err}`);
+      }
+
+      const failedDumps = allDumps.data.filter(
+        (dump) => dump.status === "FAILED",
+      );
+      expect(failedDumps.length).toBe(1);
+      expect(failedDumps[0].dump_path).toBeNull();
+      expect(failedDumps[0].meta.error).toContain("authentication");
     });
 
     it("should handle multiple concurrent requests", async () => {
@@ -183,6 +238,24 @@ describe("pg_dump_route_test", () => {
       const dumpIds = responses.map((r) => r.body.data.dumpId);
       const uniqueDumpIds = new Set(dumpIds);
       expect(uniqueDumpIds.size).toBe(3);
+
+      for (const response of responses) {
+        const dbDump = await getPgDumpById(pool, response.body.data.dumpId);
+        expect(dbDump.success).toBe(true);
+        if (dbDump.success) {
+          expect(dbDump.data?.status).toBe("COMPLETED");
+          expect(dbDump.data?.dump_path).toBe(response.body.data.dumpPath);
+        }
+
+        const fileExists = await fs
+          .access(response.body.data.dumpPath)
+          .then(() => true)
+          .catch(() => false);
+        expect(fileExists).toBe(true);
+
+        const fileBuffer = await fs.readFile(response.body.data.dumpPath);
+        expect(fileBuffer.toString("ascii", 0, 5)).toBe("PGDMP");
+      }
     });
   });
 });
