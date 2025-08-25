@@ -17,6 +17,8 @@ import type {
   EthSignResult,
   EthSignFunction,
   EthEWalletInterface,
+  EthSignParams2,
+  EthSignResult2,
 } from "@keplr-ewallet-sdk-eth/types";
 import {
   hashEthereumMessage,
@@ -205,9 +207,10 @@ const signTypeConfig: Record<EthSignMethod, SignTypeConfig<EthSignMethod>> = {
 
 async function handleSigningFlow(
   ethEWallet: EthEWalletInterface,
-  config: SignTypeConfig<EthSignMethod>,
+  // config: SignTypeConfig<EthSignMethod>,
   data: MakeEthereumSigData,
-): Promise<EthSignMethodMap[EthSignMethod]["result"]> {
+  params: EthSignParams2,
+): Promise<EthSignResult2> {
   const showModalMsg: EWalletMsgShowModal = {
     target: "keplr_ewallet_attached",
     msg_type: "show_modal",
@@ -230,12 +233,13 @@ async function handleSigningFlow(
       });
     }
 
-    let processedData = data;
-    if (config.processModalResult) {
-      processedData = config.processModalResult(data, modalResult.data);
-    }
+    const processedData = processModalResult(data, modalResult.data, params);
+    // if (config.processModalResult) {
+    //   processedData = config.processModalResult(data, modalResult.data);
+    // }
 
-    const msgHash = config.hashMakeSignatureData(processedData);
+    const msgHash = hashMakeSignatureData(processedData, params);
+    // config.hashMakeSignatureData(processedData);
 
     const makeSignatureMsg: EWalletMsgMakeSignature = {
       target: "keplr_ewallet_attached",
@@ -262,10 +266,10 @@ async function handleSigningFlow(
   }
 }
 
-async function _makeSignature<P extends EthSignParams>(
+export async function makeSignature(
   this: EthEWalletInterface,
-  parameters: P,
-): Promise<EthSignResult<P>> {
+  params: EthSignParams2,
+): Promise<EthSignResult2> {
   const origin = this.eWallet.origin;
 
   const provider = await this.getEthereumProvider();
@@ -296,72 +300,154 @@ async function _makeSignature<P extends EthSignParams>(
   const basePayload = {
     chain_info: chainInfo,
     origin,
-    signer: parameters.data.address,
+    signer: params.data.address,
     request_id: uuidv4(),
   };
 
-  let signType: MakeEthereumSignType;
-  let makeSignatureData: MakeEthereumSigData;
+  const makeSignatureData = createMakeSignatureData(basePayload, params);
 
-  switch (parameters.type) {
+  const signResult = await handleSigningFlow(
+    this,
+    // signTypeConfig[params.type],
+    makeSignatureData,
+    params,
+  );
+
+  return signResult;
+}
+
+function createMakeSignatureData(
+  basePayload: {
+    chain_info: ChainInfoForAttachedModal;
+    origin: string;
+    signer: string;
+    request_id: string;
+  },
+  params: EthSignParams2,
+): MakeEthereumSigData {
+  switch (params.type) {
     case "sign_transaction": {
-      signType = "tx";
-      makeSignatureData = {
+      return {
         chain_type: "eth",
-        sign_type: signType,
+        sign_type: "tx",
         payload: {
           ...basePayload,
           data: {
-            transaction: parameters.data.transaction,
+            transaction: params.data.transaction,
           },
         },
       };
-      break;
     }
 
     case "personal_sign": {
-      signType = "arbitrary";
-      makeSignatureData = {
+      return {
         chain_type: "eth",
-        sign_type: signType,
+        sign_type: "arbitrary",
         payload: {
           ...basePayload,
           data: {
-            message: parameters.data.message,
+            message: params.data.message,
           },
         },
       };
-      break;
     }
 
     case "sign_typedData_v4": {
-      signType = "eip712";
-      makeSignatureData = {
+      return {
         chain_type: "eth",
-        sign_type: signType,
+        sign_type: "eip712",
         payload: {
           ...basePayload,
           data: {
             version: "4",
-            serialized_typed_data: parameters.data.serializedTypedData,
+            serialized_typed_data: params.data.serializedTypedData,
           },
         },
       };
-      break;
     }
 
     default: {
       throw standardError.ethEWallet.invalidMessage({
-        message: `Unknown sign method: ${(parameters as any).type}`,
+        message: `Unknown sign method: ${(params as any).type}`,
       });
     }
   }
-
-  return await handleSigningFlow(
-    this,
-    signTypeConfig[parameters.type],
-    makeSignatureData,
-  );
 }
 
-export const makeSignature: EthSignFunction = _makeSignature;
+function processModalResult(
+  data: MakeEthereumSigData,
+  modalResult: MakeSignatureModalResult | null,
+  params: EthSignParams2,
+): MakeEthereumSigData {
+  switch (params.type) {
+    case "sign_transaction": {
+      if (data.sign_type !== "tx") {
+        throw standardError.ethEWallet.invalidSignType({
+          message: "Sign type should be tx",
+        });
+      }
+
+      if (!modalResult) {
+        throw standardError.ethEWallet.invalidMessage({
+          message:
+            "Make signature result is not present for sign_transaction method",
+        });
+      }
+
+      if (modalResult.modal_type !== "make_signature") {
+        throw standardError.ethEWallet.invalidMessage({
+          message: "Invalid modal result for eth signature",
+        });
+      }
+
+      if (modalResult.chain_type !== "eth") {
+        throw standardError.ethEWallet.invalidMessage({
+          message: "Invalid chain type for eth signature",
+        });
+      }
+
+      const originalTx = data.payload.data.transaction;
+      const simulatedTx = modalResult.data.transaction;
+
+      const immutableFields = ["type", "to", "value", "data"] as const;
+
+      for (const field of immutableFields) {
+        if (originalTx[field] !== simulatedTx[field]) {
+          throw standardError.ethEWallet.invalidMessage({
+            message: `Simulation changed immutable field: ${field}. Original: ${originalTx[field]}, Simulated: ${simulatedTx[field]}`,
+          });
+        }
+      }
+
+      return {
+        ...data,
+        payload: {
+          ...data.payload,
+          data: {
+            transaction: simulatedTx,
+          },
+        },
+      };
+    }
+
+    case "personal_sign": {
+      return data;
+    }
+
+    case "sign_typedData_v4": {
+      return data;
+    }
+
+    default: {
+      throw new Error("unreachable");
+    }
+  }
+}
+
+export function hashMakeSignatureData(args: any, params: EthSignParams2) {
+  switch (params.type) {
+    case "sign_transaction": {
+      break;
+    }
+  }
+}

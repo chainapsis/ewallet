@@ -8,6 +8,46 @@ import type {
   RpcTransactionRequest,
 } from "viem";
 
+export type EthSignParams2 =
+  | {
+    type: "sign_transaction";
+    data: {
+      address: Address;
+      transaction: RpcTransactionRequest;
+    };
+  }
+  | {
+    type: "personal_sign";
+    data: {
+      address: Address;
+      message: SignableMessage;
+    };
+  }
+  | {
+    type: "sign_typedData_v4";
+    data: {
+      address: Address;
+      serializedTypedData: string;
+    };
+  };
+
+export type EthSignResult2 =
+  | {
+    param_type: "sign_transaction";
+    type: "signed_transaction";
+    signedTransaction: Hex;
+  }
+  | {
+    param_type: "personal_sign";
+    type: "signature";
+    signature: Hex;
+  }
+  | {
+    param_type: "sign_typedData_v4";
+    type: "signature";
+    signature: Hex;
+  };
+
 export interface EthSignMethodMap {
   sign_transaction: {
     params: {

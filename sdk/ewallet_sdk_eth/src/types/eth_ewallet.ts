@@ -5,7 +5,7 @@ import type {
 import type { Address, Hex } from "viem";
 
 import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
-import type { EthSignFunction } from ".";
+import type { EthSignFunction, EthSignParams, EthSignResult } from ".";
 
 export interface EthEWalletInterface {
   eWallet: KeplrEWalletInterface;
@@ -22,7 +22,9 @@ export interface EthEWalletInterface {
   getPublicKey: () => Promise<Hex>;
   getAddress: () => Promise<Hex>;
   waitUntilInitialized: () => Promise<void>;
-  makeSignature: EthSignFunction;
+  makeSignature: <P extends EthSignParams>(
+    parameters: P,
+  ) => Promise<EthSignResult<P>>;
   setUpEventHandlers: () => void;
 }
 
