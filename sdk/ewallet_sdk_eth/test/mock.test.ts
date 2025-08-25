@@ -24,9 +24,10 @@ import {
   mockMainnetRpc,
   mockSepoliaRpc,
   mockFailingRpc,
+  createMockSigner,
 } from "./mock";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
-import { initEWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
+import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 
 describe("EWallet Provider - Mock RPC Testing", () => {
   let mockServer: MockRpcServer;
@@ -56,7 +57,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         [mainnetUrl]: mainnetConfig,
       });
 
-      const provider = await initEWalletEIP1193Provider(
+      const provider = new EWalletEIP1193Provider(
         createProviderOptions(
           [
             {
@@ -94,7 +95,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         [mainnetUrl]: mainnetConfig,
       });
 
-      const provider = await initEWalletEIP1193Provider(
+      const provider = new EWalletEIP1193Provider(
         createProviderOptions(
           [
             {
@@ -133,7 +134,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         [mainnetUrl]: mainnetConfig,
       });
 
-      const provider = await initEWalletEIP1193Provider(
+      const provider = new EWalletEIP1193Provider(
         createProviderOptions(
           [
             {
@@ -173,195 +174,8 @@ describe("EWallet Provider - Mock RPC Testing", () => {
     });
   });
 
-  describe("Chain Validation", () => {
-    it("should successfully validate chain with mock RPC", async () => {
-      // Setup mock RPC server BEFORE creating provider
-      const { url: mainnetUrl, config: mainnetConfig } = mockMainnetRpc();
-      mockServer.setup({
-        [mainnetUrl]: mainnetConfig,
-      });
-
-      // Create provider with mock RPC URL
-      const mockChainParam = {
-        ...createChainParam(mainnet),
-        rpcUrls: [mainnetUrl],
-      };
-
-      const provider = await initEWalletEIP1193Provider(
-        createProviderOptions([mockChainParam]),
-      );
-
-      // Provider should be initialized and validated
-      expect(provider.chainId).toBe(toHex(mainnet.id));
-      expect(provider.isConnected).toBe(true);
-
-      // Get validation state
-      const addedChains = (provider as any).addedChains;
-      expect(addedChains[0].validationStatus).toBe("valid");
-    });
-
-    it("should fail with network failures using mock RPC", async () => {
-      // Setup failing mock RPC BEFORE creating provider
-      const { url: failingUrl, config: failingConfig } = mockFailingRpc();
-      mockServer.setup({
-        [failingUrl]: failingConfig,
-      });
-
-      const mockChainParam = {
-        ...createChainParam(mainnet),
-        rpcUrls: [failingUrl],
-      };
-
-      // Provider initialization should fail
-      await expect(
-        initEWalletEIP1193Provider(createProviderOptions([mockChainParam])),
-      ).rejects.toThrow("No valid chains found during provider initialization");
-    });
-
-    it("should fail when detecting chainId mismatch with mock RPC", async () => {
-      // Setup mock RPC that returns wrong chainId BEFORE creating provider
-      const mockUrl = "https://fake-mainnet-but-returns-sepolia.com";
-      mockServer.setup({
-        [mockUrl]: { chainId: toHex(sepolia.id) }, // Returns sepolia ID instead of mainnet
-      });
-
-      const mockChainParam = {
-        ...createChainParam(mainnet), // Expects mainnet
-        rpcUrls: [mockUrl],
-      };
-
-      // Provider initialization should fail due to chainId mismatch
-      await expect(
-        initEWalletEIP1193Provider(createProviderOptions([mockChainParam])),
-      ).rejects.toThrow("No valid chains found during provider initialization");
-    });
-
-    it("should successfully handle multiple chains with different mock responses", async () => {
-      // Setup multiple mock RPCs BEFORE creating provider
-      const { url: mainnetUrl, config: mainnetConfig } = mockMainnetRpc();
-      const { url: sepoliaUrl, config: sepoliaConfig } = mockSepoliaRpc();
-
-      mockServer.setup({
-        [mainnetUrl]: mainnetConfig,
-        [sepoliaUrl]: sepoliaConfig,
-      });
-
-      const mainnetChain = {
-        ...createChainParam(mainnet),
-        rpcUrls: [mainnetUrl],
-      };
-
-      const sepoliaChain = {
-        ...createChainParam(sepolia),
-        rpcUrls: [sepoliaUrl],
-      };
-
-      const provider = await initEWalletEIP1193Provider(
-        createProviderOptions([mainnetChain, sepoliaChain]),
-      );
-
-      // Both chains should be validated during initialization
-      const addedChains = (provider as any).addedChains;
-      expect(addedChains[0].validationStatus).toBe("valid"); // mainnet
-      expect(addedChains[1].validationStatus).toBe("valid"); // sepolia
-
-      // Should start with mainnet (first chain)
-      expect(provider.chainId).toBe(toHex(mainnet.id));
-
-      // Switch to sepolia should work
-      await provider.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: toHex(sepolia.id) }],
-      });
-
-      expect(provider.chainId).toBe(toHex(sepolia.id));
-    });
-
-    it("should fail with RPC error responses", async () => {
-      // Setup mock RPC that returns error BEFORE creating provider
-      const errorUrl = "https://mock-rpc-error.com";
-      mockServer.simulateRpcError(errorUrl, -32000, "Server error");
-
-      const mockChainParam = {
-        ...createChainParam(mainnet),
-        rpcUrls: [errorUrl],
-      };
-
-      // Provider initialization should fail
-      await expect(
-        initEWalletEIP1193Provider(createProviderOptions([mockChainParam])),
-      ).rejects.toThrow("No valid chains found during provider initialization");
-    });
-
-    it("should successfully handle delayed responses", async () => {
-      // Setup mock RPC with delay BEFORE creating provider
-      const delayedUrl = "https://mock-slow-rpc.com";
-      mockServer.setup({
-        [delayedUrl]: {
-          chainId: toHex(mainnet.id),
-          delay: 50, // 50ms delay
-        },
-      });
-
-      const mockChainParam = {
-        ...createChainParam(mainnet),
-        rpcUrls: [delayedUrl],
-      };
-
-      const start = performance.now();
-      const provider = await initEWalletEIP1193Provider(
-        createProviderOptions([mockChainParam]),
-      );
-      const end = performance.now();
-
-      // Should take at least the delay time
-      expect(end - start).toBeGreaterThanOrEqual(45);
-
-      const addedChains = (provider as any).addedChains;
-      expect(addedChains[0].validationStatus).toBe("valid");
-    });
-  });
-
   describe("Network Simulation", () => {
-    it("should successfully handle dynamic mock configuration changes", async () => {
-      const dynamicUrl = "https://dynamic-mock.com";
-
-      // Initially setup as working
-      mockServer.setup({
-        [dynamicUrl]: { chainId: toHex(mainnet.id) },
-      });
-
-      const provider = await initEWalletEIP1193Provider(
-        createProviderOptions([
-          {
-            ...createChainParam(mainnet),
-            rpcUrls: [dynamicUrl],
-          },
-        ]),
-      );
-
-      // First provider should be initialized successfully
-      expect(provider.chainId).toBe(toHex(mainnet.id));
-      let addedChains = (provider as any).addedChains;
-      expect(addedChains[0].validationStatus).toBe("valid");
-
-      // Change mock to fail
-      mockServer.simulateFailure(dynamicUrl);
-
-      // Create new provider (simulating restart) - should now fail
-      await expect(
-        initEWalletEIP1193Provider(
-          createProviderOptions([
-            {
-              ...createChainParam(mainnet),
-              rpcUrls: [dynamicUrl],
-            },
-          ]),
-        ),
-      ).rejects.toThrow("No valid chains found during provider initialization");
-    });
-
-    it("should successfully handle disconnect and reconnect events", async () => {
+    it("should successfully handle disconnect and reconnect events (public rpc)", async () => {
       const dynamicUrl = "https://disconnect-reconnect-test.com";
 
       // Setup working mock initially
@@ -369,7 +183,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
         [dynamicUrl]: { chainId: toHex(mainnet.id) },
       });
 
-      const provider = await initEWalletEIP1193Provider(
+      const provider = new EWalletEIP1193Provider(
         createProviderOptions([
           {
             ...createChainParam(mainnet),
@@ -413,6 +227,70 @@ describe("EWallet Provider - Mock RPC Testing", () => {
 
       // Third request should succeed and trigger reconnect
       await provider.request({ method: "eth_blockNumber" });
+
+      // Should have connect event now
+      expect(events).toHaveLength(2);
+      expect(events[1].type).toBe("connect");
+      expect(events[1].data).toMatchObject({
+        chainId: toHex(mainnet.id),
+      });
+    });
+
+    it("should successfully handle disconnect and reconnect events (wallet rpc)", async () => {
+      const dynamicUrl = "https://disconnect-reconnect-test.com";
+
+      // Setup working mock initially
+      mockServer.setup({
+        [dynamicUrl]: { chainId: toHex(mainnet.id) },
+      });
+
+      const provider = new EWalletEIP1193Provider(
+        createProviderOptions(
+          [
+            {
+              ...createChainParam(mainnet),
+              rpcUrls: [dynamicUrl],
+            },
+          ],
+          createMockSigner(),
+        ),
+      );
+
+      // Track events
+      const events: Array<{ type: string; data?: any }> = [];
+      provider.on("connect", (data) => events.push({ type: "connect", data }));
+      provider.on("disconnect", (error) =>
+        events.push({ type: "disconnect", data: error }),
+      );
+
+      // Clear events array since initialization events already fired
+      events.length = 0;
+
+      // First request should succeed (no additional connect event)
+      await provider.request({ method: "eth_blockNumber" });
+      expect(events).toHaveLength(0); // No events, already connected
+
+      // Change mock to simulate network failure
+      mockServer.simulateFailure(dynamicUrl);
+
+      // Second request should fail and trigger disconnect
+      await expect(
+        provider.request({ method: "eth_blockNumber" }),
+      ).rejects.toMatchObject({
+        code: ResourceUnavailableRpcError.code,
+      });
+
+      // Should have disconnect event
+      expect(events).toHaveLength(1);
+      expect(events[0].type).toBe("disconnect");
+
+      // Restore working mock
+      mockServer.setup({
+        [dynamicUrl]: { chainId: toHex(mainnet.id) },
+      });
+
+      // Third request should succeed and trigger reconnect
+      await provider.request({ method: "eth_accounts" });
 
       // Should have connect event now
       expect(events).toHaveLength(2);

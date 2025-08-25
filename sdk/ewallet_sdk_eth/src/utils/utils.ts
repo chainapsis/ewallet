@@ -2,7 +2,7 @@ import type {
   Hex,
   Address,
   ByteArray,
-  AddEthereumChainParameter as Chain,
+  AddEthereumChainParameter as RpcChain,
 } from "viem";
 import { publicKeyToAddress } from "viem/accounts";
 import { secp256k1 } from "@noble/curves/secp256k1";
@@ -154,7 +154,7 @@ export const validateNativeCurrencySymbol = (
  * @returns Validation result with error
  */
 export const validateChain = (
-  chain: Chain,
+  chain: RpcChain,
 ): {
   isValid: boolean;
   error?: string;

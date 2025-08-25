@@ -29,19 +29,16 @@ import {
   generateInvalidBytecode,
   createEthSigner,
 } from "./utils";
-import {
-  initEWalletEIP1193Provider,
-  type EWalletEIP1193Provider,
-} from "@keplr-ewallet-sdk-eth/provider";
+import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 
 describe("EWallet Provider - Viem Integration", () => {
   describe("Public Client - Live RPC", () => {
     let provider: EWalletEIP1193Provider;
 
-    beforeAll(async () => {
+    beforeAll(() => {
       const mainnetChainParam = createChainParam(mainnet);
-      provider = await initEWalletEIP1193Provider(
+      provider = new EWalletEIP1193Provider(
         createProviderOptions([mainnetChainParam]),
       );
     });
@@ -91,7 +88,7 @@ describe("EWallet Provider - Viem Integration", () => {
       try {
         await hardhatNodeAlt.start();
         const hardhatChainParam = createChainParam(hardhatAlt);
-        hardhatProvider = await initEWalletEIP1193Provider(
+        hardhatProvider = new EWalletEIP1193Provider(
           createProviderOptions([hardhatChainParam]),
         );
       } catch (error) {
@@ -189,8 +186,8 @@ describe("EWallet Provider - Viem Integration", () => {
     describe("Signing Operations", () => {
       let aliceProvider: EWalletEIP1193Provider;
 
-      beforeAll(async () => {
-        aliceProvider = await initEWalletEIP1193Provider(
+      beforeAll(() => {
+        aliceProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(hardhatAlt)], alice),
         );
       });
@@ -293,8 +290,8 @@ describe("EWallet Provider - Viem Integration", () => {
       let walletClient: any;
       let txHelper: any;
 
-      beforeAll(async () => {
-        aliceProvider = await initEWalletEIP1193Provider(
+      beforeAll(() => {
+        aliceProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(hardhatAlt)], alice),
         );
 
@@ -469,8 +466,8 @@ describe("EWallet Provider - Viem Integration", () => {
       let walletClient: any;
       let contractHelper: any;
 
-      beforeAll(async () => {
-        aliceProvider = await initEWalletEIP1193Provider(
+      beforeAll(() => {
+        aliceProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(hardhatAlt)], alice),
         );
 
@@ -606,8 +603,8 @@ describe("EWallet Provider - Viem Integration", () => {
       let walletClient: any;
       let txHelper: any;
 
-      beforeAll(async () => {
-        aliceProvider = await initEWalletEIP1193Provider(
+      beforeAll(() => {
+        aliceProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(hardhatAlt)], alice),
         );
 

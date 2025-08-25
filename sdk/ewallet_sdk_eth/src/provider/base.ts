@@ -209,6 +209,12 @@ export class EWalletEIP1193Provider
       case "wallet_addEthereumChain": {
         const [newChain] =
           args.params as RpcRequestArgs<"wallet_addEthereumChain">["params"];
+        const validation = validateChain(newChain);
+        if (!validation.isValid) {
+          throw new InvalidParamsRpcError(
+            new Error(validation.error || "Invalid chain parameter"),
+          );
+        }
         const existing = this.addedChains.find(
           (c) => c.chainId === newChain.chainId,
         );
