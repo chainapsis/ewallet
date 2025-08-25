@@ -9,7 +9,6 @@ import {
   toViemAccount,
   getAddress,
   setUpEventHandlers,
-  waitUntilInitialized,
 } from "@keplr-ewallet-sdk-eth/methods";
 import type { EthEWalletInterface } from "./types";
 import { init, initAsync } from "./static/init";
@@ -35,7 +34,7 @@ EthEWallet.prototype.switchChain = switchChain;
 EthEWallet.prototype.toViemAccount = toViemAccount;
 EthEWallet.prototype.getPublicKey = getPublicKey;
 EthEWallet.prototype.getAddress = getAddress;
-EthEWallet.prototype.waitUntilInitialized = waitUntilInitialized;
+// EthEWallet.prototype.waitUntilInitialized = waitUntilInitialized;
 EthEWallet.prototype.makeSignature = makeSignature;
 EthEWallet.prototype.setUpEventHandlers = setUpEventHandlers;
 

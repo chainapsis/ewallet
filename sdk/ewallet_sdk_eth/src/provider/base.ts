@@ -39,8 +39,7 @@ import { ProviderEventEmitter, VERSION } from "@keplr-ewallet-sdk-eth/provider";
 
 export class EWalletEIP1193Provider
   extends ProviderEventEmitter
-  implements EIP1193Provider
-{
+  implements EIP1193Provider {
   protected isInitialized: boolean;
 
   protected signer: EthSigner | undefined;

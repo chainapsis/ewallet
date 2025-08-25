@@ -7,14 +7,11 @@ import type { Address, CustomSource, Hex, Prettify } from "viem";
  * Ewallet account type
  * This is a viem compatible account type
  */
-export type EWalletAccount<
-  source extends string = string,
-  address extends Address = Address,
-> = Prettify<
+export type EWalletAccount = Prettify<
   CustomSource & {
-    address: address;
+    address: Address;
     publicKey: Hex;
-    source: source;
+    source: "ewallet";
     type: "local";
   }
 >;
