@@ -5,21 +5,17 @@ import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/targ
 export async function getEmail(
   this: KeplrEWalletInterface,
 ): Promise<string | null> {
-  try {
-    const res = await this.sendMsgToIframe({
-      target: EWALLET_ATTACHED_TARGET,
-      msg_type: "get_email",
-      payload: null,
-    });
+  await this.waitUntilInitialized;
 
-    if (res.msg_type === "get_email_ack" && res.payload.success) {
-      return res.payload.data;
-    }
+  const res = await this.sendMsgToIframe({
+    target: EWALLET_ATTACHED_TARGET,
+    msg_type: "get_email",
+    payload: null,
+  });
 
-    return null;
-  } catch (error) {
-    console.error("[keplr] getEmail failed with error:", error);
-
-    return null;
+  if (res.msg_type === "get_email_ack" && res.payload.success) {
+    return res.payload.data;
   }
+
+  return null;
 }

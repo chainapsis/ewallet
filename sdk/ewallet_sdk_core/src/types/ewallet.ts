@@ -22,7 +22,7 @@ export interface KeplrEWalletInterface {
   eventEmitter: EventEmitter2<KeplrEWalletCoreEventMap>;
   origin: string;
   state: null | KeplrEWalletState;
-  isInitialized: Promise<Result<KeplrEWalletState, string>>;
+  waitUntilInitialized: Promise<Result<KeplrEWalletState, string>>;
   lazyInit: () => Promise<Result<KeplrEWalletState, string>>;
 
   // _email: string | null;

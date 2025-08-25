@@ -9,6 +9,8 @@ export async function makeSignature(
   this: KeplrEWalletInterface,
   msg: EWalletMsgMakeSignature,
 ): Promise<SignOutput> {
+  await this.waitUntilInitialized;
+
   const res = await this.sendMsgToIframe(msg);
 
   if (res.msg_type !== "make_signature_ack") {

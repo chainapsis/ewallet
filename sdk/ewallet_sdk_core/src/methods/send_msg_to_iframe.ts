@@ -8,12 +8,7 @@ export async function sendMsgToIframe(
   this: KeplrEWalletInterface,
   msg: EWalletMsg,
 ): Promise<EWalletMsg> {
-  // if (!this.isInitialized) {
-  //   if (this.initError) {
-  //     throw new Error(this.initError);
-  //   }
-  //   await this.waitUntilInitialized;
-  // }
+  await this.waitUntilInitialized;
 
   const contentWindow = this.iframe.contentWindow;
   if (contentWindow === null) {

@@ -7,10 +7,14 @@ import { getEmail } from "./methods/get_email";
 import { hideModal } from "./methods/hide_modal";
 import { makeSignature } from "./methods/make_signature";
 import { on } from "./methods/on";
-import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
+// import { getCosmosChainInfo } from "./methods/get_cosmos_chain_info";
 import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
-import type { KeplrEWalletCoreEventMap, KeplrEWalletInterface } from "./types";
+import type {
+  EWalletMsg,
+  KeplrEWalletCoreEventMap,
+  KeplrEWalletInterface,
+} from "./types";
 
 export function KeplrEWallet(
   this: KeplrEWalletInterface,
@@ -24,7 +28,7 @@ export function KeplrEWallet(
   this.origin = window.location.origin;
   this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
 
-  this.isInitialized = this.lazyInit();
+  this.waitUntilInitialized = this.lazyInit();
 }
 
 KeplrEWallet.init = function() { };
@@ -35,13 +39,11 @@ KeplrEWallet.prototype.hideModal = hideModal;
 KeplrEWallet.prototype.sendMsgToIframe = sendMsgToIframe;
 KeplrEWallet.prototype.signIn = signIn;
 KeplrEWallet.prototype.signOut = signOut;
-KeplrEWallet.prototype.getCosmosChainInfo = getCosmosChainInfo;
+// KeplrEWallet.prototype.getCosmosChainInfo = getCosmosChainInfo;
 KeplrEWallet.prototype.getPublicKey = getPublicKey;
 KeplrEWallet.prototype.getEmail = getEmail;
 KeplrEWallet.prototype.makeSignature = makeSignature;
 KeplrEWallet.prototype.on = on;
-
-// KeplrEWallet.prototype.waitUntilInitialized = waitUntilInitialized;
 
 // export class KeplrEWallet2 {
 //   apiKey: string;

@@ -93,6 +93,7 @@ export const useAppState = create(
           console.log("Cosmos SDK initialized");
 
           const cosmosSDK = initRes.data;
+          console.log(123, cosmosSDK);
 
           set({
             keplr_sdk_cosmos: cosmosSDK,

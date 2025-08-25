@@ -5,21 +5,17 @@ import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/targ
 export async function getPublicKey(
   this: KeplrEWalletInterface,
 ): Promise<string | null> {
-  try {
-    const res = await this.sendMsgToIframe({
-      target: EWALLET_ATTACHED_TARGET,
-      msg_type: "get_public_key",
-      payload: null,
-    });
+  await this.waitUntilInitialized;
 
-    if (res.msg_type === "get_public_key_ack" && res.payload.success) {
-      return res.payload.data;
-    }
+  const res = await this.sendMsgToIframe({
+    target: EWALLET_ATTACHED_TARGET,
+    msg_type: "get_public_key",
+    payload: null,
+  });
 
-    return null;
-  } catch (error) {
-    console.error("[keplr] getPublicKey failed with error:", error);
-
-    return null;
+  if (res.msg_type === "get_public_key_ack" && res.payload.success) {
+    return res.payload.data;
   }
+
+  return null;
 }

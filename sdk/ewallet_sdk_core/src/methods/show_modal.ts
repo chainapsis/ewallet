@@ -12,6 +12,8 @@ export async function showModal(
   this: KeplrEWalletInterface,
   msg: EWalletMsgShowModal,
 ): Promise<ModalResult> {
+  await this.waitUntilInitialized;
+
   let timeoutId: NodeJS.Timeout | null = null;
 
   const timeout = new Promise<never>((_, reject) => {
