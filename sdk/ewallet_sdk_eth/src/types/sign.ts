@@ -1,9 +1,5 @@
-import type {
-  Address,
-  Hex,
-  SignableMessage,
-  RpcTransactionRequest,
-} from "viem";
+import type { Address, SignableMessage, RpcTransactionRequest } from "viem";
+import type { MakeEthereumSigResult } from "@keplr-ewallet/ewallet-sdk-core";
 
 export type EthSignParams =
   | {
@@ -28,15 +24,7 @@ export type EthSignParams =
       };
     };
 
-export type EthSignResult =
-  | {
-      type: "signed_transaction";
-      signedTransaction: Hex;
-    }
-  | {
-      type: "signature";
-      signature: Hex;
-    };
+export type EthSignResult = MakeEthereumSigResult;
 
 /**
  * Signer interface for Ethereum

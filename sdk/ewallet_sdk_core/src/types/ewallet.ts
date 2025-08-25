@@ -6,11 +6,7 @@ import type {
   KeplrEWalletCoreEventMap,
   KeplrEWalletCoreEventName,
 } from "./event";
-import type {
-  EWalletMsg,
-  EWalletMsgMakeSignature,
-  EWalletMsgShowModal,
-} from "./msg";
+import type { EWalletMsg, EWalletMsgShowModal } from "./msg";
 import type { ModalResult } from "./modal";
 import type { SignOutput } from "./sign";
 import type { InitPayload } from "./init";
@@ -41,7 +37,6 @@ export interface KeplrEWalletInterface {
   getPublicKey: () => Promise<string | null>;
   getEmail: () => Promise<string | null>;
 
-  makeSignature: (msg: EWalletMsgMakeSignature) => Promise<SignOutput>;
   on: <N extends KeplrEWalletCoreEventName>(
     eventName: N,
     handler: KeplrEWalletCoreEventHandler<N>,
@@ -53,7 +48,7 @@ export interface KeplrEwalletInitArgs {
   sdk_endpoint?: string;
 }
 
-export interface InitMsgHandlerArgs { }
+export interface InitMsgHandlerArgs {}
 
 // export interface InitResult {
 //   email: string | null;

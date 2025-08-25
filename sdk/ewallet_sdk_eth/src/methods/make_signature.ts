@@ -1,12 +1,9 @@
 import type {
   ChainInfoForAttachedModal,
-  EWalletMsgMakeSignature,
   EWalletMsgShowModal,
   MakeEthereumSigData,
-  MakeSignatureModalResult,
-  SignOutput,
 } from "@keplr-ewallet/ewallet-sdk-core";
-import { serializeSignature, serializeTransaction, type Chain } from "viem";
+import type { Chain } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
 import type {
@@ -15,14 +12,6 @@ import type {
   EthSignResult,
 } from "@keplr-ewallet-sdk-eth/types";
 import {
-  hashEthereumMessage,
-  hashEthereumTransaction,
-  hashEthereumTypedData,
-  encodeEthereumSignature,
-  toTransactionSerializable,
-  parseTypedDataDefinition,
-} from "@keplr-ewallet-sdk-eth/utils";
-import {
   getChainIconUrl,
   SUPPORTED_CHAINS,
   TESTNET_CHAINS,
@@ -30,9 +19,7 @@ import {
 
 async function handleSigningFlow(
   ethEWallet: EthEWalletInterface,
-  // config: SignTypeConfig<EthSignMethod>,
   data: MakeEthereumSigData,
-  params: EthSignParams,
 ): Promise<EthSignResult> {
   const showModalMsg: EWalletMsgShowModal = {
     target: "keplr_ewallet_attached",
@@ -47,42 +34,27 @@ async function handleSigningFlow(
 
   try {
     const modalResult = await eWallet.showModal(showModalMsg);
-
-    await eWallet.hideModal();
-
     if (!modalResult.approved) {
       throw new Error(
         modalResult.reason ?? "User rejected the signature request",
       );
     }
 
-    const processedData = processModalResult(data, modalResult.data, params);
-    // if (config.processModalResult) {
-    //   processedData = config.processModalResult(data, modalResult.data);
-    // }
+    const makeEthereumSigResult = modalResult.data;
 
-    const msgHash = hashMakeSignatureData(processedData, params);
+    if (!makeEthereumSigResult || makeEthereumSigResult.chain_type !== "eth") {
+      throw new Error("Invalid chain type for eth signature");
+    }
 
-    const makeSignatureMsg: EWalletMsgMakeSignature = {
-      target: "keplr_ewallet_attached",
-      msg_type: "make_signature",
-      payload: {
-        msg: msgHash,
-      },
-    };
-
-    const signOutput = await eWallet.makeSignature(makeSignatureMsg);
-
-    return processMakeSignatureResult(signOutput, processedData);
+    return makeEthereumSigResult.data;
   } catch (error) {
-    // make sure to hide modal even if error thrown from modal
-    await eWallet.hideModal();
-
     if (error && typeof error === "object" && "code" in error) {
       throw error;
     }
 
     throw new Error(error instanceof Error ? error.message : String(error));
+  } finally {
+    await eWallet.hideModal();
   }
 }
 
@@ -92,7 +64,7 @@ export async function makeSignature(
 ): Promise<EthSignResult> {
   const origin = this.eWallet.origin;
 
-  const provider = await this.getEthereumProvider();
+  const provider = this.getEthereumProvider();
   const chainId = provider.chainId;
   const chainIdNumber = parseInt(chainId, 16);
 
@@ -124,12 +96,7 @@ export async function makeSignature(
 
   const makeSignatureData = createMakeSignatureData(basePayload, params);
 
-  const signResult = await handleSigningFlow(
-    this,
-    // signTypeConfig[params.type],
-    makeSignatureData,
-    params,
-  );
+  const signResult = await handleSigningFlow(this, makeSignatureData);
 
   return signResult;
 }
@@ -190,156 +157,176 @@ function createMakeSignatureData(
   }
 }
 
-function processModalResult(
-  data: MakeEthereumSigData,
-  modalResult: MakeSignatureModalResult | null,
-  params: EthSignParams,
-): MakeEthereumSigData {
-  switch (params.type) {
-    case "sign_transaction": {
-      if (data.sign_type !== "tx") {
-        throw new Error("Sign type should be tx");
-      }
+// const processedData = processModalResult(data, modalResult.data, params);
+// // if (config.processModalResult) {
+// //   processedData = config.processModalResult(data, modalResult.data);
+// // }
 
-      if (!modalResult) {
-        throw new Error(
-          "Make signature result is not present for sign_transaction method",
-        );
-      }
+// const msgHash = hashMakeSignatureData(processedData, params);
 
-      if (modalResult.chain_type !== "eth") {
-        throw new Error("Invalid chain type for eth signature");
-      }
+// const makeSignatureMsg: EWalletMsgMakeSignature = {
+//   target: "keplr_ewallet_attached",
+//   msg_type: "make_signature",
+//   payload: {
+//     msg: msgHash,
+//   },
+// };
 
-      const originalTx = data.payload.data.transaction;
-      const simulatedTx = modalResult.data.transaction;
+// const signOutput = await eWallet.makeSignature(makeSignatureMsg);
 
-      const immutableFields = ["type", "to", "value", "data"] as const;
+// return processMakeSignatureResult(signOutput, processedData);
 
-      for (const field of immutableFields) {
-        if (originalTx[field] !== simulatedTx[field]) {
-          throw new Error(
-            `Simulation changed immutable field: ${field}. Original: ${originalTx[field]}, Simulated: ${simulatedTx[field]}`,
-          );
-        }
-      }
+// TODO: move to attached
+// function processModalResult(
+//   data: MakeEthereumSigData,
+//   modalResult: MakeSignatureModalResult | null,
+//   params: EthSignParams,
+// ): MakeEthereumSigData {
+//   switch (params.type) {
+//     case "sign_transaction": {
+//       if (data.sign_type !== "tx") {
+//         throw new Error("Sign type should be tx");
+//       }
 
-      return {
-        ...data,
-        payload: {
-          ...data.payload,
-          data: {
-            transaction: simulatedTx,
-          },
-        },
-      };
-    }
+//       if (!modalResult) {
+//         throw new Error(
+//           "Make signature result is not present for sign_transaction method",
+//         );
+//       }
 
-    case "personal_sign": {
-      return data;
-    }
+//       if (modalResult.chain_type !== "eth") {
+//         throw new Error("Invalid chain type for eth signature");
+//       }
 
-    case "sign_typedData_v4": {
-      return data;
-    }
+//       const originalTx = data.payload.data.transaction;
+//       const simulatedTx = modalResult.data.transaction;
 
-    default: {
-      throw new Error("unreachable");
-    }
-  }
-}
+//       const immutableFields = ["type", "to", "value", "data"] as const;
 
-function hashMakeSignatureData(
-  data: MakeEthereumSigData,
-  params: EthSignParams,
-) {
-  switch (params.type) {
-    case "sign_transaction": {
-      if (data.sign_type !== "tx") {
-        throw new Error("Sign type should be tx");
-      }
+//       for (const field of immutableFields) {
+//         if (originalTx[field] !== simulatedTx[field]) {
+//           throw new Error(
+//             `Simulation changed immutable field: ${field}. Original: ${originalTx[field]}, Simulated: ${simulatedTx[field]}`,
+//           );
+//         }
+//       }
 
-      const payload = data.payload;
+//       return {
+//         ...data,
+//         payload: {
+//           ...data.payload,
+//           data: {
+//             transaction: simulatedTx,
+//           },
+//         },
+//       };
+//     }
 
-      const serializableTx = toTransactionSerializable({
-        chainId: payload.chain_info.chain_id,
-        tx: payload.data.transaction,
-      });
+//     case "personal_sign": {
+//       return data;
+//     }
 
-      return hashEthereumTransaction(serializableTx);
-    }
-    case "personal_sign": {
-      if (data.sign_type !== "arbitrary") {
-        throw new Error("Sign type should be arbitrary");
-      }
+//     case "sign_typedData_v4": {
+//       return data;
+//     }
 
-      return hashEthereumMessage(data.payload.data.message);
-    }
-    case "sign_typedData_v4": {
-      if (data.sign_type !== "eip712") {
-        throw new Error("Sign type should be eip712");
-      }
+//     default: {
+//       throw new Error("unreachable");
+//     }
+//   }
+// }
 
-      const payloadData = data.payload.data;
+// function hashMakeSignatureData(
+//   data: MakeEthereumSigData,
+//   params: EthSignParams,
+// ) {
+//   switch (params.type) {
+//     case "sign_transaction": {
+//       if (data.sign_type !== "tx") {
+//         throw new Error("Sign type should be tx");
+//       }
 
-      if (payloadData.version !== "4") {
-        throw new Error(
-          "Typed data version should be 4 for sign_typedData_v4 method",
-        );
-      }
+//       const payload = data.payload;
 
-      const typedData = parseTypedDataDefinition(
-        payloadData.serialized_typed_data,
-      );
+//       const serializableTx = toTransactionSerializable({
+//         chainId: payload.chain_info.chain_id,
+//         tx: payload.data.transaction,
+//       });
 
-      return hashEthereumTypedData(typedData);
-    }
-    default: {
-      throw new Error("unreachable");
-    }
-  }
-}
+//       return hashEthereumTransaction(serializableTx);
+//     }
+//     case "personal_sign": {
+//       if (data.sign_type !== "arbitrary") {
+//         throw new Error("Sign type should be arbitrary");
+//       }
 
-function processMakeSignatureResult(
-  signOutput: SignOutput,
-  data: MakeEthereumSigData,
-): EthSignResult {
-  switch (data.sign_type) {
-    case "tx": {
-      if (!data) {
-        throw new Error("Data is required for sign_transaction method");
-      }
+//       return hashEthereumMessage(data.payload.data.message);
+//     }
+//     case "sign_typedData_v4": {
+//       if (data.sign_type !== "eip712") {
+//         throw new Error("Sign type should be eip712");
+//       }
 
-      if (data.sign_type !== "tx") {
-        throw new Error("Sign type should be tx");
-      }
+//       const payloadData = data.payload.data;
 
-      const signature = encodeEthereumSignature(signOutput);
+//       if (payloadData.version !== "4") {
+//         throw new Error(
+//           "Typed data version should be 4 for sign_typedData_v4 method",
+//         );
+//       }
 
-      const payload = data.payload;
+//       const typedData = parseTypedDataDefinition(
+//         payloadData.serialized_typed_data,
+//       );
 
-      const serializableTx = toTransactionSerializable({
-        chainId: payload.chain_info.chain_id,
-        tx: payload.data.transaction,
-      });
+//       return hashEthereumTypedData(typedData);
+//     }
+//     default: {
+//       throw new Error("unreachable");
+//     }
+//   }
+// }
 
-      const signedTransaction = serializeTransaction(serializableTx, signature);
+// function processMakeSignatureResult(
+//   signOutput: SignOutput,
+//   data: MakeEthereumSigData,
+// ): EthSignResult {
+//   switch (data.sign_type) {
+//     case "tx": {
+//       if (!data) {
+//         throw new Error("Data is required for sign_transaction method");
+//       }
 
-      return {
-        type: "signed_transaction",
-        signedTransaction,
-      };
-    }
-    case "arbitrary":
-    case "eip712": {
-      const signature = encodeEthereumSignature(signOutput);
-      return {
-        type: "signature",
-        signature: serializeSignature(signature),
-      };
-    }
-    default: {
-      throw new Error("unreachable");
-    }
-  }
-}
+//       if (data.sign_type !== "tx") {
+//         throw new Error("Sign type should be tx");
+//       }
+
+//       const signature = encodeEthereumSignature(signOutput);
+
+//       const payload = data.payload;
+
+//       const serializableTx = toTransactionSerializable({
+//         chainId: payload.chain_info.chain_id,
+//         tx: payload.data.transaction,
+//       });
+
+//       const signedTransaction = serializeTransaction(serializableTx, signature);
+
+//       return {
+//         type: "signed_transaction",
+//         signedTransaction,
+//       };
+//     }
+//     case "arbitrary":
+//     case "eip712": {
+//       const signature = encodeEthereumSignature(signOutput);
+//       return {
+//         type: "signature",
+//         signature: serializeSignature(signature),
+//       };
+//     }
+//     default: {
+//       throw new Error("unreachable");
+//     }
+//   }
+// }

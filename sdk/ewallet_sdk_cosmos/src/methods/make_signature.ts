@@ -1,16 +1,16 @@
-import type { EWalletMsgMakeSignature } from "@keplr-ewallet/ewallet-sdk-core";
+// import type { EWalletMsgMakeSignature } from "@keplr-ewallet/ewallet-sdk-core";
 
-import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+// import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 
-export async function makeSignature(
-  this: CosmosEWallet,
-  signDocHash: Uint8Array,
-) {
-  const msg: EWalletMsgMakeSignature = {
-    target: "keplr_ewallet_attached",
-    msg_type: "make_signature",
-    payload: { msg: signDocHash },
-  };
+// export async function makeSignature(
+//   this: CosmosEWallet,
+//   signDocHash: Uint8Array,
+// ) {
+//   const msg: EWalletMsgMakeSignature = {
+//     target: "keplr_ewallet_attached",
+//     msg_type: "make_signature",
+//     payload: { msg: signDocHash },
+//   };
 
-  return await this.eWallet.makeSignature(msg);
-}
+//   return await this.eWallet.makeSignature(msg);
+// }

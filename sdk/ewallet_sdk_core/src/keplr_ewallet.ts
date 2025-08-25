@@ -5,7 +5,6 @@ import { signOut } from "./methods/sign_out";
 import { getPublicKey } from "./methods/get_public_key";
 import { getEmail } from "./methods/get_email";
 import { hideModal } from "./methods/hide_modal";
-import { makeSignature } from "./methods/make_signature";
 import { on } from "./methods/on";
 import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
@@ -34,7 +33,6 @@ KeplrEWallet.prototype.signIn = signIn;
 KeplrEWallet.prototype.signOut = signOut;
 KeplrEWallet.prototype.getPublicKey = getPublicKey;
 KeplrEWallet.prototype.getEmail = getEmail;
-KeplrEWallet.prototype.makeSignature = makeSignature;
 KeplrEWallet.prototype.on = on;
 
 KeplrEWallet.init = init;

@@ -6,7 +6,7 @@ export async function switchChain(
   this: EthEWalletInterface,
   chainId: Hex | number,
 ): Promise<void> {
-  const provider = await this.getEthereumProvider();
+  const provider = this.getEthereumProvider();
   await provider.request({
     method: "wallet_switchEthereumChain",
     params: [{ chainId: toHex(chainId) }],

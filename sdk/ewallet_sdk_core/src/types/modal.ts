@@ -1,6 +1,6 @@
-import type { RpcTransactionRequest, SignableMessage } from "viem";
+import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
 import type { StdSignDoc, StdSignature } from "@cosmjs/amino";
-import type { Bech32Config, BIP44, ChainInfo } from "@keplr-wallet/types";
+import type { Bech32Config, ChainInfo } from "@keplr-wallet/types";
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
 type Any = {
@@ -158,9 +158,15 @@ export type MakeSignatureModalResult = {
 
 export type MakeEthereumSigResult = EthereumTxSignResult;
 
-export type EthereumTxSignResult = {
-  transaction: RpcTransactionRequest;
-};
+export type EthereumTxSignResult =
+  | {
+      type: "signed_transaction";
+      signedTransaction: Hex;
+    }
+  | {
+      type: "signature";
+      signature: Hex;
+    };
 
 // TODO: define the response type for cosmos signature
 export type MakeCosmosSigResult = {

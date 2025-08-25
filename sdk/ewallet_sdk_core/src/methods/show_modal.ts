@@ -1,4 +1,3 @@
-import type { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
 import type {
   EWalletMsgShowModal,
   KeplrEWalletInterface,

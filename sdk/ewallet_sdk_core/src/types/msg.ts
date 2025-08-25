@@ -9,18 +9,6 @@ export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
 
 export type AckPayload<T> = Result<T, string>;
 
-export type EWalletMsgMakeSignature = {
-  target: "keplr_ewallet_attached";
-  msg_type: "make_signature";
-  payload: EWalletMakeSignaturePayload;
-};
-
-export type EWalletMsgMakeSignatureAck = {
-  target: "keplr_ewallet_sdk";
-  msg_type: "make_signature_ack";
-  payload: AckPayload<SignOutput>;
-};
-
 export type EWalletMsgGetPublicKey = {
   target: "keplr_ewallet_attached";
   msg_type: "get_public_key";
@@ -147,8 +135,6 @@ export type EWalletMsg =
   | EWalletMsgOAuthSignInAck
   | EWalletMsgSignOut
   | EWalletMsgSignOutAck
-  | EWalletMsgMakeSignature
-  | EWalletMsgMakeSignatureAck
   | EWalletMsgShowModal
   | EWalletMsgShowModalAck
   | EWalletMsgHideModal
@@ -158,7 +144,7 @@ export type EWalletMsg =
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
   | {
-    target: "keplr_ewallet_sdk";
-    msg_type: "unknown_msg_type";
-    payload: string | null;
-  };
+      target: "keplr_ewallet_sdk";
+      msg_type: "unknown_msg_type";
+      payload: string | null;
+    };
