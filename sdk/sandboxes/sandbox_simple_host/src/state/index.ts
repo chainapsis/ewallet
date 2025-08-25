@@ -1,6 +1,6 @@
 import {
   CosmosEWallet,
-  initCosmosEWallet,
+  // initCosmosEWallet,
 } from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { EthEWallet, initEthEWallet } from "@keplr-ewallet/ewallet-sdk-eth";
 import { create } from "zustand";
@@ -81,7 +81,7 @@ export const useAppState = create(
         console.log("Initializing Cosmos SDK...");
         set({ isCosmosInitializing: true });
 
-        const initRes = initCosmosEWallet({
+        const initRes = CosmosEWallet.init({
           // TODO: replace with actual apiKey
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",

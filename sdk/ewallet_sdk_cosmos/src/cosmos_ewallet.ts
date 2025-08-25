@@ -25,6 +25,7 @@ import { on } from "./methods/on";
 import type { KeplrWalletCosmosEventMap } from "./types";
 import { setUpEventHandlers } from "./methods/set_up_event_handlers";
 import { waitUntilInitialized } from "./methods/wait_until_initialized";
+import { init } from "./methods/init";
 
 export class CosmosEWallet {
   public eWallet: KeplrEWallet;
@@ -43,6 +44,8 @@ export class CosmosEWallet {
     this._publicKey = null;
     this.setUpEventHandlers();
   }
+
+  static initCosmosWallet = initCosmosEWallet.bind(this);
 
   get isInitialized(): boolean {
     return this.eWallet.isInitialized;
