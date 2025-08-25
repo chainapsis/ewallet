@@ -27,30 +27,37 @@ export async function showModal(
       data,
     },
   };
+  try {
+    const modalResult = await this.eWallet.showModal(showModalMsg);
 
-  const modalResult = await this.eWallet.showModal(showModalMsg);
+    await this.eWallet.hideModal();
 
-  await this.eWallet.hideModal();
+    if (!modalResult.approved) {
+      return {
+        approved: false,
+        reason: modalResult.reason,
+      };
+    }
 
-  if (!modalResult.approved) {
+    if (
+      modalResult.data?.chain_type === "cosmos" &&
+      modalResult.data?.modal_type === "make_signature"
+    ) {
+      return {
+        approved: true,
+        data: modalResult.data?.data,
+      };
+    }
+
     return {
       approved: false,
-      reason: modalResult.reason,
+      reason: "Invalid modal result",
     };
-  }
-
-  if (
-    modalResult.data?.chain_type === "cosmos" &&
-    modalResult.data?.modal_type === "make_signature"
-  ) {
+  } catch (error) {
+    console.error("[showModal cosmos] [unknown error]", error);
     return {
-      approved: true,
-      data: modalResult.data?.data,
+      approved: false,
+      reason: "Unknown error",
     };
   }
-
-  return {
-    approved: false,
-    reason: "Invalid modal result",
-  };
 }
