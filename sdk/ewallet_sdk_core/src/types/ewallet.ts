@@ -3,15 +3,10 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { EventEmitter3 } from "@keplr-ewallet-sdk-core/event";
 import type {
   KeplrEWalletCoreEvent2,
-  KeplrEWalletCoreEventHandler,
   KeplrEWalletCoreEventHandler2,
-  KeplrEWalletCoreEventMap,
-  KeplrEWalletCoreEventName,
 } from "./event";
 import type { EWalletMsg, EWalletMsgShowModal } from "./msg";
 import type { ModalResult } from "./modal";
-import type { SignOutput } from "./sign";
-import type { InitPayload } from "./init";
 
 export interface KeplrEWalletInterface {
   apiKey: string;
@@ -26,11 +21,6 @@ export interface KeplrEWalletInterface {
   waitUntilInitialized: Promise<Result<KeplrEWalletState, string>>;
   lazyInit: () => Promise<Result<KeplrEWalletState, string>>;
 
-  // _email: string | null;
-  // _publicKey: string | null;
-  // _initError: string | null;
-  // _initPromise: Promise<void>;
-
   showModal: (msg: EWalletMsgShowModal) => Promise<ModalResult>;
   hideModal: () => Promise<void>;
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>;
@@ -42,10 +32,7 @@ export interface KeplrEWalletInterface {
   getPublicKey: () => Promise<string | null>;
   getEmail: () => Promise<string | null>;
 
-  on: <N extends KeplrEWalletCoreEventName>(
-    eventName: N,
-    handler: KeplrEWalletCoreEventHandler<N>,
-  ) => Promise<void>;
+  on: (handlerDef: KeplrEWalletCoreEventHandler2) => Promise<void>;
 }
 
 export interface KeplrEwalletInitArgs {
