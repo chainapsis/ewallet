@@ -2,15 +2,16 @@ import type { ChainInfo } from "@keplr-wallet/types";
 import { type Result } from "@keplr-ewallet/stdlib-js";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
 const CACHE_TIME = 1000 * 60 * 60 * 1;
 
 export async function getCosmosChainInfo(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
 ): Promise<ChainInfo[]> {
-  const isCacheExpired = Date.now() - this._cacheTime > CACHE_TIME;
+  const isCacheExpired = Date.now() - this.cacheTime > CACHE_TIME;
 
-  if (isCacheExpired || this._cosmosChainInfo === null) {
+  if (isCacheExpired || this.cosmosChainInfo === null) {
     const chainInfoRes = await fetchCosmosChainInfo();
     if (!chainInfoRes) {
       throw new Error("Failed to get chain registry response");
@@ -20,11 +21,11 @@ export async function getCosmosChainInfo(
       throw new Error(chainInfoRes.err);
     }
 
-    this._cosmosChainInfo = chainInfoRes.data.chains;
-    this._cacheTime = Date.now();
+    this.cosmosChainInfo = chainInfoRes.data.chains;
+    this.cacheTime = Date.now();
   }
 
-  return this._cosmosChainInfo;
+  return this.cosmosChainInfo;
 }
 
 export async function fetchCosmosChainInfo(): Promise<

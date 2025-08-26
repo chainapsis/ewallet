@@ -2,10 +2,11 @@ import type { StdSignature } from "@cosmjs/amino";
 import { fromBase64 } from "@cosmjs/encoding";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import { verifyADR36Amino } from "@keplr-ewallet-sdk-cosmos/utils/arbitrary";
 
 export async function verifyArbitrary(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
   chainId: string,
   signer: string,
   data: string | Uint8Array,

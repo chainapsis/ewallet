@@ -6,16 +6,17 @@ import {
   simpleFetch,
   TendermintTxTracer,
 } from "@keplr-ewallet-sdk-cosmos/utils";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
 export async function sendTx(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
   chainId: string,
   tx: unknown,
   mode: "async" | "sync" | "block",
   options: {
     silent?: boolean;
     onFulfill?: (tx: any) => void;
-  } = {},
+  },
 ): Promise<Uint8Array> {
   const chainInfoList = await this.getCosmosChainInfo();
   const chainInfo = chainInfoList.find((info) => info.chainId === chainId);

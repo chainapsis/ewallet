@@ -1,4 +1,5 @@
 export * from "./event";
+export * from "./cosmos_ewallet";
 
 // import type {
 //   AccountData,

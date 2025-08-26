@@ -1,6 +1,9 @@
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
-export async function getPublicKey(this: CosmosEWallet): Promise<Uint8Array> {
+export async function getPublicKey(
+  this: CosmosEWalletInterface,
+): Promise<Uint8Array> {
   console.log("[keplr] getPublicKey: start");
   try {
     // return cached public key if available

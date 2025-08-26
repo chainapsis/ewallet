@@ -4,9 +4,10 @@ import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
 export async function signDirect(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
   chainId: string,
   signer: string,
   signDoc: SignDoc,

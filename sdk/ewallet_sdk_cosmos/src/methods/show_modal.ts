@@ -5,20 +5,13 @@ import type {
   ModalResult,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type { ShowModalResult } from "@keplr-ewallet-sdk-cosmos/types/modal";
 
 export async function showModal(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
   data: MakeCosmosSigData,
-): Promise<
-  | {
-      approved: true;
-      data: MakeCosmosSigResult;
-    }
-  | {
-      approved: false;
-      reason?: string;
-    }
-> {
+): Promise<ShowModalResult> {
   const showModalMsg: EWalletMsgShowModal = {
     target: "keplr_ewallet_attached",
     msg_type: "show_modal",

@@ -1,11 +1,12 @@
 import type { StdSignature } from "@cosmjs/amino";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import { makeADR36AminoSignDoc } from "@keplr-ewallet-sdk-cosmos/utils/arbitrary";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
 
 export async function signArbitrary(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
   chainId: string,
   signer: string,
   data: string | Uint8Array,

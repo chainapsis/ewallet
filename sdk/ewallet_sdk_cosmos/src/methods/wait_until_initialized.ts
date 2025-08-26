@@ -1,6 +1,9 @@
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
-export async function waitUntilInitialized(this: CosmosEWallet): Promise<void> {
+export async function waitUntilInitialized(
+  this: CosmosEWalletInterface,
+): Promise<void> {
   console.log("[keplr] waitUntilInitialized: start");
 
   try {

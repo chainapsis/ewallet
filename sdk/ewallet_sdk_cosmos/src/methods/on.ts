@@ -2,10 +2,11 @@ import type { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import type {
   KeplrWalletCosmosEventName,
   KeplrWalletCosmosEventHandler,
+  CosmosEWalletInterface,
 } from "@keplr-ewallet-sdk-cosmos/types";
 
 async function _on<N extends KeplrWalletCosmosEventName>(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
   eventName: N,
   handler: KeplrWalletCosmosEventHandler<N>,
 ) {

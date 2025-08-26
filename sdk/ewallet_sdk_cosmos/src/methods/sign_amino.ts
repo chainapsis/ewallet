@@ -8,9 +8,10 @@ import type { KeplrSignOptions } from "@keplr-wallet/types";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
 export async function signAmino(
-  this: CosmosEWallet,
+  this: CosmosEWalletInterface,
   chainId: string,
   signer: string,
   signDoc: StdSignDoc,

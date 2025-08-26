@@ -1,6 +1,7 @@
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
-export function setUpEventHandlers(this: CosmosEWallet): void {
+export function setUpEventHandlers(this: CosmosEWalletInterface): void {
   console.log("[keplr] set up event handlers");
 
   // this.eWallet.on("_init", (payload) => {

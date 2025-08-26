@@ -1,6 +1,7 @@
 import type { AccountData } from "@cosmjs/amino";
 
 import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import {
   isEthereumCompatible,
   getEthAddress,
@@ -15,7 +16,9 @@ import type {
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { ChainInfo } from "@keplr-wallet/types";
 
-export async function getAccounts(this: CosmosEWallet): Promise<AccountData[]> {
+export async function getAccounts(
+  this: CosmosEWalletInterface,
+): Promise<AccountData[]> {
   try {
     const pubKey = await this.getPublicKey();
 

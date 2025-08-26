@@ -13,15 +13,16 @@ import {
   cosmosAddress,
   initiaAddress,
 } from "@keplr-ewallet-sdk-cosmos/tests/test-data";
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
 describe("getKey", () => {
-  let mockCosmosEWallet: CosmosEWallet;
+  let mockCosmosEWallet: CosmosEWalletInterface;
   let mockGetPublicKey: jest.Mock<() => Promise<Uint8Array>>;
   let mockGetCosmosChainInfo: jest.Mock<() => Promise<ChainInfo[]>>;
 
   beforeEach(() => {
     // Create a mock CosmosEWallet instance
-    mockCosmosEWallet = {} as CosmosEWallet;
+    mockCosmosEWallet = {} as CosmosEWalletInterface;
 
     // Create mock methods (default to Cosmos data)
     mockGetPublicKey = jest
