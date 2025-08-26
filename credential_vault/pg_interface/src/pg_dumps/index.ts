@@ -89,7 +89,7 @@ WHERE dump_id = $2
   }
 }
 
-export async function getOldPgDumps(
+export async function getOldCompletedPgDumps(
   db: Pool,
   retentionDays: number,
 ): Promise<Result<PgDump[], string>> {
