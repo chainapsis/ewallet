@@ -46,18 +46,25 @@ describe("pg_dump_runtime_test", () => {
     };
 
     it("should run complete runtime workflow with multiple scenarios", async () => {
-      const dump1 = await processPgDump(pool, mockPgConfig);
-      expect(dump1.success).toBe(true);
-      const dump2 = await processPgDump(pool, mockPgConfig);
-      expect(dump2.success).toBe(true);
-      const dump3 = await processPgDump(pool, mockPgConfig);
-      expect(dump3.success).toBe(true);
+      const dump1Res = await processPgDump(pool, mockPgConfig);
+      if (dump1Res.success === false) {
+        throw new Error(`processPgDump failed: ${dump1Res.err}`);
+      }
+      const dump1 = dump1Res.data;
 
-      const initialDumpIds = [
-        dump1.success ? dump1.data.dumpId : null,
-        dump2.success ? dump2.data.dumpId : null,
-        dump3.success ? dump3.data.dumpId : null,
-      ].filter((id) => id !== null);
+      const dump2Res = await processPgDump(pool, mockPgConfig);
+      if (dump2Res.success === false) {
+        throw new Error(`processPgDump failed: ${dump2Res.err}`);
+      }
+      const dump2 = dump2Res.data;
+
+      const dump3Res = await processPgDump(pool, mockPgConfig);
+      if (dump3Res.success === false) {
+        throw new Error(`processPgDump failed: ${dump3Res.err}`);
+      }
+      const dump3 = dump3Res.data;
+
+      const initialDumpIds = [dump1.dumpId, dump2.dumpId, dump3.dumpId];
 
       // update dump created_at to 2 days ago
       await pool.query(
