@@ -1,5 +1,5 @@
 import type {
-  EventEmitter2,
+  EventEmitter3,
   KeplrEWalletInterface,
   MakeCosmosSigData,
 } from "@keplr-ewallet/ewallet-sdk-core";
@@ -22,28 +22,25 @@ import type {
 } from "@cosmjs/proto-signing";
 
 import type {
-  KeplrWalletCosmosEventHandler,
-  KeplrWalletCosmosEventMap,
-  KeplrWalletCosmosEventName,
+  KeplrEWalletCosmosEvent2,
+  KeplrEWalletCosmosEventHandler2,
 } from "./event";
 import type { ShowModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
 
 export interface CosmosEWalletInterface {
   eWallet: KeplrEWalletInterface;
-  eventEmitter: EventEmitter2<KeplrWalletCosmosEventMap>;
+  eventEmitter: EventEmitter3<
+    KeplrEWalletCosmosEvent2,
+    KeplrEWalletCosmosEventHandler2
+  >;
   cosmosChainInfo: ChainInfo[];
   cacheTime: number;
   publicKey: Uint8Array | null;
 
   enable: (_chainId: string) => Promise<void>;
-  on: <N extends KeplrWalletCosmosEventName>(
-    eventName: N,
-    handler: KeplrWalletCosmosEventHandler<N>,
-  ) => void;
-
+  on: (handlerDef: KeplrEWalletCosmosEventHandler2) => void;
   getPublicKey: () => Promise<Uint8Array>;
-
   getCosmosChainInfo: () => Promise<ChainInfo[]>;
   experimentalSuggestChain: (_chainInfo: ChainInfo) => Promise<void>;
   getAccounts: () => Promise<AccountData[]>;
@@ -106,6 +103,4 @@ export interface CosmosEWalletInterface {
   setUpEventHandlers: () => void;
   waitUntilInitialized: () => Promise<void>;
   showModal: (data: MakeCosmosSigData) => Promise<ShowModalResult>;
-
-  // makeSignature = makeSignature.bind(this);
 }

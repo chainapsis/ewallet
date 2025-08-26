@@ -1,20 +1,11 @@
 import type {
-  KeplrWalletCosmosEventName,
-  KeplrWalletCosmosEventHandler,
   CosmosEWalletInterface,
+  KeplrEWalletCosmosEventHandler2,
 } from "@keplr-ewallet-sdk-cosmos/types";
 
-async function _on<N extends KeplrWalletCosmosEventName>(
+export async function on(
   this: CosmosEWalletInterface,
-  eventName: N,
-  handler: KeplrWalletCosmosEventHandler<N>,
+  handlerDef: KeplrEWalletCosmosEventHandler2,
 ) {
-  if (this.eventEmitter) {
-    this.eventEmitter.on(eventName, handler);
-  }
+  this.eventEmitter.on(handlerDef);
 }
-
-export const on = _on as <N extends KeplrWalletCosmosEventName>(
-  eventName: N,
-  handler: KeplrWalletCosmosEventHandler<N>,
-) => void;

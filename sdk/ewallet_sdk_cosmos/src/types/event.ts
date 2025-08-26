@@ -11,3 +11,23 @@ export type KeplrWalletCosmosEventPayload =
 export type KeplrWalletCosmosEventHandler<
   K extends KeplrWalletCosmosEventName,
 > = (payload: KeplrWalletCosmosEventMap[K]) => void;
+
+export type KeplrEWalletCosmosEvent2 =
+  | {
+      type: "accountsChanged";
+      email: string;
+      publicKey: string;
+    }
+  | {
+      type: "chainChanged";
+    };
+
+export type KeplrEWalletCosmosEventHandler2 =
+  | {
+      type: "accountsChanged";
+      handler: (payload: { email: string; publicKey: string }) => void;
+    }
+  | {
+      type: "chainChanged";
+      handler: (payload: void) => void;
+    };

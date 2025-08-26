@@ -6,35 +6,38 @@ import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 export function setUpEventHandlers(this: EthEWalletInterface): void {
   console.log("[eth] set up event handlers");
 
-  this.eWallet.on("_accountsChanged", (payload) => {
-    const { changed, next } = computePublicKeyChange(
-      this.publicKey,
-      payload.publicKey,
-    );
-    if (changed) {
-      console.log(
-        "[eth] _accountsChanged callback, public key changed from: %s to: %s",
-        this.publicKey ? this.publicKey : "null",
-        next ? next : "null",
+  this.eWallet.on({
+    type: "CORE__accountsChanged",
+    handler: (payload) => {
+      const { changed, next } = computePublicKeyChange(
+        this.publicKey,
+        payload.publicKey,
       );
+      if (changed) {
+        console.log(
+          "[eth] _accountsChanged callback, public key changed from: %s to: %s",
+          this.publicKey ? this.publicKey : "null",
+          next ? next : "null",
+        );
 
-      if (next === null) {
-        this.publicKey = null;
-        this.address = null;
-        if (this.provider) {
-          this.provider.emit("accountsChanged", []);
+        if (next === null) {
+          this.publicKey = null;
+          this.address = null;
+          if (this.provider) {
+            this.provider.emit("accountsChanged", []);
+          }
+          return;
         }
-        return;
-      }
 
-      const nextAddress = publicKeyToEthereumAddress(next);
+        const nextAddress = publicKeyToEthereumAddress(next);
 
-      this.publicKey = next;
-      this.address = nextAddress;
-      if (this.provider) {
-        this.provider.emit("accountsChanged", [nextAddress]);
+        this.publicKey = next;
+        this.address = nextAddress;
+        if (this.provider) {
+          this.provider.emit("accountsChanged", [nextAddress]);
+        }
       }
-    }
+    },
   });
 }
 

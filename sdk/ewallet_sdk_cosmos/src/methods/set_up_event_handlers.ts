@@ -37,32 +37,37 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
   //   }
   // });
 
-  this.eWallet.on("_accountsChanged", (payload) => {
-    const { changed, next, nextHex } = computePublicKeyChange(
-      this.publicKey,
-      payload.publicKey,
-    );
-
-    if (changed) {
-      this.publicKey = next;
-      console.log(
-        "[keplr] _accountsChanged callback, public key changed from: %s to: %s",
-        this.publicKey ? Buffer.from(this.publicKey).toString("hex") : "null",
-        nextHex,
+  this.eWallet.on({
+    type: "CORE__accountsChanged",
+    handler: (payload) => {
+      const { changed, next, nextHex } = computePublicKeyChange(
+        this.publicKey,
+        payload.publicKey,
       );
-      if (this.eventEmitter) {
-        this.eventEmitter.emit("accountsChanged", {
-          email: payload.email ?? "",
-          publicKey: nextHex,
-        });
+
+      if (changed) {
+        this.publicKey = next;
+        console.log(
+          "[keplr] _accountsChanged callback, public key changed from: %s to: %s",
+          this.publicKey ? Buffer.from(this.publicKey).toString("hex") : "null",
+          nextHex,
+        );
+        if (this.eventEmitter) {
+          this.eventEmitter.emit({
+            type: "accountsChanged",
+            email: payload.email ?? "",
+            publicKey: nextHex,
+          });
+        }
       }
-    }
+    },
   });
 
-  this.eWallet.on("_chainChanged", (payload) => {
-    if (this.eventEmitter) {
-      this.eventEmitter.emit("chainChanged", payload);
-    }
+  this.eWallet.on({
+    type: "CORE__chainChanged",
+    handler: (_payload) => {
+      this.eventEmitter.emit({ type: "chainChanged" });
+    },
   });
 }
 
@@ -82,10 +87,19 @@ function computePublicKeyChange(
 }
 
 function areUint8ArraysEqual(a: Uint8Array, b: Uint8Array): boolean {
-  if (a === b) return true;
-  if (a.byteLength !== b.byteLength) return false;
-  for (let i = 0; i < a.byteLength; i += 1) {
-    if (a[i] !== b[i]) return false;
+  if (a === b) {
+    return true;
   }
+
+  if (a.byteLength !== b.byteLength) {
+    return false;
+  }
+
+  for (let i = 0; i < a.byteLength; i += 1) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+
   return true;
 }
