@@ -3,6 +3,7 @@ import {
   InvalidParamsRpcError,
   MethodNotFoundRpcError,
   toHex,
+  UnauthorizedProviderError,
   UnsupportedChainIdError,
   UnsupportedProviderMethodError,
 } from "viem";
@@ -379,7 +380,7 @@ describe("EWallet Provider - Base", () => {
             params: [toHex("test"), MOCK_ADDRESS],
           }),
         ).rejects.toMatchObject({
-          code: UnsupportedProviderMethodError.code,
+          code: UnauthorizedProviderError.code,
           message: expect.stringContaining("Signer is required"),
         });
       });
@@ -421,7 +422,7 @@ describe("EWallet Provider - Base", () => {
             params: [toHex("test"), MOCK_ADDRESS],
           }),
         ).rejects.toMatchObject({
-          code: UnsupportedProviderMethodError.code,
+          code: UnauthorizedProviderError.code,
           message: expect.stringContaining("No authenticated signer"),
         });
       });

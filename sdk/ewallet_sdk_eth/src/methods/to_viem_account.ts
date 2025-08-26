@@ -2,6 +2,7 @@ import { serializeTypedData } from "viem";
 
 import type {
   EthEWalletInterface,
+  EthSignParams,
   EWalletAccount,
 } from "@keplr-ewallet-sdk-eth/types";
 import { toRpcTransactionRequest } from "@keplr-ewallet-sdk-eth/utils";
@@ -12,7 +13,7 @@ export async function toViemAccount(
   const publicKey = await this.getPublicKey();
   const address = await this.getAddress();
 
-  const sign = this.makeSignature;
+  const sign = (params: EthSignParams) => this.makeSignature(params);
 
   const account: EWalletAccount = {
     address,

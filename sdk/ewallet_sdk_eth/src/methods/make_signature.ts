@@ -17,47 +17,6 @@ import {
   TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
 
-async function handleSigningFlow(
-  ethEWallet: EthEWalletInterface,
-  data: MakeEthereumSigData,
-): Promise<EthSignResult> {
-  const showModalMsg: EWalletMsgShowModal = {
-    target: "keplr_ewallet_attached",
-    msg_type: "show_modal",
-    payload: {
-      modal_type: "make_signature",
-      data,
-    },
-  };
-
-  const eWallet = ethEWallet.eWallet;
-
-  try {
-    const modalResult = await eWallet.showModal(showModalMsg);
-    if (!modalResult.approved) {
-      throw new Error(
-        modalResult.reason ?? "User rejected the signature request",
-      );
-    }
-
-    const makeEthereumSigResult = modalResult.data;
-
-    if (!makeEthereumSigResult || makeEthereumSigResult.chain_type !== "eth") {
-      throw new Error("Invalid chain type for eth signature");
-    }
-
-    return makeEthereumSigResult.data;
-  } catch (error) {
-    if (error && typeof error === "object" && "code" in error) {
-      throw error;
-    }
-
-    throw new Error(error instanceof Error ? error.message : String(error));
-  } finally {
-    await eWallet.hideModal();
-  }
-}
-
 export async function makeSignature(
   this: EthEWalletInterface,
   params: EthSignParams,
@@ -73,7 +32,6 @@ export async function makeSignature(
     chains = [...chains, ...TESTNET_CHAINS];
   }
 
-  // CHECK: custom chains added to the provider can be used later
   const activeChain = chains.find((chain) => chain.id === chainIdNumber);
   if (!activeChain) {
     throw new Error("Chain not found in the supported chains");
@@ -154,5 +112,46 @@ function createMakeSignatureData(
     default: {
       throw new Error(`Unknown sign method: ${(params as any).type}`);
     }
+  }
+}
+
+async function handleSigningFlow(
+  ethEWallet: EthEWalletInterface,
+  data: MakeEthereumSigData,
+): Promise<EthSignResult> {
+  const showModalMsg: EWalletMsgShowModal = {
+    target: "keplr_ewallet_attached",
+    msg_type: "show_modal",
+    payload: {
+      modal_type: "make_signature",
+      data,
+    },
+  };
+
+  const eWallet = ethEWallet.eWallet;
+
+  try {
+    const modalResult = await eWallet.showModal(showModalMsg);
+    if (!modalResult.approved) {
+      throw new Error(
+        modalResult.reason ?? "User rejected the signature request",
+      );
+    }
+
+    const makeEthereumSigResult = modalResult.data;
+
+    if (!makeEthereumSigResult || makeEthereumSigResult.chain_type !== "eth") {
+      throw new Error("Invalid chain type for eth signature");
+    }
+
+    return makeEthereumSigResult.data;
+  } catch (error) {
+    if (error && typeof error === "object" && "code" in error) {
+      throw error;
+    }
+
+    throw new Error(error instanceof Error ? error.message : String(error));
+  } finally {
+    await eWallet.hideModal();
   }
 }

@@ -8,6 +8,7 @@ import {
   toHex,
   parseEther,
   ResourceUnavailableRpcError,
+  UnauthorizedProviderError,
 } from "viem";
 import { sepolia, mainnet, hardhat } from "viem/chains";
 
@@ -221,9 +222,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       expect(events[0].type).toBe("disconnect");
 
       // Restore working mock
-      mockServer.setup({
-        [dynamicUrl]: { chainId: toHex(mainnet.id) },
-      });
+      mockServer.simulateSuccess(dynamicUrl);
 
       // Third request should succeed and trigger reconnect
       await provider.request({ method: "eth_blockNumber" });
@@ -236,7 +235,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       });
     });
 
-    it("should successfully handle disconnect and reconnect events (wallet rpc)", async () => {
+    it("should successfully handle disconnect and reconnect events (wallet rpc with mock signer)", async () => {
       const dynamicUrl = "https://disconnect-reconnect-test.com";
 
       // Setup working mock initially
@@ -284,10 +283,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       expect(events).toHaveLength(1);
       expect(events[0].type).toBe("disconnect");
 
-      // Restore working mock
-      mockServer.setup({
-        [dynamicUrl]: { chainId: toHex(mainnet.id) },
-      });
+      mockServer.simulateSuccess(dynamicUrl);
 
       // Third request should succeed and trigger reconnect
       await provider.request({ method: "eth_accounts" });
@@ -298,6 +294,57 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       expect(events[1].data).toMatchObject({
         chainId: toHex(mainnet.id),
       });
+    });
+
+    it("should not emit connect event if there's no signer", async () => {
+      const dynamicUrl = "https://disconnect-reconnect-test.com";
+
+      mockServer.setup({
+        [dynamicUrl]: { chainId: toHex(mainnet.id) },
+      });
+
+      const provider = new EWalletEIP1193Provider(
+        createProviderOptions([
+          {
+            ...createChainParam(mainnet),
+            rpcUrls: [dynamicUrl],
+          },
+        ]),
+      );
+
+      const events: Array<{ type: string; data?: any }> = [];
+      provider.on("connect", (data) => events.push({ type: "connect", data }));
+      provider.on("disconnect", (error) =>
+        events.push({ type: "disconnect", data: error }),
+      );
+
+      events.length = 0;
+
+      mockServer.simulateFailure(dynamicUrl);
+
+      await expect(
+        provider.request({ method: "eth_blockNumber" }),
+      ).rejects.toMatchObject({
+        code: ResourceUnavailableRpcError.code,
+      });
+
+      expect(events).toHaveLength(1);
+      expect(events[0].type).toBe("disconnect");
+
+      mockServer.simulateSuccess(dynamicUrl);
+
+      // there's no signer, so provider won't emit connect event
+      await expect(
+        provider.request({
+          method: "personal_sign",
+          params: [toHex("Hello"), createMockSigner().getAddress()!],
+        }),
+      ).rejects.toMatchObject({
+        code: UnauthorizedProviderError.code,
+        message: expect.stringContaining("Signer is required"),
+      });
+
+      expect(events).toHaveLength(1);
     });
   });
 });

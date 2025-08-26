@@ -16,6 +16,7 @@ import {
   UnsupportedChainIdError,
   UnsupportedProviderMethodError,
   isAddress,
+  UnauthorizedProviderError,
 } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
@@ -261,9 +262,7 @@ export class EWalletEIP1193Provider
         try {
           const { address } = this._getAuthenticatedSigner();
           return [address];
-        } catch (error) {
-          // ignore error as it's expected for `eth_accounts` and `eth_requestAccounts`
-          // when no signer is provided or signer is not authenticated
+        } catch {
           return [];
         }
       case "eth_sendTransaction":
@@ -384,14 +383,14 @@ export class EWalletEIP1193Provider
     const signer = this.signer;
 
     if (!signer) {
-      throw new UnsupportedProviderMethodError(
+      throw new UnauthorizedProviderError(
         new Error("Signer is required for wallet RPC methods"),
       );
     }
 
     const address = signer.getAddress();
     if (!address || !isAddress(address)) {
-      throw new UnsupportedProviderMethodError(
+      throw new UnauthorizedProviderError(
         new Error("No authenticated signer for wallet RPC methods"),
       );
     }

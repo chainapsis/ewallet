@@ -178,6 +178,13 @@ export class MockRpcServer {
   }
 
   /**
+   * Simulate successful RPC response
+   */
+  simulateSuccess(url: string) {
+    this.addConfig(url, { shouldFail: false });
+  }
+
+  /**
    * Simulate chainId mismatch (RPC returns different chainId than expected)
    */
   simulateChainIdMismatch(url: string, actualChainId: string) {
