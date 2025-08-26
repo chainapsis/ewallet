@@ -1,4 +1,10 @@
 import type { AccountData } from "@cosmjs/amino";
+import type {
+  EWalletMsgGetCosmosChainInfo,
+  KeplrEWalletInterface,
+} from "@keplr-ewallet/ewallet-sdk-core";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { ChainInfo } from "@keplr-wallet/types";
 
 import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import {
@@ -7,12 +13,6 @@ import {
   getCosmosAddress,
   getBech32Address,
 } from "@keplr-ewallet-sdk-cosmos/utils/address";
-import type {
-  EWalletMsgGetCosmosChainInfo,
-  KeplrEWalletInterface,
-} from "@keplr-ewallet/ewallet-sdk-core";
-import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { ChainInfo } from "@keplr-wallet/types";
 
 export async function getAccounts(
   this: CosmosEWalletInterface,

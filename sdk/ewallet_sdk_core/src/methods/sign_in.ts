@@ -18,7 +18,7 @@ export async function signIn(this: KeplrEWalletInterface, type: "google") {
       await tryGoogleSignIn(
         this.sdkEndpoint,
         this.apiKey,
-        this.sendMsgToIframe,
+        this.sendMsgToIframe.bind(this),
       );
       break;
     }

@@ -44,7 +44,6 @@ export const useAppState = create(
         set({ isEthInitializing: true });
 
         const initRes = EthEWallet.init({
-          // TODO: replace with actual apiKey
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
           sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
@@ -86,7 +85,6 @@ export const useAppState = create(
         set({ isCosmosInitializing: true });
 
         const initRes = CosmosEWallet.init({
-          // TODO: replace with actual apiKey
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
           sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
