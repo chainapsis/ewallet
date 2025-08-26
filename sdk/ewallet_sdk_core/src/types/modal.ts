@@ -1,18 +1,19 @@
 import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
 import type { StdSignDoc, StdSignature } from "@cosmjs/amino";
 import type { Bech32Config, ChainInfo } from "@keplr-wallet/types";
+
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
-type Any = {
-  typeUrl: string;
-  value: Uint8Array;
-};
+// type Any = {
+//   typeUrl: string;
+//   value: Uint8Array;
+// };
 
-type AnyWithUnpacked =
-  | Any
-  | (Any & {
-      unpacked: unknown;
-    });
+// type AnyWithUnpacked =
+//   | Any
+//   | (Any & {
+//       unpacked: unknown;
+//     });
 
 export type ShowModalPayload = MakeSignatureModalPayload | OtherModalPayload;
 
