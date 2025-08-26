@@ -39,7 +39,6 @@ export function getEthereumProvider(
   }));
 
   this.provider = new EWalletEIP1193Provider({
-    id: uuidv4(),
     signer: {
       sign: (params) => this.makeSignature(params),
       getAddress: () => this.address,

@@ -90,9 +90,7 @@ export type RpcChainWithStatus = RpcChain & {
   connected: boolean;
 };
 
-// CHECK: we might need to provide default values with specific chains
 export type EWalletEIP1193ProviderOptions = {
-  id: string;
   chains: RpcChain[];
   signer?: EthSigner;
 };
