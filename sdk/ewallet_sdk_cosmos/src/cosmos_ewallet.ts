@@ -26,7 +26,6 @@ import type {
   KeplrEWalletCosmosEventHandler2,
 } from "@keplr-ewallet-sdk-cosmos/types";
 import { setUpEventHandlers } from "@keplr-ewallet-sdk-cosmos/methods/set_up_event_handlers";
-import { waitUntilInitialized } from "@keplr-ewallet-sdk-cosmos/methods/wait_until_initialized";
 import { init } from "./static/init";
 
 export function CosmosEWallet(
@@ -65,5 +64,4 @@ ptype.signDirect = signDirect;
 ptype.signArbitrary = signArbitrary;
 ptype.verifyArbitrary = verifyArbitrary;
 ptype.setUpEventHandlers = setUpEventHandlers;
-ptype.waitUntilInitialized = waitUntilInitialized;
 ptype.showModal = showModal;
