@@ -1,7 +1,5 @@
-import type { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
-import { isAddress, isAddressEqual, type Address, type Hex } from "viem";
+import type { KeplrEWalletInterface } from "@keplr-ewallet/ewallet-sdk-core";
 
-import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import {
   getPublicKey,
   makeSignature,
@@ -10,119 +8,104 @@ import {
   switchChain,
   toViemAccount,
   getAddress,
-} from "@keplr-ewallet-sdk-eth/api";
-import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
+  setUpEventHandlers,
+} from "@keplr-ewallet-sdk-eth/methods";
+import type { EthEWalletInterface } from "./types";
+import { init, initAsync } from "./static/init";
 
-export class EthEWallet {
-  readonly eWallet: KeplrEWallet;
+const USE_TESTNET_DEFAULT = false;
 
-  readonly useTestnet: boolean;
-
-  private _provider: EWalletEIP1193Provider | null;
-
-  private _publicKey: Hex | null;
-  private _address: Address | null;
-
-  constructor(eWallet: KeplrEWallet, useTestnet: boolean = false) {
-    this.eWallet = eWallet;
-    this.useTestnet = useTestnet;
-    this._provider = null;
-    this._publicKey = null;
-    this._address = null;
-
-    this.eWallet.on("_accountsChanged", (payload: { publicKey: string }) => {
-      console.log("[keplr-ewallet-sdk-eth] _accountsChanged", payload);
-      this.handleAccountChange(payload.publicKey);
-    });
-  }
-
-  get type(): "ethereum" {
-    return "ethereum";
-  }
-
-  get chainId(): `eip155:${number}` {
-    if (!this._provider) {
-      return `eip155:${1}`;
-    }
-
-    return `eip155:${parseInt(this._provider.chainId, 16)}`;
-  }
-
-  get publicKey(): Hex | null {
-    return this._publicKey;
-  }
-
-  protected set publicKey(publicKey: Hex) {
-    this._publicKey = publicKey;
-  }
-
-  get address(): Address | null {
-    return this._address;
-  }
-
-  protected set address(address: Address) {
-    this._address = address;
-  }
-
-  protected get provider(): EWalletEIP1193Provider | null {
-    return this._provider;
-  }
-
-  protected set provider(provider: EWalletEIP1193Provider | null) {
-    this._provider = provider;
-  }
-
-  getEthereumProvider = getEthereumProvider.bind(this);
-  sign = personalSign.bind(this);
-  switchChain = switchChain.bind(this);
-  toViemAccount = toViemAccount.bind(this);
-  getPublicKey = getPublicKey.bind(this);
-  getAddress = getAddress.bind(this);
-  protected makeSignature = makeSignature.bind(this);
-
-  private handleAccountChange(publicKey: string | undefined) {
-    if (!this._provider) {
-      return;
-    }
-
-    if (!publicKey) {
-      this._publicKey = null;
-      this._address = null;
-      this._provider.emit("accountsChanged", []);
-      return;
-    }
-
-    try {
-      const publicKeyHex: Hex = publicKey.startsWith("0x")
-        ? (publicKey as Hex)
-        : `0x${publicKey}`;
-
-      const address = publicKeyToEthereumAddress(publicKeyHex);
-
-      if (!isAddress(address)) {
-        this._publicKey = null;
-        this._address = null;
-        this._provider.emit("accountsChanged", []);
-        return;
-      }
-
-      const shouldEmitChange =
-        this._address === null || !isAddressEqual(this._address, address);
-
-      this._publicKey = publicKeyHex;
-      this._address = address;
-
-      if (shouldEmitChange) {
-        this._provider.emit("accountsChanged", [address]);
-      }
-    } catch (error) {
-      console.error(
-        "[keplr-ewallet-sdk-eth] failed to get account from public key",
-        error,
-      );
-      this._publicKey = null;
-      this._address = null;
-      this._provider.emit("accountsChanged", []);
-    }
-  }
+export function EthEWallet(
+  this: EthEWalletInterface,
+  eWallet: KeplrEWalletInterface,
+  useTestnet?: boolean,
+) {
+  this.eWallet = eWallet;
+  this.useTestnet = useTestnet !== undefined ? useTestnet : USE_TESTNET_DEFAULT;
+  this.provider = null;
+  this.publicKey = null;
+  this.address = null;
+  this.setUpEventHandlers();
 }
+
+EthEWallet.prototype.getEthereumProvider = getEthereumProvider;
+EthEWallet.prototype.sign = personalSign;
+EthEWallet.prototype.switchChain = switchChain;
+EthEWallet.prototype.toViemAccount = toViemAccount;
+EthEWallet.prototype.getPublicKey = getPublicKey;
+EthEWallet.prototype.getAddress = getAddress;
+// EthEWallet.prototype.waitUntilInitialized = waitUntilInitialized;
+EthEWallet.prototype.makeSignature = makeSignature;
+EthEWallet.prototype.setUpEventHandlers = setUpEventHandlers;
+
+EthEWallet.init = init;
+EthEWallet.initAsync = initAsync;
+
+// export class EthEWallet2 {
+//   readonly eWallet: KeplrEWalletInterface;
+//
+//   readonly useTestnet: boolean;
+//
+//   private _provider: EWalletEIP1193Provider | null;
+//   private _publicKey: Hex | null;
+//   private _address: Address | null;
+//
+//   constructor(eWallet: KeplrEWalletInterface, useTestnet: boolean = false) {
+//     this.eWallet = eWallet;
+//     this.useTestnet = useTestnet;
+//     this._provider = null;
+//     this._publicKey = null;
+//     this._address = null;
+//     this.setUpEventHandlers();
+//   }
+//
+//   get type(): "ethereum" {
+//     return "ethereum";
+//   }
+//
+//   get chainId(): `eip155:${number}` {
+//     if (!this._provider) {
+//       return `eip155:${1}`;
+//     }
+//
+//     return `eip155:${parseInt(this._provider.chainId, 16)}`;
+//   }
+//
+//   // get isInitialized(): boolean {
+//   //   return this.eWallet.isInitialized;
+//   // }
+//
+//   get publicKey(): Hex | null {
+//     return this._publicKey;
+//   }
+//
+//   protected set publicKey(publicKey: Hex | null) {
+//     this._publicKey = publicKey;
+//   }
+//
+//   get address(): Address | null {
+//     return this._address;
+//   }
+//
+//   protected set address(address: Address | null) {
+//     this._address = address;
+//   }
+//
+//   protected get provider(): EWalletEIP1193Provider | null {
+//     return this._provider;
+//   }
+//
+//   protected set provider(provider: EWalletEIP1193Provider | null) {
+//     this._provider = provider;
+//   }
+//
+//   // getEthereumProvider = getEthereumProvider.bind(this);
+//   // sign = personalSign.bind(this);
+//   // switchChain = switchChain.bind(this);
+//   // toViemAccount = toViemAccount.bind(this);
+//   // getPublicKey = getPublicKey.bind(this);
+//   // getAddress = getAddress.bind(this);
+//   // waitUntilInitialized = waitUntilInitialized.bind(this);
+//   // protected makeSignature = makeSignature.bind(this);
+//   // protected setUpEventHandlers = setUpEventHandlers.bind(this);
+// }

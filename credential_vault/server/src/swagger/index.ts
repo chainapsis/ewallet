@@ -34,7 +34,7 @@ const swaggerDefinition: SwaggerDefinition = {
       description: "Production server",
     },
   ],
-  tags: [{ name: "Key Share" }],
+  tags: [{ name: "Key Share" }, { name: "PG Dump" }],
   components: {
     schemas,
   },

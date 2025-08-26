@@ -21,7 +21,6 @@
     "@uniswap/sdk-core": "~5.8.2",
     "@uniswap/v2-sdk": "~4.6.1",
     "blo": "~1.2.0",
-    "daisyui": "5.0.9",
     "next": "^15.3.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

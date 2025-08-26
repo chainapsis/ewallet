@@ -30,10 +30,7 @@ import {
   createEthersTransactionHelper,
   createEthersContractHelper,
 } from "./utils/ethersHelpers";
-import {
-  initEWalletEIP1193Provider,
-  type EWalletEIP1193Provider,
-} from "@keplr-ewallet-sdk-eth/provider";
+import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 
 describe("EWallet Provider - Ethers.js Integration", () => {
@@ -42,7 +39,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
 
     beforeAll(async () => {
       const mainnetChainParam = createChainParam(mainnet);
-      provider = await initEWalletEIP1193Provider(
+      provider = new EWalletEIP1193Provider(
         createProviderOptions([mainnetChainParam], createDummySigner()),
       );
     });
@@ -80,7 +77,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
       try {
         await hardhatNode.start();
         const hardhatChainParam = createChainParam(hardhat);
-        hardhatProvider = await initEWalletEIP1193Provider(
+        hardhatProvider = new EWalletEIP1193Provider(
           createProviderOptions([hardhatChainParam]),
         );
       } catch (error) {
@@ -136,7 +133,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
       let deltaProvider: EWalletEIP1193Provider;
 
       beforeAll(async () => {
-        deltaProvider = await initEWalletEIP1193Provider(
+        deltaProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(hardhat)], delta),
         );
       });
@@ -278,7 +275,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
       let txHelper: ReturnType<typeof createEthersTransactionHelper>;
 
       beforeAll(async () => {
-        deltaProvider = await initEWalletEIP1193Provider(
+        deltaProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(hardhat)], delta),
         );
 
@@ -389,7 +386,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
       let contractHelper: ReturnType<typeof createEthersContractHelper>;
 
       beforeAll(async () => {
-        deltaProvider = await initEWalletEIP1193Provider(
+        deltaProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(hardhat)], delta),
         );
 

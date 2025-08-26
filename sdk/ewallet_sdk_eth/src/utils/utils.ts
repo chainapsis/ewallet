@@ -2,7 +2,7 @@ import type {
   Hex,
   Address,
   ByteArray,
-  AddEthereumChainParameter as Chain,
+  AddEthereumChainParameter as RpcChain,
 } from "viem";
 import { publicKeyToAddress } from "viem/accounts";
 import { secp256k1 } from "@noble/curves/secp256k1";
@@ -149,37 +149,17 @@ export const validateNativeCurrencySymbol = (
 };
 
 /**
- * Validate complete chain information
+ * Validate chain information
  * @param chain - The chain to validate
- * @param addedChains - Existing chains to check for duplicates
- * @returns Validation result with detailed error information
+ * @returns Validation result with error
  */
 export const validateChain = (
-  chain: Chain,
-  addedChains: readonly Chain[],
+  chain: RpcChain,
 ): {
   isValid: boolean;
   error?: string;
-  errorType?:
-    | "DUPLICATE_CHAIN"
-    | "INVALID_CHAIN_ID"
-    | "INVALID_RPC_URLS"
-    | "INVALID_BLOCK_EXPLORER_URLS"
-    | "INVALID_NATIVE_CURRENCY"
-    | "CURRENCY_SYMBOL_MISMATCH";
-  errorData?: any;
 } => {
   const { rpcUrls, blockExplorerUrls, chainId, nativeCurrency } = chain;
-
-  // Check if chain already exists
-  if (addedChains.some((c) => c.chainId === chainId)) {
-    return {
-      isValid: false,
-      error: "Chain already added",
-      errorType: "DUPLICATE_CHAIN",
-      errorData: { chainId },
-    };
-  }
 
   // Validate chain ID format and value
   const chainIdResult = validateChainIdFormat(chainId);
@@ -187,8 +167,6 @@ export const validateChain = (
     return {
       isValid: false,
       error: chainIdResult.error,
-      errorType: "INVALID_CHAIN_ID",
-      errorData: { chainId },
     };
   }
 
@@ -198,8 +176,6 @@ export const validateChain = (
     return {
       isValid: false,
       error: rpcResult.error,
-      errorType: "INVALID_RPC_URLS",
-      errorData: { rpcUrls },
     };
   }
 
@@ -209,8 +185,6 @@ export const validateChain = (
     return {
       isValid: false,
       error: blockExplorerResult.error,
-      errorType: "INVALID_BLOCK_EXPLORER_URLS",
-      errorData: { blockExplorerUrls },
     };
   }
 
@@ -221,27 +195,6 @@ export const validateChain = (
       return {
         isValid: false,
         error: symbolResult.error,
-        errorType: "INVALID_NATIVE_CURRENCY",
-        errorData: { symbol: nativeCurrency.symbol },
-      };
-    }
-
-    // Check for native currency symbol mismatch with existing chain
-    const existingChain = addedChains.find((c) => c.chainId === chainId);
-    if (
-      existingChain &&
-      existingChain.nativeCurrency &&
-      existingChain.nativeCurrency.symbol !== nativeCurrency.symbol
-    ) {
-      return {
-        isValid: false,
-        error: "Native currency symbol mismatch with existing chain",
-        errorType: "CURRENCY_SYMBOL_MISMATCH",
-        errorData: {
-          chainId,
-          existing: existingChain.nativeCurrency.symbol,
-          provided: nativeCurrency.symbol,
-        },
       };
     }
   }

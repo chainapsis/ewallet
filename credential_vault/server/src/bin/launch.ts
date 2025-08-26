@@ -37,7 +37,7 @@ async function main() {
       port: env.DB_PORT,
     },
     {
-      intervalDays: 1,
+      sleepTimeSeconds: 1 * 86400, // 1 day
       retentionDays: 7,
     },
   );

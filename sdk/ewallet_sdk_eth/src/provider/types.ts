@@ -1,11 +1,14 @@
 import { EventEmitter } from "eventemitter3";
-import type { Address, AddEthereumChainParameter as Chain } from "viem";
+import type {
+  Address,
+  AddEthereumChainParameter as RpcChain,
+  RpcError,
+} from "viem";
 
 import type {
   RpcMethod,
   RpcRequestArgs,
   RpcResponseData,
-  RpcError,
 } from "@keplr-ewallet-sdk-eth/rpc";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
 
@@ -83,17 +86,11 @@ export interface EIP1193Provider extends ProviderEventEmitter {
   ): Promise<RpcResponseData<M>>;
 }
 
-export type ChainValidationStatus = "pending" | "valid" | "invalid";
-
-export type ChainWithStatus = Chain & {
+export type RpcChainWithStatus = RpcChain & {
   connected: boolean;
-  validationStatus: ChainValidationStatus;
 };
 
-// CHECK: we might need to provide default values with specific chains
 export type EWalletEIP1193ProviderOptions = {
-  id: string;
-  chains: Chain[];
+  chains: RpcChain[];
   signer?: EthSigner;
-  skipChainValidation?: boolean;
 };

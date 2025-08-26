@@ -1,6 +1,7 @@
-import type { RpcTransactionRequest, SignableMessage } from "viem";
-import type { StdSignDoc } from "@cosmjs/amino";
-import type { Bech32Config, ChainInfo, Msg } from "@keplr-wallet/types";
+import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
+import type { StdSignDoc, StdSignature } from "@cosmjs/amino";
+import type { Bech32Config, ChainInfo } from "@keplr-wallet/types";
+import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
 type Any = {
   typeUrl: string;
@@ -47,6 +48,10 @@ export type ChainInfoForAttachedModal = {
   readonly fee_currencies?: ChainInfo["feeCurrencies"];
   readonly currencies?: ChainInfo["currencies"];
   readonly bech32_config?: Bech32Config;
+
+  readonly bip44?: ChainInfo["bip44"];
+  readonly features?: ChainInfo["features"];
+  readonly evm?: ChainInfo["evm"];
 };
 
 export type MakeCosmosSignType = MakeCosmosSigData["sign_type"];
@@ -71,15 +76,13 @@ type CosmosTxSignDirectPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
-  signDocString: string;
-  msgs: AnyWithUnpacked[];
+  signDoc: SignDoc;
 };
 type CosmosTxSignAminoPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
-  signDocString: string;
-  msgs: readonly Msg[];
+  signDoc: StdSignDoc;
 };
 
 export type CosmosArbitrarySignPayload = {
@@ -155,9 +158,17 @@ export type MakeSignatureModalResult = {
 
 export type MakeEthereumSigResult = EthereumTxSignResult;
 
-export type EthereumTxSignResult = {
-  transaction: RpcTransactionRequest;
-};
+export type EthereumTxSignResult =
+  | {
+      type: "signed_transaction";
+      signedTransaction: Hex;
+    }
+  | {
+      type: "signature";
+      signature: Hex;
+    };
 
 // TODO: define the response type for cosmos signature
-export type MakeCosmosSigResult = {};
+export type MakeCosmosSigResult = {
+  signature: StdSignature;
+};

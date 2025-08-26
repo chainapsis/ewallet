@@ -61,23 +61,26 @@ export function PersonalSignWidget() {
         <button
           onClick={handlePersonalSign}
           disabled={!walletClient || !address || personalSignLoading}
-          className="btn btn-primary w-full"
+          className="btn btn-primary w-full mt-4"
         >
           {personalSignLoading ? (
-            <span className="loading loading-spinner loading-sm"></span>
+            <>
+              <span className="loading loading-spinner loading-sm"></span>
+              <span className="ml-2">Signing...</span>
+            </>
           ) : (
             "Sign Message"
           )}
         </button>
 
         {personalSignError && (
-          <div className="alert alert-error">
+          <div className="alert alert-error mt-4">
             <span className="text-sm">{personalSignError?.message}</span>
           </div>
         )}
 
         {signature && (
-          <div className="alert alert-success flex flex-col items-start gap-2">
+          <div className="alert alert-success flex flex-col items-start gap-2 mt-4">
             <div className="font-medium">Signature Generated</div>
             <div className="bg-base-200 rounded p-3 w-full max-h-40 overflow-x-auto overflow-y-auto">
               <code className="text-xs whitespace-pre font-mono text-base-content">

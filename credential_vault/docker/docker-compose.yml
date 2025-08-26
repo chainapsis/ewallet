@@ -38,7 +38,7 @@ services:
       ADMIN_PASSWORD: "admin_password"
 
     volumes:
-      - ~/pg_dumps:/home/node/pg_dumps
+      - ~/keplr_ewallet_data:/home/node/keplr_ewallet_data
     depends_on:
       - credential_vault_pg
 

@@ -1,54 +1,38 @@
-import { sendMsgToIframe } from "./window_msg/send_msg_to_iframe";
-import { showModal } from "./api/show_modal";
-import { signIn } from "./api/sign_in";
-import { signOut } from "./api/sign_out";
-import { getPublicKey } from "./api/get_public_key";
-import { getEmail } from "./api/get_email";
-import { hideModal } from "./api/hide_modal";
-import { makeSignature } from "./api/make_signature";
-import { registerOrigin } from "./api/register_origin";
-import { on } from "./api/on";
-import { getCosmosChainInfo } from "./api/get_cosmos_chain_info";
+import { sendMsgToIframe } from "./methods/send_msg_to_iframe";
+import { showModal } from "./methods/show_modal";
+import { signIn } from "./methods/sign_in";
+import { signOut } from "./methods/sign_out";
+import { getPublicKey } from "./methods/get_public_key";
+import { getEmail } from "./methods/get_email";
+import { hideModal } from "./methods/hide_modal";
+import { on } from "./methods/on";
+import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
-import type { KeplrEWalletCoreEventHandlerMap } from "./types";
+import type { KeplrEWalletCoreEventMap, KeplrEWalletInterface } from "./types";
+import { init } from "./static/init";
 
-export class KeplrEWallet {
-  apiKey: string;
-  iframe: HTMLIFrameElement;
-  sdkEndpoint: string;
-  eventEmitter: EventEmitter2;
-  readonly origin: string;
-
-  on: <
-    N extends KeplrEWalletCoreEventHandlerMap["eventName"],
-    M extends { eventName: N } & KeplrEWalletCoreEventHandlerMap,
-  >(
-    eventType: N,
-    handler: M["handler"],
-  ) => void;
-
-  public constructor(
-    apiKey: string,
-    iframe: HTMLIFrameElement,
-    sdkEndpoint: string,
-  ) {
-    this.apiKey = apiKey;
-    this.iframe = iframe;
-    this.sdkEndpoint = sdkEndpoint;
-    this.origin = window.location.origin;
-    this.eventEmitter = new EventEmitter2();
-    this.on = on.bind(this);
-  }
-
-  showModal = showModal.bind(this);
-  hideModal = hideModal.bind(this);
-  sendMsgToIframe = sendMsgToIframe.bind(this);
-  signIn = signIn.bind(this);
-  signOut = signOut.bind(this);
-  getCosmosChainInfo = getCosmosChainInfo.bind(this);
-  getPublicKey = getPublicKey.bind(this);
-  getEmail = getEmail.bind(this);
-  makeSignature = makeSignature.bind(this);
-  registerOrigin = registerOrigin.bind(this);
-  // on = on.bind(this);
+export function KeplrEWallet(
+  this: KeplrEWalletInterface,
+  apiKey: string,
+  iframe: HTMLIFrameElement,
+  sdkEndpoint: string,
+) {
+  this.apiKey = apiKey;
+  this.iframe = iframe;
+  this.sdkEndpoint = sdkEndpoint;
+  this.origin = window.location.origin;
+  this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
+  this.waitUntilInitialized = this.lazyInit();
 }
+
+KeplrEWallet.prototype.lazyInit = lazyInit;
+KeplrEWallet.prototype.showModal = showModal;
+KeplrEWallet.prototype.hideModal = hideModal;
+KeplrEWallet.prototype.sendMsgToIframe = sendMsgToIframe;
+KeplrEWallet.prototype.signIn = signIn;
+KeplrEWallet.prototype.signOut = signOut;
+KeplrEWallet.prototype.getPublicKey = getPublicKey;
+KeplrEWallet.prototype.getEmail = getEmail;
+KeplrEWallet.prototype.on = on;
+
+KeplrEWallet.init = init;

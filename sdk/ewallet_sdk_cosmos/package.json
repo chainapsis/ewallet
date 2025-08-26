@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-cosmos",
-  "version": "0.0.6-rc.65",
+  "version": "0.0.6-rc.68",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "publishConfig": {
@@ -8,7 +8,8 @@
   },
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yarn rollup-build && tsc --build --force --emitDeclarationOnly && tsc-alias",
+    "build": "yarn rollup-build && yarn build-declaration",
+    "build-declaration": "tsc --build --force --emitDeclarationOnly && tsc-alias",
     "rollup-build": "yarn clean && tsc && rollup -c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
@@ -30,8 +31,8 @@
   "dependencies": {
     "@cosmjs/amino": "^0.33.1",
     "@cosmjs/proto-signing": "^0.33.1",
-    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.49",
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.9",
+    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.52",
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.10",
     "@keplr-wallet/proto-types": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
     "@noble/curves": "^1.9.2",

@@ -1,5 +1,12 @@
 import type { AddEthereumChainParameter } from "viem";
-import { toHex } from "viem";
+import {
+  InvalidParamsRpcError,
+  MethodNotFoundRpcError,
+  toHex,
+  UnauthorizedProviderError,
+  UnsupportedChainIdError,
+  UnsupportedProviderMethodError,
+} from "viem";
 import { sepolia, mainnet } from "viem/chains";
 
 import {
@@ -18,17 +25,15 @@ import {
 } from "./mock";
 import {
   EWalletEIP1193Provider,
-  initEWalletEIP1193Provider,
   ProviderEventEmitter,
 } from "@keplr-ewallet-sdk-eth/provider";
-import { ErrorCodes } from "@keplr-ewallet-sdk-eth/errors";
 
 describe("EWallet Provider - Base", () => {
   describe("Basic Properties", () => {
     let provider: EWalletEIP1193Provider;
     let mockServer: MockRpcServer;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       // Use mock RPC for basic property tests
       mockServer = createMockRpcServer();
       const { url: mainnetUrl, config: mainnetConfig } = mockMainnetRpc();
@@ -41,7 +46,7 @@ describe("EWallet Provider - Base", () => {
         rpcUrls: [mainnetUrl],
       };
 
-      provider = await initEWalletEIP1193Provider(
+      provider = new EWalletEIP1193Provider(
         createProviderOptions([mockChainParam]),
       );
     });
@@ -54,7 +59,6 @@ describe("EWallet Provider - Base", () => {
       expect(EWalletEIP1193Provider).toBeDefined();
       expect(provider.chainId).toBe(toHex(mainnet.id));
       expect(provider.isConnected).toBe(true);
-      expect(provider.isEWallet).toBe(true);
       expect(provider.version).toBe(EXPECTED_VERSION);
       expect(provider.name).toBe(EXPECTED_NAME);
     });
@@ -68,7 +72,7 @@ describe("EWallet Provider - Base", () => {
     let provider: EWalletEIP1193Provider;
     let mockServer: MockRpcServer;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       // Use mock RPC for interface tests
       mockServer = createMockRpcServer();
       const { url: mainnetUrl, config: mainnetConfig } = mockMainnetRpc();
@@ -81,7 +85,7 @@ describe("EWallet Provider - Base", () => {
         rpcUrls: [mainnetUrl],
       };
 
-      provider = await initEWalletEIP1193Provider(
+      provider = new EWalletEIP1193Provider(
         createProviderOptions([mockChainParam]),
       );
     });
@@ -101,8 +105,8 @@ describe("EWallet Provider - Base", () => {
 
     it("should have correct property types", () => {
       expect(typeof provider.isConnected).toBe("boolean");
-      expect(typeof provider.isEWallet).toBe("boolean");
       expect(typeof provider.version).toBe("string");
+      expect(typeof provider.chainId).toBe("string");
     });
 
     it("should satisfy TypeScript type compatibility", () => {
@@ -122,10 +126,10 @@ describe("EWallet Provider - Base", () => {
       let provider: EWalletEIP1193Provider;
       let mainnetChainParam: AddEthereumChainParameter;
 
-      beforeEach(async () => {
+      beforeEach(() => {
         // Use live RPC for basic RPC method tests
         mainnetChainParam = createChainParam(mainnet);
-        provider = await initEWalletEIP1193Provider(
+        provider = new EWalletEIP1193Provider(
           createProviderOptions([mainnetChainParam]),
         );
       });
@@ -160,14 +164,14 @@ describe("EWallet Provider - Base", () => {
         expect(thrownError).toBeDefined();
         // mainnet throws invalidParams, sepolia throws methodNotFound
         expect([
-          ErrorCodes.rpc.invalidParams,
-          ErrorCodes.rpc.methodNotFound,
+          InvalidParamsRpcError.code,
+          MethodNotFoundRpcError.code,
         ]).toContain(thrownError.code);
       });
 
       it("should successfully init provider with signer but no account", async () => {
         const mockSigner = createMockSigner({ noAccount: true });
-        const publicProvider = await initEWalletEIP1193Provider(
+        const publicProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(mainnet)], mockSigner),
         );
 
@@ -187,10 +191,10 @@ describe("EWallet Provider - Base", () => {
       let provider: EWalletEIP1193Provider;
       let mainnetChainParam: AddEthereumChainParameter;
 
-      beforeEach(async () => {
+      beforeEach(() => {
         // Use live RPC for chain management tests
         mainnetChainParam = createChainParam(mainnet);
-        provider = await initEWalletEIP1193Provider(
+        provider = new EWalletEIP1193Provider(
           createProviderOptions([mainnetChainParam]),
         );
       });
@@ -201,30 +205,6 @@ describe("EWallet Provider - Base", () => {
           params: [mainnetChainParam],
         });
         expect(result).toBeNull();
-      });
-
-      it("should fail when overwriting duplicate chain with invalid RPC URL", async () => {
-        await expect(
-          provider.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                ...mainnetChainParam,
-                rpcUrls: ["http://invalid-url"],
-              },
-            ],
-          }),
-        ).rejects.toMatchObject({
-          code: ErrorCodes.rpc.invalidParams,
-        });
-
-        // should not change the chain
-        expect(provider.chainId).toBe(toHex(mainnet.id));
-
-        const addedChains = (provider as any).addedChains;
-        expect(addedChains).toHaveLength(1);
-        expect(addedChains[0].validationStatus).toBe("valid");
-        expect(addedChains[0].connected).toBe(true);
       });
 
       it("should successfully add new ethereum chain", async () => {
@@ -252,10 +232,10 @@ describe("EWallet Provider - Base", () => {
         expect(chainChangedEvents).toHaveLength(0);
       });
 
-      it("should fail when adding chain with invalid RPC URL", async () => {
+      it("should fail when adding chain with invalid chainId", async () => {
         const invalidChainParam = {
           ...createChainParam(sepolia),
-          rpcUrls: ["http://invalid-url"],
+          chainId: "hello world",
         };
 
         await expect(
@@ -264,7 +244,7 @@ describe("EWallet Provider - Base", () => {
             params: [invalidChainParam],
           }),
         ).rejects.toMatchObject({
-          code: ErrorCodes.rpc.invalidParams,
+          code: InvalidParamsRpcError.code,
         });
       });
 
@@ -310,7 +290,7 @@ describe("EWallet Provider - Base", () => {
             params: [{ chainId: nonExistentChainId }],
           }),
         ).rejects.toMatchObject({
-          code: ErrorCodes.provider.unsupportedChain,
+          code: UnsupportedChainIdError.code,
         });
       });
 
@@ -321,12 +301,11 @@ describe("EWallet Provider - Base", () => {
 
         let addedChains = (provider as any).addedChains;
         expect(addedChains).toHaveLength(1);
-        expect(addedChains[0].validationStatus).toBe("valid");
         expect(addedChains[0].connected).toBe(true);
       });
 
       it("should successfully handle multi-chain state", async () => {
-        const multiProvider = await initEWalletEIP1193Provider(
+        const multiProvider = new EWalletEIP1193Provider(
           createProviderOptions([
             createChainParam(mainnet),
             createChainParam(sepolia),
@@ -340,8 +319,6 @@ describe("EWallet Provider - Base", () => {
         expect(multiProvider.chainId).toBe(toHex(mainnet.id));
         expect(addedChains[0].connected).toBe(true); // mainnet
         expect(addedChains[1].connected).toBe(false); // sepolia
-        expect(addedChains[0].validationStatus).toBe("valid");
-        expect(addedChains[1].validationStatus).toBe("valid");
 
         // Validate mainnet
         await multiProvider.request({ method: "eth_chainId" });
@@ -362,7 +339,7 @@ describe("EWallet Provider - Base", () => {
 
     describe("Wallet Methods - No Signer", () => {
       it("should successfully handle public RPC methods without signer", async () => {
-        const publicProvider = await initEWalletEIP1193Provider(
+        const publicProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(mainnet)]),
         );
 
@@ -377,7 +354,7 @@ describe("EWallet Provider - Base", () => {
       });
 
       it("should successfully handle wallet RPC methods not requiring authenticated signer", async () => {
-        const publicProvider = await initEWalletEIP1193Provider(
+        const publicProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(mainnet)]),
         );
 
@@ -393,7 +370,7 @@ describe("EWallet Provider - Base", () => {
       });
 
       it("should fail with wallet RPC methods without signer", async () => {
-        const publicProvider = await initEWalletEIP1193Provider(
+        const publicProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(mainnet)]),
         );
 
@@ -403,7 +380,7 @@ describe("EWallet Provider - Base", () => {
             params: [toHex("test"), MOCK_ADDRESS],
           }),
         ).rejects.toMatchObject({
-          code: ErrorCodes.provider.unsupportedMethod,
+          code: UnauthorizedProviderError.code,
           message: expect.stringContaining("Signer is required"),
         });
       });
@@ -412,7 +389,7 @@ describe("EWallet Provider - Base", () => {
     describe("Wallet Methods - With Signer", () => {
       it("should successfully handle wallet RPC methods with signer", async () => {
         const mockSigner = createMockSigner();
-        const walletProvider = await initEWalletEIP1193Provider(
+        const walletProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(mainnet)], mockSigner),
         );
 
@@ -435,18 +412,17 @@ describe("EWallet Provider - Base", () => {
 
       it("should fail when signer given but no account", async () => {
         const mockSigner = createMockSigner({ noAccount: true });
-        const walletProvider = await initEWalletEIP1193Provider(
+        const walletProvider = new EWalletEIP1193Provider(
           createProviderOptions([createChainParam(mainnet)], mockSigner),
         );
 
-        // CHECK: try-catch in provider.request is required?
         await expect(
           walletProvider.request({
             method: "personal_sign",
             params: [toHex("test"), MOCK_ADDRESS],
           }),
         ).rejects.toMatchObject({
-          code: ErrorCodes.provider.unsupportedMethod,
+          code: UnauthorizedProviderError.code,
           message: expect.stringContaining("No authenticated signer"),
         });
       });
@@ -455,7 +431,7 @@ describe("EWallet Provider - Base", () => {
 
   describe("Event System", () => {
     it("should successfully prevent duplicate connect events after initialization", async () => {
-      const eventProvider = await initEWalletEIP1193Provider(
+      const eventProvider = new EWalletEIP1193Provider(
         createProviderOptions([createChainParam(mainnet)]),
       );
 
@@ -472,7 +448,7 @@ describe("EWallet Provider - Base", () => {
     });
 
     it("should successfully handle multiple event listeners", async () => {
-      const provider = await initEWalletEIP1193Provider(
+      const provider = new EWalletEIP1193Provider(
         createProviderOptions([createChainParam(mainnet)]),
       );
 
@@ -509,7 +485,7 @@ describe("EWallet Provider - Base", () => {
     });
 
     it("should successfully remove event listeners", async () => {
-      const provider = await initEWalletEIP1193Provider(
+      const provider = new EWalletEIP1193Provider(
         createProviderOptions([createChainParam(mainnet)]),
       );
 

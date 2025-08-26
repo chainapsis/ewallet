@@ -1,24 +1,54 @@
-export class EventEmitter2 {
-  listeners: {
-    [key: string]: Function[];
-  };
+export class EventEmitter2<EventMap extends Record<string, any>> {
+  protected _listeners: {
+    [K in keyof EventMap]?: Array<(payload: EventMap[K]) => void>;
+  } = {};
 
-  constructor() {
-    this.listeners = {};
+  get listeners() {
+    return this._listeners;
   }
 
-  on(eventName: string, handler: Function) {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
+  on<K extends keyof EventMap>(
+    eventName: K,
+    handler: (payload: EventMap[K]) => void,
+  ) {
+    if (typeof handler !== "function") {
+      throw new TypeError(
+        `The "handler" argument must be of type function. Received ${handler === null ? "null" : typeof handler}`,
+      );
     }
-    this.listeners[eventName].push(handler);
+
+    if (!this._listeners[eventName]) {
+      this._listeners[eventName] = [];
+    }
+    this._listeners[eventName].push(handler);
   }
 
-  emit(eventName: string, payload: any) {
-    console.log("emit, eventName: %s", eventName, this.listeners);
+  off<K extends keyof EventMap>(
+    eventName: K,
+    handler: (payload: EventMap[K]) => void,
+  ) {
+    const handlers = this._listeners[eventName];
+    if (!handlers) {
+      return;
+    }
 
-    if (this.listeners[eventName]) {
-      this.listeners[eventName].forEach((listener) => listener(payload));
+    const index = handlers.indexOf(handler);
+    if (index === -1) {
+      return;
+    }
+
+    handlers.splice(index, 1);
+
+    if (handlers.length === 0) {
+      delete this._listeners[eventName];
+    }
+  }
+
+  emit<K extends keyof EventMap>(eventName: K, payload: EventMap[K]) {
+    console.log("emit, eventName: %s", String(eventName), this._listeners);
+    const handlers = this._listeners[eventName];
+    if (handlers && handlers.length > 0) {
+      handlers.forEach((listener) => listener(payload));
     }
   }
 }

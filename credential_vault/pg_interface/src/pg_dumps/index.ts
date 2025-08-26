@@ -69,6 +69,26 @@ WHERE dump_id = $4
   }
 }
 
+export async function updatePgDumpStatus(
+  db: Pool,
+  dumpId: string,
+  status: PgDumpStatus,
+): Promise<Result<void, string>> {
+  try {
+    const query = `
+UPDATE pg_dumps
+SET status = $1, updated_at = NOW()
+WHERE dump_id = $2
+`;
+
+    await db.query(query, [status, dumpId]);
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}
+
 export async function getOldPgDumps(
   db: Pool,
   retentionDays: number,
@@ -82,11 +102,11 @@ export async function getOldPgDumps(
     // const retentionSeconds = retentionDays * 60; // for testing
 
     const query = `
-        SELECT *
-        FROM pg_dumps
-        WHERE status = 'COMPLETED'
-          AND created_at < NOW() - ($1 * INTERVAL '1 second')
-        ORDER BY created_at ASC
+SELECT *
+FROM pg_dumps
+WHERE status = 'COMPLETED'
+AND created_at < NOW() - ($1 * INTERVAL '1 second')
+ORDER BY created_at ASC
       `;
 
     const result = await db.query(query, [retentionSeconds]);
@@ -96,20 +116,34 @@ export async function getOldPgDumps(
   }
 }
 
-export async function markPgDumpAsDeleted(
+export async function getPgDumpById(
   db: Pool,
   dumpId: string,
-): Promise<Result<void, string>> {
+): Promise<Result<PgDump | null, string>> {
   try {
     const query = `
-UPDATE pg_dumps 
-SET status = 'DELETED', updated_at = NOW()
-WHERE dump_id = $1
-`;
+SELECT * 
+FROM pg_dumps 
+WHERE dump_id = $1`;
+    const result = await db.query(query, [dumpId]);
+    if (result.rows.length === 0) {
+      return { success: true, data: null };
+    }
+    return { success: true, data: result.rows[0] as PgDump };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}
 
-    await db.query(query, [dumpId]);
-
-    return { success: true, data: undefined };
+export async function getAllPgDumps(
+  db: Pool,
+): Promise<Result<PgDump[], string>> {
+  try {
+    const query = `
+SELECT * FROM pg_dumps 
+ORDER BY created_at DESC`;
+    const result = await db.query(query);
+    return { success: true, data: result.rows as PgDump[] };
   } catch (error) {
     return { success: false, err: String(error) };
   }

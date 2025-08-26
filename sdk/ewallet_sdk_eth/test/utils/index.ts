@@ -75,9 +75,7 @@ export const createChainParam = (
 export const createDummySigner = (): EthSigner => {
   return {
     getAddress: () => DUMMY_ADDRESS,
-    sign: async function <P extends EthSignParams>(
-      parameters: P,
-    ): Promise<EthSignResult<P>> {
+    sign: async function (parameters: EthSignParams): Promise<EthSignResult> {
       switch (parameters.type) {
         case "sign_transaction": {
           return {
@@ -120,9 +118,7 @@ export const createEthSigner = (
   const account = privateKeyToAccount(privateKey);
   return {
     getAddress: () => account.address,
-    sign: async function <P extends EthSignParams>(
-      parameters: P,
-    ): Promise<EthSignResult<P>> {
+    sign: async function (parameters: EthSignParams): Promise<EthSignResult> {
       switch (parameters.type) {
         case "sign_transaction": {
           const { transaction } = parameters.data;

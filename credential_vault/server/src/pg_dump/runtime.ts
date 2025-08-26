@@ -5,7 +5,7 @@ import { sleep } from "@keplr-ewallet-cv-server/utils";
 import { deleteOldPgDumps, processPgDump } from "./dump";
 
 export interface PgDumpRuntimeOptions {
-  intervalDays: number;
+  sleepTimeSeconds: number;
   retentionDays: number;
 }
 
@@ -14,7 +14,7 @@ export async function startPgDumpRuntime(
   pgConfig: PgDumpConfig,
   pgDumpRuntimeOptions: PgDumpRuntimeOptions,
 ) {
-  const sleepTime = pgDumpRuntimeOptions.intervalDays * 86400 * 1000;
+  const sleepTime = pgDumpRuntimeOptions.sleepTimeSeconds * 1000;
   console.log("Starting pg dump runtime with sleep time:", sleepTime);
 
   while (true) {

@@ -1,24 +1,13 @@
+import type { ChainInfo } from "@keplr-wallet/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ModalResult, ShowModalPayload } from "./modal";
 import type { EWalletMakeSignaturePayload, SignOutput } from "./sign";
-import type { ChainInfo } from "@keplr-wallet/types";
+import type { InitPayload } from "./init";
 
 export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
 
 export type AckPayload<T> = Result<T, string>;
-
-export type EWalletMsgMakeSignature = {
-  target: "keplr_ewallet_attached";
-  msg_type: "make_signature";
-  payload: EWalletMakeSignaturePayload;
-};
-
-export type EWalletMsgMakeSignatureAck = {
-  target: "keplr_ewallet_sdk";
-  msg_type: "make_signature_ack";
-  payload: AckPayload<SignOutput>;
-};
 
 export type EWalletMsgGetPublicKey = {
   target: "keplr_ewallet_attached";
@@ -100,7 +89,7 @@ export type EWalletMsgHideModalAck = {
 export type EWalletMsgInit = {
   target: "keplr_ewallet_attached";
   msg_type: "init";
-  payload: { success: true } | { success: false; err: string };
+  payload: AckPayload<InitPayload>;
 };
 
 export type EWalletMsgInitAck = {
@@ -119,18 +108,6 @@ export type EWalletMsgGetEmailAck = {
   target: "keplr_ewallet_sdk";
   msg_type: "get_email_ack";
   payload: AckPayload<string>;
-};
-
-export type EWalletMsgRegisterOrigin = {
-  target: "keplr_ewallet_attached";
-  msg_type: "register_origin";
-  payload: { origin: string };
-};
-
-export type EWalletMsgRegisterOriginAck = {
-  target: "keplr_ewallet_sdk";
-  msg_type: "register_origin_ack";
-  payload: null;
 };
 
 export type EWalletMsgGetCosmosChainInfo = {
@@ -158,16 +135,12 @@ export type EWalletMsg =
   | EWalletMsgOAuthSignInAck
   | EWalletMsgSignOut
   | EWalletMsgSignOutAck
-  | EWalletMsgMakeSignature
-  | EWalletMsgMakeSignatureAck
   | EWalletMsgShowModal
   | EWalletMsgShowModalAck
   | EWalletMsgHideModal
   | EWalletMsgHideModalAck
   | EWalletMsgGetEmail
   | EWalletMsgGetEmailAck
-  | EWalletMsgRegisterOrigin
-  | EWalletMsgRegisterOriginAck
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
   | {
