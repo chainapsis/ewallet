@@ -11,10 +11,15 @@ import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 export async function getKey(
   this: CosmosEWalletInterface,
   chainId: string,
-): Promise<Key | null> {
+): Promise<Key> {
   const pubKey = await this.getPublicKey();
+  //NOTE: For now, to match the existing Keplr functions and types,
+  //the current getKey method throws an error to prevent it from being nullable. @retto
+
   if (pubKey === null) {
-    return null;
+    throw new Error(
+      "Public key not found, check if the ewallet is initialized",
+    );
   }
 
   const chainInfoList = await this.getCosmosChainInfo();

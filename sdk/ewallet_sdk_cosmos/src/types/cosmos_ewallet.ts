@@ -68,7 +68,7 @@ export interface CosmosEWalletInterface {
     signOptions?: KeplrSignOptions,
   ) => Promise<OfflineDirectSigner | OfflineAminoSigner>;
 
-  getKey: (chainId: string) => Promise<Key | null>;
+  getKey: (chainId: string) => Promise<Key>;
 
   getKeysSettled: (chainIds: string[]) => Promise<KeyData[]>;
 

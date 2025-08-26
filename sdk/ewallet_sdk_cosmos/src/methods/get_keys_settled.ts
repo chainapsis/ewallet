@@ -2,6 +2,7 @@ import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import type { KeyData } from "@keplr-ewallet-sdk-cosmos/types/key";
 
 // TODO: @retto
+// keplr랑 타입을 맞출 필요가 있는지 내일 회의 필요함. @retto
 export async function getKeysSettled(
   this: CosmosEWalletInterface,
   chainIds: string[],
