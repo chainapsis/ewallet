@@ -16,7 +16,7 @@ export async function lazyInit(
 
   // If keplr_ewallet is initialized, iframe should exist
   const el = document.getElementById(KEPLR_IFRAME_ID);
-  if (el !== null) {
+  if (el === null) {
     return {
       success: false,
       err: "iframe not exists even after Keplr eWallet initialization",
@@ -27,7 +27,7 @@ export async function lazyInit(
   if (!checkURLRes.success) {
     return checkURLRes;
   }
-  //
+
   const registerRes = await registerMsgListener();
   if (registerRes.success) {
     const initResult = registerRes.data;
