@@ -57,12 +57,6 @@ export const useAppState = create(
             isEthInitializing: false,
           });
 
-          // initRes.data.eWallet.on("_init", (result) => {
-          //   if (result.success) {
-          //     set({ isInitialized: true });
-          //   }
-          // });
-
           return initRes.data;
         } else {
           console.error("sdk init fail, err: %s", initRes.err);
@@ -101,12 +95,15 @@ export const useAppState = create(
             isCosmosInitializing: false,
           });
 
-          cosmosSDK.on("accountsChanged", async (payload: any) => {
-            console.log("ev - accountsChanged", payload);
+          cosmosSDK.on({
+            type: "accountsChanged",
+            handler: (payload: any) => {
+              console.log("ev - accountsChanged", payload);
 
-            // set({
-            //   userInfo: payload,
-            // });
+              // set({
+              //   userInfo: payload,
+              // });
+            },
           });
 
           return initRes.data;
