@@ -29,6 +29,7 @@ export function KeplrEWallet(
     KeplrEWalletCoreEvent2,
     KeplrEWalletCoreEventHandler2
   >();
+  this.state = null;
   this.waitUntilInitialized = this.lazyInit();
 }
 

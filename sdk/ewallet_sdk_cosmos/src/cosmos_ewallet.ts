@@ -39,6 +39,7 @@ export function CosmosEWallet(
     KeplrEWalletCosmosEvent2,
     KeplrEWalletCosmosEventHandler2
   >();
+  this.state = null;
   this.waitUntilInitialized = this.lazyInit();
 }
 
