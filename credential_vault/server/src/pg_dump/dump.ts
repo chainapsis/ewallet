@@ -14,7 +14,7 @@ import {
 
 import { getSecondsFromNow } from "@keplr-ewallet-cv-server/utils";
 
-const DUMP_DIR = join(os.homedir(), "pg_dumps");
+const DUMP_DIR = join(os.homedir(), "keplr_ewallet_data");
 
 export interface PgDumpResult {
   dumpId: string;
