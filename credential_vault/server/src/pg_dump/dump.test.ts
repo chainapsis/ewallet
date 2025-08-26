@@ -73,14 +73,15 @@ describe("pg_dump_test", () => {
       const stats = await fs.stat(result.data.dumpPath);
       expect(stats.size).toBe(result.data.dumpSize);
 
-      const dump = await getPgDumpById(pool, result.data.dumpId);
-      if (dump.success === false) {
-        throw new Error(`getPgDumpById failed: ${dump.err}`);
+      const getDumpRes = await getPgDumpById(pool, result.data.dumpId);
+      if (getDumpRes.success === false) {
+        throw new Error(`getPgDumpById failed: ${getDumpRes.err}`);
       }
-      expect(dump.data?.status).toBe("COMPLETED");
-      expect(dump.data?.dump_path).toBe(result.data.dumpPath);
-      expect(dump.data?.meta.dump_size).toBe(result.data.dumpSize);
-      expect(dump.data?.meta.dump_duration).toBe(result.data.dumpDuration);
+      const dump = getDumpRes.data;
+      expect(dump?.status).toBe("COMPLETED");
+      expect(dump?.dump_path).toBe(result.data.dumpPath);
+      expect(dump?.meta.dump_size).toBe(result.data.dumpSize);
+      expect(dump?.meta.dump_duration).toBe(result.data.dumpDuration);
     });
 
     it("should fail with invalid database configuration", async () => {
@@ -103,7 +104,6 @@ describe("pg_dump_test", () => {
       if (getAllPgDumpsRes.success === false) {
         throw new Error(`getAllPgDumps failed: ${getAllPgDumpsRes.err}`);
       }
-
       expect(getAllPgDumpsRes.data.length).toBe(1);
       expect(getAllPgDumpsRes.data[0].status).toBe("FAILED");
       expect(getAllPgDumpsRes.data[0].dump_path).toBeNull();
@@ -211,10 +211,8 @@ describe("pg_dump_test", () => {
        `);
 
       // delete the file to simulate file deletion error
-      if (result.success) {
-        try {
-          await fs.unlink(result.data.dumpPath);
-        } catch (error) {}
+      if (result.success === true) {
+        await fs.unlink(result.data.dumpPath);
       }
 
       const deleteResult = await deleteOldPgDumps(pool, 1);
