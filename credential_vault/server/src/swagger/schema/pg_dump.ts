@@ -48,11 +48,12 @@ export const pgDumpSchemas = {
       },
       status: {
         type: "string",
+        enum: ["IN_PROGRESS", "COMPLETED", "FAILED", "DELETED"],
         description: "The status of the pg dump",
       },
       dump_path: {
-        type: "string",
-        description: "The path to the pg dump",
+        type: ["string", "null"],
+        description: "The path to the pg dump (only present if dump succeeded)",
       },
       meta: {
         type: "object",
