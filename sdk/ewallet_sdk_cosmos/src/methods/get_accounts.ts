@@ -1,6 +1,5 @@
 import type { AccountData } from "@cosmjs/amino";
 
-import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import {
   isEthereumCompatible,
@@ -9,7 +8,6 @@ import {
   getBech32Address,
 } from "@keplr-ewallet-sdk-cosmos/utils/address";
 import type {
-  AckPayload,
   EWalletMsgGetCosmosChainInfo,
   KeplrEWalletInterface,
 } from "@keplr-ewallet/ewallet-sdk-core";

@@ -1,10 +1,8 @@
 import type {
   EWalletMsgShowModal,
   MakeCosmosSigData,
-  MakeCosmosSigResult,
-  ModalResult,
 } from "@keplr-ewallet/ewallet-sdk-core";
-import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
+
 import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import type { ShowModalResult } from "@keplr-ewallet-sdk-cosmos/types/modal";
 

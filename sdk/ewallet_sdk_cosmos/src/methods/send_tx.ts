@@ -1,6 +1,5 @@
 import { Buffer } from "buffer";
 
-import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import {
   retry,
   simpleFetch,

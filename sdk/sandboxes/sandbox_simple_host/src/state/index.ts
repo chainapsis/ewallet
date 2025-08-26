@@ -1,6 +1,6 @@
 import {
   CosmosEWallet,
-  initCosmosEWallet,
+  type CosmosEWalletInterface,
 } from "@keplr-ewallet/ewallet-sdk-cosmos";
 import {
   EthEWallet,
@@ -11,14 +11,14 @@ import { combine } from "zustand/middleware";
 
 interface AppState {
   keplr_sdk_eth: EthEWalletInterface | null;
-  keplr_sdk_cosmos: CosmosEWallet | null;
+  keplr_sdk_cosmos: CosmosEWalletInterface | null;
   isEthInitializing: boolean;
   isCosmosInitializing: boolean;
 }
 
 interface AppActions {
   initKeplrSdkEth: () => EthEWalletInterface | null;
-  initKeplrSdkCosmos: () => CosmosEWallet | null;
+  initKeplrSdkCosmos: () => CosmosEWalletInterface | null;
 }
 
 export const useAppState = create(

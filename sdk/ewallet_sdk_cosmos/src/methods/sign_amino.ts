@@ -1,13 +1,7 @@
-import {
-  serializeSignDoc,
-  type AminoSignResponse,
-  type StdSignDoc,
-} from "@cosmjs/amino";
-import { sha256 } from "@noble/hashes/sha2";
+import { type AminoSignResponse, type StdSignDoc } from "@cosmjs/amino";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
-
-import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
+
 import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
 export async function signAmino(

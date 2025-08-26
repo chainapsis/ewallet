@@ -9,14 +9,17 @@ import { PubKey } from "@keplr-wallet/proto-types/cosmos/crypto/secp256k1/keys";
 import { SignMode } from "@keplr-wallet/proto-types/cosmos/tx/signing/v1beta1/signing";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import type { Coin } from "@keplr-wallet/proto-types/cosmos/base/v1beta1/coin";
-import type { CosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
+import type {
+  CosmosEWallet,
+  CosmosEWalletInterface,
+} from "@keplr-ewallet/ewallet-sdk-cosmos";
 import { makeSignDoc as makeAminoSignDoc } from "@cosmjs/amino";
 
 import { TEST_COSMOS_CHAIN_ID, TEST_COSMOS_CHAIN_RPC } from "@/constants";
 import { SignDocWrapper } from "./sign_doc_wrapper";
 
 export async function makeMockSendTokenProtoSignDoc(
-  cosmosEWallet: CosmosEWallet,
+  cosmosEWallet: CosmosEWalletInterface,
   coin: Coin = {
     denom: "uosmo",
     amount: "10",
@@ -110,7 +113,7 @@ export async function makeMockSendTokenProtoSignDoc(
 }
 
 export async function makeMockSendTokenAminoSignDoc(
-  cosmosEWallet: CosmosEWallet,
+  cosmosEWallet: CosmosEWalletInterface,
   coin: Coin = {
     denom: "uosmo",
     amount: "10",

@@ -26,6 +26,7 @@ import type {
 } from "@keplr-ewallet-sdk-cosmos/types";
 import { setUpEventHandlers } from "@keplr-ewallet-sdk-cosmos/methods/set_up_event_handlers";
 import { waitUntilInitialized } from "@keplr-ewallet-sdk-cosmos/methods/wait_until_initialized";
+import { init } from "./static/init";
 
 export function CosmosEWallet(
   this: CosmosEWalletInterface,
@@ -38,6 +39,8 @@ export function CosmosEWallet(
   this.publicKey = null;
   this.setUpEventHandlers();
 }
+
+CosmosEWallet.init = init;
 
 const ptype: CosmosEWalletInterface = CosmosEWallet.prototype;
 

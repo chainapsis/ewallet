@@ -1,6 +1,5 @@
 import type { Key } from "@keplr-wallet/types";
 
-import { type CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
 import {
   getBech32Address,
   getCosmosAddress,
