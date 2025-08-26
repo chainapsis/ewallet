@@ -56,18 +56,22 @@ export const pgDumpSchemas = {
       },
       meta: {
         type: "object",
+        required: [],
         properties: {
           dump_duration: {
             type: "number",
-            description: "The duration of the pg dump",
+            description:
+              "The duration of the pg dump (only present if dump succeeded)",
           },
           dump_size: {
             type: "number",
-            description: "The size of the pg dump",
+            description:
+              "The size of the pg dump (only present if dump succeeded)",
           },
           error: {
             type: "string",
-            description: "The error of the pg dump",
+            description:
+              "The error message if dump failed (only present if dump failed)",
           },
         },
         description: "The meta data of the pg dump",
