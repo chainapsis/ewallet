@@ -4,6 +4,7 @@ import type {
   KeplrEWalletState,
 } from "@keplr-ewallet-sdk-core/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+
 import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/iframe";
 
 export async function lazyInit(

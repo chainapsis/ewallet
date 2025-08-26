@@ -1,8 +1,10 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { EventEmitter2 } from "@keplr-ewallet-sdk-core/event";
+import type { EventEmitter3 } from "@keplr-ewallet-sdk-core/event";
 import type {
+  KeplrEWalletCoreEvent2,
   KeplrEWalletCoreEventHandler,
+  KeplrEWalletCoreEventHandler2,
   KeplrEWalletCoreEventMap,
   KeplrEWalletCoreEventName,
 } from "./event";
@@ -15,7 +17,10 @@ export interface KeplrEWalletInterface {
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
-  eventEmitter: EventEmitter2<KeplrEWalletCoreEventMap>;
+  eventEmitter: EventEmitter3<
+    KeplrEWalletCoreEvent2,
+    KeplrEWalletCoreEventHandler2
+  >;
   origin: string;
   state: null | KeplrEWalletState;
   waitUntilInitialized: Promise<Result<KeplrEWalletState, string>>;

@@ -2,7 +2,6 @@ import type { ChainInfo } from "@keplr-wallet/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ModalResult, ShowModalPayload } from "./modal";
-import type { EWalletMakeSignaturePayload, SignOutput } from "./sign";
 import type { InitPayload } from "./init";
 
 export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";

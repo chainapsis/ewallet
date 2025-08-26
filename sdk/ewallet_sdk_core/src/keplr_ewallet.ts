@@ -8,8 +8,14 @@ import { hideModal } from "./methods/hide_modal";
 import { on } from "./methods/on";
 import { lazyInit } from "./methods/lazy_init";
 import { EventEmitter2 } from "./event/emitter";
-import type { KeplrEWalletCoreEventMap, KeplrEWalletInterface } from "./types";
+import type {
+  KeplrEWalletCoreEvent2,
+  KeplrEWalletCoreEventHandler2,
+  KeplrEWalletCoreEventMap,
+  KeplrEWalletInterface,
+} from "./types";
 import { init } from "./static/init";
+import { EventEmitter3 } from "./event";
 
 export function KeplrEWallet(
   this: KeplrEWalletInterface,
@@ -21,7 +27,10 @@ export function KeplrEWallet(
   this.iframe = iframe;
   this.sdkEndpoint = sdkEndpoint;
   this.origin = window.location.origin;
-  this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
+  this.eventEmitter = new EventEmitter3<
+    KeplrEWalletCoreEvent2,
+    KeplrEWalletCoreEventHandler2
+  >();
   this.waitUntilInitialized = this.lazyInit();
 }
 
