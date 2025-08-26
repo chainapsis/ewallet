@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Widget } from "../widget_components";
 import styles from "./login_widget.module.scss";
 import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
-import { useAppState } from "@/state";
+import { useSDKState } from "@/state/sdk";
 
 export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   const { cosmosEWallet } = useKeplrEwallet();
@@ -76,4 +76,4 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   );
 };
 
-export interface LoginWidgetProps { }
+export interface LoginWidgetProps {}

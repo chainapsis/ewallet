@@ -19,6 +19,9 @@ export async function getAccounts(
 ): Promise<AccountData[]> {
   try {
     const pubKey = await this.getPublicKey();
+    if (pubKey === null) {
+      return [];
+    }
 
     // const chainInfoList = await this.eWallet.getCosmosChainInfo();
     const chainInfoRes = await sendGetCosmosChainInfo(this.eWallet);

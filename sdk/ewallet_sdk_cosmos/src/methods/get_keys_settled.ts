@@ -1,10 +1,19 @@
-import type { Key, SettledResponse } from "@keplr-wallet/types";
-
 import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type { KeyData } from "@keplr-ewallet-sdk-cosmos/types/key";
 
-export function getKeysSettled(
+// TODO: @retto
+export async function getKeysSettled(
   this: CosmosEWalletInterface,
   chainIds: string[],
-): Promise<SettledResponse<Key>[]> {
-  return Promise.allSettled(chainIds.map((chainId) => this.getKey(chainId)));
+): Promise<KeyData[]> {
+  await this.waitUntilInitialized;
+
+  let ret = [];
+  for (let idx = 0; idx < chainIds.length; idx += 1) {
+    const key = await this.getKey(chainIds[idx]);
+    ret.push({ chainId: chainIds[idx], key });
+  }
+
+  return ret;
+  // return Promise.allSettled(chainIds.map((chainId) => this.getKey(chainId)));
 }

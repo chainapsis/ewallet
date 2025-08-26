@@ -9,6 +9,7 @@ import type { EWalletMsg, EWalletMsgShowModal } from "./msg";
 import type { ModalResult } from "./modal";
 
 export interface KeplrEWalletInterface {
+  state: null | KeplrEWalletState;
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;
@@ -17,21 +18,16 @@ export interface KeplrEWalletInterface {
     KeplrEWalletCoreEventHandler2
   >;
   origin: string;
-  state: null | KeplrEWalletState;
   waitUntilInitialized: Promise<Result<KeplrEWalletState, string>>;
-  lazyInit: () => Promise<Result<KeplrEWalletState, string>>;
 
+  lazyInit: () => Promise<Result<KeplrEWalletState, string>>;
   showModal: (msg: EWalletMsgShowModal) => Promise<ModalResult>;
   hideModal: () => Promise<void>;
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>;
   signIn: (type: "google") => Promise<void>;
   signOut: () => Promise<void>;
-
-  // getCosmosChainInfo: () => void;
-
   getPublicKey: () => Promise<string | null>;
   getEmail: () => Promise<string | null>;
-
   on: (handlerDef: KeplrEWalletCoreEventHandler2) => Promise<void>;
 }
 

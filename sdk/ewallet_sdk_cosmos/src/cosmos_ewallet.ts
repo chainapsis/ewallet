@@ -25,8 +25,8 @@ import type {
   KeplrEWalletCosmosEvent2,
   KeplrEWalletCosmosEventHandler2,
 } from "@keplr-ewallet-sdk-cosmos/types";
-import { setUpEventHandlers } from "@keplr-ewallet-sdk-cosmos/methods/set_up_event_handlers";
 import { init } from "./static/init";
+import { lazyInit } from "./methods/lazy_init";
 
 export function CosmosEWallet(
   this: CosmosEWalletInterface,
@@ -39,8 +39,7 @@ export function CosmosEWallet(
     KeplrEWalletCosmosEvent2,
     KeplrEWalletCosmosEventHandler2
   >();
-  this.publicKey = null;
-  this.setUpEventHandlers();
+  this.waitUntilInitialized = this.lazyInit();
 }
 
 CosmosEWallet.init = init;
@@ -49,6 +48,7 @@ const ptype: CosmosEWalletInterface = CosmosEWallet.prototype;
 
 ptype.enable = enable;
 ptype.on = on;
+ptype.lazyInit = lazyInit;
 ptype.getPublicKey = getPublicKey;
 ptype.getCosmosChainInfo = getCosmosChainInfo;
 ptype.experimentalSuggestChain = experimentalSuggestChain;
@@ -63,5 +63,4 @@ ptype.signAmino = signAmino;
 ptype.signDirect = signDirect;
 ptype.signArbitrary = signArbitrary;
 ptype.verifyArbitrary = verifyArbitrary;
-ptype.setUpEventHandlers = setUpEventHandlers;
 ptype.showModal = showModal;

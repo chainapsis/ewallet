@@ -46,7 +46,7 @@ export class EventEmitter3<E extends EventType, H extends EventHandlerType> {
 
   emit<T extends E["type"]>(event: E): Result<void, EventEmitError> {
     const { type, ...rest } = event;
-    console.log("emit(), type: %s", type);
+    console.log("[keplr] emit, type: %s", type);
 
     const handlers = this.listeners[type as T];
 

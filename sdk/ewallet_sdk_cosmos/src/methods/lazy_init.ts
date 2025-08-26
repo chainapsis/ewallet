@@ -1,4 +1,49 @@
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type {
+  CosmosEWalletInterface,
+  CosmosEWalletState,
+} from "@keplr-ewallet-sdk-cosmos/types";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+
+export type LazyInitError = {
+  type: "eWallet failed to initailize";
+};
+
+export async function lazyInit(
+  this: CosmosEWalletInterface,
+): Promise<Result<CosmosEWalletState, LazyInitError>> {
+  if (this.state !== null) {
+    return { success: true, data: this.state };
+  }
+
+  this.state = { publicKey: null };
+
+  const eWalletStateRes = await this.eWallet.waitUntilInitialized;
+
+  if (!eWalletStateRes.success) {
+    return { success: false, err: { type: "eWallet failed to initailize" } };
+  }
+
+  const eWalletState = eWalletStateRes.data;
+
+  if (eWalletState.publicKey) {
+    const pk = Buffer.from(eWalletState.publicKey, "hex");
+    this.state.publicKey = pk;
+
+    this.eventEmitter.emit({
+      type: "accountsChanged",
+      email: eWalletState.email,
+      publicKey: pk,
+    });
+  } else {
+    this.eventEmitter.emit({
+      type: "accountsChanged",
+      email: eWalletState.email,
+      publicKey: null,
+    });
+  }
+
+  return { success: true, data: this.state };
+}
 
 export function setUpEventHandlers(this: CosmosEWalletInterface): void {
   console.log("[keplr] set up event handlers");
@@ -40,25 +85,32 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
   this.eWallet.on({
     type: "CORE__accountsChanged",
     handler: (payload) => {
+      if (this.state === null) {
+        throw new Error("CORE__accountsChanged unreachable");
+      }
+
       const { changed, next, nextHex } = computePublicKeyChange(
-        this.publicKey,
+        this.state.publicKey,
         payload.publicKey,
       );
 
       if (changed) {
-        this.publicKey = next;
+        this.state.publicKey = next;
         console.log(
           "[keplr] _accountsChanged callback, public key changed from: %s to: %s",
-          this.publicKey ? Buffer.from(this.publicKey).toString("hex") : "null",
+          this.state.publicKey
+            ? Buffer.from(this.state.publicKey).toString("hex")
+            : "null",
           nextHex,
         );
-        if (this.eventEmitter) {
-          this.eventEmitter.emit({
-            type: "accountsChanged",
-            email: payload.email ?? "",
-            publicKey: nextHex,
-          });
-        }
+
+        // TODO: @retto
+
+        // this.eventEmitter.emit({
+        //   type: "accountsChanged",
+        //   email: payload.email ?? "",
+        //   publicKey: nextHex,
+        // });
       }
     },
   });

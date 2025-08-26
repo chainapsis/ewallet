@@ -31,7 +31,17 @@ export async function lazyInit(
   const registerRes = await registerMsgListener();
   if (registerRes.success) {
     const initResult = registerRes.data;
-    this.state = { email: initResult.email, publicKey: initResult.public_key };
+    const { email, public_key } = initResult;
+
+    this.state = { email, publicKey: public_key };
+
+    if (email && public_key) {
+      this.eventEmitter.emit({
+        type: "CORE__accountsChanged",
+        email: email,
+        publicKey: public_key,
+      });
+    }
 
     return { success: true, data: this.state };
   } else {

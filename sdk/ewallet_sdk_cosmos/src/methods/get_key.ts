@@ -11,8 +11,12 @@ import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 export async function getKey(
   this: CosmosEWalletInterface,
   chainId: string,
-): Promise<Key> {
+): Promise<Key | null> {
   const pubKey = await this.getPublicKey();
+  if (pubKey === null) {
+    return null;
+  }
+
   const chainInfoList = await this.getCosmosChainInfo();
 
   const chainInfo = chainInfoList.find(

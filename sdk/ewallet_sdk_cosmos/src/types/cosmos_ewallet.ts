@@ -27,8 +27,16 @@ import type {
 } from "./event";
 import type { ShowModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/methods/lazy_init";
+import type { KeyData } from "./key";
+
+export interface CosmosEWalletState {
+  publicKey: Uint8Array | null;
+}
 
 export interface CosmosEWalletInterface {
+  state: null | CosmosEWalletState;
   eWallet: KeplrEWalletInterface;
   eventEmitter: EventEmitter3<
     KeplrEWalletCosmosEvent2,
@@ -36,11 +44,12 @@ export interface CosmosEWalletInterface {
   >;
   cosmosChainInfo: ChainInfo[];
   cacheTime: number;
-  publicKey: Uint8Array | null;
+  waitUntilInitialized: Promise<Result<CosmosEWalletState, LazyInitError>>;
 
+  lazyInit: () => Promise<Result<CosmosEWalletState, LazyInitError>>;
   enable: (_chainId: string) => Promise<void>;
   on: (handlerDef: KeplrEWalletCosmosEventHandler2) => void;
-  getPublicKey: () => Promise<Uint8Array>;
+  getPublicKey: () => Promise<Uint8Array | null>;
   getCosmosChainInfo: () => Promise<ChainInfo[]>;
   experimentalSuggestChain: (_chainInfo: ChainInfo) => Promise<void>;
   getAccounts: () => Promise<AccountData[]>;
@@ -59,9 +68,9 @@ export interface CosmosEWalletInterface {
     signOptions?: KeplrSignOptions,
   ) => Promise<OfflineDirectSigner | OfflineAminoSigner>;
 
-  getKey: (chainId: string) => Promise<Key>;
+  getKey: (chainId: string) => Promise<Key | null>;
 
-  getKeysSettled: (chainIds: string[]) => Promise<SettledResponse<Key>[]>;
+  getKeysSettled: (chainIds: string[]) => Promise<KeyData[]>;
 
   sendTx: (
     chainId: string,
@@ -99,8 +108,5 @@ export interface CosmosEWalletInterface {
     data: string | Uint8Array,
     signature: StdSignature,
   ) => Promise<boolean>;
-
-  setUpEventHandlers: () => void;
-  waitUntilInitialized: () => Promise<void>;
   showModal: (data: MakeCosmosSigData) => Promise<ShowModalResult>;
 }

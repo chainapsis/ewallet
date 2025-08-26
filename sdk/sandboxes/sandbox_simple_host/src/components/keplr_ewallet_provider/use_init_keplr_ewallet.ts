@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-import { useAppState } from "@/state";
+import { useSDKState } from "@/state/sdk";
 
 export function useInitKeplrEWallet() {
-  const initKeplrSdkCosmos = useAppState((state) => state.initKeplrSdkCosmos);
-  const initKeplrSdkEth = useAppState((state) => state.initKeplrSdkEth);
-  const isInitialized = useAppState(
+  const initKeplrSdkCosmos = useSDKState((state) => state.initKeplrSdkCosmos);
+  const initKeplrSdkEth = useSDKState((state) => state.initKeplrSdkEth);
+  const isInitialized = useSDKState(
     (state) => state.keplr_sdk_cosmos !== null && state.keplr_sdk_eth !== null,
   );
 
