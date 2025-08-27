@@ -51,10 +51,6 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
         payload,
       );
 
-      if (this.state === null) {
-        throw new Error("CORE__accountsChanged unreachable");
-      }
-
       const { changed, next, nextHex } = computePublicKeyChange(
         this.state.publicKey,
         payload.publicKey,
