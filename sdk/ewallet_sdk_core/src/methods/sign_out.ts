@@ -12,7 +12,7 @@ export async function signOut(this: KeplrEWalletInterface) {
 
   this.eventEmitter.emit({
     type: "CORE__accountsChanged",
-    email: "",
-    publicKey: "",
+    email: null,
+    publicKey: null,
   });
 }

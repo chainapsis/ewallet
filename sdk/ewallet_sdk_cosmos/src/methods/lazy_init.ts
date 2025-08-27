@@ -58,10 +58,10 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
     handler: (payload) => {
       console.log(
         "[keplr-cosmos] CORE__accountsChanged callback, payload: %s",
-        payload,
+        JSON.stringify(payload),
       );
 
-      const { publicKey } = payload;
+      const { publicKey, email } = payload;
 
       if (this.state.publicKeyRaw !== publicKey) {
         if (publicKey !== null) {
@@ -77,6 +77,12 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
             publicKeyRaw: null,
           };
         }
+
+        this.eventEmitter.emit({
+          type: "accountsChanged",
+          email: email,
+          publicKey: this.state.publicKey,
+        });
       }
     },
   });
