@@ -47,6 +47,39 @@ export const toSignableTransaction = (
   return signableTransaction;
 };
 
+export const isSignableTransaction = (tx: RpcTransactionRequest): boolean => {
+  if (!tx || typeof tx !== "object") return false;
+
+  if (tx.from != null) return false;
+
+  const txType = tx.type || "0x2";
+
+  const has = (key: keyof RpcTransactionRequest) =>
+    tx[key] !== undefined && tx[key] !== null;
+
+  switch (txType) {
+    case "0x0":
+      // Legacy: requires gasPrice; must not include EIP-1559 fee fields
+      return (
+        has("gasPrice") && !has("maxFeePerGas") && !has("maxPriorityFeePerGas")
+      );
+    case "0x1":
+      // EIP-2930: requires gasPrice and accessList array; no EIP-1559 fee fields
+      return (
+        has("gasPrice") &&
+        Array.isArray(tx.accessList ?? []) &&
+        !has("maxFeePerGas") &&
+        !has("maxPriorityFeePerGas")
+      );
+    case "0x2":
+    default:
+      // EIP-1559: requires both fee fields; must not include legacy gasPrice
+      return (
+        has("maxFeePerGas") && has("maxPriorityFeePerGas") && !has("gasPrice")
+      );
+  }
+};
+
 export const toTransactionSerializable = ({
   chainId,
   tx,

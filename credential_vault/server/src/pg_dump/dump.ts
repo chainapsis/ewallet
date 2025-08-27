@@ -7,7 +7,7 @@ import {
   dump,
   createPgDump,
   updatePgDump,
-  getOldPgDumps,
+  getOldCompletedPgDumps,
   type PgDumpConfig,
   updatePgDumpStatus,
 } from "@keplr-ewallet/credential-vault-pg-interface";
@@ -79,7 +79,7 @@ export async function deleteOldPgDumps(
   retentionDays: number,
 ): Promise<Result<number, string>> {
   try {
-    const oldDumpsResult = await getOldPgDumps(pool, retentionDays);
+    const oldDumpsResult = await getOldCompletedPgDumps(pool, retentionDays);
     if (oldDumpsResult.success === false) {
       return {
         success: false,

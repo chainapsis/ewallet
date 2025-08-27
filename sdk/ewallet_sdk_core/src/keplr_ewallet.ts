@@ -7,9 +7,13 @@ import { getEmail } from "./methods/get_email";
 import { hideModal } from "./methods/hide_modal";
 import { on } from "./methods/on";
 import { lazyInit } from "./methods/lazy_init";
-import { EventEmitter2 } from "./event/emitter";
-import type { KeplrEWalletCoreEventMap, KeplrEWalletInterface } from "./types";
+import type {
+  KeplrEWalletCoreEvent2,
+  KeplrEWalletCoreEventHandler2,
+  KeplrEWalletInterface,
+} from "./types";
 import { init } from "./static/init";
+import { EventEmitter3 } from "./event";
 
 export function KeplrEWallet(
   this: KeplrEWalletInterface,
@@ -21,18 +25,24 @@ export function KeplrEWallet(
   this.iframe = iframe;
   this.sdkEndpoint = sdkEndpoint;
   this.origin = window.location.origin;
-  this.eventEmitter = new EventEmitter2<KeplrEWalletCoreEventMap>();
-  this.waitUntilInitialized = this.lazyInit();
+  this.eventEmitter = new EventEmitter3<
+    KeplrEWalletCoreEvent2,
+    KeplrEWalletCoreEventHandler2
+  >();
+  this.state = null;
+  this.waitUntilInitialized = this.lazyInit().then();
 }
 
-KeplrEWallet.prototype.lazyInit = lazyInit;
-KeplrEWallet.prototype.showModal = showModal;
-KeplrEWallet.prototype.hideModal = hideModal;
-KeplrEWallet.prototype.sendMsgToIframe = sendMsgToIframe;
-KeplrEWallet.prototype.signIn = signIn;
-KeplrEWallet.prototype.signOut = signOut;
-KeplrEWallet.prototype.getPublicKey = getPublicKey;
-KeplrEWallet.prototype.getEmail = getEmail;
-KeplrEWallet.prototype.on = on;
-
 KeplrEWallet.init = init;
+
+const ptype: KeplrEWalletInterface = KeplrEWallet.prototype;
+
+ptype.lazyInit = lazyInit;
+ptype.showModal = showModal;
+ptype.hideModal = hideModal;
+ptype.sendMsgToIframe = sendMsgToIframe;
+ptype.signIn = signIn;
+ptype.signOut = signOut;
+ptype.getPublicKey = getPublicKey;
+ptype.getEmail = getEmail;
+ptype.on = on;

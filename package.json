@@ -8,6 +8,7 @@
       "credential_vault/server",
       "credential_vault/cv_interface",
       "sdk/ewallet_cosmos_kit",
+      "sdk/ewallet_sdk_common",
       "sdk/ewallet_sdk_core",
       "sdk/ewallet_sdk_cosmos",
       "sdk/ewallet_sdk_eth",

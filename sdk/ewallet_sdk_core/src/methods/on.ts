@@ -1,42 +1,13 @@
 import type {
-  KeplrEWalletCoreEventHandler,
-  KeplrEWalletCoreEventName,
+  KeplrEWalletCoreEventHandler2,
   KeplrEWalletInterface,
 } from "@keplr-ewallet-sdk-core/types";
 
-export async function on<N extends KeplrEWalletCoreEventName>(
+export function on(
   this: KeplrEWalletInterface,
-  eventName: N,
-  handler: KeplrEWalletCoreEventHandler<N>,
+  handlerDef: KeplrEWalletCoreEventHandler2,
 ) {
-  if (this.eventEmitter) {
-    // if already initialized or init failed, call handler immediately
-    // if (eventName === "_init") {
-    //   const initHandler = handler as KeplrEWalletCoreEventHandler<"_init">;
-    //
-    //   if (this.isInitialized) {
-    //     initHandler({
-    //       success: true,
-    //       data: {
-    //         email: this.email,
-    //         publicKey: this.publicKey,
-    //       },
-    //     });
-    //     return;
-    //   } else if (this.initError) {
-    //     initHandler({
-    //       success: false,
-    //       err: this.initError,
-    //     });
-    //     return;
-    //   }
-    // }
+  // await this.waitUntilInitialized;
 
-    this.eventEmitter.on(eventName, handler);
-  }
+  this.eventEmitter.on(handlerDef);
 }
-
-// export const on = _on as <N extends KeplrEWalletCoreEventName>(
-//   eventName: N,
-//   handler: KeplrEWalletCoreEventHandler<N>,
-// ) => void;

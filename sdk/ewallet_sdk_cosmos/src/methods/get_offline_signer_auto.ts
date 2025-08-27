@@ -10,7 +10,8 @@ export async function getOfflineSignerAuto(
   signOptions?: KeplrSignOptions,
 ): Promise<OfflineDirectSigner | OfflineAminoSigner> {
   const key = await this.getKey(chainId);
-  if (key.isNanoLedger) {
+
+  if (key && key.isNanoLedger) {
     return this.getOfflineSignerOnlyAmino(chainId, signOptions);
   }
   return this.getOfflineSigner(chainId, signOptions);

@@ -10,12 +10,14 @@ import type {
   EthEWalletInterface,
   EthSignParams,
   EthSignResult,
+  MakeSignatureBasePayload,
 } from "@keplr-ewallet-sdk-eth/types";
 import {
   getChainIconUrl,
   SUPPORTED_CHAINS,
   TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
+import { toSignableTransaction } from "@keplr-ewallet-sdk-eth/utils";
 
 export async function makeSignature(
   this: EthEWalletInterface,
@@ -60,12 +62,7 @@ export async function makeSignature(
 }
 
 function createMakeSignatureData(
-  basePayload: {
-    chain_info: ChainInfoForAttachedModal;
-    origin: string;
-    signer: string;
-    request_id: string;
-  },
+  basePayload: MakeSignatureBasePayload,
   params: EthSignParams,
 ): MakeEthereumSigData {
   switch (params.type) {
@@ -76,7 +73,7 @@ function createMakeSignatureData(
         payload: {
           ...basePayload,
           data: {
-            transaction: params.data.transaction,
+            transaction: toSignableTransaction(params.data.transaction),
           },
         },
       };

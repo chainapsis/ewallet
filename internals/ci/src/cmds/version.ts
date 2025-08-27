@@ -4,11 +4,14 @@ import chalk from "chalk";
 import { paths } from "../paths";
 import { doBuildPkgs } from "./build_pkgs";
 import { expectSuccess } from "../expect";
+import { sleep } from "../time";
 
 export async function version(..._args: any[]) {
   console.log("Start versioning packages...");
 
-  console.log("We will re-build the packages here just to make sure");
+  console.log("We will re-build the packages here just to make sure\n");
+  await sleep(500);
+
   doBuildPkgs();
 
   console.log("Testing type definition in sandbox simple host");

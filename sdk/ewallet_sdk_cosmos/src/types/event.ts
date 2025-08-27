@@ -1,13 +1,22 @@
-export type KeplrWalletCosmosEventMap = {
-  accountsChanged: { email: string; publicKey: string };
-  chainChanged: {};
-};
+export interface AccountChangePayload {
+  email: string | null;
+  publicKey: Buffer<ArrayBuffer> | null;
+}
 
-export type KeplrWalletCosmosEventName = keyof KeplrWalletCosmosEventMap;
+export type KeplrEWalletCosmosEvent2 =
+  | ({
+      type: "accountsChanged";
+    } & AccountChangePayload)
+  | {
+      type: "chainChanged";
+    };
 
-export type KeplrWalletCosmosEventPayload =
-  KeplrWalletCosmosEventMap[KeplrWalletCosmosEventName];
-
-export type KeplrWalletCosmosEventHandler<
-  K extends KeplrWalletCosmosEventName,
-> = (payload: KeplrWalletCosmosEventMap[K]) => void;
+export type KeplrEWalletCosmosEventHandler2 =
+  | {
+      type: "accountsChanged";
+      handler: (payload: AccountChangePayload) => void;
+    }
+  | {
+      type: "chainChanged";
+      handler: (payload: void) => void;
+    };

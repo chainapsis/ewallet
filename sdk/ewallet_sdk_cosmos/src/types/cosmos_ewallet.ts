@@ -1,5 +1,5 @@
 import type {
-  EventEmitter2,
+  EventEmitter3,
   KeplrEWalletInterface,
   MakeCosmosSigData,
 } from "@keplr-ewallet/ewallet-sdk-core";
@@ -22,28 +22,35 @@ import type {
 } from "@cosmjs/proto-signing";
 
 import type {
-  KeplrWalletCosmosEventHandler,
-  KeplrWalletCosmosEventMap,
-  KeplrWalletCosmosEventName,
+  KeplrEWalletCosmosEvent2,
+  KeplrEWalletCosmosEventHandler2,
 } from "./event";
 import type { ShowModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/methods/lazy_init";
+import type { KeyData } from "./key";
+
+export interface CosmosEWalletState {
+  publicKey: Uint8Array | null;
+}
 
 export interface CosmosEWalletInterface {
+  state: CosmosEWalletState;
   eWallet: KeplrEWalletInterface;
-  eventEmitter: EventEmitter2<KeplrWalletCosmosEventMap>;
+  eventEmitter: EventEmitter3<
+    KeplrEWalletCosmosEvent2,
+    KeplrEWalletCosmosEventHandler2
+  >;
   cosmosChainInfo: ChainInfo[];
   cacheTime: number;
-  publicKey: Uint8Array | null;
+  waitUntilInitialized: Promise<Result<CosmosEWalletState, LazyInitError>>;
 
+  lazyInit: () => Promise<Result<CosmosEWalletState, LazyInitError>>;
+  setUpEventHandlers: () => void;
   enable: (_chainId: string) => Promise<void>;
-  on: <N extends KeplrWalletCosmosEventName>(
-    eventName: N,
-    handler: KeplrWalletCosmosEventHandler<N>,
-  ) => void;
-
-  getPublicKey: () => Promise<Uint8Array>;
-
+  on: (handlerDef: KeplrEWalletCosmosEventHandler2) => void;
+  getPublicKey: () => Promise<Uint8Array | null>;
   getCosmosChainInfo: () => Promise<ChainInfo[]>;
   experimentalSuggestChain: (_chainInfo: ChainInfo) => Promise<void>;
   getAccounts: () => Promise<AccountData[]>;
@@ -64,7 +71,7 @@ export interface CosmosEWalletInterface {
 
   getKey: (chainId: string) => Promise<Key>;
 
-  getKeysSettled: (chainIds: string[]) => Promise<SettledResponse<Key>[]>;
+  getKeysSettled: (chainIds: string[]) => Promise<KeyData[]>;
 
   sendTx: (
     chainId: string,
@@ -102,10 +109,5 @@ export interface CosmosEWalletInterface {
     data: string | Uint8Array,
     signature: StdSignature,
   ) => Promise<boolean>;
-
-  setUpEventHandlers: () => void;
-  waitUntilInitialized: () => Promise<void>;
   showModal: (data: MakeCosmosSigData) => Promise<ShowModalResult>;
-
-  // makeSignature = makeSignature.bind(this);
 }

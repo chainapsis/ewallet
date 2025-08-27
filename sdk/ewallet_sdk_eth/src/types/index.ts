@@ -1,41 +1,19 @@
 export * from "./eth_ewallet";
 export * from "./sign";
 
-import type { Address, CustomSource, Hex, Prettify } from "viem";
+import type { Address, CustomSource, Hex } from "viem";
 
 /**
  * Ewallet account type
  * This is a viem compatible account type
+ * Referenced from viem's `LocalAccount` type for shape compatibility
+ *
+ * See viem `LocalAccount` definition:
+ * - [LocalAccount type](https://github.com/wevm/viem/blob/cbfa2e0969224e97886339cbe060903e51680e90/src/accounts/types.ts#L74)
  */
-export type EWalletAccount = Prettify<
-  CustomSource & {
-    address: Address;
-    publicKey: Hex;
-    source: "ewallet";
-    type: "local";
-  }
->;
-
-// export interface IEthEWallet {
-//   type: "ethereum";
-//   chainId: string; // CAIP-2 formatting
-//   address: Hex;
-//   /**
-//    * @returns EIP-1193 compatible Ethereum provider
-//    */
-//   getEthereumProvider: () => Promise<EIP1193Provider>;
-//   /**
-//    * Execute `personal_sign` operation with user wallet
-//    *
-//    * @param msg - Message to sign in hex format
-//    * @returns Signature of the message in hex format
-//    */
-//   sign: (msg: string) => Promise<Hex>;
-//   /**
-//    * Switch to the specified chain
-//    * The chain must be supported by the wallet
-//    *
-//    * @param chainId - Chain ID to switch to in hex string or number
-//    */
-//   switchChain: (chainId: `0x${string}` | number) => Promise<void>;
-// }
+export type EWalletAccount = CustomSource & {
+  address: Address;
+  publicKey: Hex;
+  source: "ewallet";
+  type: "local";
+};

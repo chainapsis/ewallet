@@ -2,32 +2,37 @@ import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 
 export async function getPublicKey(
   this: CosmosEWalletInterface,
-): Promise<Uint8Array> {
-  console.log("[keplr] getPublicKey: start");
+): Promise<Uint8Array | null> {
+  console.log("[keplr-cosmos] getPublicKey: start");
+
   try {
-    // return cached public key if available
-    if (this.publicKey) {
-      console.log("[keplr] getPublicKey: cached public key");
-      return this.publicKey;
+    await this.waitUntilInitialized;
+
+    if (this.state === null) {
+      throw new Error("Cosmos SDK is not properly initialized");
     }
 
-    console.log("[keplr] getPublicKey: getPublicKey from eWallet");
-
-    const pubKey = await this.eWallet.getPublicKey();
-
-    if (pubKey === null) {
-      this.publicKey = null;
-      throw new Error("Failed to get public key");
-      // return { success: false, err: "Failed to get public key" };
+    if (this.state.publicKey) {
+      console.log("[keplr-cosmos] getPublicKey: cached public key");
+      return this.state.publicKey;
     }
 
-    const publicKey = Buffer.from(pubKey, "hex");
-    this.publicKey = publicKey;
-    return this.publicKey;
-    // return { success: true, data: Buffer.from(pubKey, "hex") };
+    console.log("[keplr-cosmos] getPublicKey: getPublicKey from eWallet");
+
+    const pk = await this.eWallet.getPublicKey();
+
+    if (pk === null) {
+      this.state.publicKey = null;
+      return null;
+    } else {
+      const publicKey = Buffer.from(pk, "hex");
+
+      this.state.publicKey = publicKey;
+      return this.state.publicKey;
+    }
   } catch (error: any) {
-    console.error("[keplr] getPublicKey failed with error:", error);
+    console.error("[keplr-cosmos] getPublicKey failed with error:", error);
+
     throw error;
-    // return { success: false, err: error.toString() };
   }
 }

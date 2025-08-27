@@ -89,7 +89,7 @@ WHERE dump_id = $2
   }
 }
 
-export async function getOldPgDumps(
+export async function getOldCompletedPgDumps(
   db: Pool,
   retentionDays: number,
 ): Promise<Result<PgDump[], string>> {
@@ -137,12 +137,20 @@ WHERE dump_id = $1`;
 
 export async function getAllPgDumps(
   db: Pool,
+  days?: number,
 ): Promise<Result<PgDump[], string>> {
   try {
-    const query = `
-SELECT * FROM pg_dumps 
-ORDER BY created_at DESC`;
-    const result = await db.query(query);
+    let query = `SELECT * FROM pg_dumps`;
+
+    const values = [];
+    if (days && days > 0) {
+      query += ` WHERE created_at >= NOW() - ($1 * INTERVAL '1 day')`;
+      values.push(days);
+    }
+
+    query += ` ORDER BY created_at DESC`;
+
+    const result = await db.query(query, values);
     return { success: true, data: result.rows as PgDump[] };
   } catch (error) {
     return { success: false, err: String(error) };

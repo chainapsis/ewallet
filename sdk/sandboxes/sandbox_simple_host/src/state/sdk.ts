@@ -9,20 +9,20 @@ import {
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-interface AppState {
+interface SDKState {
   keplr_sdk_eth: EthEWalletInterface | null;
   keplr_sdk_cosmos: CosmosEWalletInterface | null;
   isEthInitializing: boolean;
   isCosmosInitializing: boolean;
 }
 
-interface AppActions {
+interface SDKActions {
   initKeplrSdkEth: () => EthEWalletInterface | null;
   initKeplrSdkCosmos: () => CosmosEWalletInterface | null;
 }
 
-export const useAppState = create(
-  combine<AppState, AppActions>(
+export const useSDKState = create(
+  combine<SDKState, SDKActions>(
     {
       keplr_sdk_eth: null,
       keplr_sdk_cosmos: null,
@@ -57,12 +57,6 @@ export const useAppState = create(
             isEthInitializing: false,
           });
 
-          // initRes.data.eWallet.on("_init", (result) => {
-          //   if (result.success) {
-          //     set({ isInitialized: true });
-          //   }
-          // });
-
           return initRes.data;
         } else {
           console.error("sdk init fail, err: %s", initRes.err);
@@ -94,19 +88,21 @@ export const useAppState = create(
           console.log("Cosmos SDK initialized");
 
           const cosmosSDK = initRes.data;
-          console.log(123, cosmosSDK);
 
           set({
             keplr_sdk_cosmos: cosmosSDK,
             isCosmosInitializing: false,
           });
 
-          cosmosSDK.on("accountsChanged", async (payload: any) => {
-            console.log("ev - accountsChanged", payload);
+          cosmosSDK.on({
+            type: "accountsChanged",
+            handler: (payload: any) => {
+              console.log("ev - accountsChanged", payload);
 
-            // set({
-            //   userInfo: payload,
-            // });
+              // set({
+              //   userInfo: payload,
+              // });
+            },
           });
 
           return initRes.data;

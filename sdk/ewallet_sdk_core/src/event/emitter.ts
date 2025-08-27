@@ -23,6 +23,14 @@ export class EventEmitter2<EventMap extends Record<string, any>> {
     this._listeners[eventName].push(handler);
   }
 
+  emit<K extends keyof EventMap>(eventName: K, payload: EventMap[K]) {
+    console.log("emit, eventName: %s", String(eventName), this._listeners);
+    const handlers = this._listeners[eventName];
+    if (handlers && handlers.length > 0) {
+      handlers.forEach((listener) => listener(payload));
+    }
+  }
+
   off<K extends keyof EventMap>(
     eventName: K,
     handler: (payload: EventMap[K]) => void,
@@ -41,14 +49,6 @@ export class EventEmitter2<EventMap extends Record<string, any>> {
 
     if (handlers.length === 0) {
       delete this._listeners[eventName];
-    }
-  }
-
-  emit<K extends keyof EventMap>(eventName: K, payload: EventMap[K]) {
-    console.log("emit, eventName: %s", String(eventName), this._listeners);
-    const handlers = this._listeners[eventName];
-    if (handlers && handlers.length > 0) {
-      handlers.forEach((listener) => listener(payload));
     }
   }
 }

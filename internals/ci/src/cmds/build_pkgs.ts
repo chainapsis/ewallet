@@ -13,6 +13,7 @@ export function doBuildPkgs() {
   // Order matters!
   const pkgsInOrder = [
     paths.stdlib,
+    paths.sdk_common,
     paths.sdk_core,
     paths.sdk_cosmos,
     paths.sdk_eth,
