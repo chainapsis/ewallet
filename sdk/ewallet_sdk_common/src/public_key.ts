@@ -1,20 +1,27 @@
-import { type Hex } from "viem";
-
+/**
+ * Compute if the public key has changed
+ * @param current - The current public key
+ * @param next - The next public key
+ * @returns True if the public key has changed with the next public key in normalized form/null, false otherwise
+ */
 export function computePublicKeyChange(
-  current: Hex | null,
+  current: string | null,
   next: string | null,
-): { changed: boolean; next: Hex | null } {
-  let nextHex: Hex | null = null;
-  if (next) {
-    nextHex = (next.startsWith("0x") ? next : `0x${next}`) as Hex;
-  }
+): { changed: boolean; normalizedNext: string | null } {
+  const nCurrent = normalize(current);
+  const nNext = normalize(next);
 
   const changed =
-    (current === null && nextHex !== null) ||
-    (current !== null && nextHex === null) ||
-    (current !== null &&
-      nextHex !== null &&
-      current.toLowerCase() !== nextHex.toLowerCase());
+    (nCurrent === null && nNext !== null) ||
+    (nCurrent !== null && nNext === null) ||
+    (nCurrent !== null && nNext !== null && nCurrent !== nNext);
 
-  return { changed, next: nextHex };
+  return { changed, normalizedNext: nNext };
+}
+
+function normalize(key: string | null): string | null {
+  if (key === null || key === "") return null;
+  return key.toLowerCase().startsWith("0x")
+    ? key.slice(2).toLowerCase()
+    : key.toLowerCase();
 }
