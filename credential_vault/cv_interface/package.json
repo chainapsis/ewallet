@@ -9,6 +9,36 @@
     "clean": "del-cli dist",
     "build": "yarn clean && tsc --build --force && tsc-alias"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./witnessed_id_tokens": {
+      "import": "./dist/witnessed_id_tokens.js",
+      "types": "./dist/witnessed_id_tokens.d.ts"
+    },
+    "./key_share": {
+      "import": "./dist/key_share.js",
+      "types": "./dist/key_share.d.ts"
+    },
+    "./response": {
+      "import": "./dist/response.js",
+      "types": "./dist/response.d.ts"
+    },
+    "./user": {
+      "import": "./dist/user.js",
+      "types": "./dist/user.d.ts"
+    },
+    "./wallet": {
+      "import": "./dist/wallet.js",
+      "types": "./dist/wallet.d.ts"
+    },
+    "./auth": {
+      "import": "./dist/auth.js",
+      "types": "./dist/auth.d.ts"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
