@@ -16,6 +16,7 @@ import {
   SUPPORTED_CHAINS,
   TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
+import { toSignableTransaction } from "@keplr-ewallet-sdk-eth/utils";
 
 export async function makeSignature(
   this: EthEWalletInterface,
@@ -76,7 +77,7 @@ function createMakeSignatureData(
         payload: {
           ...basePayload,
           data: {
-            transaction: params.data.transaction,
+            transaction: toSignableTransaction(params.data.transaction),
           },
         },
       };

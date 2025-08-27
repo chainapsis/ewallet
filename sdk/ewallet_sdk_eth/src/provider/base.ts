@@ -33,7 +33,6 @@ import { PUBLIC_RPC_METHODS } from "@keplr-ewallet-sdk-eth/rpc";
 import {
   parseTypedData,
   isValidChainId,
-  toSignableTransaction,
   validateChain,
 } from "@keplr-ewallet-sdk-eth/utils";
 import type {
@@ -285,15 +284,13 @@ export class EWalletEIP1193Provider
         const [tx] =
           args.params as RpcRequestArgs<"eth_signTransaction">["params"];
 
-        const signableTx = toSignableTransaction(tx);
-
         const { signer, address } = this._getAuthenticatedSigner();
 
         const result = await signer.sign({
           type: "sign_transaction",
           data: {
             address,
-            transaction: signableTx,
+            transaction: tx,
           },
         });
 
