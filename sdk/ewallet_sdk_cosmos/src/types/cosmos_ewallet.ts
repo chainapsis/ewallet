@@ -32,6 +32,7 @@ import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/methods/lazy_init"
 
 export interface CosmosEWalletState {
   publicKey: Uint8Array | null;
+  publicKeyRaw: string | null;
 }
 
 export interface CosmosEWalletInterface {

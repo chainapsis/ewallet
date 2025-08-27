@@ -9,7 +9,7 @@ import type { EWalletMsg, EWalletMsgShowModal } from "./msg";
 import type { ModalResult } from "./modal";
 
 export interface KeplrEWalletInterface {
-  state: null | KeplrEWalletState;
+  state: KeplrEWalletState;
   apiKey: string;
   iframe: HTMLIFrameElement;
   sdkEndpoint: string;

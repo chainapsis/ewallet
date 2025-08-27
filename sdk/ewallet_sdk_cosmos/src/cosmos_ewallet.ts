@@ -41,6 +41,7 @@ export function CosmosEWallet(
   >();
   this.state = {
     publicKey: null,
+    publicKeyRaw: null,
   };
   this.waitUntilInitialized = this.lazyInit().then();
 }

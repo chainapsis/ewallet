@@ -28,7 +28,7 @@ export function EthEWallet(
     publicKeyRaw: null,
     address: null,
   };
-  this.waitUntilInitialized = this.lazyInit();
+  this.waitUntilInitialized = this.lazyInit().then();
 }
 
 EthEWallet.init = init;
