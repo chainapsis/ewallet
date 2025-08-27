@@ -26,27 +26,3 @@ export function init(
     data: new (EthEWallet as any)(eWalletRes.data, args.use_testnet),
   };
 }
-
-export async function initAsync(
-  args: EthEWalletInitArgs,
-): Promise<Result<EthEWalletInterface, string>> {
-  const eWalletRes = KeplrEWallet.init(args);
-
-  if (!eWalletRes.success) {
-    console.error(
-      "[keplr] eth, ewallet core init fail, err: %s",
-      eWalletRes.err,
-    );
-
-    return eWalletRes;
-  }
-
-  const ethEWallet = new (EthEWallet as any)(eWalletRes.data, args.use_testnet);
-
-  await ethEWallet.waitUntilInitialized();
-
-  return {
-    success: true,
-    data: ethEWallet,
-  };
-}
