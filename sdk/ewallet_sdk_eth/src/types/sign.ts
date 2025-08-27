@@ -1,5 +1,13 @@
 import type { Address, SignableMessage, RpcTransactionRequest } from "viem";
 import type { MakeEthereumSigResult } from "@keplr-ewallet/ewallet-sdk-core";
+import type { ChainInfoForAttachedModal } from "@keplr-ewallet/ewallet-sdk-core";
+
+export interface MakeSignatureBasePayload {
+  chain_info: ChainInfoForAttachedModal;
+  origin: string;
+  signer: string;
+  request_id: string;
+}
 
 export type EthSignParams =
   | {

@@ -13,7 +13,7 @@ export function init(
   const eWalletRes = KeplrEWallet.init(args);
   if (!eWalletRes.success) {
     console.error(
-      "[keplr] cosmos, ewallet core init fail, err: %s",
+      "[keplr-cosmos] ewallet core init fail, err: %s",
       eWalletRes.err,
     );
 

@@ -10,6 +10,7 @@ import type {
   EthEWalletInterface,
   EthSignParams,
   EthSignResult,
+  MakeSignatureBasePayload,
 } from "@keplr-ewallet-sdk-eth/types";
 import {
   getChainIconUrl,
@@ -61,12 +62,7 @@ export async function makeSignature(
 }
 
 function createMakeSignatureData(
-  basePayload: {
-    chain_info: ChainInfoForAttachedModal;
-    origin: string;
-    signer: string;
-    request_id: string;
-  },
+  basePayload: MakeSignatureBasePayload,
   params: EthSignParams,
 ): MakeEthereumSigData {
   switch (params.type) {

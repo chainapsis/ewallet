@@ -3,7 +3,7 @@ import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 export async function getPublicKey(
   this: CosmosEWalletInterface,
 ): Promise<Uint8Array | null> {
-  console.log("[keplr] getPublicKey: start");
+  console.log("[keplr-cosmos] getPublicKey: start");
 
   try {
     await this.waitUntilInitialized;
@@ -13,11 +13,11 @@ export async function getPublicKey(
     }
 
     if (this.state.publicKey) {
-      console.log("[keplr] getPublicKey: cached public key");
+      console.log("[keplr-cosmos] getPublicKey: cached public key");
       return this.state.publicKey;
     }
 
-    console.log("[keplr] getPublicKey: getPublicKey from eWallet");
+    console.log("[keplr-cosmos] getPublicKey: getPublicKey from eWallet");
 
     const pk = await this.eWallet.getPublicKey();
 
@@ -31,7 +31,7 @@ export async function getPublicKey(
       return this.state.publicKey;
     }
   } catch (error: any) {
-    console.error("[keplr] getPublicKey failed with error:", error);
+    console.error("[keplr-cosmos] getPublicKey failed with error:", error);
 
     throw error;
   }

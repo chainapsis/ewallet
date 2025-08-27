@@ -14,7 +14,7 @@ export type LazyInitError = {
 export async function lazyInit(
   this: EthEWalletInterface,
 ): Promise<Result<EthEWalletState, LazyInitError>> {
-  console.log("[eth] set up event handlers");
+  console.log("[keplr-eth] set up event handlers");
 
   const eWalletStateRes = await this.eWallet.waitUntilInitialized;
 
@@ -40,7 +40,7 @@ export async function lazyInit(
 
       if (changed) {
         console.log(
-          "[eth] _accountsChanged callback, public key changed from: %s to: %s",
+          "[keplr-eth] _accountsChanged callback, public key changed from: %s to: %s",
           this.state.publicKey ? this.state.publicKey : "null",
           next ? next : "null",
         );

@@ -41,7 +41,7 @@ export async function lazyInit(
 }
 
 export function setUpEventHandlers(this: CosmosEWalletInterface): void {
-  console.log("[keplr cosmos_sdk] set up event handlers");
+  console.log("[keplr-cosmos] set up event handlers");
 
   // this.eWallet.on("_init", (payload) => {
   //   console.log(
@@ -81,7 +81,7 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
     type: "CORE__accountsChanged",
     handler: (payload) => {
       console.log(
-        "[keplr cosmos_sdk] CORE__accountsChanged callback, payload: %s",
+        "[keplr-cosmos] CORE__accountsChanged callback, payload: %s",
         payload,
       );
 
@@ -97,7 +97,7 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
       if (changed) {
         this.state.publicKey = next;
         console.log(
-          "[keplr cosmos_sdk] _accountsChanged callback, public key changed from: %s to: %s",
+          "[keplr-cosmos] _accountsChanged callback, public key changed from: %s to: %s",
           this.state.publicKey
             ? Buffer.from(this.state.publicKey).toString("hex")
             : "null",

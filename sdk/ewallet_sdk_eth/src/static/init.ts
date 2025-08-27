@@ -14,7 +14,7 @@ export function init(
 
   if (!eWalletRes.success) {
     console.error(
-      "[keplr] eth, ewallet core init fail, err: %s",
+      "[keplr-eth] ewallet core init fail, err: %s",
       eWalletRes.err,
     );
 
