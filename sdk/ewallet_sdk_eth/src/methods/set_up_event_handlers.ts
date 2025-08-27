@@ -1,4 +1,5 @@
 import { type Hex } from "viem";
+import { computePublicKeyChange } from "@keplr-ewallet/ewallet-sdk-common";
 
 import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
 import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
@@ -13,6 +14,7 @@ export function setUpEventHandlers(this: EthEWalletInterface): void {
         this.publicKey,
         payload.publicKey,
       );
+
       if (changed) {
         console.log(
           "[eth] _accountsChanged callback, public key changed from: %s to: %s",
@@ -41,21 +43,21 @@ export function setUpEventHandlers(this: EthEWalletInterface): void {
   });
 }
 
-function computePublicKeyChange(
-  current: Hex | null,
-  next: string | null,
-): { changed: boolean; next: Hex | null } {
-  let nextHex: Hex | null = null;
-  if (next) {
-    nextHex = (next.startsWith("0x") ? next : `0x${next}`) as Hex;
-  }
-
-  const changed =
-    (current === null && nextHex !== null) ||
-    (current !== null && nextHex === null) ||
-    (current !== null &&
-      nextHex !== null &&
-      current.toLowerCase() !== nextHex.toLowerCase());
-
-  return { changed, next: nextHex };
-}
+// function computePublicKeyChange(
+//   current: Hex | null,
+//   next: string | null,
+// ): { changed: boolean; next: Hex | null } {
+//   let nextHex: Hex | null = null;
+//   if (next) {
+//     nextHex = (next.startsWith("0x") ? next : `0x${next}`) as Hex;
+//   }
+//
+//   const changed =
+//     (current === null && nextHex !== null) ||
+//     (current !== null && nextHex === null) ||
+//     (current !== null &&
+//       nextHex !== null &&
+//       current.toLowerCase() !== nextHex.toLowerCase());
+//
+//   return { changed, next: nextHex };
+// }

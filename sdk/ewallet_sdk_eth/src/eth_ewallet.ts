@@ -28,13 +28,15 @@ export function EthEWallet(
   this.setUpEventHandlers();
 }
 
-EthEWallet.prototype.getEthereumProvider = getEthereumProvider;
-EthEWallet.prototype.sign = personalSign;
-EthEWallet.prototype.switchChain = switchChain;
-EthEWallet.prototype.toViemAccount = toViemAccount;
-EthEWallet.prototype.getPublicKey = getPublicKey;
-EthEWallet.prototype.getAddress = getAddress;
-EthEWallet.prototype.makeSignature = makeSignature;
-EthEWallet.prototype.setUpEventHandlers = setUpEventHandlers;
-
 EthEWallet.init = init;
+
+const ptype: EthEWalletInterface = EthEWallet.prototype;
+
+ptype.getEthereumProvider = getEthereumProvider;
+ptype.sign = personalSign;
+ptype.switchChain = switchChain;
+ptype.toViemAccount = toViemAccount;
+ptype.getPublicKey = getPublicKey;
+ptype.getAddress = getAddress;
+ptype.makeSignature = makeSignature;
+ptype.setUpEventHandlers = setUpEventHandlers;

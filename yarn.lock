@@ -2619,6 +2619,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@keplr-ewallet/ewallet-sdk-common@workspace:*, @keplr-ewallet/ewallet-sdk-common@workspace:sdk/ewallet_sdk_common":
+  version: 0.0.0-use.local
+  resolution: "@keplr-ewallet/ewallet-sdk-common@workspace:sdk/ewallet_sdk_common"
+  dependencies:
+    "@jest/globals": "npm:*"
+    "@types/jest": "npm:*"
+    "@types/node": "npm:*"
+    del-cli: "npm:*"
+    ts-jest: "npm:*"
+    tsc-alias: "npm:*"
+    typescript: "npm:*"
+  languageName: unknown
+  linkType: soft
+
 "@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.52, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core"
@@ -2698,6 +2712,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth"
   dependencies:
+    "@keplr-ewallet/ewallet-sdk-common": "workspace:*"
     "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.52"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.10"
     "@rollup/plugin-commonjs": "npm:*"

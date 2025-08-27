@@ -7,6 +7,7 @@ export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
 
   if (this.publicKey !== null) {
     console.log("[eth] getPublicKey: cached public key");
+
     return this.publicKey;
   }
 

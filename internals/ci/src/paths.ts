@@ -1,6 +1,6 @@
 import path from "node:path";
 
-export const paths = (function() {
+export const paths = (function () {
   const root = path.join(__dirname, "../../../");
 
   const cv_interface = path.join(
@@ -11,6 +11,8 @@ export const paths = (function() {
   const cv_server = path.join(__dirname, "../../../credential_vault/server");
 
   const stdlib = path.join(__dirname, "../../../stdlib_js");
+
+  const sdk_common = path.join(__dirname, "../../../sdk/ewallet_sdk_common/");
 
   const sdk_core = path.join(__dirname, "../../../sdk/ewallet_sdk_core/");
 
@@ -41,6 +43,7 @@ export const paths = (function() {
     sdk_core,
     sdk_eth,
     sdk_cosmos,
+    sdk_common,
     crypto_bytes,
     cv_interface,
     cv_server,
