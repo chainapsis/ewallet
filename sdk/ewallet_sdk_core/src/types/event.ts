@@ -1,6 +1,6 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-export interface InitPayload {
+export interface InitEventPayload {
   email: string | null;
   publicKey: string | null;
 }
@@ -13,21 +13,14 @@ export type KeplrEWalletCoreEvent2 =
     }
   | {
       type: "CORE__chainChanged";
-    }
-  | ({
-      type: "CORE__init";
-    } & Result<InitPayload, string>);
+    };
 
 export type KeplrEWalletCoreEventHandler2 =
   | {
       type: "CORE__accountsChanged";
-      handler: (payload: InitPayload) => void;
+      handler: (payload: InitEventPayload) => void;
     }
   | {
       type: "CORE__chainChanged";
       handler: (payload: void) => void;
-    }
-  | {
-      type: "CORE__init";
-      handler: (payload: Result<InitPayload, string>) => void;
     };

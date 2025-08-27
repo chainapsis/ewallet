@@ -1,11 +1,10 @@
-import type { EWalletMsg } from "@keplr-ewallet-sdk-core/types";
 import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/target";
-import type { KeplrEWalletInterface } from "@keplr-ewallet-sdk-core/types";
-import { type OAuthState } from "@keplr-ewallet-sdk-core/types/oauth";
-
-const RedirectUriSearchParamsKey = {
-  STATE: "state",
-};
+import type {
+  KeplrEWalletInterface,
+  OAuthState,
+  EWalletMsg,
+} from "@keplr-ewallet-sdk-core/types";
+import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
 
 const FIVE_MINS_MS = 5 * 60 * 1000;
 
