@@ -9,7 +9,7 @@ export function getOfflineSignerOnlyAmino(
   signOptions?: KeplrSignOptions,
 ): OfflineAminoSigner {
   return {
-    getAccounts: this.getAccounts,
+    getAccounts: this.getAccounts.bind(this),
     signAmino: (signerAddress, signDoc) =>
       this.signAmino(chainId, signerAddress, signDoc, signOptions),
   };
