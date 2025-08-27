@@ -1,8 +1,3 @@
-export interface InitEventPayload {
-  email: string | null;
-  publicKey: string | null;
-}
-
 export interface AccountsChangedPayload {
   email: string | null;
   publicKey: string | null;
@@ -10,20 +5,20 @@ export interface AccountsChangedPayload {
 
 export type KeplrEWalletCoreEvent2 =
   | {
-      type: "CORE__accountsChanged";
-      email: string | null;
-      publicKey: string | null;
-    }
+    type: "CORE__accountsChanged";
+    email: string | null;
+    publicKey: string | null;
+  }
   | {
-      type: "CORE__chainChanged";
-    };
+    type: "CORE__chainChanged";
+  };
 
 export type KeplrEWalletCoreEventHandler2 =
   | {
-      type: "CORE__accountsChanged";
-      handler: (payload: AccountsChangedPayload) => void;
-    }
+    type: "CORE__accountsChanged";
+    handler: (payload: AccountsChangedPayload) => void;
+  }
   | {
-      type: "CORE__chainChanged";
-      handler: (payload: void) => void;
-    };
+    type: "CORE__chainChanged";
+    handler: (payload: void) => void;
+  };
