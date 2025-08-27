@@ -25,6 +25,8 @@ export async function lazyInit(
 
   const eWalletState = eWalletStateRes.data;
 
+  this.setUpEventHandlers();
+
   if (eWalletState.publicKey) {
     const pk = Buffer.from(eWalletState.publicKey, "hex");
     this.state.publicKey = pk;
@@ -46,7 +48,7 @@ export async function lazyInit(
 }
 
 export function setUpEventHandlers(this: CosmosEWalletInterface): void {
-  console.log("[keplr] set up event handlers");
+  console.log("[keplr cosmos_sdk] set up event handlers");
 
   // this.eWallet.on("_init", (payload) => {
   //   console.log(
@@ -85,6 +87,11 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
   this.eWallet.on({
     type: "CORE__accountsChanged",
     handler: (payload) => {
+      console.log(
+        "[keplr cosmos_sdk] CORE__accountsChanged callback, payload: %s",
+        payload,
+      );
+
       if (this.state === null) {
         throw new Error("CORE__accountsChanged unreachable");
       }
@@ -97,20 +104,28 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
       if (changed) {
         this.state.publicKey = next;
         console.log(
-          "[keplr] _accountsChanged callback, public key changed from: %s to: %s",
+          "[keplr cosmos_sdk] _accountsChanged callback, public key changed from: %s to: %s",
           this.state.publicKey
             ? Buffer.from(this.state.publicKey).toString("hex")
             : "null",
           nextHex,
         );
 
-        // TODO: @retto
+        if (next === null) {
+          this.state.publicKey = null;
+          this.eventEmitter.emit({
+            type: "accountsChanged",
+            email: null,
+            publicKey: null,
+          });
+          return;
+        }
 
-        // this.eventEmitter.emit({
-        //   type: "accountsChanged",
-        //   email: payload.email ?? "",
-        //   publicKey: nextHex,
-        // });
+        this.eventEmitter.emit({
+          type: "accountsChanged",
+          email: payload.email,
+          publicKey: Buffer.from(next),
+        });
       }
     },
   });

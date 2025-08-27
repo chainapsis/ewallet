@@ -47,6 +47,7 @@ export interface CosmosEWalletInterface {
   waitUntilInitialized: Promise<Result<CosmosEWalletState, LazyInitError>>;
 
   lazyInit: () => Promise<Result<CosmosEWalletState, LazyInitError>>;
+  setUpEventHandlers: () => void;
   enable: (_chainId: string) => Promise<void>;
   on: (handlerDef: KeplrEWalletCosmosEventHandler2) => void;
   getPublicKey: () => Promise<Uint8Array | null>;
