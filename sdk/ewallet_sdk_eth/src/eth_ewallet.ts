@@ -8,7 +8,7 @@ import {
   switchChain,
   toViemAccount,
   getAddress,
-  setUpEventHandlers,
+  lazyInit,
 } from "@keplr-ewallet-sdk-eth/methods";
 import type { EthEWalletInterface } from "./types";
 import { init } from "./static/init";
@@ -23,9 +23,11 @@ export function EthEWallet(
   this.eWallet = eWallet;
   this.useTestnet = useTestnet !== undefined ? useTestnet : USE_TESTNET_DEFAULT;
   this.provider = null;
-  this.publicKey = null;
-  this.address = null;
-  this.setUpEventHandlers();
+  this.state = {
+    publicKey: null,
+    address: null,
+  };
+  this.waitUntilInitialized = this.lazyInit();
 }
 
 EthEWallet.init = init;
@@ -39,4 +41,4 @@ ptype.toViemAccount = toViemAccount;
 ptype.getPublicKey = getPublicKey;
 ptype.getAddress = getAddress;
 ptype.makeSignature = makeSignature;
-ptype.setUpEventHandlers = setUpEventHandlers;
+ptype.lazyInit = lazyInit;

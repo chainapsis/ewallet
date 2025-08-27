@@ -36,7 +36,7 @@ export interface CosmosEWalletState {
 }
 
 export interface CosmosEWalletInterface {
-  state: null | CosmosEWalletState;
+  state: CosmosEWalletState;
   eWallet: KeplrEWalletInterface;
   eventEmitter: EventEmitter3<
     KeplrEWalletCosmosEvent2,

@@ -11,12 +11,6 @@ export type LazyInitError = {
 export async function lazyInit(
   this: CosmosEWalletInterface,
 ): Promise<Result<CosmosEWalletState, LazyInitError>> {
-  if (this.state !== null) {
-    return { success: true, data: this.state };
-  }
-
-  this.state = { publicKey: null };
-
   const eWalletStateRes = await this.eWallet.waitUntilInitialized;
 
   if (!eWalletStateRes.success) {
@@ -24,9 +18,6 @@ export async function lazyInit(
   }
 
   const eWalletState = eWalletStateRes.data;
-
-  this.setUpEventHandlers();
-
   if (eWalletState.publicKey) {
     const pk = Buffer.from(eWalletState.publicKey, "hex");
     this.state.publicKey = pk;
@@ -43,6 +34,8 @@ export async function lazyInit(
       publicKey: null,
     });
   }
+
+  this.setUpEventHandlers();
 
   return { success: true, data: this.state };
 }

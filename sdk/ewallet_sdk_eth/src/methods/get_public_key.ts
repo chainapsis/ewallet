@@ -5,10 +5,10 @@ import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
   console.log("[eth] getPublicKey: start");
 
-  if (this.publicKey !== null) {
+  if (this.state.publicKey !== null) {
     console.log("[eth] getPublicKey: cached public key");
 
-    return this.publicKey;
+    return this.state.publicKey;
   }
 
   console.log("[eth] getPublicKey: getPublicKey from eWallet");
@@ -18,7 +18,7 @@ export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
     throw new Error("Failed to fetch public key");
   }
 
-  this.publicKey = `0x${ret}`;
+  this.state.publicKey = `0x${ret}`;
 
   return `0x${ret}`;
 }
