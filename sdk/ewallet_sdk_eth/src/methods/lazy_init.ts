@@ -29,10 +29,7 @@ export async function lazyInit(
     handleAccountsChanged.call(this, eWalletState.publicKey);
   }
 
-  this.eWallet.on({
-    type: "CORE__accountsChanged",
-    handler: (payload) => handleAccountsChanged.call(this, payload.publicKey),
-  });
+  setUpEventHandlers.call(this);
 
   console.log(
     "[keplr-eth] lazy init for eth ewallet complete\npublicKey: %s\naddress: %s",
@@ -48,6 +45,13 @@ export async function lazyInit(
       publicKeyRaw: this.state.publicKeyRaw,
     },
   };
+}
+
+function setUpEventHandlers(this: EthEWalletInterface) {
+  this.eWallet.on({
+    type: "CORE__accountsChanged",
+    handler: (payload) => handleAccountsChanged.call(this, payload.publicKey),
+  });
 }
 
 function handleAccountsChanged(
