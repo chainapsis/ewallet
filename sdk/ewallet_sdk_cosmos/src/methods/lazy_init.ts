@@ -43,40 +43,6 @@ export async function lazyInit(
 export function setUpEventHandlers(this: CosmosEWalletInterface): void {
   console.log("[keplr-cosmos] set up event handlers");
 
-  // this.eWallet.on("_init", (payload) => {
-  //   console.log(
-  //     "[cosmos] _init callback, payload: %s",
-  //     JSON.stringify(payload),
-  //   );
-  //
-  //   if (!payload.success) {
-  //     console.log("[cosmos] _init callback, error: %s", payload.err);
-  //     this.publicKey = null;
-  //     return;
-  //   }
-  //
-  //   const { changed, next, nextHex } = computePublicKeyChange(
-  //     this.publicKey,
-  //     payload.data.publicKey,
-  //   );
-  //
-  //   if (changed) {
-  //     console.log(
-  //       "[cosmos] _init callback, public key changed from: %s to: %s",
-  //       this.publicKey ? Buffer.from(this.publicKey).toString("hex") : "null",
-  //       nextHex,
-  //     );
-  //
-  //     this.publicKey = next;
-  //     if (this.eventEmitter) {
-  //       this.eventEmitter.emit("accountsChanged", {
-  //         email: payload.data.email ?? "",
-  //         publicKey: nextHex,
-  //       });
-  //     }
-  //   }
-  // });
-
   this.eWallet.on({
     type: "CORE__accountsChanged",
     handler: (payload) => {

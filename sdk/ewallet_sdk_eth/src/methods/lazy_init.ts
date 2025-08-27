@@ -17,6 +17,8 @@ export async function lazyInit(
   console.log("[keplr-eth] set up event handlers");
 
   const eWalletStateRes = await this.eWallet.waitUntilInitialized;
+  // => sdk core initialziation complete
+  // => fire event "accountChange"
 
   if (!eWalletStateRes.success) {
     return { success: false, err: { type: "eWallet failed to initailize" } };

@@ -1,3 +1,5 @@
+"use client";
+
 import { createClient, fallback, getAddress, http, toHex } from "viem";
 import { createConfig, CreateConnectorFn, createConnector } from "wagmi";
 import {

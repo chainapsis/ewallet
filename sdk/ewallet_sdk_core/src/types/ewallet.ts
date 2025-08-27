@@ -28,7 +28,7 @@ export interface KeplrEWalletInterface {
   signOut: () => Promise<void>;
   getPublicKey: () => Promise<string | null>;
   getEmail: () => Promise<string | null>;
-  on: (handlerDef: KeplrEWalletCoreEventHandler2) => Promise<void>;
+  on: (handlerDef: KeplrEWalletCoreEventHandler2) => void;
 }
 
 export interface KeplrEwalletInitArgs {

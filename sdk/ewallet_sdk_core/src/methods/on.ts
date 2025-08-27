@@ -3,11 +3,11 @@ import type {
   KeplrEWalletInterface,
 } from "@keplr-ewallet-sdk-core/types";
 
-export async function on(
+export function on(
   this: KeplrEWalletInterface,
   handlerDef: KeplrEWalletCoreEventHandler2,
 ) {
-  await this.waitUntilInitialized;
+  // await this.waitUntilInitialized;
 
   this.eventEmitter.on(handlerDef);
 }
