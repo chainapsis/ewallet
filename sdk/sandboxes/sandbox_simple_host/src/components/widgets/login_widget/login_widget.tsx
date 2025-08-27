@@ -3,14 +3,12 @@ import React, { useState } from "react";
 import { Widget } from "../widget_components";
 import styles from "./login_widget.module.scss";
 import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
-import { useIsSignedIn } from "@/hooks/ewallet";
+import { useUserInfoState } from "@/state/userInfo";
 
 export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   const { cosmosEWallet } = useKeplrEwallet();
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const { isSignedIn, email, publicKey } = useIsSignedIn();
-
-  // const userInfo = useAppState().userInfo;
+  const { isSignedIn, email, publicKey } = useUserInfoState();
 
   const handleSignIn = async () => {
     try {
