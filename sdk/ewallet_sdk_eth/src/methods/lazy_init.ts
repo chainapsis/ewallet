@@ -1,4 +1,3 @@
-import { computePublicKeyChange } from "@keplr-ewallet/ewallet-sdk-common";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { Hex } from "viem";
 
@@ -46,6 +45,7 @@ export async function lazyInit(
     data: {
       address: this.state.address,
       publicKey: this.state.publicKey,
+      publicKeyRaw: this.state.publicKeyRaw,
     },
   };
 }
@@ -56,38 +56,51 @@ function handleAccountsChanged(
 ) {
   console.log("[keplr-eth] detect account change");
 
-  const { changed, normalizedNext } = computePublicKeyChange(
-    this.state.publicKey,
-    publicKey,
-  );
+  if (this.state.publicKeyRaw !== publicKey) {
+    normalizeKey(publicKey);
 
-  if (changed) {
     console.log(
-      "[keplr-eth] account change detected\npublic key changed from: %s to: %s",
-      this.state.publicKey ? this.state.publicKey : "null",
-      normalizedNext ? `0x${normalizedNext}` : "null",
+      "[keplr-eth] account change detected, from: %s to: %s",
+      this.state.publicKey,
+      publicKey,
     );
 
     const provider = this.getEthereumProvider();
 
-    if (normalizedNext === null) {
+    const publicKeyNormalized = normalizeKey(publicKey);
+
+    if (publicKeyNormalized === null) {
       this.state = {
         publicKey: null,
+        publicKeyRaw: null,
         address: null,
       };
 
       provider.emit("accountsChanged", []);
       return;
+    } else {
+      const publicKeyHex: Hex = `0x${publicKeyNormalized}`;
+      const nextAddress = publicKeyToEthereumAddress(publicKeyHex);
+
+      this.state = {
+        publicKeyRaw: publicKey,
+        publicKey: publicKeyHex,
+        address: nextAddress,
+      };
+
+      provider.emit("accountsChanged", [nextAddress]);
     }
+  }
+}
 
-    const nextPublicKeyHex: Hex = `0x${normalizedNext}`;
-    const nextAddress = publicKeyToEthereumAddress(nextPublicKeyHex);
+function normalizeKey(key: string | null): string | null {
+  if (key === null || key === "") {
+    return null;
+  }
 
-    this.state = {
-      publicKey: nextPublicKeyHex,
-      address: nextAddress,
-    };
-
-    provider.emit("accountsChanged", [nextAddress]);
+  if (key.toLowerCase().startsWith("0x")) {
+    return key.slice(2).toLowerCase();
+  } else {
+    return key.toLowerCase();
   }
 }

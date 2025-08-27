@@ -12,6 +12,7 @@ import type { LazyInitError } from "@keplr-ewallet-sdk-eth/methods";
 export interface EthEWalletState {
   publicKey: Hex | null;
   address: Address | null;
+  publicKeyRaw: string | null;
 }
 
 export interface EthEWalletInterface {
