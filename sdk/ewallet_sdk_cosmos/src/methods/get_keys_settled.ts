@@ -1,20 +1,16 @@
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
-import type { KeyData } from "@keplr-ewallet-sdk-cosmos/types/key";
+import type {
+  Key,
+  SettledResponse,
+  SettledResponses,
+} from "@keplr-wallet/types";
 
-// TODO: @retto
-// Should we make the types compatible w/ Keplr? @retto
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+
 export async function getKeysSettled(
   this: CosmosEWalletInterface,
   chainIds: string[],
-): Promise<KeyData[]> {
+): Promise<SettledResponses<Key>> {
   await this.waitUntilInitialized;
 
-  let ret = [];
-  for (let idx = 0; idx < chainIds.length; idx += 1) {
-    const key = await this.getKey(chainIds[idx]);
-    ret.push({ chainId: chainIds[idx], key });
-  }
-
-  return ret;
-  // return Promise.allSettled(chainIds.map((chainId) => this.getKey(chainId)));
+  return Promise.allSettled(chainIds.map((chainId) => this.getKey(chainId)));
 }
