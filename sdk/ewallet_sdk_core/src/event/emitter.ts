@@ -1,42 +1,85 @@
-export class EventEmitter2<EventMap extends Record<string, any>> {
-  protected _listeners: {
-    [K in keyof EventMap]?: Array<(payload: EventMap[K]) => void>;
-  } = {};
+import type { Result } from "@keplr-ewallet/stdlib-js";
 
-  get listeners() {
-    return this._listeners;
+type EventType = {
+  type: string;
+  [key: string]: any;
+};
+
+type EventHandlerType = {
+  type: string;
+  handler: (payload: any) => void;
+};
+
+type EventEmitError =
+  | {
+      type: "handle error";
+      err: string;
+    }
+  | {
+      type: "handler not found";
+      event_type: string;
+    };
+
+export class EventEmitter3<E extends EventType, H extends EventHandlerType> {
+  listeners: {
+    [K in E["type"]]?: H["handler"][];
+  };
+
+  constructor() {
+    this.listeners = {};
   }
 
-  on<K extends keyof EventMap>(
-    eventName: K,
-    handler: (payload: EventMap[K]) => void,
-  ) {
+  on<T extends E["type"]>(handlerDef: H) {
+    const { handler, type } = handlerDef;
+
     if (typeof handler !== "function") {
       throw new TypeError(
         `The "handler" argument must be of type function. Received ${handler === null ? "null" : typeof handler}`,
       );
     }
 
-    if (!this._listeners[eventName]) {
-      this._listeners[eventName] = [];
+    if (this.listeners[type as T] === undefined) {
+      this.listeners[type as T] = [];
     }
-    this._listeners[eventName].push(handler);
+    (this.listeners[type as T] as H["handler"][]).push(handler);
   }
 
-  emit<K extends keyof EventMap>(eventName: K, payload: EventMap[K]) {
-    console.log("emit, eventName: %s", String(eventName), this._listeners);
-    const handlers = this._listeners[eventName];
-    if (handlers && handlers.length > 0) {
-      handlers.forEach((listener) => listener(payload));
+  emit<T extends E["type"]>(event: E): Result<void, EventEmitError> {
+    const { type, ...rest } = event;
+    console.log("[keplr] emit, type: %s", type);
+
+    const handlers = this.listeners[type as T];
+
+    if (handlers === undefined) {
+      return {
+        success: false,
+        err: {
+          type: "handler not found",
+          event_type: type,
+        },
+      };
     }
+
+    for (let idx = 0; idx < handlers.length; idx += 1) {
+      try {
+        const handler = handlers[idx];
+        handler(rest);
+      } catch (err: any) {
+        return {
+          success: false,
+          err: { type: "handle error", err: err.toString() },
+        };
+      }
+    }
+
+    return { success: true, data: void 0 };
   }
 
-  off<K extends keyof EventMap>(
-    eventName: K,
-    handler: (payload: EventMap[K]) => void,
-  ) {
-    const handlers = this._listeners[eventName];
-    if (!handlers) {
+  off<T extends E["type"]>(handlerDef: H) {
+    const { type, handler } = handlerDef;
+
+    const handlers = this.listeners[type as T];
+    if (handlers === undefined) {
       return;
     }
 
@@ -48,7 +91,7 @@ export class EventEmitter2<EventMap extends Record<string, any>> {
     handlers.splice(index, 1);
 
     if (handlers.length === 0) {
-      delete this._listeners[eventName];
+      delete this.listeners[type as T];
     }
   }
 }
