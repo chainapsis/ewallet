@@ -5,7 +5,6 @@ import {
   toHex,
   UnauthorizedProviderError,
   UnsupportedChainIdError,
-  UnsupportedProviderMethodError,
 } from "viem";
 import { sepolia, mainnet } from "viem/chains";
 
