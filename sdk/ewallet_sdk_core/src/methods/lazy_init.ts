@@ -10,10 +10,6 @@ import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/iframe";
 export async function lazyInit(
   this: KeplrEWalletInterface,
 ): Promise<Result<KeplrEWalletState, string>> {
-  if (this.state !== null) {
-    return { success: true, data: this.state };
-  }
-
   // If keplr_ewallet is initialized, iframe should exist
   const el = document.getElementById(KEPLR_IFRAME_ID);
   if (el === null) {

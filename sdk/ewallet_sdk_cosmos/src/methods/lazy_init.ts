@@ -18,11 +18,6 @@ export async function lazyInit(
     return { success: false, err: { type: "eWallet failed to initailize" } };
   }
 
-  console.log("[keplr-cosmos] lazy init for cosmos ewallet complete", {
-    email: eWalletStateRes.data.email,
-    publicKey: eWalletStateRes.data.publicKey,
-  });
-
   const eWalletState = eWalletStateRes.data;
   if (eWalletState.publicKey) {
     const pk = Buffer.from(eWalletState.publicKey, "hex");
