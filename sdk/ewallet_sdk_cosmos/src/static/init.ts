@@ -22,3 +22,23 @@ export function init(
 
   return { success: true, data: new (CosmosEWallet as any)(eWalletRes.data) };
 }
+
+export async function initAsync(
+  args: KeplrEwalletInitArgs,
+): Promise<Result<CosmosEWalletInterface, string>> {
+  const eWalletRes = KeplrEWallet.init(args);
+  if (!eWalletRes.success) {
+    console.error(
+      "[keplr-cosmos] ewallet core init fail, err: %s",
+      eWalletRes.err,
+    );
+
+    return eWalletRes;
+  }
+
+  const eWallet = new (CosmosEWallet as any)(eWalletRes.data);
+
+  await eWallet.lazyInit();
+
+  return { success: true, data: eWallet };
+}

@@ -11,7 +11,7 @@ import {
   lazyInit,
 } from "@keplr-ewallet-sdk-eth/methods";
 import type { EthEWalletInterface } from "./types";
-import { init } from "./static/init";
+import { init, initAsync } from "./static/init";
 
 const USE_TESTNET_DEFAULT = false;
 
@@ -32,6 +32,7 @@ export function EthEWallet(
 }
 
 EthEWallet.init = init;
+EthEWallet.initAsync = initAsync;
 
 const ptype: EthEWalletInterface = EthEWallet.prototype;
 
