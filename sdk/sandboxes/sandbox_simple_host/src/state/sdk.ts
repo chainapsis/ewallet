@@ -98,10 +98,6 @@ export const useSDKState = create(
             type: "accountsChanged",
             handler: (payload) => {
               console.log("ev - accountsChanged", payload);
-
-              // set({
-              //   userInfo: payload,
-              // });
             },
           });
 

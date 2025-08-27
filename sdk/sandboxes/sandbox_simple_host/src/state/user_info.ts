@@ -15,7 +15,6 @@ interface UserInfoActions {
   clearUserInfo: () => void;
 }
 
-// UserInfo를 위한 별도 스토어
 export const useUserInfoState = create(
   combine<UserInfoState, UserInfoActions>(
     {
