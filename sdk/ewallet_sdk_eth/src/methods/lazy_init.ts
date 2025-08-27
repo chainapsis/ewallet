@@ -32,18 +32,15 @@ export async function lazyInit(
   setUpEventHandlers.call(this);
 
   console.log(
-    "[keplr-eth] lazy init for eth ewallet complete\npublicKey: %s\naddress: %s",
+    "[keplr-eth] lazy init for eth ewallet complete\npublicKeyRaw: %s\npublicKey: %s\naddress: %s",
+    this.state.publicKeyRaw,
     this.state.publicKey,
     this.state.address,
   );
 
   return {
     success: true,
-    data: {
-      address: this.state.address,
-      publicKey: this.state.publicKey,
-      publicKeyRaw: this.state.publicKeyRaw,
-    },
+    data: this.state,
   };
 }
 
@@ -58,20 +55,22 @@ function handleAccountsChanged(
   this: EthEWalletInterface,
   publicKey: string | null,
 ) {
-  console.log("[keplr-eth] detect account change");
+  console.log("[keplr-eth] detect account change", publicKey);
 
-  if (this.state.publicKeyRaw !== publicKey) {
-    normalizeKey(publicKey);
+  const currentPublicKeyRaw = normalizeKey(this.state.publicKeyRaw);
+  const publicKeyNormalized = normalizeKey(publicKey);
 
+  const changed = currentPublicKeyRaw !== publicKeyNormalized;
+
+  // only emit `accountsChanged` event if public key changed
+  if (changed) {
     console.log(
       "[keplr-eth] account change detected, from: %s to: %s",
-      this.state.publicKey,
-      publicKey,
+      currentPublicKeyRaw,
+      publicKeyNormalized,
     );
 
     const provider = this.getEthereumProvider();
-
-    const publicKeyNormalized = normalizeKey(publicKey);
 
     if (publicKeyNormalized === null) {
       this.state = {
