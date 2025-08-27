@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-eth",
-  "version": "0.0.6-rc.59",
+  "version": "0.0.6-rc.60",
   "packageManager": "yarn@4.7.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -38,8 +38,8 @@
   },
   "dependencies": {
     "@keplr-ewallet/ewallet-sdk-common": "workspace:*",
-    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.52",
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.10",
+    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.53",
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.11",
     "eventemitter3": "^5.0.1",
     "uuid": "*",
     "viem": "*"
