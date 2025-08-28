@@ -107,8 +107,8 @@ describe("pg_dump_route_test", () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_PASSWORD");
-      expect(response.body.msg).toBe("Invalid password");
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
     });
 
     it("should fail with missing password", async () => {
@@ -118,8 +118,8 @@ describe("pg_dump_route_test", () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_PASSWORD");
-      expect(response.body.msg).toBe("Invalid password");
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
     });
 
     it("should fail with empty password", async () => {
@@ -129,8 +129,8 @@ describe("pg_dump_route_test", () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_PASSWORD");
-      expect(response.body.msg).toBe("Invalid password");
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
     });
 
     it("should handle database configuration errors", async () => {

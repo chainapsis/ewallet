@@ -9,6 +9,10 @@ import {
   getAllPgDumps,
   type PgDump,
 } from "@keplr-ewallet/credential-vault-pg-interface";
+import {
+  adminAuthMiddleware,
+  type AdminAuthenticatedRequest,
+} from "@keplr-ewallet-cv-server/middlewares/admin_auth";
 
 export function setPgDumpRoutes(router: Router) {
   /**
@@ -48,48 +52,46 @@ export function setPgDumpRoutes(router: Router) {
    *               code: PG_DUMP_FAILED
    *               msg: "Failed to process pg dump"
    *       401:
-   *         description: Invalid password
+   *         description: Invalid admin password
    *         content:
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/ErrorResponse'
    *             example:
    *               success: false
-   *               code: INVALID_PASSWORD
-   *               msg: "Invalid password"
+   *               code: UNAUTHORIZED
+   *               msg: "Invalid admin password"
    */
-  router.post("/", async (req, res: Response<CVApiResponse<PgDumpResult>>) => {
-    const { password } = req.body;
-    const state = req.app.locals as any;
+  router.post(
+    "/",
+    adminAuthMiddleware,
+    async (
+      req: AdminAuthenticatedRequest,
+      res: Response<CVApiResponse<PgDumpResult>>,
+    ) => {
+      const state = req.app.locals as any;
 
-    if (password !== state.env.ADMIN_PASSWORD) {
-      return res.status(401).json({
-        success: false,
-        code: "INVALID_PASSWORD",
-        msg: "Invalid password",
+      const processPgDumpRes = await processPgDump(state.db, {
+        database: state.env.DB_NAME,
+        host: state.env.DB_HOST,
+        password: state.env.DB_PASSWORD,
+        user: state.env.DB_USER,
+        port: state.env.DB_PORT,
       });
-    }
+      if (processPgDumpRes.success === false) {
+        return res.status(500).json({
+          success: false,
+          code: "PG_DUMP_FAILED",
+          msg: processPgDumpRes.err,
+        });
+      }
 
-    const processPgDumpRes = await processPgDump(state.db, {
-      database: state.env.DB_NAME,
-      host: state.env.DB_HOST,
-      password: state.env.DB_PASSWORD,
-      user: state.env.DB_USER,
-      port: state.env.DB_PORT,
-    });
-    if (processPgDumpRes.success === false) {
-      return res.status(500).json({
-        success: false,
-        code: "PG_DUMP_FAILED",
-        msg: processPgDumpRes.err,
+      return res.status(200).json({
+        success: true,
+        data: processPgDumpRes.data,
       });
-    }
-
-    return res.status(200).json({
-      success: true,
-      data: processPgDumpRes.data,
-    });
-  });
+    },
+  );
 
   /**
    * @swagger
