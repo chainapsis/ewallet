@@ -41,8 +41,10 @@ export async function initAsync(
     return eWalletRes;
   }
 
-  const eWallet = new (EthEWallet as any)(eWalletRes.data, args.use_testnet);
-
+  const eWallet: EthEWalletInterface = new (EthEWallet as any)(
+    eWalletRes.data,
+    args.use_testnet,
+  );
   await eWallet.waitUntilInitialized;
 
   return {

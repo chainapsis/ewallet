@@ -3,11 +3,12 @@ import type {
   KeplrEWalletInterface,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { Address, Hex } from "viem";
+import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
-import type { EthSignParams, EthSignResult, EWalletAccount } from ".";
-import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { LazyInitError } from "@keplr-ewallet-sdk-eth/methods";
+import type { EWalletAccount } from "./account";
+import type { EthSignParams, EthSignResult } from "./sign";
 
 export interface EthEWalletState {
   publicKey: Hex | null;

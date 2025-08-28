@@ -11,18 +11,18 @@ import {
   toBytes,
 } from "viem";
 
-export const hashEthereumMessage = (message: SignableMessage): Uint8Array => {
+export function hashEthereumMessage(message: SignableMessage): Uint8Array {
   return toBytes(hashMessage(message));
-};
+}
 
-export const hashEthereumTransaction = (
+export function hashEthereumTransaction(
   transaction: TransactionSerializable,
-): Uint8Array => {
+): Uint8Array {
   return toBytes(keccak256(serializeTransaction(transaction)));
-};
+}
 
-export const hashEthereumTypedData = (
+export function hashEthereumTypedData(
   typedData: TypedDataDefinition,
-): Uint8Array => {
+): Uint8Array {
   return toBytes(hashTypedData(typedData));
-};
+}

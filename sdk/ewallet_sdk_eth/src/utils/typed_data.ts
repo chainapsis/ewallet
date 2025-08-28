@@ -6,11 +6,11 @@ import type { TypedDataDefinition } from "viem";
  * @param reviver - A function to transform the parsed value
  * @returns The parsed typed data
  */
-export const parseTypedData = <T>(
+export function parseTypedData<T>(
   text: string,
   reviver?: (this: any, key: string, value: any) => any,
-): T => {
-  return JSON.parse(text, function (key, val) {
+): T {
+  return JSON.parse(text, function(key, val) {
     // First apply user-provided reviver, if any
     const revived =
       typeof reviver === "function" ? reviver.call(this, key, val) : val;
@@ -26,7 +26,7 @@ export const parseTypedData = <T>(
     // Otherwise return the revived or original value
     return revived;
   });
-};
+}
 
 /**
  * Parse typed data from a string and explicitly convert to TypedDataDefinition
@@ -35,9 +35,9 @@ export const parseTypedData = <T>(
  * @param reviver - Optional function to transform parsed values
  * @returns The parsed typed data as TypedDataDefinition
  */
-export const parseTypedDataDefinition = (
+export function parseTypedDataDefinition(
   text: string,
   reviver?: (this: any, key: string, value: any) => any,
-): TypedDataDefinition => {
+): TypedDataDefinition {
   return parseTypedData<TypedDataDefinition>(text, reviver);
-};
+}

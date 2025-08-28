@@ -36,9 +36,11 @@ export async function initAsync(
     return eWalletRes;
   }
 
-  const eWallet = new (CosmosEWallet as any)(eWalletRes.data);
+  const eWallet: CosmosEWalletInterface = new (CosmosEWallet as any)(
+    eWalletRes.data,
+  );
 
-  await eWallet.lazyInit();
+  await eWallet.waitUntilInitialized;
 
   return { success: true, data: eWallet };
 }
