@@ -43,16 +43,6 @@ export function setPgDumpRoutes(router: Router) {
    *                   properties:
    *                     data:
    *                       $ref: '#/components/schemas/PgDumpResponse'
-   *       500:
-   *         description: Failed to process pg dump
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *             example:
-   *               success: false
-   *               code: PG_DUMP_FAILED
-   *               msg: "Failed to process pg dump"
    *       401:
    *         description: Invalid admin password
    *         content:
@@ -63,6 +53,16 @@ export function setPgDumpRoutes(router: Router) {
    *               success: false
    *               code: UNAUTHORIZED
    *               msg: "Invalid admin password"
+   *       500:
+   *         description: Failed to process pg dump
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: PG_DUMP_FAILED
+   *               msg: "Failed to process pg dump"
    */
   router.post(
     "/",
@@ -179,6 +179,83 @@ export function setPgDumpRoutes(router: Router) {
     });
   });
 
+  /**
+   * @swagger
+   * /pg_dump/v1/restore:
+   *   post:
+   *     tags:
+   *       - PG Dump
+   *     summary: Restore a pg dump
+   *     description: Restore a pg dump
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               dump_id:
+   *                 type: string
+   *                 description: The id of the pg dump to restore
+   *                 example: "123e4567-e89b-12d3-a456-426614174000"
+   *     responses:
+   *       200:
+   *         description: Successfully restored pg dump
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: object
+   *                       properties:
+   *                         dump_id:
+   *                           type: string
+   *                           description: The id of the pg dump that was restored
+   *                           example: "123e4567-e89b-12d3-a456-426614174000"
+   *       400:
+   *         description: Invalid dump_id parameter
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: INVALID_DUMP_ID
+   *               msg: "Invalid dump_id parameter"
+   *       401:
+   *         description: Invalid admin password
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: UNAUTHORIZED
+   *               msg: "Invalid admin password"
+   *       404:
+   *         description: Pg dump not found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: PG_DUMP_NOT_FOUND
+   *               msg: "Pg dump not found"
+   *       500:
+   *         description: Failed to restore pg dump
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: PG_RESTORE_FAILED
+   *               msg: "Failed to restore pg dump"
+   */
   router.post(
     "/restore",
     adminAuthMiddleware,
