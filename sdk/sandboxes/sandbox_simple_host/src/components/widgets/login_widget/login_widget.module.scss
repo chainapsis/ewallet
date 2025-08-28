@@ -93,9 +93,10 @@
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-self: stretch;
 
+    flex-wrap: wrap;
     gap: 8px;
 
     .label {
@@ -105,4 +106,27 @@
       word-break: break-all;
     }
   }
+}
+
+.addressRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.value {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
