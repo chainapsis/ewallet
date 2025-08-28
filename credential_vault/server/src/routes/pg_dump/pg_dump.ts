@@ -1,14 +1,16 @@
 import { Router, type Response } from "express";
 import type { CVApiResponse } from "@keplr-ewallet/credential-vault-interface/response";
+import {
+  getAllPgDumps,
+  getPgDumpById,
+  restore,
+  type PgDump,
+} from "@keplr-ewallet/credential-vault-pg-interface";
 
 import {
   processPgDump,
   type PgDumpResult,
 } from "@keplr-ewallet-cv-server/pg_dump/dump";
-import {
-  getAllPgDumps,
-  type PgDump,
-} from "@keplr-ewallet/credential-vault-pg-interface";
 import {
   adminAuthMiddleware,
   type AdminAuthenticatedRequest,
@@ -176,4 +178,69 @@ export function setPgDumpRoutes(router: Router) {
       data: dumpsResult.data,
     });
   });
+
+  router.post(
+    "/restore",
+    adminAuthMiddleware,
+    async (
+      req: AdminAuthenticatedRequest<{ dump_id: string }>,
+      res: Response<CVApiResponse<{ dump_id: string }>>,
+    ) => {
+      const state = req.app.locals as any;
+
+      const dumpId = req.body.dump_id;
+
+      const getPgDumpRes = await getPgDumpById(state.db, dumpId);
+      if (getPgDumpRes.success === false) {
+        return res.status(500).json({
+          success: false,
+          code: "UNKNOWN_ERROR",
+          msg: `getPgDumpById failed: ${getPgDumpRes.err}`,
+        });
+      }
+
+      if (getPgDumpRes.data === null) {
+        return res.status(404).json({
+          success: false,
+          code: "PG_DUMP_NOT_FOUND",
+          msg: `Pg dump not found: ${dumpId}`,
+        });
+      }
+
+      const pgDump = getPgDumpRes.data;
+
+      if (pgDump.status !== "COMPLETED" || pgDump.dump_path === null) {
+        return res.status(404).json({
+          success: false,
+          code: "INVALID_PG_DUMP",
+          msg: `Invalid pg dump: ${dumpId}`,
+        });
+      }
+
+      const restoreRes = await restore(
+        {
+          database: state.env.DB_NAME,
+          host: state.env.DB_HOST,
+          password: state.env.DB_PASSWORD,
+          user: state.env.DB_USER,
+          port: state.env.DB_PORT,
+        },
+        pgDump.dump_path,
+      );
+      if (restoreRes.success === false) {
+        return res.status(500).json({
+          success: false,
+          code: "PG_RESTORE_FAILED",
+          msg: restoreRes.err,
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          dump_id: pgDump.dump_id,
+        },
+      });
+    },
+  );
 }
