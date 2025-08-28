@@ -10,6 +10,8 @@ import { toRpcTransactionRequest } from "@keplr-ewallet-sdk-eth/utils";
 export async function toViemAccount(
   this: EthEWalletInterface,
 ): Promise<EWalletAccount> {
+  await this.waitUntilInitialized;
+
   const publicKey = await this.getPublicKey();
   const address = await this.getAddress();
 

@@ -43,7 +43,7 @@ export async function initAsync(
 
   const eWallet = new (EthEWallet as any)(eWalletRes.data, args.use_testnet);
 
-  await eWallet.lazyInit();
+  await eWallet.waitUntilInitialized;
 
   return {
     success: true,

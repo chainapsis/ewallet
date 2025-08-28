@@ -23,6 +23,8 @@ export async function makeSignature(
   this: EthEWalletInterface,
   params: EthSignParams,
 ): Promise<EthSignResult> {
+  await this.waitUntilInitialized;
+
   const origin = this.eWallet.origin;
 
   const provider = this.getEthereumProvider();
