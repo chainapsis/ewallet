@@ -87,4 +87,18 @@ export const pgDumpSchemas = {
       },
     },
   },
+  PgRestoreRequestBody: {
+    type: "object",
+    required: ["password", "dump_path"],
+    properties: {
+      password: {
+        type: "string",
+        description: "The admin password",
+      },
+      dump_path: {
+        type: "string",
+        description: "The path to the pg dump",
+      },
+    },
+  },
 };

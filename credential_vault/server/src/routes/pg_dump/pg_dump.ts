@@ -192,12 +192,7 @@ export function setPgDumpRoutes(router: Router) {
    *       content:
    *         application/json:
    *           schema:
-   *             type: object
-   *             properties:
-   *               dump_path:
-   *                 type: string
-   *                 description: The path to the pg dump to restore
-   *                 example: "/path/to/dump.sql"
+   *             $ref: '#/components/schemas/PgRestoreRequestBody'
    *     responses:
    *       200:
    *         description: Successfully restored pg dump
