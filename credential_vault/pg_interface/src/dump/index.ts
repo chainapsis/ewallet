@@ -26,12 +26,19 @@ export async function dump(
     const dumpPath = join(dumpDir, dumpFile);
     const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
 
-    await execAsync(command, {
+    const { stdout, stderr } = await execAsync(command, {
       env: {
         ...process.env,
         PGPASSWORD: pgConfig.password,
       },
     });
+
+    if (stdout) {
+      console.log("pg_dump stdout:", stdout);
+    }
+    if (stderr) {
+      console.log("pg_dump stderr:", stderr);
+    }
 
     const stats = await fs.stat(dumpPath);
     const dumpSize = stats.size;
@@ -49,12 +56,19 @@ export async function restore(
   try {
     const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose ${dumpPath}`;
 
-    await execAsync(command, {
+    const { stdout, stderr } = await execAsync(command, {
       env: {
         ...process.env,
         PGPASSWORD: pgConfig.password,
       },
     });
+
+    if (stdout) {
+      console.log("pg_restore stdout:", stdout);
+    }
+    if (stderr) {
+      console.log("pg_restore stderr:", stderr);
+    }
 
     return { success: true, data: void 0 };
   } catch (error) {
