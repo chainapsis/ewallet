@@ -24,7 +24,8 @@ export async function dump(
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
-    const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
+    const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U \
+${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
 
     const { stdout, stderr } = await execAsync(command, {
       env: {
@@ -54,7 +55,9 @@ export async function restore(
   dumpPath: string,
 ): Promise<Result<void, string>> {
   try {
-    const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose ${dumpPath}`;
+    const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U \
+${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose \
+${dumpPath}`;
 
     const { stdout, stderr } = await execAsync(command, {
       env: {
