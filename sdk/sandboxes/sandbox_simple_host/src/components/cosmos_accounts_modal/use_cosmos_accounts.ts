@@ -19,7 +19,7 @@ export function useCosmosAccounts() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const load = async () => {
+    async function load() {
       if (!isSignedIn || !cosmosSDK) {
         setAccounts([]);
         return;
@@ -85,9 +85,9 @@ export function useCosmosAccounts() {
       } finally {
         setIsLoading(false);
       }
-    };
+    }
 
-    load();
+    load().then();
   }, [isSignedIn, cosmosSDK]);
 
   return { accounts, isLoading, error };
