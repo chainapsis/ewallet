@@ -1,9 +1,9 @@
 import type { RpcTransactionRequest, TransactionSerializable } from "viem";
 import { toHex } from "viem";
 
-export const toSignableTransaction = (
+export function toSignableTransaction(
   tx: RpcTransactionRequest,
-): RpcTransactionRequest => {
+): RpcTransactionRequest {
   const { from, ...transaction } = tx;
   const txType = transaction.type || "0x2"; // Default to EIP-1559
 
@@ -45,9 +45,9 @@ export const toSignableTransaction = (
   }
 
   return signableTransaction;
-};
+}
 
-export const isSignableTransaction = (tx: RpcTransactionRequest): boolean => {
+export function isSignableTransaction(tx: RpcTransactionRequest): boolean {
   if (!tx || typeof tx !== "object") return false;
 
   if (tx.from != null) return false;
@@ -78,15 +78,15 @@ export const isSignableTransaction = (tx: RpcTransactionRequest): boolean => {
         has("maxFeePerGas") && has("maxPriorityFeePerGas") && !has("gasPrice")
       );
   }
-};
+}
 
-export const toTransactionSerializable = ({
+export function toTransactionSerializable({
   chainId,
   tx,
 }: {
   chainId: string;
   tx: RpcTransactionRequest;
-}): TransactionSerializable => {
+}): TransactionSerializable {
   const convertValue = <T>(
     value: string | number | undefined,
     converter: (value: string | number) => T,
@@ -158,11 +158,11 @@ export const toTransactionSerializable = ({
   }
 
   return transactionSerializable;
-};
+}
 
-export const toRpcTransactionRequest = (
+export function toRpcTransactionRequest(
   transaction: TransactionSerializable,
-): RpcTransactionRequest => {
+): RpcTransactionRequest {
   const convertToHexValue = (
     value: bigint | number | undefined,
   ): `0x${string}` | undefined => {
@@ -203,4 +203,4 @@ export const toRpcTransactionRequest = (
         ),
       };
   }
-};
+}

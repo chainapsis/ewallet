@@ -7,9 +7,9 @@ import type {
 import { publicKeyToAddress } from "viem/accounts";
 import { secp256k1 } from "@noble/curves/secp256k1";
 
-export const publicKeyToEthereumAddress = (
+export function publicKeyToEthereumAddress(
   publicKey: Hex | ByteArray,
-): Address => {
+): Address {
   let publicKeyWithout0x: string | ByteArray = publicKey;
   if (typeof publicKey === "string" && publicKey.startsWith("0x")) {
     publicKeyWithout0x = publicKey.slice(2);
@@ -21,35 +21,36 @@ export const publicKeyToEthereumAddress = (
 
   // ethereum address should be generated from uncompressed public key
   return publicKeyToAddress(uncompressedPublicKey);
-};
+}
 
-export const isValidChainId = (chainId: unknown): chainId is string =>
-  Boolean(chainId) && typeof chainId === "string" && chainId.startsWith("0x");
+export function isValidChainId(chainId: unknown): chainId is string {
+  return (
+    Boolean(chainId) && typeof chainId === "string" && chainId.startsWith("0x")
+  );
+}
 
 /**
  * Check if a URL string is valid
  */
-export const isValidUrl = (url: string): boolean => {
+export function isValidUrl(url: string): boolean {
   try {
     new URL(url);
     return true;
   } catch {
     return false;
   }
-};
+}
 
 /**
  * Validate chain ID format and value
  * @param chainId - The chain ID to validate
  * @returns Object with validation result and decimal value
  */
-export const validateChainIdFormat = (
-  chainId: string,
-): {
+export function validateChainIdFormat(chainId: string): {
   isValid: boolean;
   decimalValue?: number;
   error?: string;
-} => {
+} {
   try {
     const decimalChainId = parseInt(chainId, 16);
 
@@ -70,19 +71,17 @@ export const validateChainIdFormat = (
   } catch (error) {
     return { isValid: false, error: "Invalid chain ID format" };
   }
-};
+}
 
 /**
  * Validate RPC URLs array
  * @param rpcUrls - Array of RPC URLs to validate
  * @returns Validation result
  */
-export const validateRpcUrls = (
-  rpcUrls: readonly string[],
-): {
+export function validateRpcUrls(rpcUrls: readonly string[]): {
   isValid: boolean;
   error?: string;
-} => {
+} {
   if (!rpcUrls || rpcUrls.length === 0) {
     return { isValid: false, error: "RPC URLs are required" };
   }
@@ -94,19 +93,19 @@ export const validateRpcUrls = (
   }
 
   return { isValid: true };
-};
+}
 
 /**
  * Validate block explorer URLs array
  * @param blockExplorerUrls - Array of block explorer URLs to validate
  * @returns Validation result
  */
-export const validateBlockExplorerUrls = (
+export function validateBlockExplorerUrls(
   blockExplorerUrls?: readonly string[],
 ): {
   isValid: boolean;
   error?: string;
-} => {
+} {
   if (!blockExplorerUrls) {
     return { isValid: true }; // Optional field
   }
@@ -125,19 +124,17 @@ export const validateBlockExplorerUrls = (
   }
 
   return { isValid: true };
-};
+}
 
 /**
  * Validate native currency symbol
  * @param symbol - The currency symbol to validate
  * @returns Validation result
  */
-export const validateNativeCurrencySymbol = (
-  symbol: string,
-): {
+export function validateNativeCurrencySymbol(symbol: string): {
   isValid: boolean;
   error?: string;
-} => {
+} {
   if (symbol.length < 2 || symbol.length > 6) {
     return {
       isValid: false,
@@ -146,19 +143,17 @@ export const validateNativeCurrencySymbol = (
   }
 
   return { isValid: true };
-};
+}
 
 /**
  * Validate chain information
  * @param chain - The chain to validate
  * @returns Validation result with error
  */
-export const validateChain = (
-  chain: RpcChain,
-): {
+export function validateChain(chain: RpcChain): {
   isValid: boolean;
   error?: string;
-} => {
+} {
   const { rpcUrls, blockExplorerUrls, chainId, nativeCurrency } = chain;
 
   // Validate chain ID format and value
@@ -200,4 +195,4 @@ export const validateChain = (
   }
 
   return { isValid: true };
-};
+}
