@@ -1,17 +1,15 @@
 import type { KeplrEWalletInterface } from "@keplr-ewallet/ewallet-sdk-core";
 
-import {
-  getPublicKey,
-  makeSignature,
-  getEthereumProvider,
-  personalSign,
-  switchChain,
-  toViemAccount,
-  getAddress,
-  lazyInit,
-} from "@keplr-ewallet-sdk-eth/methods";
 import type { EthEWalletInterface } from "./types";
 import { init, initAsync } from "./static/init";
+import { lazyInit } from "./private/lazy_init";
+import { getEthereumProvider } from "./methods/get_ethereum_provider";
+import { personalSign } from "./methods/personal_sign";
+import { switchChain } from "./methods/switch_chain";
+import { toViemAccount } from "./methods/to_viem_account";
+import { getPublicKey } from "./methods/get_public_key";
+import { getAddress } from "./methods/get_address";
+import { makeSignature } from "./methods/make_signature";
 
 const USE_TESTNET_DEFAULT = false;
 
@@ -28,7 +26,7 @@ export function EthEWallet(
     publicKeyRaw: null,
     address: null,
   };
-  this.waitUntilInitialized = this.lazyInit().then();
+  this.waitUntilInitialized = lazyInit(this).then();
 }
 
 EthEWallet.init = init;
@@ -43,4 +41,3 @@ ptype.toViemAccount = toViemAccount;
 ptype.getPublicKey = getPublicKey;
 ptype.getAddress = getAddress;
 ptype.makeSignature = makeSignature;
-ptype.lazyInit = lazyInit;

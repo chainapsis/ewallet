@@ -6,9 +6,9 @@ import type { Address, Hex } from "viem";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
-import type { LazyInitError } from "@keplr-ewallet-sdk-eth/methods";
 import type { EWalletAccount } from "./account";
 import type { EthSignParams, EthSignResult } from "./sign";
+import type { LazyInitError } from "@keplr-ewallet-sdk-eth/errors";
 
 export interface EthEWalletState {
   publicKey: Hex | null;
@@ -30,7 +30,6 @@ export interface EthEWalletInterface {
   getPublicKey: () => Promise<Hex>;
   getAddress: () => Promise<Hex>;
   makeSignature: (params: EthSignParams) => Promise<EthSignResult>;
-  lazyInit: () => Promise<Result<EthEWalletState, LazyInitError>>;
 }
 
 export type EthEWalletInitArgs = KeplrEwalletInitArgs & {

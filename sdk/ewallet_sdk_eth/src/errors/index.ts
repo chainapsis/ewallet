@@ -7,3 +7,7 @@ export type EthEwalletInitError =
     type: "unknown_error";
     msg: string;
   };
+
+export type LazyInitError = {
+  type: "eWallet failed to initialize";
+};

@@ -4,15 +4,12 @@ import type {
   CosmosEWalletInterface,
   CosmosEWalletState,
 } from "@keplr-ewallet-sdk-cosmos/types";
-
-export type LazyInitError = {
-  type: "eWallet failed to initailize";
-};
+import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
 
 export async function lazyInit(
-  this: CosmosEWalletInterface,
+  cosmosEWallet: CosmosEWalletInterface,
 ): Promise<Result<CosmosEWalletState, LazyInitError>> {
-  const eWalletStateRes = await this.eWallet.waitUntilInitialized;
+  const eWalletStateRes = await cosmosEWallet.eWallet.waitUntilInitialized;
 
   if (!eWalletStateRes.success) {
     return { success: false, err: { type: "eWallet failed to initailize" } };
@@ -22,38 +19,40 @@ export async function lazyInit(
   if (eWalletState.publicKey) {
     const pk = Buffer.from(eWalletState.publicKey, "hex");
 
-    this.state = {
+    cosmosEWallet.state = {
       publicKey: pk,
       publicKeyRaw: eWalletState.publicKey,
     };
 
-    this.eventEmitter.emit({
+    cosmosEWallet.eventEmitter.emit({
       type: "accountsChanged",
       email: eWalletState.email,
       publicKey: pk,
     });
   } else {
-    this.state = {
+    cosmosEWallet.state = {
       publicKey: null,
       publicKeyRaw: null,
     };
 
-    this.eventEmitter.emit({
+    cosmosEWallet.eventEmitter.emit({
       type: "accountsChanged",
       email: eWalletState.email,
       publicKey: null,
     });
   }
 
-  this.setUpEventHandlers();
+  setUpEventHandlers(cosmosEWallet);
 
-  return { success: true, data: this.state };
+  return { success: true, data: cosmosEWallet.state };
 }
 
-export function setUpEventHandlers(this: CosmosEWalletInterface): void {
+export function setUpEventHandlers(
+  cosmosEWallet: CosmosEWalletInterface,
+): void {
   console.log("[keplr-cosmos] set up event handlers");
 
-  this.eWallet.on({
+  cosmosEWallet.eWallet.on({
     type: "CORE__accountsChanged",
     handler: (payload) => {
       console.log(
@@ -63,34 +62,34 @@ export function setUpEventHandlers(this: CosmosEWalletInterface): void {
 
       const { publicKey, email } = payload;
 
-      if (this.state.publicKeyRaw !== publicKey) {
+      if (cosmosEWallet.state.publicKeyRaw !== publicKey) {
         if (publicKey !== null) {
           const pk = Buffer.from(publicKey, "hex");
 
-          this.state = {
+          cosmosEWallet.state = {
             publicKey: pk,
             publicKeyRaw: publicKey,
           };
         } else {
-          this.state = {
+          cosmosEWallet.state = {
             publicKey: null,
             publicKeyRaw: null,
           };
         }
 
-        this.eventEmitter.emit({
+        cosmosEWallet.eventEmitter.emit({
           type: "accountsChanged",
           email: email,
-          publicKey: this.state.publicKey,
+          publicKey: cosmosEWallet.state.publicKey,
         });
       }
     },
   });
 
-  this.eWallet.on({
+  cosmosEWallet.eWallet.on({
     type: "CORE__chainChanged",
     handler: (_payload) => {
-      this.eventEmitter.emit({ type: "chainChanged" });
+      cosmosEWallet.eventEmitter.emit({ type: "chainChanged" });
     },
   });
 }

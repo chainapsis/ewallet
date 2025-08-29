@@ -28,7 +28,7 @@ import type {
 import type { ShowModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/methods/lazy_init";
+import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
 
 export interface CosmosEWalletState {
   publicKey: Uint8Array | null;
@@ -46,8 +46,6 @@ export interface CosmosEWalletInterface {
   cacheTime: number;
   waitUntilInitialized: Promise<Result<CosmosEWalletState, LazyInitError>>;
 
-  lazyInit: () => Promise<Result<CosmosEWalletState, LazyInitError>>;
-  setUpEventHandlers: () => void;
   enable: (_chainId: string) => Promise<void>;
   on: (handlerDef: KeplrEWalletCosmosEventHandler2) => void;
   getPublicKey: () => Promise<Uint8Array | null>;

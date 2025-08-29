@@ -6,17 +6,14 @@ import type {
   EthEWalletInterface,
   EthEWalletState,
 } from "@keplr-ewallet-sdk-eth/types";
-
-export type LazyInitError = {
-  type: "eWallet failed to initialize";
-};
+import type { LazyInitError } from "@keplr-ewallet-sdk-eth/errors";
 
 export async function lazyInit(
-  this: EthEWalletInterface,
+  ethEwallet: EthEWalletInterface,
 ): Promise<Result<EthEWalletState, LazyInitError>> {
   console.log("[keplr-eth] lazy init for eth ewallet");
 
-  const eWalletStateRes = await this.eWallet.waitUntilInitialized;
+  const eWalletStateRes = await ethEwallet.eWallet.waitUntilInitialized;
 
   if (!eWalletStateRes.success) {
     return { success: false, err: { type: "eWallet failed to initialize" } };
@@ -26,21 +23,21 @@ export async function lazyInit(
 
   if (eWalletState.publicKey) {
     // ensure not missing initial state change
-    handleAccountsChanged.call(this, eWalletState.publicKey);
+    handleAccountsChanged.call(ethEwallet, eWalletState.publicKey);
   }
 
-  setUpEventHandlers.call(this);
+  setUpEventHandlers.call(ethEwallet);
 
   console.log(
     "[keplr-eth] lazy init for eth ewallet complete\npublicKeyRaw: %s\npublicKey: %s\naddress: %s",
-    this.state.publicKeyRaw,
-    this.state.publicKey,
-    this.state.address,
+    ethEwallet.state.publicKeyRaw,
+    ethEwallet.state.publicKey,
+    ethEwallet.state.address,
   );
 
   return {
     success: true,
-    data: this.state,
+    data: ethEwallet.state,
   };
 }
 
