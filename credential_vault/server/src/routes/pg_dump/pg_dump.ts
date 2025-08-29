@@ -194,10 +194,10 @@ export function setPgDumpRoutes(router: Router) {
    *           schema:
    *             type: object
    *             properties:
-   *               dump_id:
+   *               dump_path:
    *                 type: string
-   *                 description: The id of the pg dump to restore
-   *                 example: "123e4567-e89b-12d3-a456-426614174000"
+   *                 description: The path to the pg dump to restore
+   *                 example: "/path/to/dump.sql"
    *     responses:
    *       200:
    *         description: Successfully restored pg dump
@@ -211,20 +211,10 @@ export function setPgDumpRoutes(router: Router) {
    *                     data:
    *                       type: object
    *                       properties:
-   *                         dump_id:
+   *                         dump_path:
    *                           type: string
-   *                           description: The id of the pg dump that was restored
-   *                           example: "123e4567-e89b-12d3-a456-426614174000"
-   *       400:
-   *         description: Invalid dump_id parameter
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *             example:
-   *               success: false
-   *               code: INVALID_DUMP_ID
-   *               msg: "Invalid dump_id parameter"
+   *                           description: The path to the pg dump that was restored
+   *                           example: "/path/to/dump.sql"
    *       401:
    *         description: Invalid admin password
    *         content:
@@ -235,16 +225,6 @@ export function setPgDumpRoutes(router: Router) {
    *               success: false
    *               code: UNAUTHORIZED
    *               msg: "Invalid admin password"
-   *       404:
-   *         description: Pg dump not found
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *             example:
-   *               success: false
-   *               code: PG_DUMP_NOT_FOUND
-   *               msg: "Pg dump not found"
    *       500:
    *         description: Failed to restore pg dump
    *         content:
@@ -260,39 +240,12 @@ export function setPgDumpRoutes(router: Router) {
     "/restore",
     adminAuthMiddleware,
     async (
-      req: AdminAuthenticatedRequest<{ dump_id: string }>,
-      res: Response<CVApiResponse<{ dump_id: string }>>,
+      req: AdminAuthenticatedRequest<{ dump_path: string }>,
+      res: Response<CVApiResponse<{ dump_path: string }>>,
     ) => {
       const state = req.app.locals as any;
 
-      const dumpId = req.body.dump_id;
-
-      const getPgDumpRes = await getPgDumpById(state.db, dumpId);
-      if (getPgDumpRes.success === false) {
-        return res.status(500).json({
-          success: false,
-          code: "UNKNOWN_ERROR",
-          msg: `getPgDumpById failed: ${getPgDumpRes.err}`,
-        });
-      }
-
-      if (getPgDumpRes.data === null) {
-        return res.status(404).json({
-          success: false,
-          code: "PG_DUMP_NOT_FOUND",
-          msg: `Pg dump not found: ${dumpId}`,
-        });
-      }
-
-      const pgDump = getPgDumpRes.data;
-
-      if (pgDump.status !== "COMPLETED" || pgDump.dump_path === null) {
-        return res.status(404).json({
-          success: false,
-          code: "INVALID_PG_DUMP",
-          msg: `Invalid pg dump: ${dumpId}`,
-        });
-      }
+      const dumpPath = req.body.dump_path;
 
       const restoreRes = await restore(
         {
@@ -302,7 +255,7 @@ export function setPgDumpRoutes(router: Router) {
           user: state.env.DB_USER,
           port: state.env.DB_PORT,
         },
-        pgDump.dump_path,
+        dumpPath,
       );
       if (restoreRes.success === false) {
         return res.status(500).json({
@@ -315,7 +268,7 @@ export function setPgDumpRoutes(router: Router) {
       return res.status(200).json({
         success: true,
         data: {
-          dump_id: pgDump.dump_id,
+          dump_path: dumpPath,
         },
       });
     },
