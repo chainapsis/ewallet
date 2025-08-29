@@ -6,6 +6,10 @@ import {
   getPgDumpById,
   getAllPgDumps,
 } from "@keplr-ewallet/credential-vault-pg-interface";
+import {
+  createUser,
+  getUserByEmail,
+} from "@keplr-ewallet/credential-vault-pg-interface";
 
 import {
   createPgDatabase,
@@ -447,6 +451,352 @@ describe("pg_dump_route_test", () => {
       const dumpIds2 = response2.body.data.map((d: any) => d.dump_id);
       expect(dumpIds2).toContain(recentDump.dumpId);
       expect(dumpIds2).toContain(oldDump.dumpId);
+    });
+  });
+
+  describe("POST /pg_dump/v1/restore", () => {
+    const createDump = async () => {
+      const response = await request(app)
+        .post("/pg_dump/v1/")
+        .send({ password: testAdminPassword })
+        .expect(200);
+      return response.body.data;
+    };
+
+    it("should successfully restore pg dump with valid dump_path and password", async () => {
+      // Create test users using createUser function
+      const testEmails = [
+        "user1@test.com",
+        "user2@test.com",
+        "user3@test.com",
+        "user4@test.com",
+        "user5@test.com",
+      ];
+
+      const createdUsers = [];
+      for (const email of testEmails) {
+        const createUserRes = await createUser(pool, email);
+        expect(createUserRes.success).toBe(true);
+        if (createUserRes.success) {
+          createdUsers.push(createUserRes.data);
+        }
+      }
+
+      for (const email of testEmails) {
+        const getUserRes = await getUserByEmail(pool, email);
+        expect(getUserRes.success).toBe(true);
+        if (getUserRes.success) {
+          expect(getUserRes.data).not.toBeNull();
+          if (getUserRes.data) {
+            expect(getUserRes.data.email).toBe(email);
+          }
+        }
+      }
+
+      // Create dump
+      const dump = await createDump();
+
+      // Reset database to simulate data loss
+      await resetPgDatabase(pool);
+
+      for (const email of testEmails) {
+        const getUserRes = await getUserByEmail(pool, email);
+        expect(getUserRes.success).toBe(true);
+        if (getUserRes.success) {
+          expect(getUserRes.data).toBeNull();
+        }
+      }
+
+      // Restore from dump
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: dump.dumpPath,
+        })
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.dump_path).toBe(dump.dumpPath);
+
+      // Verify data was restored
+      for (const email of testEmails) {
+        const getUserRes = await getUserByEmail(pool, email);
+        expect(getUserRes.success).toBe(true);
+        if (getUserRes.success) {
+          expect(getUserRes.data).not.toBeNull();
+          if (getUserRes.data) {
+            expect(getUserRes.data.email).toBe(email);
+          }
+        }
+      }
+    });
+
+    it("should fail with invalid password", async () => {
+      const dump = await createDump();
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: "wrong_password",
+          dump_path: dump.dumpPath,
+        })
+        .expect(401);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
+    });
+
+    it("should fail with missing password", async () => {
+      const dump = await createDump();
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          dump_path: dump.dumpPath,
+        })
+        .expect(401);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
+    });
+
+    it("should fail with empty password", async () => {
+      const dump = await createDump();
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: "",
+          dump_path: dump.dumpPath,
+        })
+        .expect(401);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
+    });
+
+    it("should fail with missing dump_path", async () => {
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+        })
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DUMP_PATH");
+      expect(response.body.msg).toBe("dump_path parameter is required");
+    });
+
+    it("should fail with null dump_path", async () => {
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: null,
+        })
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DUMP_PATH");
+      expect(response.body.msg).toBe("dump_path parameter is required");
+    });
+
+    it("should fail with empty string dump_path", async () => {
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: "",
+        })
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DUMP_PATH");
+      expect(response.body.msg).toBe("dump_path parameter is required");
+    });
+
+    it("should fail with non-existent dump_path", async () => {
+      const nonExistentPath = "/path/to/non/existent/dump.dump";
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: nonExistentPath,
+        })
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("DUMP_FILE_NOT_FOUND");
+      expect(response.body.msg).toBe(
+        `Dump file not found at path: ${nonExistentPath}`,
+      );
+    });
+
+    it("should fail when dump_path points to a directory", async () => {
+      const directoryPath = "/tmp";
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: directoryPath,
+        })
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DUMP_FILE");
+      expect(response.body.msg).toBe(`Path is not a file: ${directoryPath}`);
+    });
+
+    it("should handle database configuration errors during restore", async () => {
+      const dump = await createDump();
+
+      const invalidApp = express();
+      invalidApp.use(express.json());
+
+      const router = express.Router();
+      setPgDumpRoutes(router);
+      invalidApp.use("/pg_dump/v1", router);
+
+      invalidApp.locals = {
+        db: pool,
+        env: {
+          ADMIN_PASSWORD: testAdminPassword,
+          DB_NAME: "non_existent_db",
+          DB_HOST: testPgConfig.host,
+          DB_PASSWORD: testPgConfig.password,
+          DB_USER: testPgConfig.user,
+          DB_PORT: testPgConfig.port,
+        },
+      };
+
+      const response = await request(invalidApp)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: dump.dumpPath,
+        })
+        .expect(500);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("PG_RESTORE_FAILED");
+      expect(response.body.msg).toContain("database");
+    });
+
+    it("should handle authentication errors during restore", async () => {
+      const dump = await createDump();
+
+      const invalidApp = express();
+      invalidApp.use(express.json());
+
+      const router = express.Router();
+      setPgDumpRoutes(router);
+      invalidApp.use("/pg_dump/v1", router);
+
+      invalidApp.locals = {
+        db: pool,
+        env: {
+          ADMIN_PASSWORD: testAdminPassword,
+          DB_NAME: testPgConfig.database,
+          DB_HOST: testPgConfig.host,
+          DB_PASSWORD: "wrong_password",
+          DB_USER: testPgConfig.user,
+          DB_PORT: testPgConfig.port,
+        },
+      };
+
+      const response = await request(invalidApp)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: dump.dumpPath,
+        })
+        .expect(500);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("PG_RESTORE_FAILED");
+      expect(response.body.msg).toContain("authentication");
+    });
+
+    it("should handle non-existent dump file", async () => {
+      const dump = await createDump();
+
+      // Delete the dump file to simulate a missing file
+      await fs.unlink(dump.dumpPath);
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: dump.dumpPath,
+        })
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("DUMP_FILE_NOT_FOUND");
+      expect(response.body.msg).toBe(
+        `Dump file not found at path: ${dump.dumpPath}`,
+      );
+    });
+
+    it("should handle corrupted dump file", async () => {
+      const dump = await createDump();
+
+      // Corrupt the dump file by writing invalid data
+      await fs.writeFile(dump.dumpPath, "invalid dump data");
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: dump.dumpPath,
+        })
+        .expect(500);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("PG_RESTORE_FAILED");
+    });
+
+    it("should handle relative dump_path", async () => {
+      const dump = await createDump();
+
+      // Get relative path from absolute path
+      const relativePath = dump.dumpPath.replace(process.cwd(), ".");
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: relativePath,
+        })
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.dump_path).toBe(relativePath);
+    });
+
+    it("should handle absolute dump_path", async () => {
+      const dump = await createDump();
+
+      const response = await request(app)
+        .post("/pg_dump/v1/restore")
+        .send({
+          password: testAdminPassword,
+          dump_path: dump.dumpPath,
+        })
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.dump_path).toBe(dump.dumpPath);
     });
   });
 });
