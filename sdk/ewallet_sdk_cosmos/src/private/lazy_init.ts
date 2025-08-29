@@ -42,17 +42,15 @@ export async function lazyInit(
     });
   }
 
-  setUpEventHandlers(cosmosEWallet);
+  setUpEventHandlers.call(cosmosEWallet);
 
   return { success: true, data: cosmosEWallet.state };
 }
 
-export function setUpEventHandlers(
-  cosmosEWallet: CosmosEWalletInterface,
-): void {
+export function setUpEventHandlers(this: CosmosEWalletInterface): void {
   console.log("[keplr-cosmos] set up event handlers");
 
-  cosmosEWallet.eWallet.on({
+  this.eWallet.on({
     type: "CORE__accountsChanged",
     handler: (payload) => {
       console.log(
@@ -62,34 +60,34 @@ export function setUpEventHandlers(
 
       const { publicKey, email } = payload;
 
-      if (cosmosEWallet.state.publicKeyRaw !== publicKey) {
+      if (this.state.publicKeyRaw !== publicKey) {
         if (publicKey !== null) {
           const pk = Buffer.from(publicKey, "hex");
 
-          cosmosEWallet.state = {
+          this.state = {
             publicKey: pk,
             publicKeyRaw: publicKey,
           };
         } else {
-          cosmosEWallet.state = {
+          this.state = {
             publicKey: null,
             publicKeyRaw: null,
           };
         }
 
-        cosmosEWallet.eventEmitter.emit({
+        this.eventEmitter.emit({
           type: "accountsChanged",
           email: email,
-          publicKey: cosmosEWallet.state.publicKey,
+          publicKey: this.state.publicKey,
         });
       }
     },
   });
 
-  cosmosEWallet.eWallet.on({
+  this.eWallet.on({
     type: "CORE__chainChanged",
     handler: (_payload) => {
-      cosmosEWallet.eventEmitter.emit({ type: "chainChanged" });
+      this.eventEmitter.emit({ type: "chainChanged" });
     },
   });
 }
