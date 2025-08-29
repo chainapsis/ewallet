@@ -3,7 +3,12 @@ import type {
   EWalletMsgShowModal,
   MakeEthereumSigData,
 } from "@keplr-ewallet/ewallet-sdk-core";
-import type { Chain } from "viem";
+import {
+  InternalRpcError,
+  UnsupportedChainIdError,
+  UserRejectedRequestError,
+  type Chain,
+} from "viem";
 import { v4 as uuidv4 } from "uuid";
 
 import type {
@@ -38,7 +43,9 @@ export async function makeSignature(
 
   const activeChain = chains.find((chain) => chain.id === chainIdNumber);
   if (!activeChain) {
-    throw new Error("Chain not found in the supported chains");
+    throw new UnsupportedChainIdError(
+      new Error("Chain not found in the supported chains"),
+    );
   }
 
   const chainInfo: ChainInfoForAttachedModal = {
@@ -109,7 +116,9 @@ function createMakeSignatureData(
     }
 
     default: {
-      throw new Error(`Unknown sign method: ${(params as any).type}`);
+      throw new InternalRpcError(
+        new Error(`Unknown sign method: ${(params as any).type}`),
+      );
     }
   }
 }
@@ -132,8 +141,8 @@ async function handleSigningFlow(
   try {
     const modalResult = await eWallet.showModal(showModalMsg);
     if (!modalResult.approved) {
-      throw new Error(
-        modalResult.reason ?? "User rejected the signature request",
+      throw new UserRejectedRequestError(
+        new Error(modalResult.reason ?? "User rejected the signature request"),
       );
     }
 
@@ -145,11 +154,14 @@ async function handleSigningFlow(
 
     return makeEthereumSigResult.data;
   } catch (error) {
+    // if it's already a JSON-RPC compatible error, just throw it
     if (error && typeof error === "object" && "code" in error) {
       throw error;
     }
 
-    throw new Error(error instanceof Error ? error.message : String(error));
+    throw new InternalRpcError(
+      new Error(error instanceof Error ? error.message : String(error)),
+    );
   } finally {
     await eWallet.hideModal();
   }
