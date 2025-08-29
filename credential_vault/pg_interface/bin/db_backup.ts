@@ -6,41 +6,32 @@ import { dump } from "@keplr-ewallet-credential-vault-pg-interface/dump";
 
 const DUMP_DIR = join(os.homedir(), "keplr_ewallet_data");
 
+const COMMITTEE_ID = parseInt(process.env.COMMITTEE_ID || "1", 10);
+
 async function main() {
-  console.log("dump!");
-  return;
+  console.log("Starting db backup... COMMITTEE_ID: %s", COMMITTEE_ID);
 
-  // TODO: @chihun
-  // const env = loadEnvs();
-
-  // const createPostgresRes = await createPgDatabase({
-  //   database: env.DB_NAME,
-  //   host: env.DB_HOST,
-  //   password: env.DB_PASSWORD,
-  //   user: env.DB_USER,
-  //   port: env.DB_PORT,
-  //   ssl: env.DB_SSL,
-  // });
-  //
-  // if (createPostgresRes.success === false) {
-  //   console.error(createPostgresRes.err);
-  //   return createPostgresRes;
-  // }
-
-  // const db = createPostgresRes.data;
+  const env = loadEnvs(COMMITTEE_ID);
 
   const pgConfig = {
-    database: process.env.DB_NAME!,
-    host: process.env.DB_HOST!,
-    password: process.env.DB_PASSWORD!,
-    user: process.env.DB_USER!,
-    port: Number(process.env.DB_PORT!),
+    host: env.host,
+    port: Number(env.port),
+    database: env.database,
+    password: env.password,
+    user: env.user,
   };
 
   const dumpResult = await dump(pgConfig, DUMP_DIR);
-  console.log(1, dumpResult);
+  if (dumpResult.success === false) {
+    console.error("Failed to dump database: %s", dumpResult.err);
+    return;
+  }
 
-  return;
+  console.log(
+    "DB backup completed successfully, dump path: %s, dump size: %s",
+    dumpResult.data.dumpPath,
+    dumpResult.data.dumpSize,
+  );
 }
 
 main().then();
