@@ -1,3 +1,4 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 export default {
   preset: "ts-jest/presets/default-esm",
   extensionsToTreatAsEsm: [".ts"],
@@ -6,7 +7,7 @@ export default {
       "ts-jest",
       {
         useESM: true,
-        tsconfig: "tsconfig.test.json",
+        tsconfig: "tsconfig.json",
       },
     ],
   },

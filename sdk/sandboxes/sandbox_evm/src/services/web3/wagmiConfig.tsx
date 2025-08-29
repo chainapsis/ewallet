@@ -9,9 +9,8 @@ import {
 } from "@rainbow-me/rainbowkit";
 import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
 import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
-import {
-  EthEWallet,
-  type EthEWalletInitArgs,
+import type {
+  EthEWalletInitArgs,
   EthEWalletInterface,
   EWalletEIP1193Provider,
 } from "@keplr-ewallet/ewallet-sdk-eth";
@@ -57,6 +56,7 @@ export interface WalletConnectOptions {
   projectId: string;
 }
 
+// wagmi compatible connector for keplr e-wallet
 function keplrEWalletConnector(
   walletDetails: WalletDetailsParams,
   args: EthEWalletInitArgs,
@@ -64,12 +64,14 @@ function keplrEWalletConnector(
   let ethEWallet: EthEWalletInterface | null = null;
   let cachedProvider: EWalletEIP1193Provider | null = null;
 
-  const initEthEWalletOnce = (): EthEWalletInterface => {
+  async function initEthEWalletOnce(): Promise<EthEWalletInterface> {
     if (ethEWallet) {
       return ethEWallet;
     }
 
-    const initRes = EthEWallet.init(args);
+    // lazy import to avoid SSR issues and optimize bundle size
+    const { EthEWallet } = await import("@keplr-ewallet/ewallet-sdk-eth");
+    const initRes = await EthEWallet.initAsync(args);
 
     if (!initRes.success) {
       throw new Error(`init fail: ${initRes.err}`);
@@ -77,16 +79,25 @@ function keplrEWalletConnector(
 
     ethEWallet = initRes.data;
     return ethEWallet;
-  };
+  }
 
   return createConnector<EWalletEIP1193Provider>((config) => {
     const wallet = {
       id: "keplr-ewallet",
-      name: "Keplr E-Wallet",
+      name: "Keplr Embedded",
       type: "keplr-ewallet" as const,
       icon: keplrIcon,
       setup: async () => {
-        initEthEWalletOnce();
+        console.log("[sandbox-evm] setup keplr e-wallet");
+        // Only setup in browser environment
+        if (typeof window !== "undefined") {
+          console.log("[sandbox-evm] setup keplr e-wallet in browser");
+          await initEthEWalletOnce();
+        } else {
+          console.log(
+            "[sandbox-evm] keplr e-wallet can only be initialized in browser",
+          );
+        }
       },
       connect: async (parameters?: {
         chainId?: number | undefined;
@@ -95,7 +106,7 @@ function keplrEWalletConnector(
         console.log("[sandbox-evm] try to connect keplr e-wallet!");
 
         if (!ethEWallet) {
-          initEthEWalletOnce();
+          await initEthEWalletOnce();
 
           // DO NOT fallthrough here to manually retry connect
           // as popup on safari will be blocked by async initialization
@@ -175,7 +186,7 @@ function keplrEWalletConnector(
           return cachedProvider;
         }
 
-        const ethEWallet = initEthEWalletOnce();
+        const ethEWallet = await initEthEWalletOnce();
 
         cachedProvider = ethEWallet.getEthereumProvider();
 
@@ -235,7 +246,7 @@ function keplrEWalletConnector(
 export const wagmiConfigWithKeplr = () => {
   return createConfig({
     chains: [targetNetworks[0], ...targetNetworks.slice(1)],
-    ssr: true,
+    ssr: true, // in server side, it won't be able to initialize keplr e-wallet
     connectors: connectorsForWallets(
       [
         {

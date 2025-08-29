@@ -107,8 +107,8 @@ describe("pg_dump_route_test", () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_PASSWORD");
-      expect(response.body.msg).toBe("Invalid password");
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
     });
 
     it("should fail with missing password", async () => {
@@ -118,8 +118,8 @@ describe("pg_dump_route_test", () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_PASSWORD");
-      expect(response.body.msg).toBe("Invalid password");
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
     });
 
     it("should fail with empty password", async () => {
@@ -129,8 +129,8 @@ describe("pg_dump_route_test", () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_PASSWORD");
-      expect(response.body.msg).toBe("Invalid password");
+      expect(response.body.code).toBe("UNAUTHORIZED");
+      expect(response.body.msg).toBe("Invalid admin password");
     });
 
     it("should handle database configuration errors", async () => {
@@ -256,6 +256,197 @@ describe("pg_dump_route_test", () => {
         const fileBuffer = await fs.readFile(response.body.data.dumpPath);
         expect(fileBuffer.toString("ascii", 0, 5)).toBe("PGDMP");
       }
+    });
+  });
+
+  describe("GET /pg_dump/v1/", () => {
+    const createDump = async () => {
+      const response = await request(app)
+        .post("/pg_dump/v1/")
+        .send({ password: testAdminPassword })
+        .expect(200);
+      return response.body.data;
+    };
+
+    it("should return all dumps when no days parameter is provided", async () => {
+      const dump1 = await createDump();
+      const dump2 = await createDump();
+
+      const response = await request(app).get("/pg_dump/v1/").expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(2);
+
+      const dumpIds = response.body.data.map((dump: any) => dump.dump_id);
+      expect(dumpIds).toContain(dump1.dumpId);
+      expect(dumpIds).toContain(dump2.dumpId);
+
+      const firstDump = response.body.data[0];
+      expect(firstDump.dump_id).toBeDefined();
+      expect(firstDump.status).toBeDefined();
+      expect(firstDump.dump_path).toBeDefined();
+      expect(firstDump.meta).toBeDefined();
+      expect(firstDump.created_at).toBeDefined();
+      expect(firstDump.updated_at).toBeDefined();
+    });
+
+    it("should return dumps for specified number of days", async () => {
+      const dump = await createDump();
+
+      const response = await request(app)
+        .get("/pg_dump/v1/?days=7")
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
+
+      const dumpIds = response.body.data.map((d: any) => d.dump_id);
+      expect(dumpIds).toContain(dump.dumpId);
+    });
+
+    it("should return empty array when no dumps exist", async () => {
+      const response = await request(app).get("/pg_dump/v1/").expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBe(0);
+    });
+
+    it("should fail with invalid days parameter (zero)", async () => {
+      const response = await request(app)
+        .get("/pg_dump/v1/?days=0")
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DAYS");
+      expect(response.body.msg).toBe(
+        "Days parameter must be between 1 and 1000",
+      );
+    });
+
+    it("should fail with invalid days parameter (negative)", async () => {
+      const response = await request(app)
+        .get("/pg_dump/v1/?days=-1")
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DAYS");
+      expect(response.body.msg).toBe(
+        "Days parameter must be between 1 and 1000",
+      );
+    });
+
+    it("should fail with days parameter greater than 1000", async () => {
+      const response = await request(app)
+        .get("/pg_dump/v1/?days=1001")
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DAYS");
+      expect(response.body.msg).toBe(
+        "Days parameter must be between 1 and 1000",
+      );
+    });
+
+    it("should fail with non-numeric days parameter", async () => {
+      const response = await request(app)
+        .get("/pg_dump/v1/?days=abc")
+        .expect(400);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("INVALID_DAYS");
+      expect(response.body.msg).toBe(
+        "Days parameter must be between 1 and 1000",
+      );
+    });
+
+    it("should handle database errors gracefully", async () => {
+      // Create an app with invalid database connection
+      const invalidApp = express();
+      invalidApp.use(express.json());
+
+      const router = express.Router();
+      setPgDumpRoutes(router);
+      invalidApp.use("/pg_dump/v1", router);
+
+      invalidApp.locals = {
+        db: null, // Invalid database connection
+        env: {
+          ADMIN_PASSWORD: testAdminPassword,
+          DB_NAME: testPgConfig.database,
+          DB_HOST: testPgConfig.host,
+          DB_PASSWORD: testPgConfig.password,
+          DB_USER: testPgConfig.user,
+          DB_PORT: testPgConfig.port,
+        },
+      };
+
+      const response = await request(invalidApp)
+        .get("/pg_dump/v1/")
+        .expect(500);
+
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe("UNKNOWN_ERROR");
+      expect(response.body.msg).toBeDefined();
+    });
+
+    it("should return dumps ordered by created_at DESC", async () => {
+      const dump1 = await createDump();
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const dump2 = await createDump();
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const dump3 = await createDump();
+
+      const response = await request(app).get("/pg_dump/v1/").expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(3);
+
+      const dumpIds = response.body.data.map((d: any) => d.dump_id);
+      const expectedOrder = [dump3.dumpId, dump2.dumpId, dump1.dumpId];
+
+      for (let i = 0; i < expectedOrder.length; i++) {
+        expect(dumpIds[i]).toBe(expectedOrder[i]);
+      }
+    });
+
+    it("should filter dumps by days correctly", async () => {
+      const recentDump = await createDump();
+      const oldDump = await createDump();
+
+      // Update the old dump's created_at to be 2 days ago
+      await pool.query(
+        `UPDATE pg_dumps SET created_at = created_at - INTERVAL '2 days' WHERE dump_id = $1`,
+        [oldDump.dumpId],
+      );
+
+      const response = await request(app)
+        .get("/pg_dump/v1/?days=1")
+        .expect(200);
+
+      expect(response.body.success).toBe(true);
+      expect(response.body.data).toBeDefined();
+      expect(Array.isArray(response.body.data)).toBe(true);
+
+      // Verify only recent dump is in the response
+      const dumpIds = response.body.data.map((d: any) => d.dump_id);
+      expect(dumpIds).toContain(recentDump.dumpId);
+      expect(dumpIds).not.toContain(oldDump.dumpId);
+
+      // Get dumps for last 3 days (should include both dumps)
+      const response2 = await request(app)
+        .get("/pg_dump/v1/?days=3")
+        .expect(200);
+
+      expect(response2.body.success).toBe(true);
+      const dumpIds2 = response2.body.data.map((d: any) => d.dump_id);
+      expect(dumpIds2).toContain(recentDump.dumpId);
+      expect(dumpIds2).toContain(oldDump.dumpId);
     });
   });
 });

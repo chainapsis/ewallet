@@ -6,7 +6,7 @@ import { getPublicKey } from "./methods/get_public_key";
 import { getEmail } from "./methods/get_email";
 import { hideModal } from "./methods/hide_modal";
 import { on } from "./methods/on";
-import { lazyInit } from "./methods/lazy_init";
+import { lazyInit } from "./private/lazy_init";
 import type {
   KeplrEWalletCoreEvent2,
   KeplrEWalletCoreEventHandler2,
@@ -29,15 +29,18 @@ export function KeplrEWallet(
     KeplrEWalletCoreEvent2,
     KeplrEWalletCoreEventHandler2
   >();
-  this.state = null;
-  this.waitUntilInitialized = this.lazyInit().then();
+  this.state = {
+    email: null,
+    publicKey: null,
+  };
+  this.waitUntilInitialized = lazyInit(this).then();
 }
 
 KeplrEWallet.init = init;
 
 const ptype: KeplrEWalletInterface = KeplrEWallet.prototype;
 
-ptype.lazyInit = lazyInit;
+// ptype.lazyInit = lazyInit;
 ptype.showModal = showModal;
 ptype.hideModal = hideModal;
 ptype.sendMsgToIframe = sendMsgToIframe;

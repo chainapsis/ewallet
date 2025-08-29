@@ -6,7 +6,7 @@ import type {
 import type {
   ChainInfo,
   KeplrSignOptions,
-  SettledResponse,
+  SettledResponses,
 } from "@keplr-wallet/types";
 import type { Key } from "@keplr-wallet/types";
 import type {
@@ -28,11 +28,11 @@ import type {
 import type { ShowModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/methods/lazy_init";
-import type { KeyData } from "./key";
+import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
 
 export interface CosmosEWalletState {
   publicKey: Uint8Array | null;
+  publicKeyRaw: string | null;
 }
 
 export interface CosmosEWalletInterface {
@@ -46,8 +46,6 @@ export interface CosmosEWalletInterface {
   cacheTime: number;
   waitUntilInitialized: Promise<Result<CosmosEWalletState, LazyInitError>>;
 
-  lazyInit: () => Promise<Result<CosmosEWalletState, LazyInitError>>;
-  setUpEventHandlers: () => void;
   enable: (_chainId: string) => Promise<void>;
   on: (handlerDef: KeplrEWalletCosmosEventHandler2) => void;
   getPublicKey: () => Promise<Uint8Array | null>;
@@ -71,7 +69,7 @@ export interface CosmosEWalletInterface {
 
   getKey: (chainId: string) => Promise<Key>;
 
-  getKeysSettled: (chainIds: string[]) => Promise<KeyData[]>;
+  getKeysSettled: (chainIds: string[]) => Promise<SettledResponses<Key>>;
 
   sendTx: (
     chainId: string,

@@ -96,12 +96,8 @@ export const useSDKState = create(
 
           cosmosSDK.on({
             type: "accountsChanged",
-            handler: (payload: any) => {
+            handler: (payload) => {
               console.log("ev - accountsChanged", payload);
-
-              // set({
-              //   userInfo: payload,
-              // });
             },
           });
 

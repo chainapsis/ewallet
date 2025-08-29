@@ -9,7 +9,7 @@ import { sleep } from "../time";
 export async function version(..._args: any[]) {
   console.log("Start versioning packages...");
 
-  console.log("We will re-build the packages here just to make sure\n");
+  console.log("We will re-build the packages now just to make sure\n");
   await sleep(500);
 
   doBuildPkgs();

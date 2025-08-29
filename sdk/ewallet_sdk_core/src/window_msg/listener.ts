@@ -14,6 +14,7 @@ export function registerMsgListener(): Promise<AckPayload<InitPayload>> {
       const msg = event.data as EWalletMsg;
       if (msg.msg_type === "init") {
         window.removeEventListener("message", handler);
+
         // Resolve regardless, caller can branch on payload.success
         resolve(msg.payload);
       }

@@ -1,14 +1,20 @@
 import { Router, type Response } from "express";
+import fs from "node:fs/promises";
 import type { CVApiResponse } from "@keplr-ewallet/credential-vault-interface/response";
+import {
+  getAllPgDumps,
+  restore,
+  type PgDump,
+} from "@keplr-ewallet/credential-vault-pg-interface";
 
 import {
   processPgDump,
   type PgDumpResult,
 } from "@keplr-ewallet-cv-server/pg_dump/dump";
 import {
-  getAllPgDumps,
-  type PgDump,
-} from "@keplr-ewallet/credential-vault-pg-interface";
+  adminAuthMiddleware,
+  type AdminAuthenticatedRequest,
+} from "@keplr-ewallet-cv-server/middlewares/admin_auth";
 
 export function setPgDumpRoutes(router: Router) {
   /**
@@ -37,6 +43,16 @@ export function setPgDumpRoutes(router: Router) {
    *                   properties:
    *                     data:
    *                       $ref: '#/components/schemas/PgDumpResponse'
+   *       401:
+   *         description: Invalid admin password
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: UNAUTHORIZED
+   *               msg: "Invalid admin password"
    *       500:
    *         description: Failed to process pg dump
    *         content:
@@ -47,49 +63,37 @@ export function setPgDumpRoutes(router: Router) {
    *               success: false
    *               code: PG_DUMP_FAILED
    *               msg: "Failed to process pg dump"
-   *       401:
-   *         description: Invalid password
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *             example:
-   *               success: false
-   *               code: INVALID_PASSWORD
-   *               msg: "Invalid password"
    */
-  router.post("/", async (req, res: Response<CVApiResponse<PgDumpResult>>) => {
-    const { password } = req.body;
-    const state = req.app.locals as any;
+  router.post(
+    "/",
+    adminAuthMiddleware,
+    async (
+      req: AdminAuthenticatedRequest,
+      res: Response<CVApiResponse<PgDumpResult>>,
+    ) => {
+      const state = req.app.locals as any;
 
-    if (password !== state.env.ADMIN_PASSWORD) {
-      return res.status(401).json({
-        success: false,
-        code: "INVALID_PASSWORD",
-        msg: "Invalid password",
+      const processPgDumpRes = await processPgDump(state.db, {
+        database: state.env.DB_NAME,
+        host: state.env.DB_HOST,
+        password: state.env.DB_PASSWORD,
+        user: state.env.DB_USER,
+        port: state.env.DB_PORT,
       });
-    }
+      if (processPgDumpRes.success === false) {
+        return res.status(500).json({
+          success: false,
+          code: "PG_DUMP_FAILED",
+          msg: processPgDumpRes.err,
+        });
+      }
 
-    const processPgDumpRes = await processPgDump(state.db, {
-      database: state.env.DB_NAME,
-      host: state.env.DB_HOST,
-      password: state.env.DB_PASSWORD,
-      user: state.env.DB_USER,
-      port: state.env.DB_PORT,
-    });
-    if (processPgDumpRes.success === false) {
-      return res.status(500).json({
-        success: false,
-        code: "PG_DUMP_FAILED",
-        msg: processPgDumpRes.err,
+      return res.status(200).json({
+        success: true,
+        data: processPgDumpRes.data,
       });
-    }
-
-    return res.status(200).json({
-      success: true,
-      data: processPgDumpRes.data,
-    });
-  });
+    },
+  );
 
   /**
    * @swagger
@@ -174,4 +178,165 @@ export function setPgDumpRoutes(router: Router) {
       data: dumpsResult.data,
     });
   });
+
+  /**
+   * @swagger
+   * /pg_dump/v1/restore:
+   *   post:
+   *     tags:
+   *       - PG Dump
+   *     summary: Restore a pg dump
+   *     description: Restore a pg dump
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               dump_path:
+   *                 type: string
+   *                 description: The path to the pg dump to restore
+   *                 example: "/path/to/dump.sql"
+   *     responses:
+   *       200:
+   *         description: Successfully restored pg dump
+   *         content:
+   *           application/json:
+   *             schema:
+   *               allOf:
+   *                 - $ref: '#/components/schemas/SuccessResponse'
+   *                 - type: object
+   *                   properties:
+   *                     data:
+   *                       type: object
+   *                       properties:
+   *                         dump_path:
+   *                           type: string
+   *                           description: The path to the pg dump that was restored
+   *                           example: "/path/to/dump.sql"
+   *       400:
+   *         description: Invalid dump_path parameter or file not found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             examples:
+   *               INVALID_DUMP_PATH:
+   *                 summary: Invalid dump_path parameter
+   *                 value:
+   *                   success: false
+   *                   code: INVALID_DUMP_PATH
+   *                   msg: "dump_path parameter is required"
+   *               DUMP_FILE_NOT_FOUND:
+   *                 summary: Dump file not found
+   *                 value:
+   *                   success: false
+   *                   code: DUMP_FILE_NOT_FOUND
+   *                   msg: "Dump file not found at path: /path/to/dump.sql"
+   *               INVALID_DUMP_FILE:
+   *                 summary: Path is not a file
+   *                 value:
+   *                   success: false
+   *                   code: INVALID_DUMP_FILE
+   *                   msg: "Path is not a file: /path/to/dump.sql"
+   *               DUMP_FILE_ACCESS_ERROR:
+   *                 summary: Cannot access dump file
+   *                 value:
+   *                   success: false
+   *                   code: DUMP_FILE_ACCESS_ERROR
+   *                   msg: "Cannot access dump file: /path/to/dump.sql"
+   *       401:
+   *         description: Invalid admin password
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: UNAUTHORIZED
+   *               msg: "Invalid admin password"
+   *       500:
+   *         description: Failed to restore pg dump
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: PG_RESTORE_FAILED
+   *               msg: "Failed to restore pg dump"
+   */
+  router.post(
+    "/restore",
+    adminAuthMiddleware,
+    async (
+      req: AdminAuthenticatedRequest<{ dump_path: string }>,
+      res: Response<CVApiResponse<{ dump_path: string }>>,
+    ) => {
+      const state = req.app.locals as any;
+
+      const dumpPath = req.body.dump_path;
+
+      if (!dumpPath) {
+        return res.status(400).json({
+          success: false,
+          code: "INVALID_DUMP_PATH",
+          msg: "dump_path parameter is required",
+        });
+      }
+
+      try {
+        await fs.access(dumpPath);
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          code: "DUMP_FILE_NOT_FOUND",
+          msg: `Dump file not found at path: ${dumpPath}`,
+        });
+      }
+
+      try {
+        const stats = await fs.stat(dumpPath);
+        if (!stats.isFile()) {
+          return res.status(400).json({
+            success: false,
+            code: "INVALID_DUMP_FILE",
+            msg: `Path is not a file: ${dumpPath}`,
+          });
+        }
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          code: "DUMP_FILE_ACCESS_ERROR",
+          msg: `Cannot access dump file: ${dumpPath}`,
+        });
+      }
+
+      const restoreRes = await restore(
+        {
+          database: state.env.DB_NAME,
+          host: state.env.DB_HOST,
+          password: state.env.DB_PASSWORD,
+          user: state.env.DB_USER,
+          port: state.env.DB_PORT,
+        },
+        dumpPath,
+      );
+      if (restoreRes.success === false) {
+        return res.status(500).json({
+          success: false,
+          code: "PG_RESTORE_FAILED",
+          msg: restoreRes.err,
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: {
+          dump_path: dumpPath,
+        },
+      });
+    },
+  );
 }

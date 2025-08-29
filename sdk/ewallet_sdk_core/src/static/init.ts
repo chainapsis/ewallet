@@ -6,17 +6,19 @@ import type {
   KeplrEWalletInterface,
 } from "@keplr-ewallet-sdk-core/types";
 import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
+import type { KeplrEwalletInitError } from "@keplr-ewallet-sdk-core/errors";
 
 const SDK_ENDPOINT = `https://attached.embed.keplr.app`;
 
 export function init(
   args: KeplrEwalletInitArgs,
-): Result<KeplrEWalletInterface, string> {
+): Result<KeplrEWalletInterface, KeplrEwalletInitError> {
   try {
     if (window.__keplr_ewallet_locked === true) {
       console.warn(
         "keplr ewallet init is locked. Is init being exeucted concurrently?",
       );
+      return { success: false, err: { type: "is_locked" } };
     } else {
       window.__keplr_ewallet_locked = true;
     }
@@ -29,7 +31,7 @@ export function init(
 
       return {
         success: false,
-        err: "Not in the browser context",
+        err: { type: "not_in_browser" },
       };
     }
 
@@ -43,7 +45,7 @@ export function init(
     if (hostOrigin.length === 0) {
       return {
         success: false,
-        err: "Host origin empty",
+        err: { type: "host_origin_empty" },
       };
     }
 
@@ -57,7 +59,7 @@ export function init(
     } catch (err) {
       return {
         success: false,
-        err: "SDK endpoint is not a valid url",
+        err: { type: "sdk_endpoint_invalid_url" },
       };
     }
 
@@ -66,7 +68,10 @@ export function init(
 
     const iframeRes = setUpIframeElement(sdkEndpointURL);
     if (!iframeRes.success) {
-      return iframeRes;
+      return {
+        success: false,
+        err: { type: "iframe_setup_fail", msg: iframeRes.err.toString() },
+      };
     }
 
     const iframe = iframeRes.data;

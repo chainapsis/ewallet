@@ -597,83 +597,83 @@ describe("EWallet Provider - Viem Integration", () => {
       });
     });
 
-    describe("Advanced Features", () => {
-      let aliceProvider: EWalletEIP1193Provider;
-      let publicClient: any;
-      let walletClient: any;
-      let txHelper: any;
+    // NOTE: disabled for now, as hardhat does not support EIP-7702
+    // describe("Advanced Features", () => {
+    //   let aliceProvider: EWalletEIP1193Provider;
+    //   let publicClient: any;
+    //   let walletClient: any;
+    //   let txHelper: any;
 
-      beforeAll(() => {
-        aliceProvider = new EWalletEIP1193Provider(
-          createProviderOptions([createChainParam(hardhatAlt)], alice),
-        );
+    //   beforeAll(() => {
+    //     aliceProvider = new EWalletEIP1193Provider(
+    //       createProviderOptions([createChainParam(hardhatAlt)], alice),
+    //     );
 
-        publicClient = createPublicClient({
-          chain: hardhatAlt,
-          transport: custom(aliceProvider),
-        });
+    //     publicClient = createPublicClient({
+    //       chain: hardhatAlt,
+    //       transport: custom(aliceProvider),
+    //     });
 
-        walletClient = createWalletClient({
-          chain: hardhatAlt,
-          transport: custom(aliceProvider),
-          account: alice.getAddress()!,
-        });
+    //     walletClient = createWalletClient({
+    //       chain: hardhatAlt,
+    //       transport: custom(aliceProvider),
+    //       account: alice.getAddress()!,
+    //     });
 
-        txHelper = createTransactionHelper({
-          publicClient,
-          walletClient,
-          account: alice.getAddress()!,
-        });
-      });
+    //     txHelper = createTransactionHelper({
+    //       publicClient,
+    //       walletClient,
+    //       account: alice.getAddress()!,
+    //     });
+    //   });
 
-      // NOTE: disabled for now, as hardhat does not support EIP-7702
-      // it("should successfully handle EIP-7702 as EIP-1559 transaction", async () => {
-      //   const contractHelper = createContractHelper({
-      //     publicClient,
-      //     walletClient,
-      //     account: alice.getAddress()!,
-      //   });
+    //   it("should successfully handle EIP-7702 as EIP-1559 transaction", async () => {
+    //     const contractHelper = createContractHelper({
+    //       publicClient,
+    //       walletClient,
+    //       account: alice.getAddress()!,
+    //     });
 
-      //   const deployResult = await contractHelper.deployContract({
-      //     abi: COUNTER_ABI,
-      //     bytecode: COUNTER_DEPLOYMENT_BYTECODE,
-      //   });
-      //   const counterAddress = deployResult.contractAddress;
+    //     const deployResult = await contractHelper.deployContract({
+    //       abi: COUNTER_ABI,
+    //       bytecode: COUNTER_DEPLOYMENT_BYTECODE,
+    //     });
+    //     const counterAddress = deployResult.contractAddress;
 
-      //   const nonce = await publicClient.getTransactionCount({
-      //     address: alice.getAddress()!,
-      //   });
+    //     const nonce = await publicClient.getTransactionCount({
+    //       address: alice.getAddress()!,
+    //     });
 
-      //   const authorization: Authorization = {
-      //     address: counterAddress,
-      //     chainId: hardhatAlt.id,
-      //     nonce: nonce + 1,
-      //   };
+    //     const authorization: Authorization = {
+    //       address: counterAddress,
+    //       chainId: hardhatAlt.id,
+    //       nonce: nonce + 1,
+    //     };
 
-      //   const authorizationHash = hashAuthorization(authorization);
+    //     const authorizationHash = hashAuthorization(authorization);
 
-      //   const signature = parseSignature(
-      //     (await (alice as any).signHash({
-      //       hash: authorizationHash,
-      //     })) as `0x${string}`,
-      //   );
+    //     const signature = parseSignature(
+    //       (await (alice as any).signHash({
+    //         hash: authorizationHash,
+    //       })) as `0x${string}`,
+    //     );
 
-      //   authorization.r = signature.r;
-      //   authorization.s = signature.s;
-      //   authorization.v = signature.v;
+    //     authorization.r = signature.r;
+    //     authorization.s = signature.s;
+    //     authorization.v = signature.v;
 
-      //   const intrinsicGas = 25000 + 21000; // 25000 for authorization, 21000 for transfer zero value
+    //     const intrinsicGas = 25000 + 21000; // 25000 for authorization, 21000 for transfer zero value
 
-      //   const { receipt } = await txHelper.sendTransactionAndExpectSuccess({
-      //     to: await alice.getAddress(),
-      //     authorizationList: [authorization],
-      //     gas: BigInt(intrinsicGas),
-      //   });
+    //     const { receipt } = await txHelper.sendTransactionAndExpectSuccess({
+    //       to: await alice.getAddress(),
+    //       authorizationList: [authorization],
+    //       gas: BigInt(intrinsicGas),
+    //     });
 
-      //   expect(receipt.status).toBe("success");
-      //   expect(receipt.type).toBe("eip1559");
-      //   expect(receipt.gasUsed).toBeLessThan(BigInt(intrinsicGas));
-      // });
-    });
+    //     expect(receipt.status).toBe("success");
+    //     expect(receipt.type).toBe("eip1559");
+    //     expect(receipt.gasUsed).toBeLessThan(BigInt(intrinsicGas));
+    //   });
+    // });
   });
 });

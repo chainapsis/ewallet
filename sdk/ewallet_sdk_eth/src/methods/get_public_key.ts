@@ -11,6 +11,8 @@ export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
     return this.state.publicKey;
   }
 
+  await this.waitUntilInitialized;
+
   console.log("[keplr-eth] getPublicKey: getPublicKey from eWallet");
 
   const ret = await this.eWallet.getPublicKey();

@@ -9,7 +9,7 @@ export function getOfflineSigner(
   signOptions?: KeplrSignOptions,
 ): OfflineDirectSigner {
   return {
-    getAccounts: this.getAccounts,
+    getAccounts: this.getAccounts.bind(this),
     signDirect: (signerAddress, signDoc) =>
       this.signDirect(chainId, signerAddress, signDoc, signOptions),
   };

@@ -1,13 +1,43 @@
 {
   "name": "@keplr-ewallet/credential-vault-interface",
   "packageManager": "yarn@4.7.0",
-  "version": "0.0.2-alpha.21",
+  "version": "0.0.2-alpha.23",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "del-cli dist",
     "build": "yarn clean && tsc --build --force && tsc-alias"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./witnessed_id_tokens": {
+      "import": "./dist/witnessed_id_tokens.js",
+      "types": "./dist/witnessed_id_tokens.d.ts"
+    },
+    "./key_share": {
+      "import": "./dist/key_share.js",
+      "types": "./dist/key_share.d.ts"
+    },
+    "./response": {
+      "import": "./dist/response.js",
+      "types": "./dist/response.d.ts"
+    },
+    "./user": {
+      "import": "./dist/user.js",
+      "types": "./dist/user.d.ts"
+    },
+    "./wallet": {
+      "import": "./dist/wallet.js",
+      "types": "./dist/wallet.d.ts"
+    },
+    "./auth": {
+      "import": "./dist/auth.js",
+      "types": "./dist/auth.d.ts"
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -18,7 +48,7 @@
     "directory": "credential_vault/cv_interface"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "^0.0.3-alpha.27"
+    "@keplr-ewallet/bytes": "^0.0.3-alpha.28"
   },
   "devDependencies": {
     "@types/jest": "*",

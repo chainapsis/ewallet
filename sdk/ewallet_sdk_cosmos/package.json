@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-cosmos",
-  "version": "0.0.6-rc.69",
+  "version": "0.0.6-rc.73",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "publishConfig": {
@@ -31,8 +31,8 @@
   "dependencies": {
     "@cosmjs/amino": "^0.33.1",
     "@cosmjs/proto-signing": "^0.33.1",
-    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.53",
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.11",
+    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.56",
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.12",
     "@keplr-wallet/proto-types": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
     "@noble/curves": "^1.9.2",

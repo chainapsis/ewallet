@@ -10,7 +10,7 @@ import {
   ResourceUnavailableRpcError,
   UnauthorizedProviderError,
 } from "viem";
-import { sepolia, mainnet, hardhat } from "viem/chains";
+import { mainnet, hardhat } from "viem/chains";
 
 import { hardhatAccounts } from "./hardhat";
 import {
@@ -23,8 +23,6 @@ import {
   MockRpcServer,
   createMockRpcServer,
   mockMainnetRpc,
-  mockSepoliaRpc,
-  mockFailingRpc,
   createMockSigner,
 } from "./mock";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";

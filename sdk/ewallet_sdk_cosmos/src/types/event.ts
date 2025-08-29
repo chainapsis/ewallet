@@ -1,6 +1,8 @@
+import type { Key } from "@keplr-wallet/types";
+
 export interface AccountChangePayload {
   email: string | null;
-  publicKey: Buffer<ArrayBuffer> | null;
+  publicKey: Key["pubKey"] | null;
 }
 
 export type KeplrEWalletCosmosEvent2 =

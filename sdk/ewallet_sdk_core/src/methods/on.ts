@@ -7,7 +7,5 @@ export function on(
   this: KeplrEWalletInterface,
   handlerDef: KeplrEWalletCoreEventHandler2,
 ) {
-  // await this.waitUntilInitialized;
-
   this.eventEmitter.on(handlerDef);
 }

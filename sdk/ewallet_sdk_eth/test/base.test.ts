@@ -1,5 +1,6 @@
 import type { AddEthereumChainParameter } from "viem";
 import {
+  InvalidInputRpcError,
   InvalidParamsRpcError,
   MethodNotFoundRpcError,
   toHex,
@@ -243,7 +244,7 @@ describe("EWallet Provider - Base", () => {
             params: [invalidChainParam],
           }),
         ).rejects.toMatchObject({
-          code: InvalidParamsRpcError.code,
+          code: InvalidInputRpcError.code,
         });
       });
 

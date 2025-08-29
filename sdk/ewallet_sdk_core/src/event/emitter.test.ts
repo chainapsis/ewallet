@@ -1,25 +1,53 @@
-import { EventEmitter2 } from "./emitter";
 import { jest } from "@jest/globals";
 
-interface TestEventMap {
-  userLogin: { userId: string; email: string };
-  userLogout: { userId: string };
-  dataUpdate: { data: any };
-}
+import { EventEmitter3 } from "./emitter";
+
+type TestEvent =
+  | {
+      type: "userLogin";
+      userId: string;
+      email: string;
+    }
+  | {
+      type: "userLogout";
+      userId: string;
+    }
+  | {
+      type: "dataUpdate";
+      data: any;
+    };
+
+type TestEventHandler =
+  | {
+      type: "userLogin";
+      handler: (payload: { userId: string; email: string }) => void;
+    }
+  | {
+      type: "userLogout";
+      handler: (payload: { userId: string }) => void;
+    }
+  | {
+      type: "dataUpdate";
+      handler: (payload: any) => void;
+    };
 
 describe("EventEmitter2", () => {
-  let emitter: EventEmitter2<TestEventMap>;
+  let emitter: EventEmitter3<TestEvent, TestEventHandler>;
 
   beforeEach(() => {
-    emitter = new EventEmitter2<TestEventMap>();
+    emitter = new EventEmitter3<TestEvent, TestEventHandler>();
   });
 
   describe("Basic event registration and emission", () => {
     test("should register and call handlers correctly", () => {
       const mockHandler = jest.fn();
 
-      emitter.on("userLogin", mockHandler);
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.on({ type: "userLogin", handler: mockHandler });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
 
       expect(mockHandler).toHaveBeenCalledTimes(1);
       expect(mockHandler).toHaveBeenCalledWith({
@@ -32,9 +60,13 @@ describe("EventEmitter2", () => {
       const handler1 = jest.fn();
       const handler2 = jest.fn();
 
-      emitter.on("userLogin", handler1);
-      emitter.on("userLogin", handler2);
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.on({ type: "userLogin", handler: handler1 });
+      emitter.on({ type: "userLogin", handler: handler2 });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
 
       expect(handler1).toHaveBeenCalledTimes(1);
       expect(handler2).toHaveBeenCalledTimes(1);
@@ -44,11 +76,15 @@ describe("EventEmitter2", () => {
       const loginHandler = jest.fn();
       const logoutHandler = jest.fn();
 
-      emitter.on("userLogin", loginHandler);
-      emitter.on("userLogout", logoutHandler);
+      emitter.on({ type: "userLogin", handler: loginHandler });
+      emitter.on({ type: "userLogout", handler: logoutHandler });
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
-      emitter.emit("userLogout", { userId: "123" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
+      emitter.emit({ type: "userLogout", userId: "123" });
 
       expect(loginHandler).toHaveBeenCalledTimes(1);
       expect(logoutHandler).toHaveBeenCalledTimes(1);
@@ -56,7 +92,11 @@ describe("EventEmitter2", () => {
 
     test("should not throw error when emitting events with no registered handlers", () => {
       expect(() => {
-        emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+        emitter.emit({
+          type: "userLogin",
+          userId: "123",
+          email: "test@example.com",
+        });
       }).not.toThrow();
     });
   });
@@ -66,12 +106,16 @@ describe("EventEmitter2", () => {
       const handler1 = jest.fn();
       const handler2 = jest.fn();
 
-      emitter.on("userLogin", handler1);
-      emitter.on("userLogin", handler2);
+      emitter.on({ type: "userLogin", handler: handler1 });
+      emitter.on({ type: "userLogin", handler: handler2 });
 
-      emitter.off("userLogin", handler1);
+      emitter.off({ type: "userLogin", handler: handler1 });
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
 
       expect(handler1).not.toHaveBeenCalled();
       expect(handler2).toHaveBeenCalledTimes(1);
@@ -81,16 +125,16 @@ describe("EventEmitter2", () => {
       const handler1 = jest.fn();
       const handler2 = jest.fn();
 
-      emitter.on("userLogin", handler1);
-      emitter.on("userLogin", handler2);
+      emitter.on({ type: "userLogin", handler: handler1 });
+      emitter.on({ type: "userLogin", handler: handler2 });
 
       expect(emitter.listeners.userLogin).toBeDefined();
       expect(emitter.listeners.userLogin?.length).toBe(2);
 
-      emitter.off("userLogin", handler1);
+      emitter.off({ type: "userLogin", handler: handler1 });
       expect(emitter.listeners.userLogin?.length).toBe(1);
 
-      emitter.off("userLogin", handler2);
+      emitter.off({ type: "userLogin", handler: handler2 });
       expect(emitter.listeners.userLogin).toBeUndefined();
     });
 
@@ -98,13 +142,17 @@ describe("EventEmitter2", () => {
       const loginHandler = jest.fn();
       const logoutHandler = jest.fn();
 
-      emitter.on("userLogin", loginHandler);
-      emitter.on("userLogout", logoutHandler);
+      emitter.on({ type: "userLogin", handler: loginHandler });
+      emitter.on({ type: "userLogout", handler: logoutHandler });
 
-      emitter.off("userLogin", loginHandler);
+      emitter.off({ type: "userLogin", handler: loginHandler });
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
-      emitter.emit("userLogout", { userId: "123" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
+      emitter.emit({ type: "userLogout", userId: "123" });
 
       expect(loginHandler).not.toHaveBeenCalled();
       expect(logoutHandler).toHaveBeenCalledTimes(1);
@@ -115,31 +163,35 @@ describe("EventEmitter2", () => {
     test("should manage each registration independently when same function is registered multiple times", () => {
       const handler = jest.fn();
 
-      emitter.on("userLogin", handler);
-      emitter.on("userLogin", handler);
-      emitter.on("userLogin", handler);
+      emitter.on({ type: "userLogin", handler: handler });
+      emitter.on({ type: "userLogin", handler: handler });
+      emitter.on({ type: "userLogin", handler: handler });
 
       expect(emitter.listeners.userLogin?.length).toBe(3);
 
-      emitter.off("userLogin", handler);
+      emitter.off({ type: "userLogin", handler: handler });
       expect(emitter.listeners.userLogin?.length).toBe(2);
 
-      emitter.off("userLogin", handler);
+      emitter.off({ type: "userLogin", handler: handler });
       expect(emitter.listeners.userLogin?.length).toBe(1);
 
-      emitter.off("userLogin", handler);
+      emitter.off({ type: "userLogin", handler: handler });
       expect(emitter.listeners.userLogin).toBeUndefined();
     });
 
     test("should call remaining handlers correctly after partial removal of same function", () => {
       const handler = jest.fn();
 
-      emitter.on("userLogin", handler);
-      emitter.on("userLogin", handler);
+      emitter.on({ type: "userLogin", handler: handler });
+      emitter.on({ type: "userLogin", handler: handler });
 
-      emitter.off("userLogin", handler);
+      emitter.off({ type: "userLogin", handler: handler });
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
       expect(handler).toHaveBeenCalledTimes(1);
     });
   });
@@ -148,13 +200,17 @@ describe("EventEmitter2", () => {
     test("should completely remove references after handler removal", () => {
       const handler = jest.fn();
 
-      emitter.on("userLogin", handler);
+      emitter.on({ type: "userLogin", handler });
       expect(emitter.listeners.userLogin).toBeDefined();
 
-      emitter.off("userLogin", handler);
+      emitter.off({ type: "userLogin", handler });
       expect(emitter.listeners.userLogin).toBeUndefined();
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
       expect(handler).not.toHaveBeenCalled();
     });
 
@@ -164,18 +220,22 @@ describe("EventEmitter2", () => {
       for (let i = 0; i < 100; i++) {
         const handler = jest.fn();
         handlers.push(handler);
-        emitter.on("userLogin", handler);
+        emitter.on({ type: "userLogin", handler });
       }
 
       expect(emitter.listeners.userLogin?.length).toBe(100);
 
       for (let i = 0; i < 50; i++) {
-        emitter.off("userLogin", handlers[i]);
+        emitter.off({ type: "userLogin", handler: handlers[i] });
       }
 
       expect(emitter.listeners.userLogin?.length).toBe(50);
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
 
       for (let i = 0; i < 50; i++) {
         expect(handlers[i]).not.toHaveBeenCalled();
@@ -197,11 +257,15 @@ describe("EventEmitter2", () => {
       const normalHandler = jest.fn();
 
       // call order: errorHandler -> normalHandler
-      emitter.on("userLogin", errorHandler);
-      emitter.on("userLogin", normalHandler);
+      emitter.on({ type: "userLogin", handler: errorHandler });
+      emitter.on({ type: "userLogin", handler: normalHandler });
 
       expect(() => {
-        emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+        emitter.emit({
+          type: "userLogin",
+          userId: "123",
+          email: "test@example.com",
+        });
       }).toThrow(errorMessage);
 
       expect(errorHandler).toHaveBeenCalledTimes(1);
@@ -248,11 +312,15 @@ describe("EventEmitter2", () => {
       const handler2 = jest.fn(() => executionOrder.push(2));
       const handler3 = jest.fn(() => executionOrder.push(3));
 
-      emitter.on("userLogin", handler1);
-      emitter.on("userLogin", handler2);
-      emitter.on("userLogin", handler3);
+      emitter.on({ type: "userLogin", handler: handler1 });
+      emitter.on({ type: "userLogin", handler: handler2 });
+      emitter.on({ type: "userLogin", handler: handler3 });
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
 
       expect(executionOrder).toEqual([1, 2, 3]);
     });
@@ -261,13 +329,17 @@ describe("EventEmitter2", () => {
       const handler = jest.fn();
 
       for (let i = 0; i < 10; i++) {
-        emitter.on("userLogin", handler);
-        emitter.off("userLogin", handler);
+        emitter.on({ type: "userLogin", handler });
+        emitter.off({ type: "userLogin", handler });
       }
 
       expect(emitter.listeners.userLogin).toBeUndefined();
 
-      emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+      emitter.emit({
+        type: "userLogin",
+        userId: "123",
+        email: "test@example.com",
+      });
       expect(handler).not.toHaveBeenCalled();
     });
 
@@ -276,17 +348,21 @@ describe("EventEmitter2", () => {
       const handler1 = jest.fn();
       const handler2 = jest.fn(() => {
         // this handler will replace handler3 with assassin...
-        emitter.off("userLogin", handler3);
-        emitter.on("userLogin", assassin);
+        emitter.off({ type: "userLogin", handler: handler3 });
+        emitter.on({ type: "userLogin", handler: assassin });
       });
       const handler3 = jest.fn();
 
-      emitter.on("userLogin", handler1);
-      emitter.on("userLogin", handler2);
-      emitter.on("userLogin", handler3);
+      emitter.on({ type: "userLogin", handler: handler1 });
+      emitter.on({ type: "userLogin", handler: handler2 });
+      emitter.on({ type: "userLogin", handler: handler3 });
 
       expect(() => {
-        emitter.emit("userLogin", { userId: "123", email: "test@example.com" });
+        emitter.emit({
+          type: "userLogin",
+          userId: "123",
+          email: "test@example.com",
+        });
       }).not.toThrow();
 
       expect(handler1).toHaveBeenCalledTimes(1);

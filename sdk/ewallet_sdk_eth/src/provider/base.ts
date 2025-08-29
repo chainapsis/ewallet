@@ -17,6 +17,7 @@ import {
   UnsupportedProviderMethodError,
   isAddress,
   UnauthorizedProviderError,
+  InternalRpcError,
 } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
@@ -211,7 +212,7 @@ export class EWalletEIP1193Provider
           args.params as RpcRequestArgs<"wallet_addEthereumChain">["params"];
         const validation = validateChain(newChain);
         if (!validation.isValid) {
-          throw new InvalidParamsRpcError(
+          throw new InvalidInputRpcError(
             new Error(validation.error || "Invalid chain parameter"),
           );
         }
@@ -295,7 +296,7 @@ export class EWalletEIP1193Provider
         });
 
         if (result.type !== "signed_transaction") {
-          throw new Error("Invalid result type");
+          throw new InternalRpcError(new Error("Invalid result type"));
         }
 
         this._handleConnected(true, { chainId: this.activeChain.chainId });
@@ -326,7 +327,7 @@ export class EWalletEIP1193Provider
         });
 
         if (result.type !== "signature") {
-          throw new Error("Invalid result type");
+          throw new InternalRpcError(new Error("Invalid result type"));
         }
 
         this._handleConnected(true, { chainId: this.activeChain.chainId });
@@ -356,7 +357,7 @@ export class EWalletEIP1193Provider
         });
 
         if (result.type !== "signature") {
-          throw new Error("Invalid result type");
+          throw new InternalRpcError(new Error("Invalid result type"));
         }
 
         this._handleConnected(true, { chainId: this.activeChain.chainId });
