@@ -8,7 +8,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/iframe";
 
 export async function lazyInit(
-  this: KeplrEWalletInterface,
+  eWallet: KeplrEWalletInterface,
 ): Promise<Result<KeplrEWalletState, string>> {
   // If keplr_ewallet is initialized, iframe should exist
   const el = document.getElementById(KEPLR_IFRAME_ID);
@@ -19,7 +19,7 @@ export async function lazyInit(
     };
   }
 
-  const checkURLRes = await checkURL(this.sdkEndpoint);
+  const checkURLRes = await checkURL(eWallet.sdkEndpoint);
   if (!checkURLRes.success) {
     return checkURLRes;
   }
@@ -29,17 +29,17 @@ export async function lazyInit(
     const initResult = registerRes.data;
     const { email, public_key } = initResult;
 
-    this.state = { email, publicKey: public_key };
+    eWallet.state = { email, publicKey: public_key };
 
     if (email && public_key) {
-      this.eventEmitter.emit({
+      eWallet.eventEmitter.emit({
         type: "CORE__accountsChanged",
         email: email,
         publicKey: public_key,
       });
     }
 
-    return { success: true, data: this.state };
+    return { success: true, data: eWallet.state };
   } else {
     return {
       success: false,
