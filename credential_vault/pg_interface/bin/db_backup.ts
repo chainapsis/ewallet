@@ -23,8 +23,7 @@ async function main() {
 
   const dumpResult = await dump(pgConfig, DUMP_DIR);
   if (dumpResult.success === false) {
-    console.error("Failed to dump database: %s", dumpResult.err);
-    return;
+    throw new Error(`Failed to dump database: ${dumpResult.err}`);
   }
 
   console.log(

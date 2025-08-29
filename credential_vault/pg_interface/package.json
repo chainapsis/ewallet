@@ -8,6 +8,7 @@
     "migrate_1": "MIGRATE_MODE=one COMMITTEE_ID=1 tsx ./bin/migrate/index.ts",
     "migrate_2": "MIGRATE_MODE=one COMMITTEE_ID=2 tsx ./bin/migrate/index.ts",
     "db_backup": "tsx ./bin/db_backup.ts",
+    "db_restore": "tsx ./bin/db_restore.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
