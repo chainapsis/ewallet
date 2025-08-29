@@ -8,14 +8,14 @@ export interface EthersTransactionHelperOptions {
 
 export interface EthersSendTransactionOptions extends TransactionRequest {}
 
-export const createEthersTransactionHelper = (
+export function createEthersTransactionHelper(
   options: EthersTransactionHelperOptions,
-) => {
+) {
   const { provider, signer } = options;
 
-  const prepareTransactionWithDefaults = async (
+  async function prepareTransactionWithDefaults(
     txOptions: EthersSendTransactionOptions,
-  ) => {
+  ) {
     // Estimate gas if not provided
     let gasLimit = txOptions.gasLimit;
     if (!gasLimit) {
@@ -36,9 +36,9 @@ export const createEthersTransactionHelper = (
       maxFeePerGas,
       maxPriorityFeePerGas,
     };
-  };
+  }
 
-  const sendTransaction = async (txOptions: EthersSendTransactionOptions) => {
+  async function sendTransaction(txOptions: EthersSendTransactionOptions) {
     const request = await prepareTransactionWithDefaults(txOptions);
     // Always fetch the latest nonce if not provided
     let nonce = request.nonce;
@@ -55,20 +55,20 @@ export const createEthersTransactionHelper = (
       throw new Error("Transaction did not return a receipt");
     }
     return receipt;
-  };
+  }
 
-  const sendTransactionAndExpectSuccess = async (
+  async function sendTransactionAndExpectSuccess(
     txOptions: EthersSendTransactionOptions,
-  ) => {
+  ) {
     const receipt = await sendTransaction(txOptions);
     expect(receipt.status).toBe(1);
     return receipt;
-  };
+  }
 
-  const sendTransactionAndExpectFailure = async (
+  async function sendTransactionAndExpectFailure(
     txOptions: EthersSendTransactionOptions,
     expectedError?: string | RegExp,
-  ) => {
+  ) {
     try {
       await sendTransaction(txOptions);
       throw new Error("Transaction was expected to fail but succeeded");
@@ -82,7 +82,7 @@ export const createEthersTransactionHelper = (
       }
       return error;
     }
-  };
+  }
 
   return {
     prepareTransactionWithDefaults,
@@ -90,7 +90,7 @@ export const createEthersTransactionHelper = (
     sendTransactionAndExpectSuccess,
     sendTransactionAndExpectFailure,
   };
-};
+}
 
 export interface EthersContractHelperOptions
   extends EthersTransactionHelperOptions {
@@ -99,16 +99,16 @@ export interface EthersContractHelperOptions
   contractBytecode: string;
 }
 
-export const createEthersContractHelper = (
+export function createEthersContractHelper(
   options: EthersContractHelperOptions,
-) => {
+) {
   const txHelper = createEthersTransactionHelper(options);
   const { signer, provider, contractAbi, contractBytecode } = options;
 
-  const deployContract = async (
+  async function deployContract(
     bytecodeOverride?: string,
-    ...factoryArgs: any[]
-  ) => {
+    // ...factoryArgs: any[]
+  ) {
     const bytecode = bytecodeOverride ?? contractBytecode;
     const address = await signer.getAddress();
     const nonce = await provider.getTransactionCount(address, "pending");
@@ -134,23 +134,23 @@ export const createEthersContractHelper = (
       contract: new Contract(contractAddress, contractAbi, signer),
       address: contractAddress,
     };
-  };
+  }
 
-  const deployContractAndExpectFailure = async (
+  async function deployContractAndExpectFailure(
     bytecodeOverride?: string,
-    ...factoryArgs: any[]
-  ) => {
+    // ...factoryArgs: any[]
+  ) {
     try {
-      await deployContract(bytecodeOverride, ...factoryArgs);
+      await deployContract(bytecodeOverride);
       throw new Error("Contract deployment was expected to fail but succeeded");
     } catch (error: any) {
       return error;
     }
-  };
+  }
 
   return {
     ...txHelper,
     deployContract,
     deployContractAndExpectFailure,
   };
-};
+}

@@ -74,12 +74,12 @@ export interface SendTransactionOptions {
   authorizationList?: Authorization[];
 }
 
-export const createTransactionHelper = (options: TransactionHelperOptions) => {
+export function createTransactionHelper(options: TransactionHelperOptions) {
   const { publicClient, walletClient, account } = options;
 
-  const prepareTransactionWithDefaults = async (
+  async function prepareTransactionWithDefaults(
     txOptions: SendTransactionOptions,
-  ) => {
+  ) {
     const {
       maxFeePerGas: estimatedMaxFeePerGas,
       maxPriorityFeePerGas: estimatedMaxPriorityFeePerGas,
@@ -102,9 +102,9 @@ export const createTransactionHelper = (options: TransactionHelperOptions) => {
     } as any;
 
     return walletClient.prepareTransactionRequest(baseRequest);
-  };
+  }
 
-  const sendTransaction = async (txOptions: SendTransactionOptions) => {
+  async function sendTransaction(txOptions: SendTransactionOptions) {
     const request = await prepareTransactionWithDefaults(txOptions);
 
     // Estimate gas if not provided
@@ -124,20 +124,20 @@ export const createTransactionHelper = (options: TransactionHelperOptions) => {
       hash: txHash,
       receipt: await publicClient.waitForTransactionReceipt({ hash: txHash }),
     };
-  };
+  }
 
-  const sendTransactionAndExpectSuccess = async (
+  async function sendTransactionAndExpectSuccess(
     txOptions: SendTransactionOptions,
-  ) => {
+  ) {
     const result = await sendTransaction(txOptions);
     expect(result.receipt.status).toBe("success");
     return result;
-  };
+  }
 
-  const sendTransactionAndExpectFailure = async (
+  async function sendTransactionAndExpectFailure(
     txOptions: SendTransactionOptions,
     expectedError?: string | RegExp,
-  ) => {
+  ) {
     try {
       await sendTransaction(txOptions);
       throw new Error("Transaction was expected to fail but succeeded");
@@ -151,7 +151,7 @@ export const createTransactionHelper = (options: TransactionHelperOptions) => {
       }
       return error;
     }
-  };
+  }
 
   return {
     prepareTransactionWithDefaults,
@@ -159,13 +159,13 @@ export const createTransactionHelper = (options: TransactionHelperOptions) => {
     sendTransactionAndExpectSuccess,
     sendTransactionAndExpectFailure,
   };
-};
+}
 
 // Contract Helper Functions
-export const createContractHelper = (options: TransactionHelperOptions) => {
+export function createContractHelper(options: TransactionHelperOptions) {
   const txHelper = createTransactionHelper(options);
 
-  const deployContract = async (params: EncodeDeployDataParameters) => {
+  async function deployContract(params: EncodeDeployDataParameters) {
     const data = encodeDeployData(params);
 
     const result = await txHelper.sendTransactionAndExpectSuccess({
@@ -179,13 +179,13 @@ export const createContractHelper = (options: TransactionHelperOptions) => {
       ...result,
       contractAddress: result.receipt.contractAddress!,
     };
-  };
+  }
 
-  const deployContractAndExpectFailure = async (
+  async function deployContractAndExpectFailure(
     params?: EncodeDeployDataParameters,
     expectedError?: string | RegExp,
     gasOverride?: bigint,
-  ) => {
+  ) {
     const data = params ? encodeDeployData(params) : "0x";
 
     return txHelper.sendTransactionAndExpectFailure(
@@ -195,11 +195,11 @@ export const createContractHelper = (options: TransactionHelperOptions) => {
       },
       expectedError,
     );
-  };
+  }
 
   return {
     ...txHelper,
     deployContract,
     deployContractAndExpectFailure,
   };
-};
+}

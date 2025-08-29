@@ -59,20 +59,22 @@ export const COUNTER_DEPLOYMENT_BYTECODE =
   "0x6080604052348015600e575f5ffd5b506101e18061001c5f395ff3fe608060405234801561000f575f5ffd5b506004361061003f575f3560e01c80633fb5c1cb146100435780638381f58a1461005f578063d09de08a1461007d575b5f5ffd5b61005d600480360381019061005891906100e4565b610087565b005b610067610090565b604051610074919061011e565b60405180910390f35b610085610095565b005b805f8190555050565b5f5481565b5f5f8154809291906100a690610164565b9190505550565b5f5ffd5b5f819050919050565b6100c3816100b1565b81146100cd575f5ffd5b50565b5f813590506100de816100ba565b92915050565b5f602082840312156100f9576100f86100ad565b5b5f610106848285016100d0565b91505092915050565b610118816100b1565b82525050565b5f6020820190506101315f83018461010f565b92915050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f61016e826100b1565b91507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82036101a05761019f610137565b5b60018201905091905056fea264697066735822122037ad68ebe8f3853c8fa6cfe7296c8c5c7240233bdc0835097ec7a021cd787c0964736f6c634300081d0033" as Hex;
 
 // Test fixtures
-export const createChainParam = (
+export function createChainParam(
   chain: typeof mainnet | typeof hardhat,
-): AddEthereumChainParameter => ({
-  chainId: toHex(chain.id),
-  chainName: chain.name,
-  rpcUrls: chain.rpcUrls.default.http,
-  nativeCurrency: chain.nativeCurrency,
-  blockExplorerUrls: chain.blockExplorers?.default.url
-    ? [chain.blockExplorers.default.url]
-    : [],
-});
+): AddEthereumChainParameter {
+  return {
+    chainId: toHex(chain.id),
+    chainName: chain.name,
+    rpcUrls: chain.rpcUrls.default.http,
+    nativeCurrency: chain.nativeCurrency,
+    blockExplorerUrls: chain.blockExplorers?.default.url
+      ? [chain.blockExplorers.default.url]
+      : [],
+  };
+}
 
 // Create a dummy signer for testing
-export const createDummySigner = (): EthSigner => {
+export function createDummySigner(): EthSigner {
   return {
     getAddress: () => DUMMY_ADDRESS,
     sign: async function (parameters: EthSignParams): Promise<EthSignResult> {
@@ -103,7 +105,7 @@ export const createDummySigner = (): EthSigner => {
       }
     },
   };
-};
+}
 
 /**
  * Create an Ethereum signer for testing
@@ -111,10 +113,10 @@ export const createDummySigner = (): EthSigner => {
  * @returns An Ethereum signer that can sign transactions, personal messages, and typed data
  * @dev signHash function is not part of the EthSigner interface, but is added for testing purposes
  */
-export const createEthSigner = (
+export function createEthSigner(
   chainId: number | string,
   privateKey: Hex,
-): EthSigner & { signHash: ({ hash }: { hash: Hex }) => Promise<Hex> } => {
+): EthSigner & { signHash: ({ hash }: { hash: Hex }) => Promise<Hex> } {
   const account = privateKeyToAccount(privateKey);
   return {
     getAddress: () => account.address,
@@ -165,27 +167,29 @@ export const createEthSigner = (
       return await account.sign({ hash });
     },
   };
-};
+}
 
-export const createProviderOptions = (
+export function createProviderOptions(
   chains: AddEthereumChainParameter[],
   signer?: EthSigner,
-) => ({
-  id: DUMMY_PROVIDER_ID,
-  signer,
-  chains,
-});
+) {
+  return {
+    id: DUMMY_PROVIDER_ID,
+    signer,
+    chains,
+  };
+}
 
 // Test Data Generators
-export const generateRandomAddress = (): `0x${string}` => {
+export function generateRandomAddress(): `0x${string}` {
   const bytes = new Uint8Array(20);
   crypto.getRandomValues(bytes);
   return `0x${Array.from(bytes)
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("")}` as `0x${string}`;
-};
+}
 
-export const generateInvalidBytecode = (): Hex => {
+export function generateInvalidBytecode(): Hex {
   // Invalid bytecode that would fail during deployment
   return "0xdeadbeef" as Hex;
-};
+}
