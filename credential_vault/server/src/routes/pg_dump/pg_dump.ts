@@ -1,8 +1,8 @@
 import { Router, type Response } from "express";
+import fs from "node:fs/promises";
 import type { CVApiResponse } from "@keplr-ewallet/credential-vault-interface/response";
 import {
   getAllPgDumps,
-  getPgDumpById,
   restore,
   type PgDump,
 } from "@keplr-ewallet/credential-vault-pg-interface";
@@ -215,6 +215,37 @@ export function setPgDumpRoutes(router: Router) {
    *                           type: string
    *                           description: The path to the pg dump that was restored
    *                           example: "/path/to/dump.sql"
+   *       400:
+   *         description: Invalid dump_path parameter or file not found
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             examples:
+   *               INVALID_DUMP_PATH:
+   *                 summary: Invalid dump_path parameter
+   *                 value:
+   *                   success: false
+   *                   code: INVALID_DUMP_PATH
+   *                   msg: "dump_path parameter is required"
+   *               DUMP_FILE_NOT_FOUND:
+   *                 summary: Dump file not found
+   *                 value:
+   *                   success: false
+   *                   code: DUMP_FILE_NOT_FOUND
+   *                   msg: "Dump file not found at path: /path/to/dump.sql"
+   *               INVALID_DUMP_FILE:
+   *                 summary: Path is not a file
+   *                 value:
+   *                   success: false
+   *                   code: INVALID_DUMP_FILE
+   *                   msg: "Path is not a file: /path/to/dump.sql"
+   *               DUMP_FILE_ACCESS_ERROR:
+   *                 summary: Cannot access dump file
+   *                 value:
+   *                   success: false
+   *                   code: DUMP_FILE_ACCESS_ERROR
+   *                   msg: "Cannot access dump file: /path/to/dump.sql"
    *       401:
    *         description: Invalid admin password
    *         content:
@@ -246,6 +277,41 @@ export function setPgDumpRoutes(router: Router) {
       const state = req.app.locals as any;
 
       const dumpPath = req.body.dump_path;
+
+      if (!dumpPath) {
+        return res.status(400).json({
+          success: false,
+          code: "INVALID_DUMP_PATH",
+          msg: "dump_path parameter is required",
+        });
+      }
+
+      try {
+        await fs.access(dumpPath);
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          code: "DUMP_FILE_NOT_FOUND",
+          msg: `Dump file not found at path: ${dumpPath}`,
+        });
+      }
+
+      try {
+        const stats = await fs.stat(dumpPath);
+        if (!stats.isFile()) {
+          return res.status(400).json({
+            success: false,
+            code: "INVALID_DUMP_FILE",
+            msg: `Path is not a file: ${dumpPath}`,
+          });
+        }
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          code: "DUMP_FILE_ACCESS_ERROR",
+          msg: `Cannot access dump file: ${dumpPath}`,
+        });
+      }
 
       const restoreRes = await restore(
         {
