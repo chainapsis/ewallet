@@ -33,6 +33,6 @@
     "dist",
     "**/*.test.ts",
     "**/*.spec.ts",
-    "test/**/*"
+    "src/tests/**/*"
   ]
 }
