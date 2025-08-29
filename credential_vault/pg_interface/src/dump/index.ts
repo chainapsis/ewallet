@@ -46,22 +46,18 @@ export async function restore(
   pgConfig: PgDumpConfig,
   dumpPath: string,
 ): Promise<Result<void, string>> {
-  const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose ${dumpPath}`;
+  try {
+    const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose ${dumpPath}`;
 
-  const { stdout, stderr } = await execAsync(command, {
-    env: {
-      ...process.env,
-      PGPASSWORD: pgConfig.password,
-    },
-  });
+    await execAsync(command, {
+      env: {
+        ...process.env,
+        PGPASSWORD: pgConfig.password,
+      },
+    });
 
-  if (stderr.length > 0) {
-    return { success: false, err: stderr };
-  }
-
-  if (stdout.length > 0) {
     return { success: true, data: void 0 };
+  } catch (error) {
+    return { success: false, err: String(error) };
   }
-
-  return { success: false, err: "Unknown error" };
 }
