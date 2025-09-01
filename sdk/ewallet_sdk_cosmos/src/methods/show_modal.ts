@@ -46,9 +46,6 @@ export async function showModal(
     };
   } catch (error) {
     console.error("[showModal cosmos] [unknown error]", error);
-
-    await this.eWallet.hideModal();
-
     return {
       approved: false,
       reason: "Unknown error",
