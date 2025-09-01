@@ -32,11 +32,11 @@ export async function signDirect(
           features: chainInfo?.features,
           bip44: chainInfo?.bip44,
           evm: chainInfo?.evm,
-          signOptions,
         },
         signDoc,
         signer,
         origin,
+        signOptions,
       },
     };
     const showModalResponse = await this.showModal(showModalData);

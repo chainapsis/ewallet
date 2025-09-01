@@ -1,6 +1,10 @@
 import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
 import type { StdSignDoc, StdSignature } from "@cosmjs/amino";
-import type { Bech32Config, ChainInfo } from "@keplr-wallet/types";
+import type {
+  Bech32Config,
+  ChainInfo,
+  KeplrSignOptions,
+} from "@keplr-wallet/types";
 
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
