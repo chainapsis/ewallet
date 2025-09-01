@@ -33,8 +33,6 @@ export function CosmosEWallet(
   eWallet: KeplrEWalletInterface,
 ) {
   this.eWallet = eWallet;
-  this.cosmosChainInfo = [];
-  this.cacheTime = 0;
   this.eventEmitter = new EventEmitter3<
     KeplrEWalletCosmosEvent2,
     KeplrEWalletCosmosEventHandler2

@@ -42,8 +42,6 @@ export interface CosmosEWalletInterface {
     KeplrEWalletCosmosEvent2,
     KeplrEWalletCosmosEventHandler2
   >;
-  cosmosChainInfo: ChainInfo[];
-  cacheTime: number;
   waitUntilInitialized: Promise<Result<CosmosEWalletState, LazyInitError>>;
 
   enable: (_chainId: string) => Promise<void>;
