@@ -38,11 +38,11 @@ async function main() {
 
   const { env } = process;
   const createPostgresRes = await createPgDatabase({
-    database: env.DB_NAME!,
-    host: env.DB_HOST!,
-    password: env.DB_PASSWORD!,
-    user: env.DB_USER!,
-    port: Number(env.DB_PORT!),
+    database: env.DB_NAME,
+    host: env.DB_HOST,
+    password: env.DB_PASSWORD,
+    user: env.DB_USER,
+    port: Number(env.DB_PORT),
     ssl: env.DB_SSL === "true" ? true : false,
   });
 
@@ -61,11 +61,11 @@ async function main() {
   startPgDumpRuntime(
     app.locals.db,
     {
-      database: env.DB_NAME!,
-      host: env.DB_HOST!,
-      password: env.DB_PASSWORD!,
-      user: env.DB_USER!,
-      port: Number(env.DB_PORT!),
+      database: env.DB_NAME,
+      host: env.DB_HOST,
+      password: env.DB_PASSWORD,
+      user: env.DB_USER,
+      port: Number(env.DB_PORT),
     },
     {
       sleepTimeSeconds: ONE_DAY_MS, // 1 day
