@@ -13,6 +13,8 @@ export function publicKeyToEthereumAddress(
   let publicKeyWithout0x: string | ByteArray = publicKey;
   if (typeof publicKey === "string" && publicKey.startsWith("0x")) {
     publicKeyWithout0x = publicKey.slice(2);
+  } else {
+    publicKeyWithout0x = Buffer.from(publicKey).toString("hex");
   }
 
   const point = secp256k1.Point.fromHex(publicKeyWithout0x);

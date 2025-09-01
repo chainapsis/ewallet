@@ -8,6 +8,80 @@ import {
   isSignableTransaction,
 } from "@keplr-ewallet-sdk-eth/utils";
 
+describe("publicKeyToEthereumAddress", () => {
+  it("should convert compressed public key string to Ethereum address", () => {
+    const compressedPublicKey =
+      "0x0268d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4";
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(compressedPublicKey);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should convert uncompressed public key string to Ethereum address", () => {
+    const uncompressedPublicKey =
+      "0x0468d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4d4b640ac857c7a6ca794625bd0422b9d7ec90a7e2974ca949eca507ba4719f56";
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(uncompressedPublicKey);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should convert ByteArray (Uint8Array) public key to Ethereum address", () => {
+    const compressedPublicKeyBytes = new Uint8Array([
+      0x02, 0x68, 0xd3, 0x9a, 0x99, 0xcf, 0x77, 0xad, 0xba, 0x08, 0xa2, 0x88,
+      0x77, 0x90, 0x00, 0x23, 0x51, 0x3f, 0x6e, 0x49, 0xb7, 0x02, 0x90, 0x1f,
+      0xb5, 0x3a, 0x90, 0xd9, 0xc1, 0x18, 0x7e, 0x1a, 0xa4,
+    ]);
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(compressedPublicKeyBytes);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should convert Buffer public key to Ethereum address", () => {
+    // Compressed public key as Buffer
+    const compressedPublicKeyBuffer = Buffer.from(
+      "0268d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4",
+      "hex",
+    );
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(compressedPublicKeyBuffer);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should produce the same address for different input formats of the same public key", () => {
+    const compressedHex =
+      "0268d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4";
+    const compressedHexWith0x = `0x${compressedHex}`;
+    const compressedBytes = new Uint8Array(Buffer.from(compressedHex, "hex"));
+    const compressedBuffer = Buffer.from(compressedHex, "hex");
+
+    const addressFromHex = publicKeyToEthereumAddress(`0x${compressedHex}`);
+    const addressFromHexWith0x =
+      publicKeyToEthereumAddress(compressedHexWith0x);
+    const addressFromBytes = publicKeyToEthereumAddress(compressedBytes);
+    const addressFromBuffer = publicKeyToEthereumAddress(compressedBuffer);
+
+    expect(addressFromHex).toBe(addressFromHexWith0x);
+    expect(addressFromHex).toBe(addressFromBytes);
+    expect(addressFromHex).toBe(addressFromBuffer);
+  });
+});
+
 describe("encodeEthereumSignature", () => {
   it("should encode the signature correctly", async () => {
     const compressedPublicKey =

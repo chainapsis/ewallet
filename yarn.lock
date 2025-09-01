@@ -2714,6 +2714,7 @@ __metadata:
   dependencies:
     "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.57"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.13"
+    "@noble/curves": "npm:*"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
     "@rollup/plugin-terser": "npm:*"
@@ -3328,6 +3329,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/curves@npm:*":
+  version: 2.0.0
+  resolution: "@noble/curves@npm:2.0.0"
+  dependencies:
+    "@noble/hashes": "npm:2.0.0"
+  checksum: 10c0/d87ef4d6337441a7a29fa81a68d0cbfaf6d7fa3752e3a17e4109cf4e407a82d573eec6c84108db801e09d851547cbf8d0f4db28517d47ca79184f2d7a1f49d8e
+  languageName: node
+  linkType: hard
+
 "@noble/curves@npm:1.2.0":
   version: 1.2.0
   resolution: "@noble/curves@npm:1.2.0"
@@ -3437,6 +3447,13 @@ __metadata:
   version: 1.8.0
   resolution: "@noble/hashes@npm:1.8.0"
   checksum: 10c0/06a0b52c81a6fa7f04d67762e08b2c476a00285858150caeaaff4037356dd5e119f45b2a530f638b77a5eeca013168ec1b655db41bae3236cb2e9d511484fc77
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@noble/hashes@npm:2.0.0"
+  checksum: 10c0/4c619df392164ea8655c630e753e791e1afb5f38cb746463d36509f684a197c3c653858b6a78135a0b54c80270a66f28003d5999ec1ad06cec0d658bf720a03f
   languageName: node
   linkType: hard
 
@@ -17200,6 +17217,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@jest/globals": "npm:^30.0.4"
+    "@noble/curves": "npm:^1.9.2"
     "@rollup/plugin-commonjs": "npm:^25.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.0.0"
     "@rollup/plugin-terser": "npm:^0.4.4"
