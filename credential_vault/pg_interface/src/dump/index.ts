@@ -24,14 +24,22 @@ export async function dump(
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
-    const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
+    const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U \
+${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
 
-    await execAsync(command, {
+    const { stdout, stderr } = await execAsync(command, {
       env: {
         ...process.env,
         PGPASSWORD: pgConfig.password,
       },
     });
+
+    if (stdout) {
+      console.log("pg_dump stdout:", stdout);
+    }
+    if (stderr) {
+      console.log("pg_dump stderr:", stderr);
+    }
 
     const stats = await fs.stat(dumpPath);
     const dumpSize = stats.size;
@@ -46,22 +54,27 @@ export async function restore(
   pgConfig: PgDumpConfig,
   dumpPath: string,
 ): Promise<Result<void, string>> {
-  const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose ${dumpPath}`;
+  try {
+    const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U \
+${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose \
+${dumpPath}`;
 
-  const { stdout, stderr } = await execAsync(command, {
-    env: {
-      ...process.env,
-      PGPASSWORD: pgConfig.password,
-    },
-  });
+    const { stdout, stderr } = await execAsync(command, {
+      env: {
+        ...process.env,
+        PGPASSWORD: pgConfig.password,
+      },
+    });
 
-  if (stderr.length > 0) {
-    return { success: false, err: stderr };
-  }
+    if (stdout) {
+      console.log("pg_restore stdout:", stdout);
+    }
+    if (stderr) {
+      console.log("pg_restore stderr:", stderr);
+    }
 
-  if (stdout.length > 0) {
     return { success: true, data: void 0 };
+  } catch (error) {
+    return { success: false, err: String(error) };
   }
-
-  return { success: false, err: "Unknown error" };
 }

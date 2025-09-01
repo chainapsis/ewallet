@@ -224,33 +224,43 @@ export class MockRpcServer {
 }
 
 // Convenience functions for common scenarios
-export const createMockRpcServer = () => new MockRpcServer();
+export function createMockRpcServer() {
+  return new MockRpcServer();
+}
 
-export const mockMainnetRpc = (
+export function mockMainnetRpc(
   url: string = "https://mock-mainnet.example.com",
-) => ({
-  url,
-  config: { chainId: toHex(1) } as MockRpcServerConfig,
-});
+): { url: string; config: MockRpcServerConfig } {
+  return {
+    url,
+    config: { chainId: toHex(1) } as MockRpcServerConfig,
+  };
+}
 
-export const mockSepoliaRpc = (
+export function mockSepoliaRpc(
   url: string = "https://mock-sepolia.example.com",
-) => ({
-  url,
-  config: { chainId: toHex(11155111) } as MockRpcServerConfig,
-});
+): { url: string; config: MockRpcServerConfig } {
+  return {
+    url,
+    config: { chainId: toHex(11155111) } as MockRpcServerConfig,
+  };
+}
 
-export const mockFailingRpc = (
+export function mockFailingRpc(
   url: string = "https://mock-failing.example.com",
-) => ({
-  url,
-  config: { shouldFail: true } as MockRpcServerConfig,
-});
+): { url: string; config: MockRpcServerConfig } {
+  return {
+    url,
+    config: { shouldFail: true } as MockRpcServerConfig,
+  };
+}
 
-export const mockInvalidChainRpc = (
+export function mockInvalidChainRpc(
   url: string = "https://mock-invalid.example.com",
   wrongChainId: string = "0x999",
-) => ({
-  url,
-  config: { chainId: wrongChainId } as MockRpcServerConfig,
-});
+): { url: string; config: MockRpcServerConfig } {
+  return {
+    url,
+    config: { chainId: wrongChainId } as MockRpcServerConfig,
+  };
+}

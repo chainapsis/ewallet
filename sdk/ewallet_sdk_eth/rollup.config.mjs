@@ -20,9 +20,11 @@ export default [
       "@keplr-ewallet/ewallet-sdk-core",
       "eventemitter3",
       "viem",
+      "@noble/curves",
       "uuid",
       /^viem\//,
       /^ox\//,
+      /^@noble\/curves\//,
     ],
     plugins: [
       nodeResolve({
@@ -34,8 +36,8 @@ export default [
         transformMixedEsModules: true,
       }),
       typescript({
-        tsconfig: "./tsconfig.json",
-        declaration: true,
+        declaration: false,
+        exclude: ["**/*.test.ts", "**/tests/**/*", "**/*.spec.ts"],
       }),
     ],
   },
@@ -45,7 +47,15 @@ export default [
       file: "dist/index.d.ts", // Output path for the bundled declaration file
       format: "esm",
     },
-    plugins: [tsConfigPaths(), nodeResolve(), dts(), typescript()],
+    plugins: [
+      tsConfigPaths(),
+      nodeResolve(),
+      dts(),
+      typescript({
+        emitDeclarationOnly: true,
+        exclude: ["**/*.test.ts", "**/tests/**/*", "**/*.spec.ts"],
+      }),
+    ],
   },
   // {
   //   file: "dist/index.min.js",

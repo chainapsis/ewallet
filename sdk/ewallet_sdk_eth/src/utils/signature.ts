@@ -4,10 +4,10 @@ import type { SignOutput } from "@keplr-ewallet/ewallet-sdk-core";
 import { secp256k1 } from "@noble/curves/secp256k1";
 
 // ref: fullSignatureToEvmSig in cait_sith_keplr_addon/src/tests/eth_tx_sign.test.ts
-export const encodeEthereumSignature = (
+export function encodeEthereumSignature(
   signOutput: SignOutput,
   chainId?: number,
-): Signature => {
+): Signature {
   const { sig, is_high } = signOutput;
 
   // 1) Decompress R which is compressed public key
@@ -38,4 +38,4 @@ export const encodeEthereumSignature = (
   const s = pad(sHex, { dir: "left", size: 32 });
 
   return { r, s, v: BigInt(v) };
-};
+}

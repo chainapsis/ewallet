@@ -1,9 +1,131 @@
-import type { RpcTransactionRequest } from "viem";
+import { serializeSignature } from "viem/accounts";
+import { type RpcTransactionRequest, recoverPublicKey } from "viem";
 
 import {
+  publicKeyToEthereumAddress,
+  encodeEthereumSignature,
   toSignableTransaction,
   isSignableTransaction,
 } from "@keplr-ewallet-sdk-eth/utils";
+
+describe("publicKeyToEthereumAddress", () => {
+  it("should convert compressed public key string to Ethereum address", () => {
+    const compressedPublicKey =
+      "0x0268d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4";
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(compressedPublicKey);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should convert uncompressed public key string to Ethereum address", () => {
+    const uncompressedPublicKey =
+      "0x0468d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4d4b640ac857c7a6ca794625bd0422b9d7ec90a7e2974ca949eca507ba4719f56";
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(uncompressedPublicKey);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should convert ByteArray (Uint8Array) public key to Ethereum address", () => {
+    const compressedPublicKeyBytes = new Uint8Array([
+      0x02, 0x68, 0xd3, 0x9a, 0x99, 0xcf, 0x77, 0xad, 0xba, 0x08, 0xa2, 0x88,
+      0x77, 0x90, 0x00, 0x23, 0x51, 0x3f, 0x6e, 0x49, 0xb7, 0x02, 0x90, 0x1f,
+      0xb5, 0x3a, 0x90, 0xd9, 0xc1, 0x18, 0x7e, 0x1a, 0xa4,
+    ]);
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(compressedPublicKeyBytes);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should convert Buffer public key to Ethereum address", () => {
+    // Compressed public key as Buffer
+    const compressedPublicKeyBuffer = Buffer.from(
+      "0268d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4",
+      "hex",
+    );
+    const expectedAddress = "0xDdbEC09D796225434925b4105c66c24956EBc6cA";
+
+    const address = publicKeyToEthereumAddress(compressedPublicKeyBuffer);
+
+    expect(address).toMatch(/^0x[0-9a-fA-F]{40}$/);
+    expect(typeof address).toBe("string");
+    expect(address).toBe(expectedAddress);
+  });
+
+  it("should produce the same address for different input formats of the same public key", () => {
+    const compressedHex =
+      "0268d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4";
+    const compressedHexWith0x = `0x${compressedHex}`;
+    const compressedBytes = new Uint8Array(Buffer.from(compressedHex, "hex"));
+    const compressedBuffer = Buffer.from(compressedHex, "hex");
+
+    const addressFromHex = publicKeyToEthereumAddress(`0x${compressedHex}`);
+    const addressFromHexWith0x =
+      publicKeyToEthereumAddress(compressedHexWith0x);
+    const addressFromBytes = publicKeyToEthereumAddress(compressedBytes);
+    const addressFromBuffer = publicKeyToEthereumAddress(compressedBuffer);
+
+    expect(addressFromHex).toBe(addressFromHexWith0x);
+    expect(addressFromHex).toBe(addressFromBytes);
+    expect(addressFromHex).toBe(addressFromBuffer);
+  });
+});
+
+describe("encodeEthereumSignature", () => {
+  it("should encode the signature correctly", async () => {
+    const compressedPublicKey =
+      "0268d39a99cf77adba08a28877900023513f6e49b702901fb53a90d9c1187e1aa4";
+    const address = publicKeyToEthereumAddress(`0x${compressedPublicKey}`);
+
+    const msgHash =
+      "d7ed35dd0510a611f63230dabd98e34dcfca9fda4e086083a0741e50a247249d"; // hashMessage("hello world!")
+
+    const signOutput = {
+      sig: {
+        big_r:
+          "0220FF16EBC6DA287D0C059F809A9F4AC23BC238CF17F4D2F361FBFEFE9ECC0A46",
+        s: "59AE4813A391DBA17C3509DA80AF0AA866D16406075202654DD3A17E912C19DF",
+      },
+      is_high: true,
+    };
+
+    const signature = encodeEthereumSignature(signOutput);
+
+    expect(signature).toHaveProperty("r");
+    expect(signature).toHaveProperty("s");
+    expect(signature).toHaveProperty("v");
+    expect(signature.r).toMatch(/^0x[0-9a-fA-F]{64}$/);
+    expect(signature.s).toMatch(/^0x[0-9a-fA-F]{64}$/);
+    expect(typeof signature.v).toBe("bigint");
+
+    const serializedSignature = serializeSignature(signature);
+
+    // recovered public key should be uncompressed
+    const recoveredPublicKey = await recoverPublicKey({
+      hash: `0x${msgHash}`,
+      signature: serializedSignature,
+    });
+
+    // 0x04 is the prefix for uncompressed public key
+    // length is 128 because it's 64 bytes (32 bytes for x and 32 bytes for y) without hex prefix 0x04
+    expect(recoveredPublicKey).toMatch(/^0x04[0-9a-fA-F]{128}$/);
+
+    const recoveredAddress = publicKeyToEthereumAddress(recoveredPublicKey);
+
+    expect(recoveredAddress).toBe(address);
+  });
+});
 
 describe("toSignableTransaction", () => {
   it("produces legacy (0x0) signable tx with gasPrice", () => {

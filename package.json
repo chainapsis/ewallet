@@ -27,6 +27,7 @@
     "ci": "yarn --cwd ./internals/ci run start"
   },
   "dependencies": {
+    "@noble/curves": "^1.9.2",
     "chalk": "^5.5.0",
     "tsx": "^4.20.3",
     "uuid": "^11.1.0",
