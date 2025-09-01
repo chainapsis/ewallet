@@ -78,35 +78,35 @@ export function getEnvPath(envFileName: string) {
   return envPath;
 }
 
-export function loadEnv(envFileName: string): Result<void, string> {
-  const envPath = getEnvPath(envFileName);
+// export function loadEnv(envFileName: string): Result<void, string> {
+//   const envPath = getEnvPath(envFileName);
+//
+//   if (!fs.existsSync(envPath)) {
+//     console.log("Env file does not exist, path: %s", envPath);
+//
+//     return { success: false, err: `Env file does not exist, path: ${envPath}` };
+//   } else {
+//     console.info("Loading env, path: %s", envPath);
+//   }
+//
+//   dotenv.config({
+//     path: envPath,
+//     override: false,
+//     quiet: true,
+//   });
+//
+//   return { success: true, data: void 0 };
+// }
 
-  if (!fs.existsSync(envPath)) {
-    console.log("Env file does not exist, path: %s", envPath);
-
-    return { success: false, err: `Env file does not exist, path: ${envPath}` };
-  } else {
-    console.info("Loading env, path: %s", envPath);
-  }
-
-  dotenv.config({
-    path: envPath,
-    override: false,
-    quiet: true,
-  });
-
-  return { success: true, data: void 0 };
-}
-
-export function verifyEnv(
-  schema: ZodObject,
-  envs: Record<string, any>,
-): Result<void, string> {
-  const res = schema.safeParse(envs);
-
-  if (res.success) {
-    return { success: true, data: void 0 };
-  } else {
-    return { success: false, err: z.prettifyError(res.error) };
-  }
-}
+// export function verifyEnv(
+//   schema: ZodObject,
+//   envs: Record<string, any>,
+// ): Result<void, string> {
+//   const res = schema.safeParse(envs);
+//
+//   if (res.success) {
+//     return { success: true, data: void 0 };
+//   } else {
+//     return { success: false, err: z.prettifyError(res.error) };
+//   }
+// }

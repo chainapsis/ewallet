@@ -2602,6 +2602,7 @@ __metadata:
     "@types/swagger-ui-express": "npm:^4.1.8"
     "@typescript-eslint/eslint-plugin": "npm:^7.16.1"
     "@typescript-eslint/parser": "npm:^7.16.1"
+    commander: "npm:*"
     cors: "npm:^2.8.5"
     dotenv: "npm:^16.4.5"
     express: "npm:^4.21.1"

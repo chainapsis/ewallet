@@ -1,7 +1,10 @@
 import * as dotenv from "dotenv";
+import fs from "node:fs";
 import path from "path";
-import { z } from "zod";
+import { z, ZodObject } from "zod";
 import os from "node:os";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+// import { getEnvPath } from "./bin/create_env";
 
 const ENV_FILE_NAME_STEM = "credential_vault";
 
@@ -35,31 +38,74 @@ const envSchema = z.object({
   ADMIN_PASSWORD: z.string().min(1, "ADMIN_PASSWORD is required"),
 });
 
-export function loadEnvs(): EnvType {
+// export function loadEnv(envFileName: string): Result<void, string> {
+//   const envPath = getEnvPath(envFileName);
+//
+//   if (!fs.existsSync(envPath)) {
+//     console.log("Env file does not exist, path: %s", envPath);
+//
+//     return { success: false, err: `Env file does not exist, path: ${envPath}` };
+//   } else {
+//     console.info("Loading env, path: %s", envPath);
+//   }
+//
+//   dotenv.config({
+//     path: envPath,
+//     override: false,
+//     quiet: true,
+//   });
+//
+//   return { success: true, data: void 0 };
+// }
+
+export function loadEnvs(committeeId: string): Result<void, string> {
   const committeeIdSuffix =
-    process.env.COMMITTEE_ID === "1" ? "" : `_${process.env.COMMITTEE_ID}`;
+    committeeId === "1" ? "" : `_${process.env.COMMITTEE_ID}`;
+
   const envFileName = `${ENV_FILE_NAME_STEM}${committeeIdSuffix}.env`;
+
   const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
+
+  if (!fs.existsSync(envPath)) {
+    console.log("Env file does not exist, path: %s", envPath);
+
+    return { success: false, err: `Env file does not exist, path: ${envPath}` };
+  } else {
+    console.info("Loading env, path: %s", envPath);
+  }
 
   dotenv.config({
     path: envPath,
     override: false,
   });
 
-  const rawEnv: EnvType = {
-    PORT: parseInt(process.env.PORT || "4201", 10),
-    DB_HOST: process.env.DB_HOST || "localhost",
-    DB_PORT: parseInt(process.env.DB_PORT || "5432", 10),
-    DB_USER: process.env.DB_USER || "postgres",
-    DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
-    DB_NAME: process.env.DB_NAME || "credential_vault_dev",
-    DB_SSL: (process.env.DB_SSL || "false") === "true",
-    ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET || "temp_enc_secret",
-    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "admin_password",
-  };
+  return { success: true, data: void 0 };
 
-  const envs = envSchema.parse(rawEnv);
-  console.log("Loaded envs: %j", envs);
+  // const rawEnv: EnvType = {
+  //   PORT: parseInt(process.env.PORT || "4201", 10),
+  //   DB_HOST: process.env.DB_HOST || "localhost",
+  //   DB_PORT: parseInt(process.env.DB_PORT || "5432", 10),
+  //   DB_USER: process.env.DB_USER || "postgres",
+  //   DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
+  //   DB_NAME: process.env.DB_NAME || "credential_vault_dev",
+  //   DB_SSL: (process.env.DB_SSL || "false") === "true",
+  //   ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET || "temp_enc_secret",
+  //   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "admin_password",
+  // };
+  //
+  // const envs = envSchema.parse(rawEnv);
+  // console.log("Loaded envs: %j", envs);
+}
 
-  return envs;
+export function verifyEnv(
+  // schema: ZodObject,
+  envs: Record<string, any>,
+): Result<void, string> {
+  const res = envSchema.safeParse(envs);
+
+  if (res.success) {
+    return { success: true, data: void 0 };
+  } else {
+    return { success: false, err: z.prettifyError(res.error) };
+  }
 }
