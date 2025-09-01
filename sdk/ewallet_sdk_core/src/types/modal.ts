@@ -78,12 +78,14 @@ type CosmosTxSignDirectPayload = {
   chain_info: ChainInfoForAttachedModal;
   signer: string;
   signDoc: SignDoc;
+  signOptions?: KeplrSignOptions;
 };
 type CosmosTxSignAminoPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
   signDoc: StdSignDoc;
+  signOptions?: KeplrSignOptions;
 };
 
 export type CosmosArbitrarySignPayload = {
