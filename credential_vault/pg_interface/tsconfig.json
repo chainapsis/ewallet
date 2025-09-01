@@ -25,6 +25,6 @@
       "@keplr-ewallet-credential-vault-pg-interface/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "bin/**/*"],
+  "include": ["src/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "dist"]
 }
