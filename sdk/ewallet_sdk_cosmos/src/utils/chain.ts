@@ -6,8 +6,8 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { ChainInfo } from "@keplr-wallet/types";
 
 type SendGetCosmosChainInfoError =
-  | { type: "wrong ack message type" }
-  | { type: "payload contains err"; err: any };
+  | { type: "wrong_ack_message_type" }
+  | { type: "payload_contains_err"; err: any };
 
 export async function sendGetCosmosChainInfo(
   ewallet: KeplrEWalletInterface,
@@ -24,13 +24,13 @@ export async function sendGetCosmosChainInfo(
   const res = await ewallet.sendMsgToIframe(msg);
 
   if (res.msg_type !== "get_cosmos_chain_info_ack") {
-    return { success: false, err: { type: "wrong ack message type" } };
+    return { success: false, err: { type: "wrong_ack_message_type" } };
   }
 
   if (!res.payload.success) {
     return {
       success: false,
-      err: { type: "payload contains err", err: res.payload.err },
+      err: { type: "payload_contains_err", err: res.payload.err },
     };
   }
 
