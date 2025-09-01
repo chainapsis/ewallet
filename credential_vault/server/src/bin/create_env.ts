@@ -50,7 +50,10 @@ function copyEnv(envFileName: string, exampleEnvFileName: string) {
 }
 
 function main() {
+  console.log("\nenv file - base (1)");
   copyEnv(ENV_FILE_NAME, EXAMPLE_ENV_FILE);
+
+  console.log("\nenv file - 2");
   copyEnv(ENV_FILE_NAME_2, EXAMPLE_ENV_FILE_2);
 }
 

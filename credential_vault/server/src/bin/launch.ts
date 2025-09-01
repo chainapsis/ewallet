@@ -23,11 +23,16 @@ function parseCLIArgs() {
 
 async function main() {
   const opts = parseCLIArgs();
-  loadEnv(opts.committeeId);
+  console.log("CLI opts: %j", opts);
+
+  const loadEnvRes = loadEnv(opts.committeeId);
+  if (!loadEnvRes.success) {
+    console.warn("ENV didn't exist, but we will continue");
+  }
 
   const verifyEnvRes = verifyEnv(process.env);
   if (!verifyEnvRes.success) {
-    console.error("ENVS invalid, err: %s", verifyEnvRes.err);
+    console.error("ENV variables invalid, err: %s", verifyEnvRes.err);
     process.exit(1);
   }
 
