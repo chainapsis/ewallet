@@ -38,27 +38,7 @@ const envSchema = z.object({
   ADMIN_PASSWORD: z.string().min(1, "ADMIN_PASSWORD is required"),
 });
 
-// export function loadEnv(envFileName: string): Result<void, string> {
-//   const envPath = getEnvPath(envFileName);
-//
-//   if (!fs.existsSync(envPath)) {
-//     console.log("Env file does not exist, path: %s", envPath);
-//
-//     return { success: false, err: `Env file does not exist, path: ${envPath}` };
-//   } else {
-//     console.info("Loading env, path: %s", envPath);
-//   }
-//
-//   dotenv.config({
-//     path: envPath,
-//     override: false,
-//     quiet: true,
-//   });
-//
-//   return { success: true, data: void 0 };
-// }
-
-export function loadEnvs(committeeId: string): Result<void, string> {
+export function loadEnv(committeeId: string): Result<void, string> {
   const committeeIdSuffix =
     committeeId === "1" ? "" : `_${process.env.COMMITTEE_ID}`;
 
@@ -80,27 +60,9 @@ export function loadEnvs(committeeId: string): Result<void, string> {
   });
 
   return { success: true, data: void 0 };
-
-  // const rawEnv: EnvType = {
-  //   PORT: parseInt(process.env.PORT || "4201", 10),
-  //   DB_HOST: process.env.DB_HOST || "localhost",
-  //   DB_PORT: parseInt(process.env.DB_PORT || "5432", 10),
-  //   DB_USER: process.env.DB_USER || "postgres",
-  //   DB_PASSWORD: process.env.DB_PASSWORD || "postgres",
-  //   DB_NAME: process.env.DB_NAME || "credential_vault_dev",
-  //   DB_SSL: (process.env.DB_SSL || "false") === "true",
-  //   ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET || "temp_enc_secret",
-  //   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || "admin_password",
-  // };
-  //
-  // const envs = envSchema.parse(rawEnv);
-  // console.log("Loaded envs: %j", envs);
 }
 
-export function verifyEnv(
-  // schema: ZodObject,
-  envs: Record<string, any>,
-): Result<void, string> {
+export function verifyEnv(envs: Record<string, any>): Result<void, string> {
   const res = envSchema.safeParse(envs);
 
   if (res.success) {

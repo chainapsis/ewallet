@@ -2,7 +2,7 @@ import { program } from "commander";
 
 import { createPgDatabase } from "@keplr-ewallet-cv-server/database";
 import { makeApp } from "@keplr-ewallet-cv-server/app";
-import { loadEnvs, verifyEnv } from "@keplr-ewallet-cv-server/envs";
+import { loadEnv, verifyEnv } from "@keplr-ewallet-cv-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-cv-server/pg_dump/runtime";
 
 const ONE_DAY_MS = 1 * 86400;
@@ -23,7 +23,7 @@ function parseCLIArgs() {
 
 async function main() {
   const opts = parseCLIArgs();
-  loadEnvs(opts.committeeId);
+  loadEnv(opts.committeeId);
 
   const verifyEnvRes = verifyEnv(process.env);
   if (!verifyEnvRes.success) {
