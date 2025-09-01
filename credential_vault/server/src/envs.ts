@@ -13,18 +13,6 @@ export const EXAMPLE_ENV_FILE = "credential_vault.env.example";
 export const ENV_FILE_NAME_2 = "credential_vault_2.env";
 export const EXAMPLE_ENV_FILE_2 = "credential_vault_2.env.example";
 
-// export interface EnvType {
-//   PORT: number;
-//   DB_HOST: string;
-//   DB_PORT: number;
-//   DB_USER: string;
-//   DB_PASSWORD: string;
-//   DB_NAME: string;
-//   DB_SSL: boolean;
-//   ENCRYPTION_SECRET: string;
-//   ADMIN_PASSWORD: string;
-// }
-
 const envSchema = z.object({
   PORT: z.string(),
   DB_HOST: z.string(),
