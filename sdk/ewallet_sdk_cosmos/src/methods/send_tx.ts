@@ -26,26 +26,21 @@ export async function sendTx(
 
   const isProtoTx = Buffer.isBuffer(tx) || tx instanceof Uint8Array;
 
-  const params = isProtoTx
-    ? {
-        tx_bytes: Buffer.from(tx as any).toString("base64"),
-        mode: (() => {
-          switch (mode) {
-            case "async":
-              return "BROADCAST_MODE_ASYNC";
-            case "block":
-              return "BROADCAST_MODE_BLOCK";
-            case "sync":
-              return "BROADCAST_MODE_SYNC";
-            default:
-              return "BROADCAST_MODE_UNSPECIFIED";
-          }
-        })(),
+  const params = {
+    tx_bytes: Buffer.from(tx as any).toString("base64"),
+    mode: (() => {
+      switch (mode) {
+        case "async":
+          return "BROADCAST_MODE_ASYNC";
+        case "block":
+          return "BROADCAST_MODE_BLOCK";
+        case "sync":
+          return "BROADCAST_MODE_SYNC";
+        default:
+          return "BROADCAST_MODE_UNSPECIFIED";
       }
-    : {
-        tx,
-        mode: mode,
-      };
+    })(),
+  };
 
   try {
     const result = await simpleFetch<any>(
