@@ -50,7 +50,7 @@ export async function sendTx(
   try {
     const result = await simpleFetch<any>(
       chainInfo.rest,
-      isProtoTx ? "/cosmos/tx/v1beta1/txs" : "/txs",
+      "/cosmos/tx/v1beta1/txs",
       {
         method: "POST",
         headers: {
