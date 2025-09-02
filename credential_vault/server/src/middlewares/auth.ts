@@ -28,7 +28,10 @@ export async function bearerTokenMiddleware(
   const idToken = authHeader.substring(7); // skip "Bearer "
 
   try {
-    const result = await validateOAuthToken(idToken);
+    const result = await validateOAuthToken(
+      idToken,
+      process.env.GOOGLE_CLIENT_ID!,
+    );
 
     if (!result.success) {
       res.status(401).json({ error: result.err || "Invalid token" });

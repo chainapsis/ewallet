@@ -23,6 +23,7 @@ const envSchema = z.object({
   DB_SSL: z.string(),
   ENCRYPTION_SECRET: z.string(),
   ADMIN_PASSWORD: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
 });
 
 export function loadEnv(committeeId: string): Result<void, string> {
