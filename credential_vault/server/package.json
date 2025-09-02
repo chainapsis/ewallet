@@ -14,6 +14,7 @@
     "@keplr-ewallet/credential-vault-interface": "workspace:*",
     "@keplr-ewallet/credential-vault-pg-interface": "workspace:*",
     "@keplr-ewallet/stdlib-js": "workspace:*",
+    "chalk": "*",
     "commander": "*",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

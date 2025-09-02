@@ -1,6 +1,7 @@
 import path from "path";
 import os from "node:os";
 import fs from "node:fs";
+import chalk from "chalk";
 
 import {
   ENV_FILE_NAME,
@@ -56,7 +57,7 @@ function main() {
   console.log("\nenv file - 2");
   copyEnv(ENV_FILE_NAME_2, EXAMPLE_ENV_FILE_2);
 
-  console.log("\nDone creating env");
+  console.log("\%s creating env", chalk.green("Done"));
 }
 
 main();
