@@ -52,11 +52,21 @@ export async function signDirect(
         showModalResponse.reason ?? "User rejected the signature request",
       );
     }
+    const signature = showModalResponse.data.signature;
+    const signed = showModalResponse.data.signed;
 
-    return {
-      signed: signDoc,
-      signature: showModalResponse.data.signature,
-    };
+    if ("accountNumber" in signed) {
+      return {
+        signed: {
+          ...signed,
+          bodyBytes: Uint8Array.from(signed.bodyBytes),
+          authInfoBytes: Uint8Array.from(signed.authInfoBytes),
+        },
+        signature,
+      };
+    }
+
+    throw new Error("Signed document is not in the correct format");
   } catch (error) {
     console.error("[signDirect cosmos] [error] @@@@@", error);
     throw error;

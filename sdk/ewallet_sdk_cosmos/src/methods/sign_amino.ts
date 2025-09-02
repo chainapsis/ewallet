@@ -52,10 +52,16 @@ export async function signAmino(
         showModalResponse.reason ?? "User rejected the signature request",
       );
     }
+    const signature = showModalResponse.data.signature;
+    const signed = showModalResponse.data.signed;
+
+    if ("accountNumber" in signed) {
+      throw new Error("Signed document is not in the correct format");
+    }
 
     return {
-      signed: signDoc,
-      signature: showModalResponse.data.signature,
+      signed,
+      signature,
     };
   } catch (error) {
     console.error("[signAmino cosmos] [error] @@@@@", error);

@@ -177,4 +177,5 @@ export type EthereumTxSignResult =
 // TODO: define the response type for cosmos signature
 export type MakeCosmosSigResult = {
   signature: StdSignature;
+  signed: StdSignDoc | SignDoc;
 };
