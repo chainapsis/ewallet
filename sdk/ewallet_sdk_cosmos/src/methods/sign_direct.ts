@@ -18,16 +18,22 @@ export async function signDirect(
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
 
+    if (!chainInfo) {
+      throw new Error("Chain info not found for chainId: " + chainId);
+    }
+
     const showModalData: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "tx",
       payload: {
         chain_info: {
           chain_id: chainId,
+          rpc_url: chainInfo.rpc,
+          rest_url: chainInfo.rest,
           chain_name: chainInfo?.chainName ?? "",
           chain_symbol_image_url: chainInfo?.stakeCurrency?.coinImageUrl ?? "",
-          fee_currencies: chainInfo?.feeCurrencies,
-          currencies: chainInfo?.currencies,
+          fee_currencies: chainInfo.feeCurrencies,
+          currencies: chainInfo.currencies,
           bech32_config: chainInfo?.bech32Config,
           features: chainInfo?.features,
           bip44: chainInfo?.bip44,
