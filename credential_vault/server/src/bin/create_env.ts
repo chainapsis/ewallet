@@ -57,7 +57,7 @@ function main() {
   console.log("\nenv file - 2");
   copyEnv(ENV_FILE_NAME_2, EXAMPLE_ENV_FILE_2);
 
-  console.log("\%s creating env", chalk.green("Done"));
+  console.log("%s creating env", chalk.green("Done"));
 }
 
 main();

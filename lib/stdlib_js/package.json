@@ -38,5 +38,6 @@
     "ts-jest": "*",
     "tsc-alias": "*",
     "typescript": "*"
-  }
+  },
+  "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"
 }
