@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "clean": "del-cli dist",
+    "create_env": "tsx src/bin/create_env.ts",
     "typecheck": "tsc --noEmit",
-    "build": "yarn rollup-build && tsc --build --force --emitDeclarationOnly && tsc-alias",
+    "build": "yarn create_env && yarn rollup-build && tsc --build --force --emitDeclarationOnly && tsc-alias",
     "rollup-build": "yarn clean && tsc --build --force && rollup --c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "*",
     "@rollup/plugin-node-resolve": "*",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "*",
     "@rollup/plugin-typescript": "*",
     "@types/jest": "*",
