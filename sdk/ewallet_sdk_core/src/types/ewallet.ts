@@ -7,6 +7,14 @@ import type {
 } from "./event";
 import type { EWalletMsg, EWalletMsgShowModal } from "./msg";
 import type { ModalResult } from "./modal";
+import type { KeplrEwalletInitError } from "@keplr-ewallet-sdk-core/errors";
+
+export interface KeplrEWalletStaticInterface {
+  new (apiKey: string, iframe: HTMLIFrameElement, sdkEndpoint: string): void;
+  init: (
+    args: KeplrEwalletInitArgs,
+  ) => Result<KeplrEWalletInterface, KeplrEwalletInitError>;
+}
 
 export interface KeplrEWalletInterface {
   state: KeplrEWalletState;
@@ -20,7 +28,6 @@ export interface KeplrEWalletInterface {
   origin: string;
   waitUntilInitialized: Promise<Result<KeplrEWalletState, string>>;
 
-  // lazyInit: () => Promise<Result<KeplrEWalletState, string>>;
   showModal: (msg: EWalletMsgShowModal) => Promise<ModalResult>;
   hideModal: () => Promise<void>;
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>;
@@ -36,7 +43,7 @@ export interface KeplrEwalletInitArgs {
   sdk_endpoint?: string;
 }
 
-export interface InitMsgHandlerArgs { }
+export interface InitMsgHandlerArgs {}
 
 export interface KeplrEWalletState {
   email: string | null;
