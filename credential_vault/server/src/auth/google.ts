@@ -1,9 +1,10 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
+
 import type { GoogleTokenInfo } from "@keplr-ewallet/credential-vault-interface/auth";
+import { GOOGLE_CLIENT_ID } from "./constants";
 
 export async function validateOAuthToken(
   idToken: string,
-  googleClientId: string,
 ): Promise<Result<GoogleTokenInfo, string>> {
   try {
     const res = await fetch(
@@ -14,7 +15,7 @@ export async function validateOAuthToken(
     }
     const tokenInfo = (await res.json()) as GoogleTokenInfo;
 
-    if (tokenInfo.aud !== googleClientId) {
+    if (tokenInfo.aud !== GOOGLE_CLIENT_ID) {
       return { success: false, err: "Invalid client_id" };
     }
 

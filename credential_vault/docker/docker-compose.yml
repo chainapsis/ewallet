@@ -36,7 +36,6 @@ services:
       ENCRYPTION_SECRET: "temp_enc_secret"
       # Please change it to your own password.
       ADMIN_PASSWORD: "admin_password"
-      GOOGLE_CLIENT_ID: "google_client_id"
 
     volumes:
       - ~/keplr_ewallet_data:/home/node/keplr_ewallet_data
