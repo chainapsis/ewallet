@@ -26,20 +26,24 @@ export async function sendTx(
 
   const isProtoTx = Buffer.isBuffer(tx) || tx instanceof Uint8Array;
 
+  let _mode;
+  switch (mode) {
+    case "async":
+      _mode = "BROADCAST_MODE_ASYNC";
+      break;
+    case "block":
+      _mode = "BROADCAST_MODE_BLOCK";
+      break;
+    case "sync":
+      _mode = "BROADCAST_MODE_SYNC";
+      break;
+    default:
+      _mode = "BROADCAST_MODE_UNSPECIFIED";
+  }
+
   const params = {
     tx_bytes: Buffer.from(tx as any).toString("base64"),
-    mode: (() => {
-      switch (mode) {
-        case "async":
-          return "BROADCAST_MODE_ASYNC";
-        case "block":
-          return "BROADCAST_MODE_BLOCK";
-        case "sync":
-          return "BROADCAST_MODE_SYNC";
-        default:
-          return "BROADCAST_MODE_UNSPECIFIED";
-      }
-    })(),
+    mode: _mode,
   };
 
   try {
@@ -97,8 +101,9 @@ export async function sendTx(
     );
 
     return txHash;
-  } catch (e) {
-    console.log(e);
-    throw e;
+  } catch (err: any) {
+    console.error("Error sending tx, err: %s", err.toString());
+
+    throw err;
   }
 }
