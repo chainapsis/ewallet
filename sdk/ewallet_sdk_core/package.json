@@ -42,7 +42,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "*",
     "@rollup/plugin-node-resolve": "*",
-    "@rollup/plugin-replace": "^6.0.2",
+    "@rollup/plugin-replace": "*",
     "@rollup/plugin-terser": "*",
     "@rollup/plugin-typescript": "*",
     "@types/jest": "*",

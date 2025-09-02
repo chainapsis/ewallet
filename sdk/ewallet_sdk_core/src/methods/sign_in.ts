@@ -5,6 +5,7 @@ import type {
   EWalletMsg,
 } from "@keplr-ewallet-sdk-core/types";
 import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
+import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
 
 const FIVE_MINS_MS = 5 * 60 * 1000;
 
@@ -41,9 +42,7 @@ async function tryGoogleSignIn(
   apiKey: string,
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>,
 ) {
-  // const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientId =
-    "239646646986-8on7ql1vmbcshbjk12bdtopmto99iipm.apps.googleusercontent.com";
+  const clientId = GOOGLE_CLIENT_ID;
   if (!clientId) {
     throw new Error("GOOGLE_CLIENT_ID is not set");
   }

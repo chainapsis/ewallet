@@ -38,6 +38,7 @@
     "@jest/globals": "^30.0.4",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/bcrypt": "^5.0.2",

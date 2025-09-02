@@ -2658,7 +2658,7 @@ __metadata:
     "@keplr-wallet/types": "npm:^0.12.257"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
-    "@rollup/plugin-replace": "npm:^6.0.2"
+    "@rollup/plugin-replace": "npm:*"
     "@rollup/plugin-terser": "npm:*"
     "@rollup/plugin-typescript": "npm:*"
     "@types/jest": "npm:*"
@@ -5352,7 +5352,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-replace@npm:^6.0.2":
+"@rollup/plugin-replace@npm:*, @rollup/plugin-replace@npm:^6.0.2":
   version: 6.0.2
   resolution: "@rollup/plugin-replace@npm:6.0.2"
   dependencies:
@@ -17253,6 +17253,7 @@ __metadata:
     "@noble/curves": "npm:^1.9.2"
     "@rollup/plugin-commonjs": "npm:^25.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.0.0"
+    "@rollup/plugin-replace": "npm:^6.0.2"
     "@rollup/plugin-terser": "npm:^0.4.4"
     "@rollup/plugin-typescript": "npm:^11.0.0"
     "@types/bcrypt": "npm:^5.0.2"
