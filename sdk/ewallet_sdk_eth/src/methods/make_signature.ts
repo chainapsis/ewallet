@@ -9,7 +9,6 @@ import {
   UserRejectedRequestError,
   type Chain,
 } from "viem";
-import { v4 as uuidv4 } from "uuid";
 
 import type {
   EthEWalletInterface,
@@ -60,7 +59,6 @@ export async function makeSignature(
     chain_info: chainInfo,
     origin,
     signer: params.data.address,
-    request_id: uuidv4(),
   };
 
   const makeSignatureData = createMakeSignatureData(basePayload, params);

@@ -6,7 +6,6 @@ export interface MakeSignatureBasePayload {
   chain_info: ChainInfoForAttachedModal;
   origin: string;
   signer: string;
-  request_id: string;
 }
 
 export type EthSignParams =

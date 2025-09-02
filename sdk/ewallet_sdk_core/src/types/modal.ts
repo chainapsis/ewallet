@@ -125,7 +125,6 @@ export type EthereumTxSignPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
-  request_id: string;
   data: {
     transaction: RpcTransactionRequest;
   };
@@ -135,7 +134,6 @@ export type EthereumArbitrarySignPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
-  request_id: string;
   data: {
     message: SignableMessage;
   };
@@ -145,7 +143,6 @@ export type EthereumEip712SignPayload = {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
-  request_id: string;
   data: {
     version: "4";
     serialized_typed_data: string;

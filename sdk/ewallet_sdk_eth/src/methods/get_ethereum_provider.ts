@@ -1,5 +1,4 @@
 import { toHex, type Chain } from "viem";
-import { v4 as uuidv4 } from "uuid";
 
 import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import {
