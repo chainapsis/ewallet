@@ -7,8 +7,9 @@
     "clean": "del-cli dist",
     "create_env": "tsx ./scripts/create_env.ts",
     "typecheck": "tsc --noEmit",
-    "build": "yarn rollup-build && tsc --build --force --emitDeclarationOnly && tsc-alias",
-    "rollup-build": "yarn clean && tsc --build --force && rollup --c",
+    "build-type": "tsc --build --force --emitDeclarationOnly && tsc-alias",
+    "build": "yarn rollup-build",
+    "rollup-build": "yarn clean && rollup --c",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "publishConfig": {

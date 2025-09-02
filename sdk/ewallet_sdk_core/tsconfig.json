@@ -11,6 +11,7 @@
     "outDir": "./dist",
     "composite": true,
     "removeComments": true,
+    "noEmit": true,
     "noImplicitAny": true,
     "strict": true,
     "declaration": true,
@@ -27,6 +28,6 @@
       "@keplr-ewallet-sdk-core/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "scripts/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
