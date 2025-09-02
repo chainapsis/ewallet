@@ -12,13 +12,13 @@ type EventHandlerType = {
 
 type EventEmitError =
   | {
-      type: "handle error";
-      err: string;
-    }
+    type: "handle_error";
+    err: string;
+  }
   | {
-      type: "handler not found";
-      event_type: string;
-    };
+    type: "handler_not_found";
+    event_type: string;
+  };
 
 export class EventEmitter3<E extends EventType, H extends EventHandlerType> {
   listeners: {
@@ -54,7 +54,7 @@ export class EventEmitter3<E extends EventType, H extends EventHandlerType> {
       return {
         success: false,
         err: {
-          type: "handler not found",
+          type: "handler_not_found",
           event_type: type,
         },
       };
@@ -67,7 +67,7 @@ export class EventEmitter3<E extends EventType, H extends EventHandlerType> {
       } catch (err: any) {
         return {
           success: false,
-          err: { type: "handle error", err: err.toString() },
+          err: { type: "handle_error", err: err.toString() },
         };
       }
     }
