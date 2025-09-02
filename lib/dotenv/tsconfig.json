@@ -1,5 +1,4 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "target": "es2017",
     "lib": ["dom", "es2017", "esnext.asynciterable"],
@@ -24,6 +23,6 @@
     "resolveJsonModule": true,
     "paths": {}
   },
-  "include": ["./*.js", "src/**/*.ts", "tests/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
