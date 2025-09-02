@@ -37,7 +37,6 @@
   "dependencies": {
     "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.60",
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.14",
-    "@noble/curves": "*",
     "eventemitter3": "^5.0.1",
     "uuid": "*",
     "viem": "*"
