@@ -15,9 +15,9 @@ function copyEnv(envFileName: string, exampleEnvFileName: string) {
   const cwd = process.cwd();
   const forceOverwrite = process.argv.includes("--force");
 
-  console.info("Create an env file, cwd: %s", cwd);
+  console.log("Create an env file, cwd: %s", cwd);
   if (forceOverwrite) {
-    console.info("Force overwrite mode enabled");
+    console.log("Force overwrite mode enabled");
   }
 
   createConfigDir();
@@ -26,16 +26,16 @@ function copyEnv(envFileName: string, exampleEnvFileName: string) {
   const envPath = getEnvPath(envFileName);
 
   if (fs.existsSync(envPath) && !forceOverwrite) {
-    console.info(`Abort creating env. File already exists, path: ${envPath}`);
-    console.info(`Use --force flag to overwrite existing file`);
+    console.log(`Abort creating env. File already exists, path: ${envPath}`);
+    console.log(`Use --force flag to overwrite existing file`);
     return;
   }
 
   if (fs.existsSync(envPath) && forceOverwrite) {
-    console.info(`Overwriting existing env file, path: ${envPath}`);
+    console.log(`Overwriting existing env file, path: ${envPath}`);
   }
 
-  console.info(
+  console.log(
     "Copying env file, srcPath: %s, destPath: %s",
     envExamplePath,
     envPath,
@@ -46,7 +46,7 @@ function copyEnv(envFileName: string, exampleEnvFileName: string) {
   const env = fs.readFileSync(envPath).toString();
   console.log("%s", env);
 
-  console.info("Create env done!, path: %s", envPath);
+  console.log("Create env done!, path: %s", envPath);
 }
 
 function main() {
@@ -55,6 +55,8 @@ function main() {
 
   console.log("\nenv file - 2");
   copyEnv(ENV_FILE_NAME_2, EXAMPLE_ENV_FILE_2);
+
+  console.log("\nDone creating env");
 }
 
 main();
