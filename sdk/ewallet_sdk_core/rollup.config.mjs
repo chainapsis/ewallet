@@ -36,11 +36,11 @@ export default [
         tsconfig: "./tsconfig.json",
         declaration: true,
       }),
-      replace({
-        "process.env.GOOGLE_CLIENT_ID": JSON.stringify(
-          process.env.GOOGLE_CLIENT_ID,
-        ),
-      }),
+      // replace({
+      //   "process.env.GOOGLE_CLIENT_ID": JSON.stringify(
+      //     process.env.GOOGLE_CLIENT_ID,
+      //   ),
+      // }),
     ],
   },
   {

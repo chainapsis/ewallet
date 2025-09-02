@@ -41,7 +41,9 @@ async function tryGoogleSignIn(
   apiKey: string,
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>,
 ) {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
+  // const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientId =
+    "239646646986-8on7ql1vmbcshbjk12bdtopmto99iipm.apps.googleusercontent.com";
   if (!clientId) {
     throw new Error("GOOGLE_CLIENT_ID is not set");
   }
