@@ -140,10 +140,11 @@ export type EWalletMsg =
   | EWalletMsgHideModalAck
   | EWalletMsgGetEmail
   | EWalletMsgGetEmailAck
+  // TODO: @elden
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
   | {
-      target: "keplr_ewallet_sdk";
-      msg_type: "unknown_msg_type";
-      payload: string | null;
-    };
+    target: "keplr_ewallet_sdk";
+    msg_type: "unknown_msg_type";
+    payload: string | null;
+  };

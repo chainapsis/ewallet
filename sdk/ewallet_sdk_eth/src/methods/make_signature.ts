@@ -2,7 +2,8 @@ import type {
   ChainInfoForAttachedModal,
   EWalletMsgShowModal,
   MakeEthereumSigData,
-} from "@keplr-ewallet/ewallet-sdk-core";
+} from "@kepr-ewallet/ewallet-sdk-core";
+import { v4 as uuidv4 } from "uuid";
 import {
   InternalRpcError,
   UnsupportedChainIdError,
@@ -125,11 +126,14 @@ async function handleSigningFlow(
   ethEWallet: EthEWalletInterface,
   data: MakeEthereumSigData,
 ): Promise<EthSignResult> {
+  const modal_id = uuidv4();
+
   const showModalMsg: EWalletMsgShowModal = {
     target: "keplr_ewallet_attached",
     msg_type: "show_modal",
     payload: {
       modal_type: "make_signature",
+      modal_id,
       data,
     },
   };

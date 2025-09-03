@@ -2,10 +2,12 @@ import type { MakeCosmosSigResult } from "@keplr-ewallet/ewallet-sdk-core";
 
 export type ShowModalResult =
   | {
-      approved: true;
-      data: MakeCosmosSigResult;
-    }
+    approved: true;
+    modal_id: string;
+    data: MakeCosmosSigResult;
+  }
   | {
-      approved: false;
-      reason?: string;
-    };
+    approved: false;
+    modal_id: string;
+    reason?: string;
+  };
