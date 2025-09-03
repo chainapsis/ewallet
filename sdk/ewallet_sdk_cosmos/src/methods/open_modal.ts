@@ -55,9 +55,9 @@ export async function openModal(
     //   reason: "Invalid modal result",
     // };
   } catch (err: any) {
-    console.error("[keplr-cosmos] modal_id: %s, unknown error", modal_id, err);
+    // console.error("[keplr-cosmos] modal_id: %s, err: ", modal_id, err);
 
-    throw new Error(`Error getting modal response, err: ${err.toString()}`);
+    throw new Error(`Error getting modal response, err: ${err}`);
 
     // return {
     //   approved: false,
