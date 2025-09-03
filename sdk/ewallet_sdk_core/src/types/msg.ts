@@ -1,7 +1,7 @@
 import type { ChainInfo } from "@keplr-wallet/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { ModalResult, ShowModalPayload } from "./modal";
+import type { ModalResult, OpenModalPayload } from "./modal";
 import type { InitPayload } from "./init";
 
 export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
@@ -61,15 +61,15 @@ export type EWalletMsgSignOutAck = {
   payload: AckPayload<null>;
 };
 
-export type EWalletMsgShowModal = {
+export type EWalletMsgOpenModal = {
   target: "keplr_ewallet_attached";
-  msg_type: "show_modal";
-  payload: ShowModalPayload;
+  msg_type: "open_modal";
+  payload: OpenModalPayload;
 };
 
-export type EWalletMsgShowModalAck = {
+export type EWalletMsgOpenModalAck = {
   target: "keplr_ewallet_sdk";
-  msg_type: "show_modal_ack";
+  msg_type: "open_modal_ack";
   payload: AckPayload<ModalResult>;
 };
 
@@ -134,8 +134,8 @@ export type EWalletMsg =
   | EWalletMsgOAuthSignInAck
   | EWalletMsgSignOut
   | EWalletMsgSignOutAck
-  | EWalletMsgShowModal
-  | EWalletMsgShowModalAck
+  | EWalletMsgOpenModal
+  | EWalletMsgOpenModalAck
   | EWalletMsgHideModal
   | EWalletMsgHideModalAck
   | EWalletMsgGetEmail

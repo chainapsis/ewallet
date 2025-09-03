@@ -1,5 +1,5 @@
 import type {
-  EWalletMsgShowModal,
+  EWalletMsgOpenModal,
   KeplrEWalletInterface,
   ModalResult,
 } from "@keplr-ewallet-sdk-core/types";
@@ -7,9 +7,9 @@ import type {
 // 5 minutes in ms
 const WAIT_TIME = 60 * 5 * 1000;
 
-export async function showModal(
+export async function openModal(
   this: KeplrEWalletInterface,
-  msg: EWalletMsgShowModal,
+  msg: EWalletMsgOpenModal,
 ): Promise<ModalResult> {
   await this.waitUntilInitialized;
 
@@ -25,7 +25,7 @@ export async function showModal(
   try {
     this.iframe.style.display = "block";
 
-    const showModalAck = await Promise.race([
+    const openModalAck = await Promise.race([
       this.sendMsgToIframe(msg),
       timeout,
     ]);
@@ -35,15 +35,15 @@ export async function showModal(
       timeoutId = null;
     }
 
-    if (showModalAck.msg_type !== "show_modal_ack") {
+    if (openModalAck.msg_type !== "open_modal_ack") {
       throw new Error("Unreachable");
     }
 
-    if (!showModalAck.payload.success) {
-      throw new Error(showModalAck.payload.err);
+    if (!openModalAck.payload.success) {
+      throw new Error(openModalAck.payload.err);
     }
 
-    return showModalAck.payload.data;
+    return openModalAck.payload.data;
   } catch (error) {
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -51,7 +51,7 @@ export async function showModal(
     }
 
     if (error instanceof Error && error.message === "Show modal timeout") {
-      await this.hideModal();
+      await this.closeModal();
       throw new Error("Show modal timeout");
     }
 

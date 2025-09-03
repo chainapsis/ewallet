@@ -1,6 +1,6 @@
 import type { MakeCosmosSigResult } from "@keplr-ewallet/ewallet-sdk-core";
 
-export type ShowModalResult =
+export type OpenModalResult =
   | {
     approved: true;
     modal_id: string;

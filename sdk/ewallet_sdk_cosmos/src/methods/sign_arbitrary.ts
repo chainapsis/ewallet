@@ -22,7 +22,7 @@ export async function signArbitrary(
       throw new Error("Chain info not found for chainId: " + chainId);
     }
 
-    const showModalMsg: MakeCosmosSigData = {
+    const msg: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "arbitrary",
       payload: {
@@ -45,13 +45,13 @@ export async function signArbitrary(
         origin,
       },
     };
-    const showModalResponse = await this.showModal(showModalMsg);
+    const openModalResponse = await this.openModal(msg);
 
-    if (showModalResponse.approved === false) {
+    if (openModalResponse.approved === false) {
       throw new Error("User rejected the signature request");
     }
 
-    const signature = showModalResponse.data.signature;
+    const signature = openModalResponse.data.signature;
     const isVerified = await this.verifyArbitrary(
       chainId,
       signer,

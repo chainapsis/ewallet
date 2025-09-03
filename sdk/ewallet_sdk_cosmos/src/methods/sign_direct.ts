@@ -22,7 +22,7 @@ export async function signDirect(
       throw new Error("Chain info not found for chainId: " + chainId);
     }
 
-    const showModalData: MakeCosmosSigData = {
+    const data: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "tx",
       payload: {
@@ -45,7 +45,7 @@ export async function signDirect(
         signOptions,
       },
     };
-    const showModalResponse = await this.showModal(showModalData);
+    const showModalResponse = await this.openModal(data);
 
     if (showModalResponse.approved === false) {
       throw new Error(

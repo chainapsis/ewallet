@@ -8,7 +8,7 @@ import type {
 
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
-export type ShowModalPayload = MakeSignatureModalPayload | OtherModalPayload;
+export type OpenModalPayload = MakeSignatureModalPayload | OtherModalPayload;
 
 export type ModalApproval = {
   approved: true;

@@ -1,6 +1,6 @@
 import type {
   ChainInfoForAttachedModal,
-  EWalletMsgShowModal,
+  EWalletMsgOpenModal,
   MakeEthereumSigData,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import { v4 as uuidv4 } from "uuid";
@@ -128,9 +128,9 @@ async function handleSigningFlow(
 ): Promise<EthSignResult> {
   const modal_id = uuidv4();
 
-  const showModalMsg: EWalletMsgShowModal = {
+  const openModalMsg: EWalletMsgOpenModal = {
     target: "keplr_ewallet_attached",
-    msg_type: "show_modal",
+    msg_type: "open_modal",
     payload: {
       modal_type: "make_signature",
       modal_id,
@@ -141,7 +141,7 @@ async function handleSigningFlow(
   const eWallet = ethEWallet.eWallet;
 
   try {
-    const modalResult = await eWallet.showModal(showModalMsg);
+    const modalResult = await eWallet.openModal(openModalMsg);
     if (!modalResult.approved) {
       throw new UserRejectedRequestError(
         new Error(modalResult.reason ?? "User rejected the signature request"),
@@ -165,6 +165,6 @@ async function handleSigningFlow(
       new Error(error instanceof Error ? error.message : String(error)),
     );
   } finally {
-    await eWallet.hideModal();
+    await eWallet.closeModal();
   }
 }
