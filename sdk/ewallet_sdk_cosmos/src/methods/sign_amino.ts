@@ -48,9 +48,16 @@ export async function signAmino(
     const openModalResp = await this.openModal(data);
     switch (openModalResp.status) {
       case "approved": {
+        const signature = openModalResp.data.signature;
+        const signed = openModalResp.data.signed;
+
+        if ("accountNumber" in signed) {
+          throw new Error("Signed document is not in the correct format");
+        }
+
         return {
-          signed: signDoc,
-          signature: openModalResp.data.signature,
+          signed,
+          signature,
         };
       }
       case "rejected": {
@@ -63,6 +70,18 @@ export async function signAmino(
         throw new Error("unreachable");
       }
     }
+
+    // const signature = showModalResponse.data.signature;
+    // const signed = showModalResponse.data.signed;
+    //
+    // if ("accountNumber" in signed) {
+    //   throw new Error("Signed document is not in the correct format");
+    // }
+    //
+    // return {
+    //   signed,
+    //   signature,
+    // };
   } catch (error) {
     console.error("[keplr-cosmos] Error signing amino, err: %s", error);
 
