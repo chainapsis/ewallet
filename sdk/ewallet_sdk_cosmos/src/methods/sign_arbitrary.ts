@@ -98,7 +98,8 @@ export async function signArbitrary(
     //   ...signature,
     // };
   } catch (error) {
-    console.error("[signArbitrary cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] Error signing arbitrary, err: %s", error);
+
     throw error;
   }
 }

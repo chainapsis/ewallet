@@ -36,25 +36,30 @@ export async function openModal(
     }
 
     if (openModalAck.msg_type !== "open_modal_ack") {
+      console.log(2);
       throw new Error("Unreachable");
     }
 
     if (openModalAck.payload.status !== "approved") {
+      console.log(3);
       throw new Error(openModalAck.payload.toString());
     }
 
     return openModalAck.payload;
   } catch (error) {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      timeoutId = null;
-    }
-
+    console.log(4);
     if (error instanceof Error && error.message === "Show modal timeout") {
-      await this.closeModal();
+      console.log(5);
+      // this.closeModal();
       throw new Error("Show modal timeout");
     }
 
     throw error;
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+    this.closeModal();
   }
 }

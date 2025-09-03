@@ -26,7 +26,7 @@ export async function openModal(
   try {
     const modalResult = await this.eWallet.openModal(openModalMsg);
 
-    await this.eWallet.closeModal();
+    this.eWallet.closeModal();
 
     return modalResult;
 
@@ -55,13 +55,9 @@ export async function openModal(
     //   reason: "Invalid modal result",
     // };
   } catch (err: any) {
-    console.error(
-      "[keplr-cosmos] modal_id: %s, unknown error: %s",
-      modal_id,
-      err,
-    );
+    console.error("[keplr-cosmos] modal_id: %s, unknown error", modal_id, err);
 
-    throw new Error(`Error getting modal response, err: ${err}`);
+    throw new Error(`Error getting modal response, err: ${err.toString()}`);
 
     // return {
     //   approved: false,

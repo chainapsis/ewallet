@@ -29,7 +29,7 @@ export interface KeplrEWalletInterface {
   waitUntilInitialized: Promise<Result<KeplrEWalletState, string>>;
 
   openModal: (msg: EWalletMsgOpenModal) => Promise<OpenModalAckPayload>;
-  closeModal: () => Promise<void>;
+  closeModal: () => void;
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>;
   signIn: (type: "google") => Promise<void>;
   signOut: () => Promise<void>;
