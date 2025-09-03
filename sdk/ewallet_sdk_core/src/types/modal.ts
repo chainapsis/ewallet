@@ -8,17 +8,6 @@ import type {
 
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 
-// type Any = {
-//   typeUrl: string;
-//   value: Uint8Array;
-// };
-
-// type AnyWithUnpacked =
-//   | Any
-//   | (Any & {
-//       unpacked: unknown;
-//     });
-
 export type ShowModalPayload = MakeSignatureModalPayload | OtherModalPayload;
 
 export type ModalApproval = {
@@ -35,11 +24,13 @@ export type ModalResult = ModalApproval | ModalRejection;
 
 export interface OtherModalPayload {
   modal_type: "other";
+  modal_id: string;
   data: {};
 }
 
 export type MakeSignatureModalPayload = {
   modal_type: "make_signature";
+  modal_id: string;
   data: MakeCosmosSigData | MakeEthereumSigData;
 };
 
@@ -65,15 +56,15 @@ export type MakeCosmosSignType = MakeCosmosSigData["sign_type"];
 
 export type MakeCosmosSigData =
   | {
-      chain_type: "cosmos";
-      sign_type: "tx";
-      payload: CosmosTxSignPayload;
-    }
+    chain_type: "cosmos";
+    sign_type: "tx";
+    payload: CosmosTxSignPayload;
+  }
   | {
-      chain_type: "cosmos";
-      sign_type: "arbitrary";
-      payload: CosmosArbitrarySignPayload;
-    };
+    chain_type: "cosmos";
+    sign_type: "arbitrary";
+    payload: CosmosArbitrarySignPayload;
+  };
 
 export type CosmosTxSignPayload =
   | CosmosTxSignDirectPayload
@@ -106,20 +97,20 @@ export type MakeEthereumSignType = MakeEthereumSigData["sign_type"];
 
 export type MakeEthereumSigData =
   | {
-      chain_type: "eth";
-      sign_type: "tx";
-      payload: EthereumTxSignPayload;
-    }
+    chain_type: "eth";
+    sign_type: "tx";
+    payload: EthereumTxSignPayload;
+  }
   | {
-      chain_type: "eth";
-      sign_type: "arbitrary";
-      payload: EthereumArbitrarySignPayload;
-    }
+    chain_type: "eth";
+    sign_type: "arbitrary";
+    payload: EthereumArbitrarySignPayload;
+  }
   | {
-      chain_type: "eth";
-      sign_type: "eip712";
-      payload: EthereumEip712SignPayload;
-    };
+    chain_type: "eth";
+    sign_type: "eip712";
+    payload: EthereumEip712SignPayload;
+  };
 
 export type EthereumTxSignPayload = {
   origin: string;
@@ -152,27 +143,27 @@ export type EthereumEip712SignPayload = {
 export type MakeSignatureModalResult = {
   modal_type: "make_signature";
 } & (
-  | {
+    | {
       chain_type: "eth";
       data: MakeEthereumSigResult;
     }
-  | {
+    | {
       chain_type: "cosmos";
       data: MakeCosmosSigResult;
     }
-);
+  );
 
 export type MakeEthereumSigResult = EthereumTxSignResult;
 
 export type EthereumTxSignResult =
   | {
-      type: "signed_transaction";
-      signedTransaction: Hex;
-    }
+    type: "signed_transaction";
+    signedTransaction: Hex;
+  }
   | {
-      type: "signature";
-      signature: Hex;
-    };
+    type: "signature";
+    signature: Hex;
+  };
 
 // TODO: define the response type for cosmos signature
 export type MakeCosmosSigResult = {
