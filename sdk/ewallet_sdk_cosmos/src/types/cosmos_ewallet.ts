@@ -2,6 +2,7 @@ import type {
   EventEmitter3,
   KeplrEWalletInterface,
   MakeCosmosSigData,
+  OpenModalAckPayload,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type {
   ChainInfo,
@@ -25,7 +26,7 @@ import type {
   KeplrEWalletCosmosEvent2,
   KeplrEWalletCosmosEventHandler2,
 } from "./event";
-import type { ShowModalResult } from "./modal";
+import type { OpenModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
@@ -105,5 +106,6 @@ export interface CosmosEWalletInterface {
     data: string | Uint8Array,
     signature: StdSignature,
   ) => Promise<boolean>;
-  showModal: (data: MakeCosmosSigData) => Promise<ShowModalResult>;
+
+  openModal: (data: MakeCosmosSigData) => Promise<OpenModalAckPayload>;
 }

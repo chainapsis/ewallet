@@ -34,7 +34,8 @@ export class EventEmitter3<E extends EventType, H extends EventHandlerType> {
 
     if (typeof handler !== "function") {
       throw new TypeError(
-        `The "handler" argument must be of type function. Received ${handler === null ? "null" : typeof handler}`,
+        `The "handler" argument must be of type function. \
+Received ${handler === null ? "null" : typeof handler}`,
       );
     }
 

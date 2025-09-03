@@ -22,7 +22,7 @@ export async function signDirect(
       throw new Error("Chain info not found for chainId: " + chainId);
     }
 
-    const showModalData: MakeCosmosSigData = {
+    const data: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "tx",
       payload: {
@@ -45,30 +45,40 @@ export async function signDirect(
         signOptions,
       },
     };
-    const showModalResponse = await this.showModal(showModalData);
 
-    if (showModalResponse.approved === false) {
-      throw new Error(
-        showModalResponse.reason ?? "User rejected the signature request",
-      );
+    const openModalResp = await this.openModal(data);
+
+    switch (openModalResp.status) {
+      case "approved": {
+        const signature = openModalResp.data.signature;
+        const signed = openModalResp.data.signed;
+
+        if ("accountNumber" in signed) {
+          return {
+            signed: {
+              ...signed,
+              bodyBytes: Uint8Array.from(signed.bodyBytes),
+              authInfoBytes: Uint8Array.from(signed.authInfoBytes),
+            },
+            signature,
+          };
+        } else {
+          throw new Error("Signed document is not in the correct format");
+        }
+      }
+      case "rejected": {
+        throw new Error("User rejected modal request");
+      }
+      case "error": {
+        throw new Error(openModalResp.err);
+      }
+      default: {
+        throw new Error("unreachable");
+      }
     }
-    const signature = showModalResponse.data.signature;
-    const signed = showModalResponse.data.signed;
-
-    if ("accountNumber" in signed) {
-      return {
-        signed: {
-          ...signed,
-          bodyBytes: Uint8Array.from(signed.bodyBytes),
-          authInfoBytes: Uint8Array.from(signed.authInfoBytes),
-        },
-        signature,
-      };
-    }
-
-    throw new Error("Signed document is not in the correct format");
   } catch (error) {
-    console.error("[signDirect cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] sign direct err: %s", error);
+
     throw error;
   }
 }

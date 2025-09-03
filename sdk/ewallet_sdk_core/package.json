@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-core",
-  "version": "0.0.6-rc.62",
+  "version": "0.0.6-rc.64",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "scripts": {
@@ -15,12 +15,11 @@
     "access": "public"
   },
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist/"
-  ],
-  "imports": {
-    "@keplr-ewallet-sdk-core/*": "./dist/*.js"
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "keywords": [
     "keplr",

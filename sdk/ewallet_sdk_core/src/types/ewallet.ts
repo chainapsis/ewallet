@@ -5,12 +5,12 @@ import type {
   KeplrEWalletCoreEvent2,
   KeplrEWalletCoreEventHandler2,
 } from "./event";
-import type { EWalletMsg, EWalletMsgShowModal } from "./msg";
-import type { ModalResult } from "./modal";
+import type { EWalletMsg, EWalletMsgOpenModal } from "./msg";
+import type { OpenModalAckPayload } from "./modal";
 import type { KeplrEwalletInitError } from "@keplr-ewallet-sdk-core/errors";
 
 export interface KeplrEWalletStaticInterface {
-  new (apiKey: string, iframe: HTMLIFrameElement, sdkEndpoint: string): void;
+  new(apiKey: string, iframe: HTMLIFrameElement, sdkEndpoint: string): void;
   init: (
     args: KeplrEwalletInitArgs,
   ) => Result<KeplrEWalletInterface, KeplrEwalletInitError>;
@@ -28,8 +28,8 @@ export interface KeplrEWalletInterface {
   origin: string;
   waitUntilInitialized: Promise<Result<KeplrEWalletState, string>>;
 
-  showModal: (msg: EWalletMsgShowModal) => Promise<ModalResult>;
-  hideModal: () => Promise<void>;
+  openModal: (msg: EWalletMsgOpenModal) => Promise<OpenModalAckPayload>;
+  closeModal: () => Promise<void>;
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>;
   signIn: (type: "google") => Promise<void>;
   signOut: () => Promise<void>;
@@ -42,8 +42,6 @@ export interface KeplrEwalletInitArgs {
   api_key: string;
   sdk_endpoint?: string;
 }
-
-export interface InitMsgHandlerArgs {}
 
 export interface KeplrEWalletState {
   email: string | null;

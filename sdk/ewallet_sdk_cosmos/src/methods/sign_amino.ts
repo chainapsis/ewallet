@@ -45,26 +45,46 @@ export async function signAmino(
       },
     };
 
-    const showModalResponse = await this.showModal(data);
+    const openModalResp = await this.openModal(data);
+    switch (openModalResp.status) {
+      case "approved": {
+        const signature = openModalResp.data.signature;
+        const signed = openModalResp.data.signed;
 
-    if (showModalResponse.approved === false) {
-      throw new Error(
-        showModalResponse.reason ?? "User rejected the signature request",
-      );
+        if ("accountNumber" in signed) {
+          throw new Error("Signed document is not in the correct format");
+        }
+
+        return {
+          signed,
+          signature,
+        };
+      }
+      case "rejected": {
+        throw new Error("User rejected modal request");
+      }
+      case "error": {
+        throw new Error(openModalResp.err);
+      }
+      default: {
+        throw new Error("unreachable");
+      }
     }
-    const signature = showModalResponse.data.signature;
-    const signed = showModalResponse.data.signed;
 
-    if ("accountNumber" in signed) {
-      throw new Error("Signed document is not in the correct format");
-    }
-
-    return {
-      signed,
-      signature,
-    };
+    // const signature = showModalResponse.data.signature;
+    // const signed = showModalResponse.data.signed;
+    //
+    // if ("accountNumber" in signed) {
+    //   throw new Error("Signed document is not in the correct format");
+    // }
+    //
+    // return {
+    //   signed,
+    //   signature,
+    // };
   } catch (error) {
-    console.error("[signAmino cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] Error signing amino, err: %s", error);
+
     throw error;
   }
 }
