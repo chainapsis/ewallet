@@ -45,27 +45,58 @@ export async function signArbitrary(
         origin,
       },
     };
-    const openModalResponse = await this.openModal(msg);
 
-    if (openModalResponse.approved === false) {
-      throw new Error("User rejected the signature request");
+    const openModalResp = await this.openModal(msg);
+
+    switch (openModalResp.status) {
+      case "approved": {
+        const signature = openModalResp.data.signature;
+
+        const isVerified = await this.verifyArbitrary(
+          chainId,
+          signer,
+          data,
+          signature,
+        );
+
+        if (!isVerified) {
+          throw new Error("Signature verification failed");
+        }
+
+        return {
+          ...signature,
+        };
+      }
+      case "rejected": {
+        throw new Error("User rejected modal request");
+      }
+      case "error": {
+        throw new Error(openModalResp.err);
+      }
+      default: {
+        throw new Error("unreachable");
+      }
     }
 
-    const signature = openModalResponse.data.signature;
-    const isVerified = await this.verifyArbitrary(
-      chainId,
-      signer,
-      data,
-      signature,
-    );
-
-    if (!isVerified) {
-      throw new Error("Signature verification failed");
-    }
-
-    return {
-      ...signature,
-    };
+    // if (openModalResponse.approved === false) {
+    //   throw new Error("User rejected the signature request");
+    // }
+    //
+    // const signature = openModalResponse.data.signature;
+    // const isVerified = await this.verifyArbitrary(
+    //   chainId,
+    //   signer,
+    //   data,
+    //   signature,
+    // );
+    //
+    // if (!isVerified) {
+    //   throw new Error("Signature verification failed");
+    // }
+    //
+    // return {
+    //   ...signature,
+    // };
   } catch (error) {
     console.error("[signArbitrary cosmos] [error] @@@@@", error);
     throw error;

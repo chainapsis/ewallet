@@ -45,20 +45,27 @@ export async function signAmino(
       },
     };
 
-    const openModalResponse = await this.openModal(data);
-
-    if (openModalResponse.approved === false) {
-      throw new Error(
-        openModalResponse.reason ?? "User rejected the signature request",
-      );
+    const openModalResp = await this.openModal(data);
+    switch (openModalResp.status) {
+      case "approved": {
+        return {
+          signed: signDoc,
+          signature: openModalResp.data.signature,
+        };
+      }
+      case "rejected": {
+        throw new Error("User rejected modal request");
+      }
+      case "error": {
+        throw new Error(openModalResp.err);
+      }
+      default: {
+        throw new Error("unreachable");
+      }
     }
-
-    return {
-      signed: signDoc,
-      signature: openModalResponse.data.signature,
-    };
   } catch (error) {
-    console.error("[signAmino cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] Error signing amino, err: %s", error);
+
     throw error;
   }
 }
