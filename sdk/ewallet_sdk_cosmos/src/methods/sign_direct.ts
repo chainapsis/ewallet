@@ -58,7 +58,7 @@ export async function signDirect(
       signature: openModalResponse.data.signature,
     };
   } catch (error) {
-    console.error("[signDirect cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] sign direct err: %s", error);
     throw error;
   }
 }

@@ -2,6 +2,7 @@ import type {
   EventEmitter3,
   KeplrEWalletInterface,
   MakeCosmosSigData,
+  OpenModalAckPayload,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type {
   ChainInfo,
@@ -106,5 +107,5 @@ export interface CosmosEWalletInterface {
     signature: StdSignature,
   ) => Promise<boolean>;
 
-  openModal: (data: MakeCosmosSigData) => Promise<OpenModalResult>;
+  openModal: (data: MakeCosmosSigData) => Promise<OpenModalAckPayload>;
 }

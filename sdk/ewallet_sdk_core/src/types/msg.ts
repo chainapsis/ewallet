@@ -1,7 +1,7 @@
 import type { ChainInfo } from "@keplr-wallet/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { ModalResult, OpenModalPayload } from "./modal";
+import type { OpenModalAckPayload, OpenModalPayload } from "./modal";
 import type { InitPayload } from "./init";
 
 export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
@@ -70,7 +70,7 @@ export type EWalletMsgOpenModal = {
 export type EWalletMsgOpenModalAck = {
   target: "keplr_ewallet_sdk";
   msg_type: "open_modal_ack";
-  payload: AckPayload<ModalResult>;
+  payload: OpenModalAckPayload;
 };
 
 export type EWalletMsgHideModal = {

@@ -1,7 +1,7 @@
 import type {
   EWalletMsgOpenModal,
   KeplrEWalletInterface,
-  ModalResult,
+  OpenModalAckPayload,
 } from "@keplr-ewallet-sdk-core/types";
 
 // 5 minutes in ms
@@ -10,7 +10,7 @@ const WAIT_TIME = 60 * 5 * 1000;
 export async function openModal(
   this: KeplrEWalletInterface,
   msg: EWalletMsgOpenModal,
-): Promise<ModalResult> {
+): Promise<OpenModalAckPayload> {
   await this.waitUntilInitialized;
 
   let timeoutId: NodeJS.Timeout | null = null;
@@ -39,11 +39,11 @@ export async function openModal(
       throw new Error("Unreachable");
     }
 
-    if (!openModalAck.payload.success) {
-      throw new Error(openModalAck.payload.err);
+    if (openModalAck.payload.status !== "approved") {
+      throw new Error(openModalAck.payload.toString());
     }
 
-    return openModalAck.payload.data;
+    return openModalAck.payload;
   } catch (error) {
     if (timeoutId) {
       clearTimeout(timeoutId);
