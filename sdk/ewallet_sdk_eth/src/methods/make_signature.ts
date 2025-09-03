@@ -2,7 +2,7 @@ import type {
   ChainInfoForAttachedModal,
   EWalletMsgShowModal,
   MakeEthereumSigData,
-} from "@kepr-ewallet/ewallet-sdk-core";
+} from "@keplr-ewallet/ewallet-sdk-core";
 import { v4 as uuidv4 } from "uuid";
 import {
   InternalRpcError,

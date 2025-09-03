@@ -19,9 +19,6 @@
   "files": [
     "dist/"
   ],
-  "imports": {
-    "@keplr-ewallet-sdk-core/*": "./dist/*.js"
-  },
   "keywords": [
     "keplr",
     "ewallet",

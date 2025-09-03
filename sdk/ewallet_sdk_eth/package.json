@@ -35,7 +35,7 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@keplr-ewallet/ewallet-sdk-core": "^0.0.6-rc.62",
+    "@keplr-ewallet/ewallet-sdk-core": "0.0.6-rc.62",
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.16",
     "eventemitter3": "^5.0.1",
     "uuid": "*",
