@@ -45,17 +45,17 @@ export async function signDirect(
         signOptions,
       },
     };
-    const showModalResponse = await this.openModal(data);
+    const openModalResponse = await this.openModal(data);
 
-    if (showModalResponse.approved === false) {
+    if (openModalResponse.approved === false) {
       throw new Error(
-        showModalResponse.reason ?? "User rejected the signature request",
+        openModalResponse.reason ?? "User rejected the signature request",
       );
     }
 
     return {
       signed: signDoc,
-      signature: showModalResponse.data.signature,
+      signature: openModalResponse.data.signature,
     };
   } catch (error) {
     console.error("[signDirect cosmos] [error] @@@@@", error);
