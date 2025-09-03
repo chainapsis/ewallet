@@ -12,6 +12,7 @@
     "composite": true,
     "removeComments": true,
     "noImplicitAny": true,
+    "noEmit": true,
     "emitDeclarationOnly": true,
     "strict": true,
     "declaration": true,

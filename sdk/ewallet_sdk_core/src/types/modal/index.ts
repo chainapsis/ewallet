@@ -3,6 +3,7 @@ import type { MakeEthereumSigData, MakeEthereumSigResult } from "./eth";
 
 export type * from "./cosmos";
 export type * from "./eth";
+export type * from "./common";
 
 export type OpenModalPayload = MakeSignatureModalPayload | OtherModalPayload;
 
