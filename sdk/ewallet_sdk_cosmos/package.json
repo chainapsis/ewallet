@@ -35,7 +35,7 @@
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.16",
     "@keplr-wallet/proto-types": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
-    "@noble/curves": "^1.9.2",
+    "@noble/curves": "^2.0.0",
     "@noble/hashes": "^1.8.0",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",

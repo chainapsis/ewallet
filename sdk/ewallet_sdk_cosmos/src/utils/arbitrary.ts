@@ -4,7 +4,6 @@ import { serializeSignDoc } from "@cosmjs/amino";
 import { sha256 } from "@noble/hashes/sha2";
 import { keccak_256 } from "@noble/hashes/sha3";
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { bytesToNumberBE } from "@noble/curves/abstract/utils";
 
 import { getBech32Address, getCosmosAddress, getEthAddress } from "./address";
 
@@ -161,19 +160,7 @@ export function verifyADR36AminoSignDoc(
     throw new Error(`Invalid length of signature: ${signature.length}`);
   }
 
-  const r = signature.slice(0, 32);
-  const s = signature.slice(32);
-
-  // TODO: @elden
-  return true;
-  // return secp256k1.verify(
-  //   {
-  //     r: bytesToNumberBE(r),
-  //     s: bytesToNumberBE(s),
-  //   },
-  //   messageHash,
-  //   pubKey,
-  // );
+  return secp256k1.verify(signature, messageHash, pubKey);
 }
 
 export function verifyADR36Amino(
