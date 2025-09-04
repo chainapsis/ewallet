@@ -5,7 +5,7 @@ export type * from "./cosmos";
 export type * from "./eth";
 export type * from "./common";
 
-export type OpenModalPayload = MakeSignatureModalPayload | OtherModalPayload;
+export type OpenModalPayload = MakeSigModalPayload | OtherModalPayload;
 
 export interface OtherModalPayload {
   modal_type: "other";
@@ -13,11 +13,21 @@ export interface OtherModalPayload {
   data: {};
 }
 
-export type MakeSignatureModalPayload = {
+export type MakeSigModalPayload =
+  | MakeCosmosSigModalPayload
+  | MakeEthSigModalPayload;
+
+export interface MakeCosmosSigModalPayload {
   modal_type: "make_signature";
   modal_id: string;
-  data: MakeCosmosSigData | MakeEthereumSigData;
-};
+  data: MakeCosmosSigData;
+}
+
+export interface MakeEthSigModalPayload {
+  modal_type: "make_signature";
+  modal_id: string;
+  data: MakeEthereumSigData;
+}
 
 export type MakeSignatureModalResult =
   | {
