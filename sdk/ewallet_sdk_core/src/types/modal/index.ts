@@ -13,21 +13,11 @@ export interface OtherModalPayload {
   data: {};
 }
 
-export type MakeSigModalPayload =
-  | MakeCosmosSigModalPayload
-  | MakeEthSigModalPayload;
-
-export interface MakeCosmosSigModalPayload {
+export type MakeSigModalPayload = {
   modal_type: "make_signature";
   modal_id: string;
-  data: MakeCosmosSigData;
-}
-
-export interface MakeEthSigModalPayload {
-  modal_type: "make_signature";
-  modal_id: string;
-  data: MakeEthereumSigData;
-}
+  data: MakeCosmosSigData | MakeEthereumSigData;
+};
 
 export type MakeSignatureModalResult =
   | {
