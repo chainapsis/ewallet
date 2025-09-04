@@ -56,11 +56,11 @@ export async function openModal(
 
     throw error;
   } finally {
-    console.log("finally");
     if (timeoutId) {
       clearTimeout(timeoutId);
       timeoutId = null;
     }
+
     this.closeModal();
   }
 }
