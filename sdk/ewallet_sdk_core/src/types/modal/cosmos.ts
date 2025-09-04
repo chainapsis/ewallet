@@ -8,15 +8,15 @@ export type MakeCosmosSignType = "tx" | "arbitrary";
 
 export type MakeCosmosSigData =
   | {
-    chain_type: "cosmos";
-    sign_type: "tx";
-    payload: CosmosTxSignPayload;
-  }
+      chain_type: "cosmos";
+      sign_type: "tx";
+      payload: CosmosTxSignPayload;
+    }
   | {
-    chain_type: "cosmos";
-    sign_type: "arbitrary";
-    payload: CosmosArbitrarySignPayload;
-  };
+      chain_type: "cosmos";
+      sign_type: "arbitrary";
+      payload: CosmosArbitrarySignPayload;
+    };
 
 export type CosmosTxSignPayload =
   | CosmosTxSignDirectPayload
@@ -49,4 +49,5 @@ export type CosmosArbitrarySignPayload = {
 // TODO: define the response type for cosmos signature
 export type MakeCosmosSigResult = {
   signature: StdSignature;
+  signed: StdSignDoc | SignDoc;
 };
