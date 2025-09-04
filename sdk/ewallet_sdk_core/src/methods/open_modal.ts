@@ -39,11 +39,11 @@ export async function openModal(
       throw new Error("Unreachable");
     }
 
-    if (openModalAck.payload.status === "rejected") {
+    if (openModalAck.payload.type === "reject") {
       throw new Error("User rejected");
     }
 
-    if (openModalAck.payload.status === "error") {
+    if (openModalAck.payload.type === "error") {
       throw new Error(openModalAck.payload.err);
     }
 

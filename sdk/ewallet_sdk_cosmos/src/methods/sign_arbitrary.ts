@@ -48,8 +48,8 @@ export async function signArbitrary(
 
     const openModalResp = await this.openModal(msg);
 
-    switch (openModalResp.status) {
-      case "approved": {
+    switch (openModalResp.type) {
+      case "approve": {
         const signature = openModalResp.data.signature;
 
         const isVerified = await this.verifyArbitrary(
@@ -67,7 +67,7 @@ export async function signArbitrary(
           ...signature,
         };
       }
-      case "rejected": {
+      case "reject": {
         throw new Error("User rejected modal request");
       }
       case "error": {

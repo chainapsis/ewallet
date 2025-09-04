@@ -48,8 +48,8 @@ export async function signDirect(
 
     const openModalResp = await this.openModal(data);
 
-    switch (openModalResp.status) {
-      case "approved": {
+    switch (openModalResp.type) {
+      case "approve": {
         const signature = openModalResp.data.signature;
         const signed = openModalResp.data.signed;
 
@@ -66,7 +66,7 @@ export async function signDirect(
           throw new Error("Signed document is not in the correct format");
         }
       }
-      case "rejected": {
+      case "reject": {
         throw new Error("User rejected modal request");
       }
       case "error": {

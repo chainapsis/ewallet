@@ -143,8 +143,8 @@ async function handleSigningFlow(
   try {
     const openModalResp = await eWallet.openModal(openModalMsg);
 
-    switch (openModalResp.status) {
-      case "approved": {
+    switch (openModalResp.type) {
+      case "approve": {
         const makeEthereumSigResult = openModalResp.data;
 
         if (
@@ -156,7 +156,7 @@ async function handleSigningFlow(
 
         return makeEthereumSigResult.data;
       }
-      case "rejected": {
+      case "reject": {
         throw new UserRejectedRequestError(
           new Error("User rejected the signature request"),
         );

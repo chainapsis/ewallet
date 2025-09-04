@@ -32,34 +32,34 @@ export type MakeSignatureModalResult =
 interface MakeSigModalApproveAckPayload {
   modal_type: "make_signature";
   modal_id: string;
-  status: "approved";
+  type: "approve";
   data: MakeSignatureModalResult;
 }
 
 interface MakeSigModalRejectAckPayload {
   modal_type: "make_signature";
   modal_id: string;
-  status: "rejected";
+  type: "reject";
 }
 
 interface MakeSigModalErrorAckPayload {
   modal_type: "make_signature";
   modal_id: string;
-  status: "error";
+  type: "error";
   err: string;
 }
 
 export type OtherModalApproveAckPayload = {
   modal_type: "other";
   modal_id: string;
-  status: "approved";
+  type: "approve";
   data: any;
 };
 
 export type OtherModalRejectAckPayload = {
   modal_type: "other";
   modal_id: string;
-  status: "rejected";
+  type: "reject";
 };
 
 export type OpenModalAckPayload =

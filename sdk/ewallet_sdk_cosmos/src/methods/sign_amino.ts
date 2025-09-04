@@ -46,8 +46,8 @@ export async function signAmino(
     };
 
     const openModalResp = await this.openModal(data);
-    switch (openModalResp.status) {
-      case "approved": {
+    switch (openModalResp.type) {
+      case "approve": {
         const signature = openModalResp.data.signature;
         const signed = openModalResp.data.signed;
 
@@ -60,7 +60,7 @@ export async function signAmino(
           signature,
         };
       }
-      case "rejected": {
+      case "reject": {
         throw new Error("User rejected modal request");
       }
       case "error": {

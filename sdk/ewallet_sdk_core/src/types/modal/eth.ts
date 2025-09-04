@@ -1,4 +1,5 @@
 import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
+
 import type { ChainInfoForAttachedModal } from "./common";
 
 export type MakeEthereumSignType = MakeEthereumSigData["sign_type"];
