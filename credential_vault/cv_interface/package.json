@@ -1,7 +1,7 @@
 {
   "name": "@keplr-ewallet/credential-vault-interface",
   "packageManager": "yarn@4.7.0",
-  "version": "0.0.2-alpha.24",
+  "version": "0.0.2-alpha.27",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -48,7 +48,7 @@
     "directory": "credential_vault/cv_interface"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "^0.0.3-alpha.29"
+    "@keplr-ewallet/bytes": "^0.0.3-alpha.32"
   },
   "devDependencies": {
     "@types/jest": "*",
@@ -62,5 +62,5 @@
     "tsx": "*",
     "typescript": "*"
   },
-  "gitHead": "f3f9e74c5a592e5e3003803ba205f1225b91be32"
+  "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"
 }

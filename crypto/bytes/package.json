@@ -3,7 +3,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "version": "0.0.3-alpha.29",
+  "version": "0.0.3-alpha.32",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
@@ -20,7 +20,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.13"
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.16"
   },
   "devDependencies": {
     "@jest/globals": "*",
@@ -31,5 +31,5 @@
     "ts-jest": "*",
     "typescript": "*"
   },
-  "gitHead": "f3f9e74c5a592e5e3003803ba205f1225b91be32"
+  "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"
 }

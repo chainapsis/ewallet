@@ -39,6 +39,7 @@ export default [
       commonjs(),
       typescript({
         tsconfig: "./tsconfig.json",
+        noEmitOnError: true,
         declaration: true,
       }),
     ],

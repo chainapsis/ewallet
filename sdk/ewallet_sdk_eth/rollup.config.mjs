@@ -20,11 +20,9 @@ export default [
       "@keplr-ewallet/ewallet-sdk-core",
       "eventemitter3",
       "viem",
-      "@noble/curves",
       "uuid",
       /^viem\//,
       /^ox\//,
-      /^@noble\/curves\//,
     ],
     plugins: [
       nodeResolve({
@@ -37,6 +35,7 @@ export default [
       }),
       typescript({
         declaration: false,
+        noEmitOnError: true,
         exclude: ["**/*.test.ts", "**/tests/**/*", "**/*.spec.ts"],
       }),
     ],

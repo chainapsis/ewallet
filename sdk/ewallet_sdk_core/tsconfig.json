@@ -12,6 +12,8 @@
     "composite": true,
     "removeComments": true,
     "noImplicitAny": true,
+    "noEmit": true,
+    "emitDeclarationOnly": true,
     "strict": true,
     "declaration": true,
     "noImplicitThis": true,
@@ -27,6 +29,6 @@
       "@keplr-ewallet-sdk-core/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "build.ts", "src/global.d.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

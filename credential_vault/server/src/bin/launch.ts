@@ -1,18 +1,49 @@
+import { program } from "commander";
+
 import { createPgDatabase } from "@keplr-ewallet-cv-server/database";
 import { makeApp } from "@keplr-ewallet-cv-server/app";
-import { loadEnvs } from "@keplr-ewallet-cv-server/envs";
+import { loadEnv, verifyEnv } from "@keplr-ewallet-cv-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-cv-server/pg_dump/runtime";
 
-async function main() {
-  const env = loadEnvs();
+const ONE_DAY_MS = 1 * 86400;
 
+function parseCLIArgs() {
+  const command = program
+    .version("0.0.1")
+    .description("Credential vault server");
+
+  command.requiredOption("--committee-id <id>");
+
+  command.parse(process.argv);
+
+  const opts = program.opts();
+
+  return opts;
+}
+
+async function main() {
+  const opts = parseCLIArgs();
+  console.log("CLI opts: %j", opts);
+
+  const loadEnvRes = loadEnv(opts.committeeId);
+  if (!loadEnvRes.success) {
+    console.warn("ENV didn't exist, but we will continue");
+  }
+
+  const verifyEnvRes = verifyEnv(process.env);
+  if (!verifyEnvRes.success) {
+    console.error("ENV variables invalid, err: %s", verifyEnvRes.err);
+    process.exit(1);
+  }
+
+  const { env } = process;
   const createPostgresRes = await createPgDatabase({
     database: env.DB_NAME,
     host: env.DB_HOST,
     password: env.DB_PASSWORD,
     user: env.DB_USER,
-    port: env.DB_PORT,
-    ssl: env.DB_SSL,
+    port: Number(env.DB_PORT),
+    ssl: env.DB_SSL === "true" ? true : false,
   });
 
   if (createPostgresRes.success === false) {
@@ -34,10 +65,10 @@ async function main() {
       host: env.DB_HOST,
       password: env.DB_PASSWORD,
       user: env.DB_USER,
-      port: env.DB_PORT,
+      port: Number(env.DB_PORT),
     },
     {
-      sleepTimeSeconds: 1 * 86400, // 1 day
+      sleepTimeSeconds: ONE_DAY_MS, // 1 day
       retentionDays: 7,
     },
   );

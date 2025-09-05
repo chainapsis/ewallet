@@ -3,7 +3,8 @@
   "workspaces": {
     "packages": [
       "internals/ci",
-      "stdlib_js",
+      "lib/stdlib_js",
+      "lib/dotenv",
       "credential_vault/pg_interface",
       "credential_vault/server",
       "credential_vault/cv_interface",
@@ -27,9 +28,7 @@
     "ci": "yarn --cwd ./internals/ci run start"
   },
   "dependencies": {
-    "@noble/curves": "^1.9.2",
     "chalk": "^5.5.0",
-    "tsx": "^4.20.3",
     "uuid": "^11.1.0",
     "viem": "^2.31.7"
   },
@@ -37,6 +36,7 @@
     "@jest/globals": "^30.0.4",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/bcrypt": "^5.0.2",

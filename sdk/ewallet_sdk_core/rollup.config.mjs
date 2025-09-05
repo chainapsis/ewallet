@@ -2,6 +2,7 @@ import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import { dts } from "rollup-plugin-dts";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
+// import replace from "@rollup/plugin-replace";
 // import commonjs from "@rollup/plugin-commonjs";
 // import terser from "@rollup/plugin-terser";
 
@@ -22,6 +23,11 @@ export default [
         tsconfig: "./tsconfig.json",
         declaration: true,
       }),
+      // replace({
+      //   "process.env.GOOGLE_CLIENT_ID": JSON.stringify(
+      //     process.env.GOOGLE_CLIENT_ID,
+      //   ),
+      // }),
     ],
   },
   {
@@ -30,7 +36,14 @@ export default [
       file: "dist/index.d.ts", // Output path for the bundled declaration file
       format: "esm",
     },
-    plugins: [tsConfigPaths(), nodeResolve(), dts(), typescript()],
+    plugins: [
+      tsConfigPaths(),
+      nodeResolve(),
+      dts(),
+      typescript({
+        noEmitOnError: true,
+      }),
+    ],
   },
   // {
   //   file: "dist/index.min.js",

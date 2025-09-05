@@ -14,6 +14,7 @@ export async function getPublicKey(
 
     if (this.state.publicKey) {
       console.log("[keplr-cosmos] getPublicKey: cached public key");
+
       return this.state.publicKey;
     }
 

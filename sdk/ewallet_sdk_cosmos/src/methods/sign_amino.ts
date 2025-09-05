@@ -16,16 +16,22 @@ export async function signAmino(
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
 
+    if (!chainInfo) {
+      throw new Error("Chain info not found for chainId: " + chainId);
+    }
+
     const data: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "tx",
       payload: {
         chain_info: {
           chain_id: chainId,
+          rpc_url: chainInfo.rpc,
+          rest_url: chainInfo.rest,
           chain_name: chainInfo?.chainName ?? "",
           chain_symbol_image_url: chainInfo?.stakeCurrency?.coinImageUrl ?? "",
-          fee_currencies: chainInfo?.feeCurrencies,
-          currencies: chainInfo?.currencies,
+          fee_currencies: chainInfo.feeCurrencies,
+          currencies: chainInfo.currencies,
 
           bech32_config: chainInfo?.bech32Config,
           features: chainInfo?.features,
@@ -35,23 +41,59 @@ export async function signAmino(
         signDoc,
         signer,
         origin,
+        signOptions,
       },
     };
 
-    const showModalResponse = await this.showModal(data);
+    const openModalResp = await this.openModal(data);
 
-    if (showModalResponse.approved === false) {
-      throw new Error(
-        showModalResponse.reason ?? "User rejected the signature request",
-      );
+    if (openModalResp.modal_type !== "make_signature") {
+      throw new Error("Invalid modal type response");
     }
 
-    return {
-      signed: signDoc,
-      signature: showModalResponse.data.signature,
-    };
+    switch (openModalResp.type) {
+      case "approve": {
+        if (openModalResp.data.chain_type !== "cosmos") {
+          throw new Error("Invalid chain type sig response");
+        }
+
+        const signature = openModalResp.data.sig_result.signature;
+        const signed = openModalResp.data.sig_result.signed;
+
+        if ("accountNumber" in signed) {
+          throw new Error("Signed document is not in the correct format");
+        }
+
+        return {
+          signed,
+          signature,
+        };
+      }
+      case "reject": {
+        throw new Error("User rejected modal request");
+      }
+      case "error": {
+        throw new Error(openModalResp.error);
+      }
+      default: {
+        throw new Error("unreachable");
+      }
+    }
+
+    // const signature = showModalResponse.data.signature;
+    // const signed = showModalResponse.data.signed;
+    //
+    // if ("accountNumber" in signed) {
+    //   throw new Error("Signed document is not in the correct format");
+    // }
+    //
+    // return {
+    //   signed,
+    //   signature,
+    // };
   } catch (error) {
-    console.error("[signAmino cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] Error signing amino, err: %s", error);
+
     throw error;
   }
 }

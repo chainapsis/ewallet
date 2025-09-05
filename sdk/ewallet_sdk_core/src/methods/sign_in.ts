@@ -5,11 +5,9 @@ import type {
   EWalletMsg,
 } from "@keplr-ewallet-sdk-core/types";
 import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
+import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
 
 const FIVE_MINS_MS = 5 * 60 * 1000;
-
-const GOOGLE_CLIENT_ID =
-  "239646646986-8on7ql1vmbcshbjk12bdtopmto99iipm.apps.googleusercontent.com";
 
 export async function signIn(this: KeplrEWalletInterface, type: "google") {
   switch (type) {
@@ -45,6 +43,10 @@ async function tryGoogleSignIn(
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>,
 ) {
   const clientId = GOOGLE_CLIENT_ID;
+  if (!clientId) {
+    throw new Error("GOOGLE_CLIENT_ID is not set");
+  }
+
   const redirectUri = `${new URL(sdkEndpoint).origin}/google/callback`;
 
   console.debug("[keplr] window host: %s", window.location.host);

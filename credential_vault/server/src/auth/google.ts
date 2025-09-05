@@ -1,9 +1,7 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { GoogleTokenInfo } from "@keplr-ewallet/credential-vault-interface/auth";
 
-// TODO: This may change later
-const GOOGLE_CLIENT_ID =
-  "239646646986-8on7ql1vmbcshbjk12bdtopmto99iipm.apps.googleusercontent.com";
+import type { GoogleTokenInfo } from "@keplr-ewallet/credential-vault-interface/auth";
+import { GOOGLE_CLIENT_ID } from "./constants";
 
 export async function validateOAuthToken(
   idToken: string,

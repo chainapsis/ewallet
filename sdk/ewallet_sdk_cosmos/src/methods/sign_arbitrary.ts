@@ -18,16 +18,22 @@ export async function signArbitrary(
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
 
-    const showModalMsg: MakeCosmosSigData = {
+    if (!chainInfo) {
+      throw new Error("Chain info not found for chainId: " + chainId);
+    }
+
+    const msg: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "arbitrary",
       payload: {
         chain_info: {
           chain_id: chainId,
+          rpc_url: chainInfo.rpc,
+          rest_url: chainInfo.rest,
           chain_name: chainInfo?.chainName ?? "",
           chain_symbol_image_url: chainInfo?.stakeCurrency?.coinImageUrl ?? "",
-          fee_currencies: chainInfo?.feeCurrencies,
-          currencies: chainInfo?.currencies,
+          fee_currencies: chainInfo.feeCurrencies,
+          currencies: chainInfo.currencies,
           bech32_config: chainInfo?.bech32Config,
           features: chainInfo?.features,
           bip44: chainInfo?.bip44,
@@ -39,29 +45,71 @@ export async function signArbitrary(
         origin,
       },
     };
-    const showModalResponse = await this.showModal(showModalMsg);
 
-    if (showModalResponse.approved === false) {
-      throw new Error("User rejected the signature request");
+    const openModalResp = await this.openModal(msg);
+
+    if (openModalResp.modal_type !== "make_signature") {
+      throw new Error("Invalid modal type response");
     }
 
-    const signature = showModalResponse.data.signature;
-    const isVerified = await this.verifyArbitrary(
-      chainId,
-      signer,
-      data,
-      signature,
-    );
+    switch (openModalResp.type) {
+      case "approve": {
+        if (openModalResp.data.chain_type !== "cosmos") {
+          throw new Error("Invalid chain type sig response");
+        }
 
-    if (!isVerified) {
-      throw new Error("Signature verification failed");
+        const signature = openModalResp.data.sig_result.signature;
+
+        const verifyRes = await this.verifyArbitrary(
+          chainId,
+          signer,
+          data,
+          signature,
+        );
+
+        if (!verifyRes.isVerified) {
+          console.error("Signature not verified, res: %o", verifyRes);
+
+          throw new Error("Signature verification failed");
+        }
+
+        return {
+          ...signature,
+        };
+      }
+      case "reject": {
+        throw new Error("User rejected modal request");
+      }
+      case "error": {
+        throw new Error(openModalResp.error);
+      }
+      default: {
+        throw new Error("unreachable");
+      }
     }
 
-    return {
-      ...signature,
-    };
+    // if (openModalResponse.approved === false) {
+    //   throw new Error("User rejected the signature request");
+    // }
+    //
+    // const signature = openModalResponse.data.signature;
+    // const isVerified = await this.verifyArbitrary(
+    //   chainId,
+    //   signer,
+    //   data,
+    //   signature,
+    // );
+    //
+    // if (!isVerified) {
+    //   throw new Error("Signature verification failed");
+    // }
+    //
+    // return {
+    //   ...signature,
+    // };
   } catch (error) {
-    console.error("[signArbitrary cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] Error signing arbitrary, err: %s", error);
+
     throw error;
   }
 }

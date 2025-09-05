@@ -1,0 +1,33 @@
+{
+  "name": "@keplr-ewallet/dotenv",
+  "version": "0.0.2-alpha.1",
+  "packageManager": "yarn@4.7.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "yarn clean && tsc && tsc-alias"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chainapsis/ewallet.git",
+    "directory": "stdlib_js"
+  },
+  "dependencies": {
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.16"
+  },
+  "devDependencies": {
+    "@types/jest": "*",
+    "@types/node": "*",
+    "del-cli": "*",
+    "jest": "*",
+    "ts-jest": "*",
+    "tsc-alias": "*",
+    "tsx": "*",
+    "typescript": "*"
+  },
+  "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"
+}

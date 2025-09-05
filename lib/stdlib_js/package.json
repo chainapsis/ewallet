@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/stdlib-js",
-  "version": "0.0.2-rc.13",
+  "version": "0.0.2-rc.16",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/keplr-ewallet.git",
+    "url": "https://github.com/chainapsis/ewallet.git",
     "directory": "stdlib_js"
   },
   "devDependencies": {
@@ -38,5 +38,6 @@
     "ts-jest": "*",
     "tsc-alias": "*",
     "typescript": "*"
-  }
+  },
+  "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"
 }

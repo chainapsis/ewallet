@@ -17,7 +17,7 @@ import { signAmino } from "@keplr-ewallet-sdk-cosmos/methods/sign_amino";
 import { signDirect } from "@keplr-ewallet-sdk-cosmos/methods/sign_direct";
 import { signArbitrary } from "@keplr-ewallet-sdk-cosmos/methods/sign_arbitrary";
 import { verifyArbitrary } from "@keplr-ewallet-sdk-cosmos/methods/verify_arbitrary";
-import { showModal } from "@keplr-ewallet-sdk-cosmos/methods/show_modal";
+import { openModal } from "@keplr-ewallet-sdk-cosmos/methods/open_modal";
 import { getPublicKey } from "@keplr-ewallet-sdk-cosmos/methods/get_public_key";
 import { on } from "@keplr-ewallet-sdk-cosmos/methods/on";
 import type {
@@ -33,8 +33,6 @@ export function CosmosEWallet(
   eWallet: KeplrEWalletInterface,
 ) {
   this.eWallet = eWallet;
-  this.cosmosChainInfo = [];
-  this.cacheTime = 0;
   this.eventEmitter = new EventEmitter3<
     KeplrEWalletCosmosEvent2,
     KeplrEWalletCosmosEventHandler2
@@ -67,4 +65,4 @@ ptype.signAmino = signAmino;
 ptype.signDirect = signDirect;
 ptype.signArbitrary = signArbitrary;
 ptype.verifyArbitrary = verifyArbitrary;
-ptype.showModal = showModal;
+ptype.openModal = openModal;

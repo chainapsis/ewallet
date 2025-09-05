@@ -18,16 +18,22 @@ export async function signDirect(
     const chainInfoList = await this.getCosmosChainInfo();
     const chainInfo = chainInfoList.find((info) => info.chainId === chainId);
 
-    const showModalData: MakeCosmosSigData = {
+    if (!chainInfo) {
+      throw new Error("Chain info not found for chainId: " + chainId);
+    }
+
+    const data: MakeCosmosSigData = {
       chain_type: "cosmos",
       sign_type: "tx",
       payload: {
         chain_info: {
           chain_id: chainId,
+          rpc_url: chainInfo.rpc,
+          rest_url: chainInfo.rest,
           chain_name: chainInfo?.chainName ?? "",
           chain_symbol_image_url: chainInfo?.stakeCurrency?.coinImageUrl ?? "",
-          fee_currencies: chainInfo?.feeCurrencies,
-          currencies: chainInfo?.currencies,
+          fee_currencies: chainInfo.feeCurrencies,
+          currencies: chainInfo.currencies,
           bech32_config: chainInfo?.bech32Config,
           features: chainInfo?.features,
           bip44: chainInfo?.bip44,
@@ -36,22 +42,51 @@ export async function signDirect(
         signDoc,
         signer,
         origin,
+        signOptions,
       },
     };
-    const showModalResponse = await this.showModal(showModalData);
 
-    if (showModalResponse.approved === false) {
-      throw new Error(
-        showModalResponse.reason ?? "User rejected the signature request",
-      );
+    const openModalResp = await this.openModal(data);
+
+    if (openModalResp.modal_type !== "make_signature") {
+      throw new Error("Invalid modal type response");
     }
 
-    return {
-      signed: signDoc,
-      signature: showModalResponse.data.signature,
-    };
+    switch (openModalResp.type) {
+      case "approve": {
+        if (openModalResp.data.chain_type !== "cosmos") {
+          throw new Error("Invalid chain type sig response");
+        }
+
+        const signature = openModalResp.data.sig_result.signature;
+        const signed = openModalResp.data.sig_result.signed;
+
+        if ("accountNumber" in signed) {
+          return {
+            signed: {
+              ...signed,
+              bodyBytes: Uint8Array.from(signed.bodyBytes),
+              authInfoBytes: Uint8Array.from(signed.authInfoBytes),
+            },
+            signature,
+          };
+        } else {
+          throw new Error("Signed document is not in the correct format");
+        }
+      }
+      case "reject": {
+        throw new Error("User rejected modal request");
+      }
+      case "error": {
+        throw new Error(openModalResp.error);
+      }
+      default: {
+        throw new Error("unreachable");
+      }
+    }
   } catch (error) {
-    console.error("[signDirect cosmos] [error] @@@@@", error);
+    console.error("[keplr-cosmos] sign direct err: %s", error);
+
     throw error;
   }
 }

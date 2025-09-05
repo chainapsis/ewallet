@@ -5,7 +5,7 @@ import type {
   KeplrEwalletInitArgs,
   KeplrEWalletInterface,
 } from "@keplr-ewallet-sdk-core/types";
-import { KeplrEWallet } from "@keplr-ewallet-sdk-core/keplr_ewallet";
+import { KeplrEWallet } from "@keplr-ewallet-sdk-core/constructor";
 import type { KeplrEwalletInitError } from "@keplr-ewallet-sdk-core/errors";
 
 const SDK_ENDPOINT = `https://attached.embed.keplr.app`;

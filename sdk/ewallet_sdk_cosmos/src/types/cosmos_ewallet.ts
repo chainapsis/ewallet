@@ -2,6 +2,7 @@ import type {
   EventEmitter3,
   KeplrEWalletInterface,
   MakeCosmosSigData,
+  OpenModalAckPayload,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type {
   ChainInfo,
@@ -25,10 +26,11 @@ import type {
   KeplrEWalletCosmosEvent2,
   KeplrEWalletCosmosEventHandler2,
 } from "./event";
-import type { ShowModalResult } from "./modal";
+import type { OpenModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
+import type { ArbitrarySigVerificationResult } from "@keplr-ewallet-sdk-cosmos/methods/verify_arbitrary";
 
 export interface CosmosEWalletState {
   publicKey: Uint8Array | null;
@@ -42,8 +44,6 @@ export interface CosmosEWalletInterface {
     KeplrEWalletCosmosEvent2,
     KeplrEWalletCosmosEventHandler2
   >;
-  cosmosChainInfo: ChainInfo[];
-  cacheTime: number;
   waitUntilInitialized: Promise<Result<CosmosEWalletState, LazyInitError>>;
 
   enable: (_chainId: string) => Promise<void>;
@@ -106,6 +106,7 @@ export interface CosmosEWalletInterface {
     signer: string,
     data: string | Uint8Array,
     signature: StdSignature,
-  ) => Promise<boolean>;
-  showModal: (data: MakeCosmosSigData) => Promise<ShowModalResult>;
+  ) => Promise<ArbitrarySigVerificationResult>;
+
+  openModal: (data: MakeCosmosSigData) => Promise<OpenModalAckPayload>;
 }
