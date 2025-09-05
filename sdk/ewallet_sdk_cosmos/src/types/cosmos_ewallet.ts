@@ -30,6 +30,7 @@ import type { OpenModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
+import type { ArbitrarySigVerificationResult } from "@keplr-ewallet-sdk-cosmos/methods/verify_arbitrary";
 
 export interface CosmosEWalletState {
   publicKey: Uint8Array | null;
@@ -105,7 +106,7 @@ export interface CosmosEWalletInterface {
     signer: string,
     data: string | Uint8Array,
     signature: StdSignature,
-  ) => Promise<boolean>;
+  ) => Promise<ArbitrarySigVerificationResult>;
 
   openModal: (data: MakeCosmosSigData) => Promise<OpenModalAckPayload>;
 }

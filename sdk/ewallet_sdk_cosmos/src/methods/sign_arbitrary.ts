@@ -60,14 +60,16 @@ export async function signArbitrary(
 
         const signature = openModalResp.data.sig_result.signature;
 
-        const isVerified = await this.verifyArbitrary(
+        const verifyRes = await this.verifyArbitrary(
           chainId,
           signer,
           data,
           signature,
         );
 
-        if (!isVerified) {
+        if (!verifyRes.isVerified) {
+          console.error("Signature not verified, res: %o", verifyRes);
+
           throw new Error("Signature verification failed");
         }
 

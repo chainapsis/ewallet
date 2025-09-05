@@ -4,13 +4,23 @@ import { fromBase64 } from "@cosmjs/encoding";
 import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
 import { verifyADR36Amino } from "@keplr-ewallet-sdk-cosmos/utils/arbitrary";
 
+export interface ArbitrarySigVerificationResult {
+  isVerified: boolean;
+  bech32PrefixAccAddr: string;
+  signer: string;
+  data: string | Uint8Array;
+  pubKeyBytes: Uint8Array;
+  signatureBytes: Uint8Array;
+  algo: "ethsecp256k1" | "secp256k1";
+}
+
 export async function verifyArbitrary(
   this: CosmosEWalletInterface,
   chainId: string,
   signer: string,
   data: string | Uint8Array,
   signature: StdSignature,
-): Promise<boolean> {
+): Promise<ArbitrarySigVerificationResult> {
   try {
     // Get chain info to determine the bech32 prefix
     const chainInfoList = await this.getCosmosChainInfo();
@@ -42,7 +52,7 @@ export async function verifyArbitrary(
         ? "ethsecp256k1"
         : "secp256k1";
 
-    return verifyADR36Amino(
+    const isVerified = verifyADR36Amino(
       bech32PrefixAccAddr,
       signer,
       data,
@@ -50,8 +60,19 @@ export async function verifyArbitrary(
       signatureBytes,
       algo,
     );
+
+    return {
+      isVerified,
+      bech32PrefixAccAddr,
+      signer,
+      data,
+      pubKeyBytes,
+      signatureBytes,
+      algo,
+    };
   } catch (error) {
     console.error("Error verifying arbitrary signature:", error);
-    return false;
+
+    throw error;
   }
 }
