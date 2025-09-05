@@ -18,7 +18,7 @@ WORKDIR /home/node/credential_vault
 RUN yarn workspaces focus @keplr-ewallet/stdlib-js
 
 # Build stdlib-js
-WORKDIR /home/node/credential_vault/stdlib_js
+WORKDIR /home/node/credential_vault/lib/stdlib_js
 RUN yarn run build
 
 # Install dependencies for crypto/bytes
