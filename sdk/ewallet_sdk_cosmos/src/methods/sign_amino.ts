@@ -46,10 +46,19 @@ export async function signAmino(
     };
 
     const openModalResp = await this.openModal(data);
+
+    if (openModalResp.modal_type !== "make_signature") {
+      throw new Error("Invalid modal type response");
+    }
+
     switch (openModalResp.type) {
       case "approve": {
-        const signature = openModalResp.data.signature;
-        const signed = openModalResp.data.signed;
+        if (openModalResp.data.chain_type !== "cosmos") {
+          throw new Error("Invalid chain type sig response");
+        }
+
+        const signature = openModalResp.data.sig_result.signature;
+        const signed = openModalResp.data.sig_result.signed;
 
         if ("accountNumber" in signed) {
           throw new Error("Signed document is not in the correct format");
