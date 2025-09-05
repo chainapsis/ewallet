@@ -2,13 +2,13 @@
 
 ## Before you begin
 
-Key share node is an important pillar of the distributed signature generation
-scheme. In order to become a node to serve the users, you should contact our
-team beforehand to get bootstrapped. We will share shortly how you can join our
-**communication channel** to discuss.
+The key share node is a crucial component of the distributed signature
+generation scheme. To become a serving node, please contact our team in advance
+for bootstrapping. We will soon provide details on how to join our
+**communication channel** for further discussion.
 
 If you are not familiar with the concepts, please read the Keplr Embedded
-[Ewallet documentation](README.md) first to learn how the system works.
+[Ewallet documentation](../README.md) first to learn how the system works.
 
 ## Hardware Requirements
 
