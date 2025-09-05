@@ -1,5 +1,15 @@
 # Running a key share node
 
+## Before you begin
+
+Key share node is an important pillar of the distributed signature generation
+scheme. In order to become a node to serve the users, you should contact our
+team beforehand to get bootstrapped. We will share shortly how you can join our
+**communication channel** to discuss.
+
+If you are not familiar with the concepts, please read the Keplr Embedded
+documentation first to learn how the system works.
+
 ## Hardware Requirements
 
 | Component                     | Min requirements                | Recommended Spec                  |
@@ -9,20 +19,21 @@
 
 ## Software Requirements
 
+- Mac OS or Linux operating system
 - Docker 27+
 
 If you plan to use your own database,
 
 - Postgres 17+
 
-## Installation
+## Installation Guide
 
 We officially support launching the application suite using Docker Compose.
 Docker images and volumes are defined in the `docker-compose.yml` file. For
 those that want to use their own databases, use this file to configure the
 system.
 
-1. Clone the public repository and navigate to the Docker setup directory:
+1. Clone the repository and navigate to the Docker setup directory:
 
 ```bash
 git clone [https://github.com/chainapsis/ewallet.git](https://github.com/chainapsis/ewallet-public.git)
@@ -34,6 +45,9 @@ cd ewallet/credential_vault/docker
 ```bash
 docker compose up -d
 ```
+
+3. Dockerized node software will soon be alive and you are set. Make sure you
+   set up the firewall (if any) correctly to allow in-bound traffic.
 
 ### Database Configuration
 
@@ -76,3 +90,20 @@ credential_vault:
     # Please change it to your own secret.
     ENCRYPTION_SECRET: "temp_enc_secret"
 ```
+
+### Node uptime and the implications
+
+At the time of writing, Keplr Embedded will allow "user sign-ups" only when
+every key share nodes are live in the network. Be sure to check your system runs
+correctly at all time.
+
+### Automatic backups
+
+The key share node automatically saves backups at regular intervals, ensuring
+recovery in case of failure. (7-day rolling)
+
+Data will be stored in the following path, `${HOME}/keplr_ewallet_data`.
+
+### Security
+
+TBD
