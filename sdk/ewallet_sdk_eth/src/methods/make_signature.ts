@@ -126,62 +126,52 @@ async function handleSigningFlow(
   ethEWallet: EthEWalletInterface,
   data: MakeEthereumSigData,
 ): Promise<EthSignResult> {
-  const modal_id = uuidv4();
-
-  const openModalMsg: EWalletMsgOpenModal = {
-    target: "keplr_ewallet_attached",
-    msg_type: "open_modal",
-    payload: {
-      modal_type: "make_signature",
-      modal_id,
-      data,
-    },
-  };
-
   const eWallet = ethEWallet.eWallet;
 
   try {
+    const modal_id = uuidv4();
+
+    const openModalMsg: EWalletMsgOpenModal = {
+      target: "keplr_ewallet_attached",
+      msg_type: "open_modal",
+      payload: {
+        modal_type: "make_signature",
+        modal_id,
+        data,
+      },
+    };
+
     const openModalResp = await eWallet.openModal(openModalMsg);
+
+    if (openModalResp.modal_type !== "make_signature") {
+      throw new Error("Invalid modal type response");
+    }
 
     switch (openModalResp.type) {
       case "approve": {
-        const makeEthereumSigResult = openModalResp.data;
-
-        if (
-          !makeEthereumSigResult ||
-          makeEthereumSigResult.chain_type !== "eth"
-        ) {
-          throw new Error("Invalid chain type for eth signature");
+        if (openModalResp.data.chain_type !== "eth") {
+          throw new Error("Invalid chain type sig response");
         }
 
-        return makeEthereumSigResult.data;
+        const makeEthereumSigResult = openModalResp.data;
+
+        return makeEthereumSigResult.sig_result;
       }
+
       case "reject": {
         throw new UserRejectedRequestError(
           new Error("User rejected the signature request"),
         );
       }
+
       case "error": {
         throw new Error(openModalResp.error);
       }
+
       default: {
         throw new Error("unreachable");
       }
     }
-
-    // if (!modalResult.approved) {
-    //   throw new UserRejectedRequestError(
-    //     new Error(modalResult.reason ?? "User rejected the signature request"),
-    //   );
-    // }
-
-    // const makeEthereumSigResult = modalResult.data;
-    //
-    // if (!makeEthereumSigResult || makeEthereumSigResult.chain_type !== "eth") {
-    //   throw new Error("Invalid chain type for eth signature");
-    // }
-    //
-    // return makeEthereumSigResult.data;
   } catch (error) {
     // if it's already a JSON-RPC compatible error, just throw it
     if (error && typeof error === "object" && "code" in error) {
