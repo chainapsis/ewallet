@@ -50,7 +50,7 @@ export async function signArbitrary(
 
     switch (openModalResp.type) {
       case "approve": {
-        const signature = openModalResp.data.signature;
+        const signature = openModalResp.data.data.signature;
 
         const isVerified = await this.verifyArbitrary(
           chainId,
