@@ -161,7 +161,7 @@ export function verifyADR36AminoSignDoc(
   }
 
   return secp256k1.verify(signature, messageHash, pubKey, {
-    prehash: true,
+    prehash: false,
   });
 }
 
