@@ -5,7 +5,6 @@
 </a>
 
 <br />
-<br />
 
 The crypto wallet, seamlessly built-in.
 
