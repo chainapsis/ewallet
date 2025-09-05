@@ -4,15 +4,12 @@
     src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.png" 
     alt="Logo" 
 >
-<h3 align="center">Keplr Embedded</h3>
-<p align="center">
+
 The crypto wallet, seamlessly built-in.
-<br/>
-<br/>
-<a href="https://docs.embed.keplr.app"><strong>Explore the docs »</strong></a>
-<br/>
-<br/>
-<a href="https://demo.embed.keplr.app">View Demo</a>  
+
+[Explore the docs »](https://docs.embed.keplr.app) <br/> <br/>
+<a href="https://demo.embed.keplr.app">View Demo</a>
+
 </p>
 </div>
 
