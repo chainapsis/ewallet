@@ -23,6 +23,9 @@ export async function verifyArbitrary(
     const bech32PrefixAccAddr = chainInfo.bech32Config.bech32PrefixAccAddr;
 
     // Convert signature from base64 to Uint8Array
+    if (signature.signature === undefined) {
+      throw new Error('STDSignature not contains "signature" property');
+    }
     const signatureBytes = fromBase64(signature.signature);
 
     // Get public key from signature.pub_key
