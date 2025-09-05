@@ -8,7 +8,7 @@ team beforehand to get bootstrapped. We will share shortly how you can join our
 **communication channel** to discuss.
 
 If you are not familiar with the concepts, please read the Keplr Embedded
-documentation first to learn how the system works.
+[Ewallet documentation](README.md) first to learn how the system works.
 
 ## Hardware Requirements
 
