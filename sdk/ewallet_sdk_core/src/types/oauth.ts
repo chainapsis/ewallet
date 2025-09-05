@@ -6,3 +6,7 @@ export type OAuthState = {
 export enum RedirectUriSearchParamsKey {
   STATE = "state",
 }
+
+// export const RedirectUriSearchParamsKey = {
+//   STATE: "state",
+// };
