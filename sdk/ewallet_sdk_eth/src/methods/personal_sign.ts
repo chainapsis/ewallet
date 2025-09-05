@@ -14,8 +14,6 @@ export async function personalSign(
     },
   });
 
-  console.log(33, result);
-
   if (result.type !== "signature") {
     throw new Error("Invalid result type");
   }
