@@ -91,6 +91,10 @@ credential_vault:
     ENCRYPTION_SECRET: "temp_enc_secret"
 ```
 
+### Node responsibility
+
+TBD
+
 ### Node uptime and the implications
 
 At the time of writing, Keplr Embedded will allow "user sign-ups" only when
