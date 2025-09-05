@@ -24,6 +24,10 @@ or mobile apps.
 Please refer to the
 [document](https://github.com/chainapsis/ewallet/blob/main/documentation/key_share_node.md).
 
+## How it works
+
+TBD
+
 ## Contributing
 
 Any contributions you make are **greatly appreciated**.
