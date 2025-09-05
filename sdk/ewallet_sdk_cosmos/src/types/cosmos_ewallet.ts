@@ -21,14 +21,13 @@ import type {
   DirectSignResponse,
   OfflineDirectSigner,
 } from "@cosmjs/proto-signing";
+import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type {
   KeplrEWalletCosmosEvent2,
   KeplrEWalletCosmosEventHandler2,
 } from "./event";
-import type { OpenModalResult } from "./modal";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
-import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
 import type { ArbitrarySigVerificationResult } from "@keplr-ewallet-sdk-cosmos/methods/verify_arbitrary";
 
