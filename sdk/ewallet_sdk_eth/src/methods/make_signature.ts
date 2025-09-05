@@ -143,6 +143,8 @@ async function handleSigningFlow(
 
     const openModalResp = await eWallet.openModal(openModalMsg);
 
+    console.log(11, openModalResp);
+
     if (openModalResp.modal_type !== "make_signature") {
       throw new Error("Invalid modal type response");
     }
@@ -154,6 +156,8 @@ async function handleSigningFlow(
         }
 
         const makeEthereumSigResult = openModalResp.data;
+
+        console.log(22, makeEthereumSigResult.sig_result);
 
         return makeEthereumSigResult.sig_result;
       }
