@@ -1,19 +1,13 @@
-<br/>
-<div align="center">
-<img 
-    src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.png" 
-    alt="Logo" 
->
+<a href="https://demo.embed.keplr.app/">
+  <img
+    src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.png"
+    alt="Logo">
+</a>
 
 The crypto wallet, seamlessly built-in.
 
-[Explore the docs »](https://docs.embed.keplr.app) <br/> <br/>
-<a href="https://demo.embed.keplr.app">View Demo</a>
-
-</p>
-</div>
-
-TBD
+[Explore the docs »](https://docs.embed.keplr.app)
+[View Demo](https://demo.embed.keplr.app)
 
 ## Running a key share node
 
