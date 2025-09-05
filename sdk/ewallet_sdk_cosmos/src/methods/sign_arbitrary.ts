@@ -48,9 +48,17 @@ export async function signArbitrary(
 
     const openModalResp = await this.openModal(msg);
 
+    if (openModalResp.modal_type !== "make_signature") {
+      throw new Error("Invalid modal type response");
+    }
+
     switch (openModalResp.type) {
       case "approve": {
-        const signature = openModalResp.data.data.signature;
+        if (openModalResp.data.chain_type !== "cosmos") {
+          throw new Error("Invalid chain type sig response");
+        }
+
+        const signature = openModalResp.data.sig_result.signature;
 
         const isVerified = await this.verifyArbitrary(
           chainId,

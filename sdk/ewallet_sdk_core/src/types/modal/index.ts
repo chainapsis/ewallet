@@ -20,14 +20,18 @@ export type MakeSigModalPayload = {
 };
 
 export type MakeSignatureModalResult =
-  | {
-    chain_type: "eth";
-    data: MakeEthereumSigResult;
-  }
-  | {
-    chain_type: "cosmos";
-    data: MakeCosmosSigResult;
-  };
+  | MakeEthSigModalResult
+  | MakeCosmosSigModalResult;
+
+export interface MakeEthSigModalResult {
+  chain_type: "eth";
+  sig_result: MakeEthereumSigResult;
+}
+
+export interface MakeCosmosSigModalResult {
+  chain_type: "cosmos";
+  sig_result: MakeCosmosSigResult;
+}
 
 interface MakeSigModalApproveAckPayload {
   modal_type: "make_signature";
