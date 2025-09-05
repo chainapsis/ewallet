@@ -79,18 +79,6 @@ export async function signAmino(
         throw new Error("unreachable");
       }
     }
-
-    // const signature = showModalResponse.data.signature;
-    // const signed = showModalResponse.data.signed;
-    //
-    // if ("accountNumber" in signed) {
-    //   throw new Error("Signed document is not in the correct format");
-    // }
-    //
-    // return {
-    //   signed,
-    //   signature,
-    // };
   } catch (error) {
     console.error("[keplr-cosmos] Error signing amino, err: %s", error);
 

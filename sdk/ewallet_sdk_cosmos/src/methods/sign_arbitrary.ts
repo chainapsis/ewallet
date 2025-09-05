@@ -87,26 +87,6 @@ export async function signArbitrary(
         throw new Error("unreachable");
       }
     }
-
-    // if (openModalResponse.approved === false) {
-    //   throw new Error("User rejected the signature request");
-    // }
-    //
-    // const signature = openModalResponse.data.signature;
-    // const isVerified = await this.verifyArbitrary(
-    //   chainId,
-    //   signer,
-    //   data,
-    //   signature,
-    // );
-    //
-    // if (!isVerified) {
-    //   throw new Error("Signature verification failed");
-    // }
-    //
-    // return {
-    //   ...signature,
-    // };
   } catch (error) {
     console.error("[keplr-cosmos] Error signing arbitrary, err: %s", error);
 
