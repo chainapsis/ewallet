@@ -6,7 +6,13 @@
 
 The crypto wallet, seamlessly built-in.
 
+Using the latest advances in cryptography, Keplr Embedded delivers a seamless
+experience by integrating the security of blockchain wallets directly into web
+or mobile apps. Users can sign up with familiar login methods (email, social, or
+SSO) while enjoying the benefits of true crypto ownership
+
 [Explore the docs »](https://docs.embed.keplr.app)
+
 [View Demo](https://demo.embed.keplr.app)
 
 ## Running a key share node
