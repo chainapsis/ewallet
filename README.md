@@ -4,6 +4,8 @@
     alt="Logo">
 </a>
 
+<br />
+
 The crypto wallet, seamlessly built-in.
 
 Using the latest advances in cryptography, Keplr Embedded delivers a seamless
