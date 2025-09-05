@@ -160,7 +160,9 @@ export function verifyADR36AminoSignDoc(
     throw new Error(`Invalid length of signature: ${signature.length}`);
   }
 
-  return secp256k1.verify(signature, messageHash, pubKey);
+  return secp256k1.verify(signature, messageHash, pubKey, {
+    prehash: true,
+  });
 }
 
 export function verifyADR36Amino(
