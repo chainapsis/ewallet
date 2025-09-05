@@ -2,24 +2,28 @@ import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
 
 import type { ChainInfoForAttachedModal } from "./common";
 
-// export type MakeEthereumSignType = MakeEthereumSigData["sign_type"];
-
 export type MakeEthereumSigData =
-  | {
-    chain_type: "eth";
-    sign_type: "tx";
-    payload: EthereumTxSignPayload;
-  }
-  | {
-    chain_type: "eth";
-    sign_type: "arbitrary";
-    payload: EthereumArbitrarySignPayload;
-  }
-  | {
-    chain_type: "eth";
-    sign_type: "eip712";
-    payload: EthereumEip712SignPayload;
-  };
+  | MakeTxSignSigData
+  | MakeArbitrarySigData
+  | MakeEIP712SigData;
+
+export interface MakeTxSignSigData {
+  chain_type: "eth";
+  sign_type: "tx";
+  payload: EthereumTxSignPayload;
+}
+
+export interface MakeArbitrarySigData {
+  chain_type: "eth";
+  sign_type: "arbitrary";
+  payload: EthereumArbitrarySignPayload;
+}
+
+export interface MakeEIP712SigData {
+  chain_type: "eth";
+  sign_type: "eip712";
+  payload: EthereumEip712SignPayload;
+}
 
 export type MakeEthereumSigResult = EthereumTxSignResult;
 
