@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/ewallet-sdk-cosmos",
-  "version": "0.0.6-rc.93",
+  "version": "0.0.6-rc.94",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "publishConfig": {
