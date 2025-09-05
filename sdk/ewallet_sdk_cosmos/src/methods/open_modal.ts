@@ -6,7 +6,6 @@ import type {
 import { v4 as uuidv4 } from "uuid";
 
 import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
-// import type { OpenModalResult } from "@keplr-ewallet-sdk-cosmos/types/modal";
 
 export async function openModal(
   this: CosmosEWalletInterface,
@@ -29,40 +28,7 @@ export async function openModal(
     this.eWallet.closeModal();
 
     return modalResult;
-
-    // if (modalResult.status !== "approved") {
-    //   return {
-    //     approved: false,
-    //     modal_id,
-    //     reason: modalResult.reason,
-    //   };
-    // }
-    //
-    // if (
-    //   modalResult.data?.chain_type === "cosmos" &&
-    //   modalResult.data?.modal_type === "make_signature"
-    // ) {
-    //   return {
-    //     approved: true,
-    //     modal_id,
-    //     data: modalResult.data?.data,
-    //   };
-    // }
-    //
-    // return {
-    //   approved: false,
-    //   modal_id,
-    //   reason: "Invalid modal result",
-    // };
   } catch (err: any) {
-    // console.error("[keplr-cosmos] modal_id: %s, err: ", modal_id, err);
-
     throw new Error(`Error getting modal response, err: ${err}`);
-
-    // return {
-    //   approved: false,
-    //   modal_id,
-    //   reason: "Unknown error",
-    // };
   }
 }
