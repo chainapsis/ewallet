@@ -36,7 +36,14 @@ export default [
       file: "dist/index.d.ts", // Output path for the bundled declaration file
       format: "esm",
     },
-    plugins: [tsConfigPaths(), nodeResolve(), dts(), typescript()],
+    plugins: [
+      tsConfigPaths(),
+      nodeResolve(),
+      dts(),
+      typescript({
+        noEmitOnError: true,
+      }),
+    ],
   },
   // {
   //   file: "dist/index.min.js",

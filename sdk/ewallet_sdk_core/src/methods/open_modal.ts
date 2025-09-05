@@ -44,7 +44,7 @@ export async function openModal(
     }
 
     if (openModalAck.payload.type === "error") {
-      throw new Error(openModalAck.payload.err);
+      throw new Error(openModalAck.payload.error);
     }
 
     return openModalAck.payload;

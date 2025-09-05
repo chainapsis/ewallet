@@ -35,6 +35,7 @@ export default [
       }),
       typescript({
         declaration: false,
+        noEmitOnError: true,
         exclude: ["**/*.test.ts", "**/tests/**/*", "**/*.spec.ts"],
       }),
     ],

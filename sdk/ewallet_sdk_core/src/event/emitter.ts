@@ -13,7 +13,7 @@ type EventHandlerType = {
 type EventEmitError =
   | {
     type: "handle_error";
-    err: string;
+    error: string;
   }
   | {
     type: "handler_not_found";
@@ -68,7 +68,7 @@ Received ${handler === null ? "null" : typeof handler}`,
       } catch (err: any) {
         return {
           success: false,
-          err: { type: "handle_error", err: err.toString() },
+          err: { type: "handle_error", error: err.toString() },
         };
       }
     }

@@ -46,7 +46,7 @@ interface MakeSigModalErrorAckPayload {
   modal_type: "make_signature";
   modal_id: string;
   type: "error";
-  err: string;
+  error: string;
 }
 
 export type OtherModalApproveAckPayload = {

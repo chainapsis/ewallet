@@ -162,7 +162,7 @@ async function handleSigningFlow(
         );
       }
       case "error": {
-        throw new Error(openModalResp.err);
+        throw new Error(openModalResp.error);
       }
       default: {
         throw new Error("unreachable");
@@ -192,6 +192,6 @@ async function handleSigningFlow(
       new Error(error instanceof Error ? error.message : String(error)),
     );
   } finally {
-    await eWallet.closeModal();
+    eWallet.closeModal();
   }
 }

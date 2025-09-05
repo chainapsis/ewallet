@@ -70,7 +70,7 @@ export async function signDirect(
         throw new Error("User rejected modal request");
       }
       case "error": {
-        throw new Error(openModalResp.err);
+        throw new Error(openModalResp.error);
       }
       default: {
         throw new Error("unreachable");
