@@ -91,11 +91,17 @@ credential_vault:
     ENCRYPTION_SECRET: "temp_enc_secret"
 ```
 
-### Node uptime and the implications
+### Node responsibility
 
-At the time of writing, Keplr Embedded will allow "user sign-ups" only when
-every key share nodes are live in the network. Be sure to check your system runs
-correctly at all time.
+1. Run the node all time. During the test period, the system allows new user
+   sign-ups (distributed key generation) only when all key share nodes are live
+   in the network - key share node uptime is thus critical in maintaining the
+   system. Keplr will check the liveness of all nodes constantly and may reach
+   out when we do not receive 'pong'.
+2. Data backup happens regularly in each node. So you do not have to define an
+   independent task to take the snapshots of the database. If you experience any
+   malfunctioning and would like to re-load the previous state of the storage,
+   please reach out to Keplr.
 
 ### Automatic backups
 
