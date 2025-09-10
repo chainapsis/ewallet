@@ -5,7 +5,7 @@
 The key share node is a crucial component of the distributed signature
 generation scheme. To become a serving node, please contact our team in advance
 for bootstrapping. We will soon provide details on how to join our
-**communication channel** for further discussion.
+**communication channel (Slack)** for further discussion.
 
 If you are not familiar with the concepts, please read the Keplr Embedded
 [Ewallet documentation](../README.md) first to learn how the system works.
@@ -26,7 +26,7 @@ If you plan to use your own database,
 
 - Postgres 17+
 
-## Installation Guide
+## Installation
 
 We officially support launching the application suite using Docker Compose.
 Docker images and volumes are defined in the `docker-compose.yml` file. For
@@ -91,25 +91,44 @@ credential_vault:
     ENCRYPTION_SECRET: "temp_enc_secret"
 ```
 
-### Node responsibility
+## Maintenance
 
-1. Run the node all time. During the test period, the system allows new user
-   sign-ups (distributed key generation) only when all key share nodes are live
-   in the network - key share node uptime is thus critical in maintaining the
-   system. Keplr will check the liveness of all nodes constantly and may reach
-   out when we do not receive 'pong'.
+### DevOps responsibilities
+
+1. Run the node all time (or at least over 99%). During the test period, the
+   system allows new user sign-ups (distributed key generation) only when all
+   key share nodes are live in the network - key share node uptime is thus
+   critical in maintaining the system. Keplr will check the liveness of all
+   nodes constantly and may reach out when we do not receive 'pong' for an
+   extended period of time.
 2. Data backup happens regularly in each node. So you do not have to define an
    independent task to take the snapshots of the database. If you experience any
-   malfunctioning and would like to re-load the previous state of the storage,
-   please reach out to Keplr.
+   malfunctioning and would like to roll back to previous state of the storage,
+   please reach out to Keplr. (instruction will be described in this document
+   down the road)
 
-### Automatic backups
+### System failure handling
+
+1. If the system experiences incidents, and does not recover by itself for over
+   15 mins, please reach out to Keplr.
+2. Keplr may give an instruction to retrieve the server log to analyze the cause
+   of the error, in which case, coordination will be appreciated.
+
+### Overall workload
+
+1. We will roll the new versions periodically. At times, minor updates may take
+   place several times a day. We will contact those correspondents directly when
+   an urgent upgrade is needed. (instruction will soon be described)
+2. Other than you staying updated through our communication channel, the scope
+   of involement from your side will be constrained at a reasonable level.
+
+## Automatic backups
 
 The key share node automatically saves backups at regular intervals, ensuring
 recovery in case of failure. (7-day rolling)
 
 Data will be stored in the following path, `${HOME}/keplr_ewallet_data`.
 
-### Security
+## Security
 
 TBD
