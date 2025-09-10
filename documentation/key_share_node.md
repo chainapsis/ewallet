@@ -10,14 +10,16 @@ for bootstrapping. We will soon provide details on how to join our
 If you are not familiar with the concepts, please read the Keplr Embedded
 [Ewallet documentation](../README.md) first to learn how the system works.
 
-## Hardware Requirements
+## [1/3] System Requirements
+
+### Hardware Requirements
 
 | Component                     | Min requirements                | Recommended Spec                  |
 | ----------------------------- | ------------------------------- | --------------------------------- |
 | Server                        | 1 vCPU, 2 GB RAM                | 8 vCPU, 32 GB RAM                 |
 | Database (If you use your DB) | 1 vCPU, 2 GB RAM, 50 GB storage | 8 vCPU, 32 GB RAM, 300 GB Storage |
 
-## Software Requirements
+### Software Requirements
 
 - Mac OS or Linux operating system
 - Docker 27+
@@ -26,7 +28,7 @@ If you plan to use your own database,
 
 - Postgres 17+
 
-## Installation
+## [2/3] Installation
 
 We officially support launching the application suite using Docker Compose.
 Docker images and volumes are defined in the `docker-compose.yml` file. For
@@ -91,7 +93,7 @@ credential_vault:
     ENCRYPTION_SECRET: "temp_enc_secret"
 ```
 
-## Maintenance
+## [3/3] Maintenance
 
 ### DevOps responsibilities
 
