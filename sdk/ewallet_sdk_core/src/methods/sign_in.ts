@@ -105,7 +105,7 @@ async function tryGoogleSignIn(
 
   return new Promise<void>((resolve, reject) => {
     let focusTimer: number;
-    let timeoutId: number;
+    let requestTimer: number;
 
     function onFocus(e: FocusEvent) {
       // when user focus back to the parent window, check if the popup is closed
@@ -123,7 +123,7 @@ async function tryGoogleSignIn(
       const data = e.data as EWalletMsg;
 
       if (data.msg_type === "oauth_sign_in_ack") {
-        cleanup();
+        // cleanup();
         if (data.payload.success) {
           resolve();
         } else {
@@ -133,14 +133,14 @@ async function tryGoogleSignIn(
     }
     window.addEventListener("message", onMessage);
 
-    timeoutId = window.setTimeout(() => {
+    requestTimer = window.setTimeout(() => {
       cleanup();
       reject(new Error("Timeout: no response within 5 minutes"));
     }, FIVE_MINS_MS);
 
     function cleanup() {
       window.clearTimeout(focusTimer);
-      window.clearTimeout(timeoutId);
+      window.clearTimeout(requestTimer);
       window.removeEventListener("focus", onFocus);
       window.removeEventListener("message", onMessage);
 
