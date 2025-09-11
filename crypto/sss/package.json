@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.16",
-    "@noble/secp256k1": "^3.0.0"
+    "@noble/secp256k1": "^3.0.0",
+    "polynomial": "^1.6.1"
   },
   "devDependencies": {
     "@jest/globals": "*",
