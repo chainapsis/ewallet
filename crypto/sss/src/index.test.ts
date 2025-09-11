@@ -18,5 +18,14 @@ describe("sss_test_1", () => {
     }
 
     console.log("coeffs", coeffs);
+
+    const v = field.newVectorFrom(coeffs);
+    console.log(22, v);
+
+    const y = field.evalPolyAt(v, 3n);
+    console.log(11, y);
+
+    // const x = 151;
+    // for (let idx = 0; idx < DEGREE; idx += 1) { }
   });
 });
