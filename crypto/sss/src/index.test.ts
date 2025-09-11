@@ -59,4 +59,61 @@ describe("sss_test_1", () => {
     console.log("Private key: ", y.toString(16));
     expect(y.toString(16).length).toBe(64);
   });
+
+  it("t2", () => {
+    console.log(123);
+
+    // 1. User talks to Keplr how to split her key
+    // Keplr responds as
+    // [
+    //   {
+    //     index: '632049623304950394n'
+    //     endpoint: 'https://123.123.123.1"
+    //   },
+    //   {
+    //      index: '460345609384506390n'
+    //      endpoint: 'https://123.123.123.1"
+    //   },
+    //   ...
+    // ]
+
+    // 2. User splits her key then sends them over to KS nodes
+    // Keplr remembers the fact that the user handed over to N KS nodes
+  });
+
+  it("t3", () => {
+    console.log(123);
+
+    // 1. User talks to Keplr how to retreive her key shares
+    // Keplr responds as
+    // {
+    //   ks_nodes: [
+    //     {
+    //       index: '632049623304950394n'
+    //       endpoint: 'https://123.123.123.1"
+    //     },
+    //     {
+    //        index: '460345609384506390n'
+    //        endpoint: 'https://123.123.123.1"
+    //     },
+    //     ...
+    //   ]
+    // }
+
+    // 2. User asks ks nodes then combine the key
+    //
+    //
+    // 3. In the event where a new KS node emerges,
+    // Keplr responds as
+    // {
+    //   create_new_key_shares_required: [
+    //     index: '632049623304950394n'
+    //     endpoint: 'https://123.123.123.1"
+    //   ],
+    //   {
+    //     index: '632049623304950394n'
+    //     endpoint: 'https://123.123.123.1"
+    //   },
+    // }
+  });
 });
