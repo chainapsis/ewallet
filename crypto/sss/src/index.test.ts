@@ -1,16 +1,30 @@
-import * as secp from "@noble/secp256k1";
-import Polynomial from "polynomial";
 import * as galois from "@guildofweavers/galois";
+import { SECP256K1_ORDER_BE } from "./curve";
 
-// const prime = 2 ^ 256 − 2 ^ 32 − 977
 const DEGREE = 5;
 const N = 10;
 const T = DEGREE + 1;
 const COEFFICIENTS_COUNT = T;
 
+const SECP256K1_ORDER_HEX = Buffer.from(SECP256K1_ORDER_BE).toString("hex");
+const SECP256K1_ORDER = BigInt("0x" + SECP256K1_ORDER_HEX);
+
 describe("sss_test_1", () => {
+  it("order_of_secp256k1", () => {
+    expect(Buffer.from(SECP256K1_ORDER_BE).toString("hex")).toBe(
+      "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141".toLowerCase(),
+    );
+    expect(SECP256K1_ORDER_HEX.length).toBe(64);
+
+    const orderBigInt = BigInt("0x" + SECP256K1_ORDER_BE);
+    console.log("orderBigInt: ", orderBigInt);
+
+    const buf = Uint8Array.from(Buffer.from(SECP256K1_ORDER_HEX, "hex"));
+    console.log("uint8Array: ", buf);
+  });
+
   it("sss_gf_secp256k1", () => {
-    const field = galois.createPrimeField(2n ** 256n - 351n * 2n ** 32n + 1n);
+    const field = galois.createPrimeField(SECP256K1_ORDER);
 
     // 1. Random sample a polynomial
     const coeffs = [];
