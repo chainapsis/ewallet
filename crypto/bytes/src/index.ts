@@ -3,6 +3,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 const HEX_STRING_REGEX = new RegExp("^[0-9a-fA-F]*$");
 
 // Type definition for a fixed-length byte array
+// Only supports big endian.
 export class Bytes<N extends number> {
   private readonly _bytes: Uint8Array;
   readonly length: N;
@@ -123,6 +124,53 @@ export class Bytes<N extends number> {
     };
   }
 
+  static fromBigInt<T extends number>(
+    bigInt: bigint,
+    length: T,
+  ): Result<Bytes<T>, string> {
+    if (typeof bigInt !== "bigint") {
+      return {
+        success: false,
+        err: "Input must be a bigint.",
+      };
+    }
+
+    if (bigInt < BigInt(0)) {
+      return {
+        success: false,
+        err: "BigInt must be non-negative.",
+      };
+    }
+
+    if (length <= 0) {
+      return {
+        success: false,
+        err: "Length must be greater than 0.",
+      };
+    }
+
+    const maxValue = (BigInt(1) << (BigInt(length) * BigInt(8))) - BigInt(1);
+    if (bigInt > maxValue) {
+      return {
+        success: false,
+        err: `BigInt value is too large for ${length} bytes. Max value: ${maxValue.toString()}, Actual: ${bigInt.toString()}`,
+      };
+    }
+
+    const uint8Array = new Uint8Array(length);
+    let value = bigInt;
+
+    for (let i = length - 1; i >= 0; i--) {
+      uint8Array[i] = Number(value & BigInt(0xff));
+      value = value >> BigInt(8);
+    }
+
+    return {
+      success: true,
+      data: new Bytes(uint8Array, length),
+    };
+  }
+
   /**
    * Compares the current Bytes instance with another Bytes instance.
    * Uses constant-time comparison to prevent timing attacks.
@@ -157,6 +205,14 @@ export class Bytes<N extends number> {
     return Array.from(this._bytes)
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
+  }
+
+  /**
+   * Converts the Bytes instance to a bigint.
+   * @returns A bigint
+   */
+  toBigInt(): bigint {
+    return BigInt("0x" + this.toHex());
   }
 }
 

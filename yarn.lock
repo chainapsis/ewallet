@@ -3249,13 +3249,12 @@ __metadata:
   dependencies:
     "@guildofweavers/galois": "npm:^0.4.22"
     "@jest/globals": "npm:*"
+    "@keplr-ewallet/bytes": "workspace:*"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
-    "@noble/secp256k1": "npm:^3.0.0"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
     jest: "npm:*"
-    polynomial: "npm:^1.6.1"
     ts-jest: "npm:*"
     typescript: "npm:*"
   languageName: unknown
@@ -3960,13 +3959,6 @@ __metadata:
   version: 1.7.1
   resolution: "@noble/secp256k1@npm:1.7.1"
   checksum: 10c0/48091801d39daba75520012027d0ff0b1719338d96033890cfe0d287ad75af00d82769c0194a06e7e4fbd816ae3f204f4a59c9e26f0ad16b429f7e9b5403ccd5
-  languageName: node
-  linkType: hard
-
-"@noble/secp256k1@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@noble/secp256k1@npm:3.0.0"
-  checksum: 10c0/bf844b9c1d4bd69f24d677eec5e0d2eb93506e6b1c32f30fd62690b539618e2d18d98297a66cde224196f4c73d4395f437eade496f241f867907f3db8cc7a2ee
   languageName: node
   linkType: hard
 
@@ -10299,13 +10291,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"complex.js@npm:2.4.2":
-  version: 2.4.2
-  resolution: "complex.js@npm:2.4.2"
-  checksum: 10c0/c78cca0a3c08fa48845e2703b9772bdd80d44e56728382d43879183cb23391da6e8b6326ceec23c685abfd529b61d34842ba1784d7fa3783b194fbc6d0850d7c
-  languageName: node
-  linkType: hard
-
 "component-emitter@npm:^1.3.1":
   version: 1.3.1
   resolution: "component-emitter@npm:1.3.1"
@@ -12353,13 +12338,6 @@ __metadata:
   version: 1.19.5
   resolution: "fp-ts@npm:1.19.5"
   checksum: 10c0/2a330fa1779561307740c26a7255fdffeb1ca2d0c7448d4dc094b477b772b0c8f7da1dfc88569b6f13f6958169b63b5df7361e514535b46b2e215bbf03a3722d
-  languageName: node
-  linkType: hard
-
-"fraction.js@npm:5.2.2":
-  version: 5.2.2
-  resolution: "fraction.js@npm:5.2.2"
-  checksum: 10c0/708f92c929c1147b91dac6820627cd84a89fcbf7a37f4c2cee6c1b6729d735ecd2ffc9aea343e404ac1e611d24387491b516a0a63ba61c158f424bfa9154883e
   languageName: node
   linkType: hard
 
@@ -17293,17 +17271,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"polynomial@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "polynomial@npm:1.6.1"
-  dependencies:
-    complex.js: "npm:2.4.2"
-    fraction.js: "npm:5.2.2"
-    quaternion: "npm:2.1.1"
-  checksum: 10c0/99299d80d101a3958a43b607f802c0ea0bf1be7d67edd0730be242174f86798458d0d4c8321532fec913878cab9ef090158ebaa6baea54385366e87c444a0012
-  languageName: node
-  linkType: hard
-
 "pony-cause@npm:^2.1.10":
   version: 2.1.11
   resolution: "pony-cause@npm:2.1.11"
@@ -17682,13 +17649,6 @@ __metadata:
   dependencies:
     side-channel: "npm:^1.1.0"
   checksum: 10c0/8ea5d91bf34f440598ee389d4a7d95820e3b837d3fd9f433871f7924801becaa0cd3b3b4628d49a7784d06a8aea9bc4554d2b6d8d584e2d221dc06238a42909c
-  languageName: node
-  linkType: hard
-
-"quaternion@npm:2.1.1":
-  version: 2.1.1
-  resolution: "quaternion@npm:2.1.1"
-  checksum: 10c0/53c7bbdda6d129dae90c6618747d20eee2fa4a96fe3ae8f02a13935a1922f626b74b5a7689d5bc11cc24b22a102a748c7e7565db87166693e8504488b07c0710
   languageName: node
   linkType: hard
 

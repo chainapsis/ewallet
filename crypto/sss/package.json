@@ -21,9 +21,8 @@
   },
   "dependencies": {
     "@guildofweavers/galois": "^0.4.22",
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.17",
-    "@noble/secp256k1": "^3.0.0",
-    "polynomial": "^1.6.1"
+    "@keplr-ewallet/bytes": "workspace:*",
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.17"
   },
   "devDependencies": {
     "@jest/globals": "*",
