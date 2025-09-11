@@ -20,7 +20,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.16"
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.16",
+    "@noble/secp256k1": "^3.0.0"
   },
   "devDependencies": {
     "@jest/globals": "*",
