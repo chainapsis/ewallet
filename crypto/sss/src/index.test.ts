@@ -16,7 +16,6 @@ describe("sss_test_1", () => {
       const coeff = field.rand();
       coeffs.push(coeff);
     }
-
     console.log("coeffs", coeffs);
 
     const v = field.newVectorFrom(coeffs);
@@ -24,5 +23,14 @@ describe("sss_test_1", () => {
 
     const y = field.evalPolyAt(v, 3n);
     console.log(11, y);
+
+    // 1. Random sample a polynomial
+
+    // 2. Random sample points of length N
+    // [x0, y0], [x1, y1], ...
+
+    // 3. Interpolate the original polynomial using the points (2)
+
+    // 4. Evaluate at x=0
   });
 });
