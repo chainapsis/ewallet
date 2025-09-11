@@ -1,5 +1,5 @@
 import * as galois from "@guildofweavers/galois";
-import { SECP256K1_ORDER_BE } from "./curve";
+import { SECP256K1_ORDER_BE } from "./curve_order";
 
 const DEGREE = 5;
 const N = 10;
