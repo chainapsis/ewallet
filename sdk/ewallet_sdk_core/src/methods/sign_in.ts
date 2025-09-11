@@ -98,7 +98,8 @@ async function tryGoogleSignIn(
 
   const ack = await ackPromise;
   if (ack.msg_type !== "set_oauth_nonce_ack" || !ack.payload.success) {
-    popup.close();
+    // Closing will be handled in the popup window
+    // popup.close();
     throw new Error("Failed to set nonce for google oauth sign in");
   }
 
