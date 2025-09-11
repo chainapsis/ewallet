@@ -3227,6 +3227,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@keplr-ewallet/sss@workspace:crypto/sss":
+  version: 0.0.0-use.local
+  resolution: "@keplr-ewallet/sss@workspace:crypto/sss"
+  dependencies:
+    "@jest/globals": "npm:*"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.16"
+    "@types/jest": "npm:*"
+    "@types/node": "npm:*"
+    del-cli: "npm:*"
+    jest: "npm:*"
+    ts-jest: "npm:*"
+    typescript: "npm:*"
+  languageName: unknown
+  linkType: soft
+
 "@keplr-ewallet/stdlib-js@npm:^0.0.2-rc.16, @keplr-ewallet/stdlib-js@npm:^0.0.2-rc.6, @keplr-ewallet/stdlib-js@workspace:*, @keplr-ewallet/stdlib-js@workspace:lib/stdlib_js":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/stdlib-js@workspace:lib/stdlib_js"

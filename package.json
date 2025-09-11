@@ -17,6 +17,7 @@
       "sdk/sandboxes/sandbox_osmosis",
       "sdk/sandboxes/sandbox_simple_host",
       "crypto/bytes",
+      "crypto/sss",
       "crypto/tecdsa/tecdsa_interface"
     ]
   },

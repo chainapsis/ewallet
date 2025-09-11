@@ -6,6 +6,7 @@
     "sdk/ewallet_sdk_cosmos",
     "sdk/ewallet_sdk_eth",
     "crypto/bytes",
+    "crypto/sss",
     "crypto/tecdsa/tecdsa_interface",
     "credential_vault/cv_interface"
   ],
