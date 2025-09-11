@@ -78,6 +78,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@assemblyscript/loader@npm:0.8.x":
+  version: 0.8.1
+  resolution: "@assemblyscript/loader@npm:0.8.1"
+  checksum: 10c0/0a8689f18bd61925ac44315f6a396c6e156bc37cab0d4a57d288eeb6581112aaee56d81605279531b32f72bfd80581eee61ef161a749740048995dd5c017e64d
+  languageName: node
+  linkType: hard
+
 "@aws-crypto/sha256-browser@npm:5.2.0":
   version: 5.2.0
   resolution: "@aws-crypto/sha256-browser@npm:5.2.0"
@@ -2350,6 +2357,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@guildofweavers/galois@npm:^0.4.22":
+  version: 0.4.22
+  resolution: "@guildofweavers/galois@npm:0.4.22"
+  dependencies:
+    "@assemblyscript/loader": "npm:0.8.x"
+  checksum: 10c0/7414d87bd3cbc764dc0bce38cbf82a6ed1518e50231f58bf4adf4aa0e24e85ec8fcf47547e60937c4eae025dd205becb1339bc1fe15ac5ccf4a074bbe26c5369
+  languageName: node
+  linkType: hard
+
 "@heroicons/react@npm:~2.1.5":
   version: 2.1.5
   resolution: "@heroicons/react@npm:2.1.5"
@@ -3231,6 +3247,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/sss@workspace:crypto/sss"
   dependencies:
+    "@guildofweavers/galois": "npm:^0.4.22"
     "@jest/globals": "npm:*"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.16"
     "@noble/secp256k1": "npm:^3.0.0"
