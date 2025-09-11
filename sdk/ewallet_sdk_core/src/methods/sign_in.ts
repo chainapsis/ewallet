@@ -145,8 +145,7 @@ async function tryGoogleSignIn(
       window.removeEventListener("message", onMessage);
 
       if (popup && !popup.closed) {
-        console.log("popup close");
-        // popup.close();
+        popup.close();
       }
     }
   });
