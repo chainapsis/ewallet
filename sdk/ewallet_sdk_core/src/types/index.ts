@@ -6,3 +6,4 @@ export * from "./event";
 export * from "./oauth";
 export * from "./cosmos_sign";
 export * from "./init";
+export * from "./sign_in";
