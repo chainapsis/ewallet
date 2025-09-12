@@ -16,12 +16,22 @@ use crate::{
 //   t: number,
 // ): Result<Bytes32Point[], string> {
 pub fn split<C: CSCurve>(secret: Vec<u8>, ks_node_hashes: Vec<Vec<u8>>, t: u32) {
-    let coefficients: Vec<C::Scalar> = vec![];
+    let mut coefficients: Vec<C::Scalar> = vec![];
+
+    let secret_u64 = 12341245124u64;
 
     let mut rng = OsRng;
 
-    // let c = C::Scalar::random(&mut rng);
-    // println!("c: {:?}", c);
+    let constant = C::Scalar::from(secret_u64);
+    println!("constant: {:?}", constant);
+    coefficients.push(constant);
+
+    for i in 0..t - 1 {
+        let c = C::Scalar::random(&mut rng);
+        coefficients.push(c);
+    }
+
+    println!("coefficients: {:?}", coefficients);
 
     let p1 = Participant::from(1u32);
     let p2 = Participant::from(2u32);
