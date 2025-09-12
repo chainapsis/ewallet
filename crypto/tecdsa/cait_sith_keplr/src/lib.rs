@@ -131,6 +131,7 @@ pub mod presign;
 pub mod sign;
 pub mod tecdsa;
 pub mod tecdsa_cli_srv;
+mod sss;
 #[cfg(test)]
 mod tests;
 
