@@ -32,14 +32,6 @@ pub fn split<C: CSCurve>(secret: Vec<u8>, ks_node_hashes: Vec<Vec<u8>>, t: u32) 
     }
 
     println!("coefficients: {:?}", coefficients);
-
-    let p1 = Participant::from(1u32);
-    let p2 = Participant::from(2u32);
-    // let p3 = Participant::from(3u32);
-
-    let lagrange = lagrange::<C>(&[p1, p2], p1);
-    // 2 * inverse of 1
-    println!("lagrange: {:?}", lagrange);
 }
 
 // participants.rs
