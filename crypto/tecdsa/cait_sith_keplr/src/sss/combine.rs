@@ -1,27 +1,32 @@
-use elliptic_curve::bigint::{ArrayEncoding, Encoding};
-use elliptic_curve::scalar;
-use elliptic_curve::{Field, Group, ScalarPrimitive};
-use k256::pkcs8::der::Encode;
-use k256::FieldBytes;
-use rand_core::CryptoRngCore;
+use elliptic_curve::bigint::Encoding;
+use elliptic_curve::{Field, ScalarPrimitive};
+use k256::Secp256k1;
 use rand_core::OsRng;
-use serde::{Deserialize, Serialize};
-use std::ops::{Add, AddAssign, Index, Mul, MulAssign};
 
-use crate::math::Polynomial;
+use crate::compat::CSCurve;
 use crate::protocol::Participant;
 use crate::sss::point::Point256;
-use crate::{
-    compat::CSCurve,
-    serde::{deserialize_projective_points, serialize_projective_points},
-};
 
 // export function combine(
 //   points: Bytes32Point[],
 //   t: number,
 // ): Result<Bytes32, string> {
 
-pub fn combine(points: Vec<Point256>, t: usize) {}
+pub fn combine(points: Vec<Point256>, t: usize) -> Result<Vec<u8>, String> {
+    if points.len() < 2 {
+        return Err("Need at least 2 points to reconstruct".to_string());
+    }
+
+    if points.len() < t {
+        return Err("Need at least t points to reconstruct".to_string());
+    }
+
+    Ok(vec![0; 32])
+
+    // 1. interplate
+
+    // 2. validate rest points
+}
 
 // participants.rs
 // Get the lagrange coefficient for a participant, relative to this list.

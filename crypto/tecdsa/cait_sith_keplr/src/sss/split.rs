@@ -1,20 +1,10 @@
-use elliptic_curve::bigint::{ArrayEncoding, Encoding};
-use elliptic_curve::scalar;
-use elliptic_curve::{Field, Group, ScalarPrimitive};
-use k256::pkcs8::der::Encode;
-use k256::FieldBytes;
-use rand_core::CryptoRngCore;
+use elliptic_curve::bigint::Encoding;
+use elliptic_curve::ScalarPrimitive;
 use rand_core::OsRng;
-use serde::{Deserialize, Serialize};
-use std::ops::{Add, AddAssign, Index, Mul, MulAssign};
 
+use crate::compat::CSCurve;
 use crate::math::Polynomial;
-use crate::protocol::Participant;
 use crate::sss::point::Point256;
-use crate::{
-    compat::CSCurve,
-    serde::{deserialize_projective_points, serialize_projective_points},
-};
 
 // export function split(
 //   secret: Bytes32,
