@@ -127,7 +127,7 @@ async function tryGoogleSignIn(
         if (data.payload.success) {
           resolve();
         } else {
-          reject(new Error(data.payload.err));
+          reject(new Error(data.payload.err.type));
         }
       }
     }

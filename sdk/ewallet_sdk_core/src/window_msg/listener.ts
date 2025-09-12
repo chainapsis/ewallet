@@ -1,10 +1,12 @@
-import type { AckPayload, EWalletMsg } from "@keplr-ewallet-sdk-core/types";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+
+import type { EWalletMsg } from "@keplr-ewallet-sdk-core/types";
 import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
 
 // Only used for "init" message which is triggered by the child.
 // After initialization, message communication is only triggered
 // by parent window and child replies on the dedicated channel
-export function registerMsgListener(): Promise<AckPayload<InitPayload>> {
+export function registerMsgListener(): Promise<Result<InitPayload, string>> {
   if (window.__keplr_ewallet_ev) {
     console.warn("[keplr] isn't it already initailized?");
   }
