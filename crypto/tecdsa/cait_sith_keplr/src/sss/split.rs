@@ -26,6 +26,18 @@ pub fn split<C: CSCurve>(
     ks_node_hashes: Vec<Vec<u8>>,
     t: usize,
 ) -> Result<Vec<Point256>, String> {
+    if secret.len() != 32 {
+        return Err("Secret must be 32 bytes".to_string());
+    }
+
+    if ks_node_hashes.len() < t {
+        return Err("KS node hashes must be greater than t".to_string());
+    }
+
+    if t < 2 {
+        return Err("T must be greater than 2".to_string());
+    }
+
     let secret_scalar = ScalarPrimitive::<C>::from_slice(&secret)
         .map_err(|_| "Failed to convert secret to scalar".to_string())?;
     let constant = C::Scalar::from(secret_scalar);
@@ -75,32 +87,4 @@ pub fn split<C: CSCurve>(
     println!("points: {:?}", points);
 
     Ok(points)
-}
-
-// participants.rs
-// Get the lagrange coefficient for a participant, relative to this list.
-pub fn lagrange<C: CSCurve>(participants: &[Participant], p: Participant) -> C::Scalar {
-    let p_scalar = p.scalar::<C>();
-
-    let mut top = C::Scalar::ONE;
-    let mut bot = C::Scalar::ONE;
-    for q in participants {
-        if p == *q {
-            continue;
-        }
-        let q_scalar = q.scalar::<C>();
-        println!("q_scalar: {:?}", q_scalar);
-        top *= q_scalar;
-        bot *= q_scalar - p_scalar;
-
-        println!("top: {:?}, bot: {:?}", top, bot);
-    }
-
-    println!(
-        "RESULT top: {:?}, bot_inv: {:?}",
-        top,
-        bot.invert().unwrap()
-    );
-
-    top * bot.invert().unwrap()
 }
