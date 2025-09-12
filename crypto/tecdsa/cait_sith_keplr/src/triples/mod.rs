@@ -29,7 +29,7 @@ use ::serde::{Deserialize, Serialize};
 use elliptic_curve::{Field, Group};
 use rand_core::CryptoRngCore;
 
-use crate::{compat::CSCurve, math::Polynomial, protocol::Participant, serde};
+use crate::{compat::CSCurve, math::Polynomial, protocol::Participant};
 
 /// Represents the public part of a triple.
 ///
