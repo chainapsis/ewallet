@@ -3098,7 +3098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/bytes@npm:^0.0.3-alpha.34, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
+"@keplr-ewallet/bytes@npm:^0.0.3-alpha.35, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/bytes@workspace:crypto/bytes"
   dependencies:
@@ -3134,7 +3134,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/credential-vault-interface@workspace:credential_vault/cv_interface"
   dependencies:
-    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.34"
+    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.35"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3237,7 +3237,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.76, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
+"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.77, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core"
   dependencies:
@@ -3286,7 +3286,7 @@ __metadata:
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.76"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.77"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
@@ -3318,7 +3318,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth"
   dependencies:
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.76"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.77"
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"

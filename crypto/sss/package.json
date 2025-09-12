@@ -3,7 +3,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "version": "0.0.2-alpha.1",
+  "version": "0.0.2-alpha.2",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
