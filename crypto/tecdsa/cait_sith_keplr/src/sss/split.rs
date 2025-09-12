@@ -21,4 +21,23 @@ pub fn split<C: CSCurve>(secret: Vec<u8>, ks_node_hashes: Vec<Vec<u8>>, t: u32) 
 
     let c = C::Scalar::random(&mut rng);
     println!("c: {:?}", c);
+
+    // participants.rs
+    /// Get the lagrange coefficient for a participant, relative to this list.
+    // pub fn lagrange<C: CSCurve>(&self, p: Participant) -> C::Scalar {
+    //     let p_scalar = p.scalar::<C>();
+    //
+    //     let mut top = C::Scalar::ONE;
+    //     let mut bot = C::Scalar::ONE;
+    //     for q in &self.participants {
+    //         if p == *q {
+    //             continue;
+    //         }
+    //         let q_scalar = q.scalar::<C>();
+    //         top *= q_scalar;
+    //         bot *= q_scalar - p_scalar;
+    //     }
+    //
+    //     top * bot.invert().unwrap()
+    // }
 }
