@@ -7,7 +7,7 @@ use crate::{
 
 #[test]
 #[should_panic]
-fn test_overflow() {
+fn test_split_overflow() {
     let ret = split::split::<Secp256k1>(
         vec![
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -20,7 +20,7 @@ fn test_overflow() {
 
 #[test]
 #[should_panic]
-fn test_shorter_length() {
+fn test_split_shorter_length() {
     let ret = split::split::<Secp256k1>(
         vec![
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -33,13 +33,44 @@ fn test_shorter_length() {
 
 #[test]
 #[should_panic]
-fn test_longer_length() {
+fn test_split_longer_length() {
     let ret = split::split::<Secp256k1>(
         vec![
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 1, 1,
         ], // 33 bytes
         vec![],
+        3,
+    );
+}
+
+#[test]
+fn test_split_success() {
+    let ks_node_hashes = vec![
+        vec![
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ],
+        vec![
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 2,
+        ],
+        vec![
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 3,
+        ],
+        vec![
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 4,
+        ],
+    ];
+
+    let ret = split::split::<Secp256k1>(
+        vec![
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ],
+        ks_node_hashes,
         3,
     );
 }
