@@ -1,7 +1,4 @@
-use elliptic_curve::bigint::Encoding;
-use elliptic_curve::{Field, ScalarPrimitive};
-use k256::Secp256k1;
-use rand_core::OsRng;
+use elliptic_curve::Field;
 
 use crate::compat::CSCurve;
 use crate::protocol::Participant;
