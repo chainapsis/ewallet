@@ -1,6 +1,6 @@
 use k256::Secp256k1;
 
-use crate::{protocol::Participant, sss::combine::lagrange};
+use crate::{protocol::Participant, sss::combine::lagrange, sss::split};
 
 #[test]
 #[should_panic]
