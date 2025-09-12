@@ -1,4 +1,4 @@
-use elliptic_curve::{Field, Group};
+use elliptic_curve::{Field, Group, ScalarPrimitive};
 use rand_core::CryptoRngCore;
 use rand_core::OsRng;
 use serde::{Deserialize, Serialize};
@@ -18,11 +18,13 @@ use crate::{
 pub fn split<C: CSCurve>(secret: Vec<u8>, ks_node_hashes: Vec<Vec<u8>>, t: u32) {
     let mut coefficients: Vec<C::Scalar> = vec![];
 
-    let secret_u64 = 12341245124u64;
+    let secret_scalar = ScalarPrimitive::<C>::from_slice(&secret).unwrap();
+
+    println!("secret_scalar: {:?}", secret_scalar);
 
     let mut rng = OsRng;
 
-    let constant = C::Scalar::from(secret_u64);
+    let constant = C::Scalar::from(secret_scalar);
     println!("constant: {:?}", constant);
     coefficients.push(constant);
 

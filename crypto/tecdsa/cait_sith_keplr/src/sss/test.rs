@@ -6,10 +6,42 @@ use crate::{
 };
 
 #[test]
-fn test_foo_123() {
-    println!("test 123");
+#[should_panic]
+fn test_overflow() {
+    let ret = split::split::<Secp256k1>(
+        vec![
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        ], // 32bytes
+        vec![],
+        3,
+    );
+}
 
-    let _ret = split::split::<Secp256k1>(vec![1, 2, 3, 4, 5, 6, 7, 8], vec![], 3);
+#[test]
+#[should_panic]
+fn test_shorter_length() {
+    let ret = split::split::<Secp256k1>(
+        vec![
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0,
+        ], // 31 bytes
+        vec![],
+        3,
+    );
+}
+
+#[test]
+#[should_panic]
+fn test_longer_length() {
+    let ret = split::split::<Secp256k1>(
+        vec![
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1, 1,
+        ], // 33 bytes
+        vec![],
+        3,
+    );
 }
 
 #[test]
