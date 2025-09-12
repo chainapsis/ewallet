@@ -56,9 +56,9 @@ async function tryGoogleSignIn(
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  // NOTE: safari browser block the new window when async operation is used
-  // between user interaction and window opening.
-  // so we need to send the message to iframe first and wait for the ack after window opening.
+  // NOTE: Safari browser sets a strict rule in the amount of time a script
+  // can handle function that involes window.open(). window.open() had better
+  // be executed without awaiting any long operations
   const ackPromise = sendMsgToIframe({
     target: EWALLET_ATTACHED_TARGET,
     msg_type: "set_oauth_nonce",
@@ -114,6 +114,7 @@ async function tryGoogleSignIn(
         if (popup && popup.closed) {
           cleanup();
           reject(new Error("Window closed by user"));
+          closePopup(popup);
         }
       }, 200);
     }
@@ -122,8 +123,8 @@ async function tryGoogleSignIn(
     function onMessage(e: MessageEvent) {
       const data = e.data as EWalletMsg;
 
-      if (data.msg_type === "oauth_sign_in_ack") {
-        // cleanup();
+      if (data.msg_type === "oauth_sign_in_result") {
+        cleanup();
         if (data.payload.success) {
           resolve();
         } else {
@@ -136,6 +137,7 @@ async function tryGoogleSignIn(
     requestTimer = window.setTimeout(() => {
       cleanup();
       reject(new Error("Timeout: no response within 5 minutes"));
+      closePopup(popup);
     }, FIVE_MINS_MS);
 
     function cleanup() {
@@ -143,10 +145,12 @@ async function tryGoogleSignIn(
       window.clearTimeout(requestTimer);
       window.removeEventListener("focus", onFocus);
       window.removeEventListener("message", onMessage);
-
-      if (popup && !popup.closed) {
-        popup.close();
-      }
     }
   });
+}
+
+function closePopup(popup: Window) {
+  if (popup && !popup.closed) {
+    popup.close();
+  }
 }

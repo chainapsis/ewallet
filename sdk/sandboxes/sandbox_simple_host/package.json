@@ -30,6 +30,7 @@
     "@types/node": "*",
     "@types/react": "*",
     "@types/react-dom": "*",
+    "@vitejs/plugin-react": "^5.0.2",
     "react-router-devtools": "^1.1.0",
     "tsx": "*",
     "typescript": "*",

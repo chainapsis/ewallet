@@ -48,6 +48,12 @@ export type EWalletMsgOAuthSignInAck = {
   payload: Result<null, OAuthSignInError>;
 };
 
+export type EWalletMsgOAuthSignInResult = {
+  target: "keplr_ewallet_sdk";
+  msg_type: "oauth_sign_in_result";
+  payload: Result<null, OAuthSignInError>;
+};
+
 export type EWalletMsgSignOut = {
   target: "keplr_ewallet_attached";
   msg_type: "sign_out";
@@ -131,6 +137,7 @@ export type EWalletMsg =
   | EWalletMsgSetOAuthNonceAck
   | EWalletMsgOAuthSignIn
   | EWalletMsgOAuthSignInAck
+  | EWalletMsgOAuthSignInResult
   | EWalletMsgSignOut
   | EWalletMsgSignOutAck
   | EWalletMsgOpenModal
