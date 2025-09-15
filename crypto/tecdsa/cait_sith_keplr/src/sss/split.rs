@@ -60,11 +60,11 @@ pub fn split<C: CSCurve>(
             let y_scalar = polynomial.evaluate(x_scalar);
             let y_bytes = Into::<C::Uint>::into(y_scalar).to_be_bytes();
 
-            let x = x_bytes
+            let x: Result<[u8; 32], String> = x_bytes
                 .as_ref()
                 .try_into()
                 .map_err(|_| "Failed to convert x to [u8; 32]".to_string());
-            let y = y_bytes
+            let y: Result<[u8; 32], String> = y_bytes
                 .as_ref()
                 .try_into()
                 .map_err(|_| "Failed to convert y to [u8; 32]".to_string());
@@ -73,7 +73,10 @@ pub fn split<C: CSCurve>(
                 return Err("Failed to convert x or y to [u8; 32]".to_string());
             }
 
-            Ok(Point256 { x, y })
+            Ok(Point256 {
+                x: x.unwrap(),
+                y: y.unwrap(),
+            })
         })
         .collect::<Result<Vec<Point256>, String>>()?;
 
