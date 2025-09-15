@@ -124,6 +124,8 @@ async function tryGoogleSignIn(
       const data = e.data as EWalletMsg;
 
       if (data.msg_type === "oauth_sign_in_result") {
+        console.log("[keplr] msg recv, %o", data);
+
         cleanup();
         if (data.payload.success) {
           resolve();

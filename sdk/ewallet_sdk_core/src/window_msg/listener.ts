@@ -1,26 +1,51 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { EWalletMsg } from "@keplr-ewallet-sdk-core/types";
+import type {
+  EWalletMsg,
+  KeplrEWalletInterface,
+} from "@keplr-ewallet-sdk-core/types";
 import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
+import { handleOAuthSignInResult } from "./oauth_sign_in_result";
 
 // Only used for "init" message which is triggered by the child.
 // After initialization, message communication is only triggered
 // by parent window and child replies on the dedicated channel
-export function registerMsgListener(): Promise<Result<InitPayload, string>> {
+export function registerMsgListener(
+  eWallet: KeplrEWalletInterface,
+): Promise<Result<InitPayload, string>> {
   if (window.__keplr_ewallet_ev) {
-    console.warn("[keplr] isn't it already initailized?");
+    // TODO: unreachable but is allowed. Report to centralized logging system
+    // required
+    console.error("[keplr] isn't it already initailized?");
   }
 
   return new Promise((resolve, reject) => {
-    const handler = (event: MessageEvent) => {
+    async function handler(event: MessageEvent) {
       const msg = event.data as EWalletMsg;
-      if (msg.msg_type === "init") {
-        window.removeEventListener("message", handler);
 
-        // Resolve regardless, caller can branch on payload.success
-        resolve(msg.payload);
+      switch (msg.msg_type) {
+        case "init": {
+          resolve(msg.payload);
+          break;
+        }
+
+        case "oauth_sign_in_result": {
+          await handleOAuthSignInResult(eWallet);
+          break;
+        }
+
+        default: {
+          throw new Error("unreachable");
+        }
       }
-    };
+
+      // if (msg.msg_type === "init") {
+      //   window.removeEventListener("message", handler);
+      //
+      //   // Resolve regardless, caller can branch on payload.success
+      //   resolve(msg.payload);
+      // }
+    }
 
     window.addEventListener("message", handler);
     window.__keplr_ewallet_ev = handler;

@@ -24,7 +24,7 @@ export async function lazyInit(
     return checkURLRes;
   }
 
-  const registerRes = await registerMsgListener();
+  const registerRes = await registerMsgListener(eWallet);
   if (registerRes.success) {
     const initResult = registerRes.data;
     const { email, public_key } = initResult;

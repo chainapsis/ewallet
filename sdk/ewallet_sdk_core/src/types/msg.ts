@@ -4,6 +4,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { OpenModalAckPayload, OpenModalPayload } from "./modal";
 import type { InitPayload } from "./init";
 import type { OAuthSignInError } from "./sign_in";
+import type { OAuthResultPayload } from "./oauth";
 
 export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
 
@@ -34,12 +35,7 @@ export type EWalletMsgSetOAuthNonceAck = {
 export type EWalletMsgOAuthSignIn = {
   target: "keplr_ewallet_attached";
   msg_type: "oauth_sign_in";
-  payload: {
-    access_token: string;
-    id_token: string;
-    api_key: string;
-    target_origin: string;
-  };
+  payload: OAuthResultPayload;
 };
 
 export type EWalletMsgOAuthSignInAck = {
@@ -51,7 +47,7 @@ export type EWalletMsgOAuthSignInAck = {
 export type EWalletMsgOAuthSignInResult = {
   target: "keplr_ewallet_sdk";
   msg_type: "oauth_sign_in_result";
-  payload: Result<null, OAuthSignInError>;
+  payload: Result<OAuthResultPayload, OAuthSignInError>;
 };
 
 export type EWalletMsgSignOut = {

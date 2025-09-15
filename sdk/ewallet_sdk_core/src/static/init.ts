@@ -14,17 +14,7 @@ export function init(
   args: KeplrEwalletInitArgs,
 ): Result<KeplrEWalletInterface, KeplrEwalletInitError> {
   try {
-    if (window.__keplr_ewallet_locked === true) {
-      console.warn(
-        "keplr ewallet init is locked. Is init being exeucted concurrently?",
-      );
-      return { success: false, err: { type: "is_locked" } };
-    } else {
-      window.__keplr_ewallet_locked = true;
-    }
-
     console.log("[keplr] init");
-    console.log("[keplr] sdk endpoint: %s", args.sdk_endpoint);
 
     if (window === undefined) {
       console.error("[keplr] EWallet can only be initialized in the browser");
@@ -34,6 +24,17 @@ export function init(
         err: { type: "not_in_browser" },
       };
     }
+
+    if (window.__keplr_ewallet_locked === true) {
+      console.warn(
+        "keplr ewallet init is locked. Is init being exeucted concurrently?",
+      );
+      return { success: false, err: { type: "is_locked" } };
+    } else {
+      window.__keplr_ewallet_locked = true;
+    }
+
+    console.log("[keplr] sdk endpoint: %s", args.sdk_endpoint);
 
     if (window.__keplr_ewallet) {
       console.warn("[keplr] already initialized");
