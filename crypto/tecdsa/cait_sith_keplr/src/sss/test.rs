@@ -125,7 +125,7 @@ fn test_simple_lagrange_coeffs() {
 }
 
 #[test]
-fn test_lagrange_coeffs() {
+fn test_split_and_combine() {
     // N = 3 & T = 3
     // random 32 bytes
     let mut rng = OsRng;
