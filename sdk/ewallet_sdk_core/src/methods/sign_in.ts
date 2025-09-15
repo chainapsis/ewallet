@@ -3,6 +3,7 @@ import type {
   KeplrEWalletInterface,
   OAuthState,
   EWalletMsg,
+  EWalletMsgOAuthSignInResult,
 } from "@keplr-ewallet-sdk-core/types";
 import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
 import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
@@ -10,18 +11,35 @@ import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
 const FIVE_MINS_MS = 5 * 60 * 1000;
 
 export async function signIn(this: KeplrEWalletInterface, type: "google") {
-  switch (type) {
-    case "google": {
-      await tryGoogleSignIn(
-        this.sdkEndpoint,
-        this.apiKey,
-        this.sendMsgToIframe.bind(this),
-      );
-      break;
+  let signInRes: EWalletMsgOAuthSignInResult;
+  try {
+    switch (type) {
+      case "google": {
+        signInRes = await tryGoogleSignIn(
+          this.sdkEndpoint,
+          this.apiKey,
+          this.sendMsgToIframe.bind(this),
+        );
+        break;
+      }
+      default:
+        throw new Error(`not supported sign in type, type: ${type}`);
     }
-    default:
-      throw new Error(`not supported sign in type, type: ${type}`);
+  } catch (err) {
+    throw new Error(`Sign in error, err: ${err}`);
   }
+
+  if (!signInRes.payload.success) {
+    throw new Error(`sign in fail, err: ${signInRes.payload.err}`);
+  }
+
+  const msg: EWalletMsg = {
+    target: "keplr_ewallet_attached",
+    msg_type: "oauth_sign_in",
+    payload: signInRes.payload.data,
+  };
+
+  await this.sendMsgToIframe(msg);
 
   const publicKey = await this.getPublicKey();
   const email = await this.getEmail();
@@ -41,7 +59,7 @@ async function tryGoogleSignIn(
   sdkEndpoint: string,
   apiKey: string,
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>,
-) {
+): Promise<EWalletMsgOAuthSignInResult> {
   const clientId = GOOGLE_CLIENT_ID;
   if (!clientId) {
     throw new Error("GOOGLE_CLIENT_ID is not set");
@@ -103,49 +121,64 @@ async function tryGoogleSignIn(
     throw new Error("Failed to set nonce for google oauth sign in");
   }
 
-  return new Promise<void>((resolve, reject) => {
-    let focusTimer: number;
-    let requestTimer: number;
+  return new Promise<EWalletMsgOAuthSignInResult>(async (resolve, reject) => {
+    // let focusTimer: number;
+    let timeout: number;
 
-    function onFocus(e: FocusEvent) {
-      // when user focus back to the parent window, check if the popup is closed
-      // a small delay to handle the case message is sent but not received yet
-      focusTimer = window.setTimeout(() => {
-        if (popup && popup.closed) {
-          cleanup();
-          reject(new Error("Window closed by user"));
-          closePopup(popup);
-        }
-      }, 200);
-    }
-    window.addEventListener("focus", onFocus);
+    // function onFocus(e: FocusEvent) {
+    //   // when user focus back to the parent window, check if the popup is closed
+    //   // a small delay to handle the case message is sent but not received yet
+    //   focusTimer = window.setTimeout(() => {
+    //     if (popup && popup.closed) {
+    //       cleanup();
+    //       reject(new Error("Window closed by user"));
+    //       closePopup(popup);
+    //     }
+    //   }, 200);
+    // }
+    // window.addEventListener("focus", onFocus);
 
-    function onMessage(e: MessageEvent) {
-      const data = e.data as EWalletMsg;
+    function onMessage(event: MessageEvent) {
+      if (event.ports.length < 1) {
+        // do nothing
+
+        return;
+      }
+
+      const port = event.ports[0];
+      const data = event.data as EWalletMsg;
 
       if (data.msg_type === "oauth_sign_in_result") {
         console.log("[keplr] msg recv, %o", data);
 
-        cleanup();
+        const msg = {};
+
+        // port.postMessage()
+
         if (data.payload.success) {
-          resolve();
+          resolve(data);
         } else {
           reject(new Error(data.payload.err.type));
         }
+
+        cleanup();
       }
     }
     window.addEventListener("message", onMessage);
 
-    requestTimer = window.setTimeout(() => {
+    timeout = window.setTimeout(() => {
       cleanup();
       reject(new Error("Timeout: no response within 5 minutes"));
       closePopup(popup);
     }, FIVE_MINS_MS);
 
     function cleanup() {
-      window.clearTimeout(focusTimer);
-      window.clearTimeout(requestTimer);
-      window.removeEventListener("focus", onFocus);
+      console.log("[keplr] clean up oauth sign in listener");
+
+      // window.clearTimeout(focusTimer);
+      // window.removeEventListener("focus", onFocus);
+
+      window.clearTimeout(timeout);
       window.removeEventListener("message", onMessage);
     }
   });

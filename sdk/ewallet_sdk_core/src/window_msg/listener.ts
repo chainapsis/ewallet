@@ -2,16 +2,13 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type {
   EWalletMsg,
+  EWalletMsgInitAck,
   KeplrEWalletInterface,
 } from "@keplr-ewallet-sdk-core/types";
 import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
-import { handleOAuthSignInResult } from "./oauth_sign_in_result";
 
-// Only used for "init" message which is triggered by the child.
-// After initialization, message communication is only triggered
-// by parent window and child replies on the dedicated channel
 export function registerMsgListener(
-  eWallet: KeplrEWalletInterface,
+  _eWallet: KeplrEWalletInterface,
 ): Promise<Result<InitPayload, string>> {
   if (window.__keplr_ewallet_ev) {
     // TODO: unreachable but is allowed. Report to centralized logging system
@@ -21,30 +18,29 @@ export function registerMsgListener(
 
   return new Promise((resolve, reject) => {
     async function handler(event: MessageEvent) {
-      const msg = event.data as EWalletMsg;
+      if (event.ports.length < 1) {
+        // do nothing
 
-      switch (msg.msg_type) {
-        case "init": {
-          resolve(msg.payload);
-          break;
-        }
-
-        case "oauth_sign_in_result": {
-          await handleOAuthSignInResult(eWallet);
-          break;
-        }
-
-        default: {
-          throw new Error("unreachable");
-        }
+        return;
       }
 
-      // if (msg.msg_type === "init") {
-      //   window.removeEventListener("message", handler);
-      //
-      //   // Resolve regardless, caller can branch on payload.success
-      //   resolve(msg.payload);
-      // }
+      const port = event.ports[0];
+      const msg = event.data as EWalletMsg;
+
+      if (msg.msg_type === "init") {
+        const ack: EWalletMsgInitAck = {
+          target: "keplr_ewallet_sdk",
+          msg_type: "init_ack",
+          payload: { success: true, data: null },
+        };
+
+        port.postMessage(ack);
+
+        window.removeEventListener("message", handler);
+
+        resolve(msg.payload);
+      } else {
+      }
     }
 
     window.addEventListener("message", handler);

@@ -29,7 +29,8 @@ export async function lazyInit(
   setUpEventHandlers.call(ethEwallet);
 
   console.log(
-    "[keplr-eth] lazy init for eth ewallet complete\npublicKeyRaw: %s\npublicKey: %s\naddress: %s",
+    "[keplr-eth] lazy init for eth ewallet complete, \
+    publicKeyRaw: %s, publicKey: %s, address: %s",
     ethEwallet.state.publicKeyRaw,
     ethEwallet.state.publicKey,
     ethEwallet.state.address,
