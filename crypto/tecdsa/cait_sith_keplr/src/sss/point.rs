@@ -1,4 +1,3 @@
-use elliptic_curve::bigint::Encoding;
 use elliptic_curve::Scalar;
 use elliptic_curve::ScalarPrimitive;
 use serde::{Deserialize, Serialize};
