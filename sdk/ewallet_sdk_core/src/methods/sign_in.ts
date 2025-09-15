@@ -4,6 +4,7 @@ import type {
   OAuthState,
   EWalletMsg,
   EWalletMsgOAuthSignInResult,
+  EWalletMsgOAuthSignInResultAck,
 } from "@keplr-ewallet-sdk-core/types";
 import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
 import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
@@ -149,11 +150,15 @@ async function tryGoogleSignIn(
       const data = event.data as EWalletMsg;
 
       if (data.msg_type === "oauth_sign_in_result") {
-        console.log("[keplr] msg recv, %o", data);
+        console.log("[keplr] oauth_sign_in_result recv, %o", data);
 
-        const msg = {};
+        const msg: EWalletMsgOAuthSignInResultAck = {
+          target: "keplr_ewallet_attached",
+          msg_type: "oauth_sign_in_result_ack",
+          payload: null,
+        };
 
-        // port.postMessage()
+        port.postMessage(msg);
 
         if (data.payload.success) {
           resolve(data);
