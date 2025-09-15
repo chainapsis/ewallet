@@ -1,6 +1,9 @@
 use k256::Secp256k1;
 
-use crate::{protocol::Participant, sss::combine::lagrange, sss::split};
+use crate::{
+    protocol::Participant,
+    sss::{combine::lagrange_coefficient, point::Point256, split},
+};
 
 #[test]
 #[should_panic]
@@ -18,7 +21,7 @@ fn test_split_overflow() {
 #[test]
 #[should_panic]
 fn test_split_shorter_length() {
-    let ret = split::split::<Secp256k1>(
+    let _ret = split::split::<Secp256k1>(
         vec![
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0,
@@ -31,7 +34,7 @@ fn test_split_shorter_length() {
 #[test]
 #[should_panic]
 fn test_split_longer_length() {
-    let ret = split::split::<Secp256k1>(
+    let _ret = split::split::<Secp256k1>(
         vec![
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 1, 1,
@@ -74,11 +77,17 @@ fn test_split_success() {
 
 #[test]
 fn test_lagrange() {
-    let p1 = Participant::from(1u32);
-    let p2 = Participant::from(2u32);
+    let p1 = Point256 {
+        x: [0; 32],
+        y: [0; 32],
+    };
+    let p2 = Point256 {
+        x: [1; 32],
+        y: [1; 32],
+    };
     // let p3 = Participant::from(3u32);
 
-    let lagrange = lagrange::<Secp256k1>(&[p1, p2], p1);
+    let lagrange = lagrange_coefficient::<Secp256k1>(vec![p1.clone(), p2.clone()], &p1);
     // 2 * inverse of 1
     println!("lagrange: {:?}", lagrange);
 }

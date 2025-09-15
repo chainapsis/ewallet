@@ -6,11 +6,6 @@ use crate::compat::CSCurve;
 use crate::math::Polynomial;
 use crate::sss::point::Point256;
 
-// export function split(
-//   secret: Bytes32,
-//   ksNodeHashes: Bytes32[],
-//   t: number,
-// ): Result<Bytes32Point[], string> {
 pub fn split<C: CSCurve>(
     secret: Vec<u8>,
     ks_node_hashes: Vec<Vec<u8>>,
@@ -58,6 +53,7 @@ pub fn split<C: CSCurve>(
             let x_bytes = Into::<C::Uint>::into(*x_scalar).to_be_bytes();
 
             let y_scalar = polynomial.evaluate(x_scalar);
+            {}
             let y_bytes = Into::<C::Uint>::into(y_scalar).to_be_bytes();
 
             let x: Result<[u8; 32], String> = x_bytes
@@ -69,14 +65,18 @@ pub fn split<C: CSCurve>(
                 .try_into()
                 .map_err(|_| "Failed to convert y to [u8; 32]".to_string());
 
-            if x.is_err() || y.is_err() {
-                return Err("Failed to convert x or y to [u8; 32]".to_string());
-            }
+            let x = match x {
+                Ok(val) => val,
+                Err(_) => return Err("Failed to convert x to [u8; 32]".to_string()),
+            };
+            let y = match y {
+                Ok(val) => val,
+                Err(_) => return Err("Failed to convert y to [u8; 32]".to_string()),
+            };
 
-            Ok(Point256 {
-                x: x.unwrap(),
-                y: y.unwrap(),
-            })
+            let point = Point256 { x, y };
+
+            Ok(point)
         })
         .collect::<Result<Vec<Point256>, String>>()?;
 
