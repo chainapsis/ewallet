@@ -6,7 +6,6 @@ use crate::sss::keyshares::KeysharePoints;
 use crate::sss::point::Point256;
 
 pub fn combine<C: CSCurve>(split_points: Vec<Point256>) -> Result<Vec<u8>, String> {
-    // 1. interpolate
     let mut secret_scalar: C::Scalar = C::Scalar::ZERO;
     let ksp = KeysharePoints::new(split_points.clone());
     let keyshare_points = match ksp {
