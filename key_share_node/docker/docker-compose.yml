@@ -36,9 +36,11 @@ services:
       ENCRYPTION_SECRET: "temp_enc_secret"
       # Please change it to your own password.
       ADMIN_PASSWORD: "admin_password"
+      # Set the path where db dump files will be stored
+      DUMP_DIR: "~/keplr_ewallet_data"
 
     volumes:
-      - ~/keplr_ewallet_data:/home/node/keplr_ewallet_data
+      - ${DUMP_DIR}:/home/node/keplr_ewallet_data
     depends_on:
       - key_share_node_pg
 

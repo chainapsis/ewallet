@@ -9,7 +9,6 @@ RUN corepack enable
 # Create working directory and copy source code
 USER node
 RUN mkdir -p /home/node/key_share_node/node_modules && chown -R node:node /home/node/key_share_node
-RUN mkdir -p /home/node/keplr_ewallet_data && chown -R node:node /home/node/keplr_ewallet_data
 WORKDIR /home/node/key_share_node
 COPY --chown=node:node . .
 

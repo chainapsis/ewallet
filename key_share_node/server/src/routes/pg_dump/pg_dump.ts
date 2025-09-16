@@ -77,13 +77,17 @@ export function setPgDumpRoutes(router: Router) {
     ) => {
       const state = req.app.locals as any;
 
-      const processPgDumpRes = await processPgDump(state.db, {
-        database: state.env.DB_NAME,
-        host: state.env.DB_HOST,
-        password: state.env.DB_PASSWORD,
-        user: state.env.DB_USER,
-        port: state.env.DB_PORT,
-      });
+      const processPgDumpRes = await processPgDump(
+        state.db,
+        {
+          database: state.env.DB_NAME,
+          host: state.env.DB_HOST,
+          password: state.env.DB_PASSWORD,
+          user: state.env.DB_USER,
+          port: state.env.DB_PORT,
+        },
+        state.env.DUMP_DIR,
+      );
       if (processPgDumpRes.success === false) {
         const errorRes: KSNodeApiErrorResponse = {
           success: false,

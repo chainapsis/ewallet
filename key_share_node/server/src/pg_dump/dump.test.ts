@@ -1,5 +1,7 @@
 import { Pool } from "pg";
 import fs from "node:fs/promises";
+import { join } from "node:path";
+import os from "node:os";
 import {
   getPgDumpById,
   getAllPgDumps,
@@ -17,6 +19,8 @@ import {
 } from "@keplr-ewallet-ksn-server/pg_dump/dump";
 
 describe("pg_dump_test", () => {
+  const dumpDir = join(os.homedir(), "keplr_ewallet_data");
+
   let pool: Pool;
 
   beforeAll(async () => {
@@ -52,7 +56,7 @@ describe("pg_dump_test", () => {
     };
 
     it("should successfully create pg dump and save to database", async () => {
-      const result = await processPgDump(pool, mockPgConfig);
+      const result = await processPgDump(pool, mockPgConfig, dumpDir);
 
       expect(result.success).toBe(true);
       if (result.success === false) {
@@ -93,7 +97,7 @@ describe("pg_dump_test", () => {
         password: testPgConfig.password,
       };
 
-      const result = await processPgDump(pool, invalidConfig);
+      const result = await processPgDump(pool, invalidConfig, dumpDir);
 
       expect(result.success).toBe(false);
       if (result.success === true) {
@@ -122,10 +126,10 @@ describe("pg_dump_test", () => {
     };
 
     it("should delete old dumps based on retention days", async () => {
-      const result1 = await processPgDump(pool, mockPgConfig);
+      const result1 = await processPgDump(pool, mockPgConfig, dumpDir);
       expect(result1.success).toBe(true);
 
-      const result2 = await processPgDump(pool, mockPgConfig);
+      const result2 = await processPgDump(pool, mockPgConfig, dumpDir);
       expect(result2.success).toBe(true);
 
       // update the created_at to simulate old dumps
@@ -167,7 +171,7 @@ describe("pg_dump_test", () => {
     });
 
     it("should not delete recent dumps", async () => {
-      const result = await processPgDump(pool, mockPgConfig);
+      const result = await processPgDump(pool, mockPgConfig, dumpDir);
       expect(result.success).toBe(true);
 
       const deleteResult = await deleteOldPgDumps(pool, 30);
@@ -201,7 +205,7 @@ describe("pg_dump_test", () => {
     });
 
     it("should handle file deletion errors gracefully", async () => {
-      const result = await processPgDump(pool, mockPgConfig);
+      const result = await processPgDump(pool, mockPgConfig, dumpDir);
       expect(result.success).toBe(true);
 
       await pool.query(`

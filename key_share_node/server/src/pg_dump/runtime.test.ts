@@ -1,3 +1,5 @@
+import { join } from "node:path";
+import os from "node:os";
 import { Pool } from "pg";
 import fs from "node:fs/promises";
 import { getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
@@ -11,6 +13,8 @@ import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
 import { processPgDump } from "@keplr-ewallet-ksn-server/pg_dump/dump";
 
 describe("pg_dump_runtime_test", () => {
+  const dumpDir = join(os.homedir(), "keplr_ewallet_data");
+
   let pool: Pool;
 
   beforeAll(async () => {
@@ -46,19 +50,19 @@ describe("pg_dump_runtime_test", () => {
     };
 
     it("should run complete runtime workflow with multiple scenarios", async () => {
-      const dump1Res = await processPgDump(pool, mockPgConfig);
+      const dump1Res = await processPgDump(pool, mockPgConfig, dumpDir);
       if (dump1Res.success === false) {
         throw new Error(`processPgDump failed: ${dump1Res.err}`);
       }
       const dump1 = dump1Res.data;
 
-      const dump2Res = await processPgDump(pool, mockPgConfig);
+      const dump2Res = await processPgDump(pool, mockPgConfig, dumpDir);
       if (dump2Res.success === false) {
         throw new Error(`processPgDump failed: ${dump2Res.err}`);
       }
       const dump2 = dump2Res.data;
 
-      const dump3Res = await processPgDump(pool, mockPgConfig);
+      const dump3Res = await processPgDump(pool, mockPgConfig, dumpDir);
       if (dump3Res.success === false) {
         throw new Error(`processPgDump failed: ${dump3Res.err}`);
       }
@@ -91,6 +95,7 @@ describe("pg_dump_runtime_test", () => {
 
       // start runtime (1 day retention)
       const runtimeOptions = {
+        dumpDir,
         sleepTimeSeconds: 1,
         retentionDays: 1,
       };

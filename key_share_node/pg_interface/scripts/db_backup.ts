@@ -1,15 +1,19 @@
-import { join } from "node:path";
-import os from "node:os";
-
 import { loadEnvs } from "./migrate/envs";
 import { dump } from "@keplr-ewallet-ksn-pg-interface/dump";
 
-const DUMP_DIR = join(os.homedir(), "keplr_ewallet_data");
-
 const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);
+const DUMP_DIR = process.env.DUMP_DIR;
 
 async function main() {
-  console.log("Starting db backup... NODE_ID: %s", NODE_ID);
+  console.log(
+    "Starting db backup... NODE_ID: %s, DUMP_DIR: %s",
+    NODE_ID,
+    DUMP_DIR,
+  );
+
+  if (!DUMP_DIR) {
+    throw new Error("DUMP_DIR is not set");
+  }
 
   const env = loadEnvs(NODE_ID);
 

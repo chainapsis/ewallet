@@ -23,6 +23,7 @@ const envSchema = z.object({
   DB_SSL: z.string(),
   ENCRYPTION_SECRET: z.string(),
   ADMIN_PASSWORD: z.string(),
+  DUMP_DIR: z.string(),
 });
 
 export function loadEnv(nodeId: string): Result<void, string> {
