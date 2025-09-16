@@ -1,11 +1,11 @@
-use crate::types::{CreateCredentialVaultKeyShareRequest, CredentialVaultKeyShare, Result};
+use crate::types::{CreateKeyShareRequest, KeyShare, Result};
 use tokio_postgres::Client;
 use uuid::Uuid;
 
 pub async fn create_key_share(
     client: &Client,
-    key_share_data: CreateCredentialVaultKeyShareRequest,
-) -> Result<CredentialVaultKeyShare> {
+    key_share_data: CreateKeyShareRequest,
+) -> Result<KeyShare> {
     let share_id = Uuid::new_v4();
     let query = "
         INSERT INTO key_shares (
@@ -26,7 +26,7 @@ pub async fn create_key_share(
         )
         .await?;
 
-    Ok(CredentialVaultKeyShare {
+    Ok(KeyShare {
         share_id: row.get("share_id"),
         wallet_id: row.get("wallet_id"),
         enc_share: row.get("enc_share"),
@@ -38,12 +38,12 @@ pub async fn create_key_share(
 pub async fn get_key_share_by_share_id(
     client: &Client,
     share_id: Uuid,
-) -> Result<Option<CredentialVaultKeyShare>> {
+) -> Result<Option<KeyShare>> {
     let query = "SELECT * FROM key_shares WHERE share_id = $1 LIMIT 1";
     let rows = client.query(query, &[&share_id]).await?;
 
     if let Some(row) = rows.first() {
-        Ok(Some(CredentialVaultKeyShare {
+        Ok(Some(KeyShare {
             share_id: row.get("share_id"),
             wallet_id: row.get("wallet_id"),
             enc_share: row.get("enc_share"),
@@ -58,12 +58,12 @@ pub async fn get_key_share_by_share_id(
 pub async fn get_key_share_by_wallet_id(
     client: &Client,
     wallet_id: Uuid,
-) -> Result<Option<CredentialVaultKeyShare>> {
+) -> Result<Option<KeyShare>> {
     let query = "SELECT * FROM key_shares WHERE wallet_id = $1 LIMIT 1";
     let rows = client.query(query, &[&wallet_id]).await?;
 
     if let Some(row) = rows.first() {
-        Ok(Some(CredentialVaultKeyShare {
+        Ok(Some(KeyShare {
             share_id: row.get("share_id"),
             wallet_id: row.get("wallet_id"),
             enc_share: row.get("enc_share"),

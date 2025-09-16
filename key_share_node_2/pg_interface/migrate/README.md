@@ -1,4 +1,4 @@
-# Credential Vault Migration Tool
+# Key Share Node Migration Tool
 
 A Rust tool for PostgreSQL database migrations.
 

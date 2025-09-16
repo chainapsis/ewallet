@@ -12,7 +12,7 @@ DB_PASSWORD=${DB_PASSWORD:-"password"}
 DB_NAME=${DB_NAME:-"key_share_node"}
 DB_PORT=${DB_PORT:-"5432"}
 
-echo "🔧 Credential Vault Migration Tool"
+echo "🔧 Key Share Node Migration Tool"
 echo "=================================="
 echo "Mode: $MIGRATE_MODE"
 echo "Committee Count: $COMMITTEE_COUNT"

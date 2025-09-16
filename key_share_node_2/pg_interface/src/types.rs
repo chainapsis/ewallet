@@ -131,7 +131,7 @@ pub enum Error {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CredentialVaultUser {
+pub struct KeyShareNodeUser {
     pub user_id: Uuid,
     pub email: String,
     pub status: Option<String>,
@@ -140,7 +140,7 @@ pub struct CredentialVaultUser {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CredentialVaultWallet {
+pub struct KeyShareNodeWallet {
     pub wallet_id: Uuid,
     pub user_id: Uuid,
     pub curve_type: Option<String>,
@@ -151,14 +151,14 @@ pub struct CredentialVaultWallet {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CreateCredentialVaultWalletRequest {
+pub struct CreateKeyShareNodeWalletRequest {
     pub user_id: Uuid,
     pub curve_type: String,
     pub public_key: Vec<u8>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CredentialVaultKeyShare {
+pub struct KeyShare {
     pub share_id: Uuid,
     pub wallet_id: Uuid,
     pub enc_share: Vec<u8>,
@@ -167,7 +167,7 @@ pub struct CredentialVaultKeyShare {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct CreateCredentialVaultKeyShareRequest {
+pub struct CreateKeyShareRequest {
     pub wallet_id: Uuid,
     pub enc_share: Vec<u8>,
 }

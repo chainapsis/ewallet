@@ -1,13 +1,13 @@
-use crate::types::{CredentialVaultUser, Error, Result};
+use crate::types::{Error, KeyShareNodeUser, Result};
 use tokio_postgres::Client;
 use uuid::Uuid;
 
-pub async fn create_user(client: &Client, email: &str) -> Result<CredentialVaultUser> {
+pub async fn create_user(client: &Client, email: &str) -> Result<KeyShareNodeUser> {
     let query = "INSERT INTO users (email) VALUES ($1) RETURNING *";
 
     let row = client.query_one(query, &[&email]).await?;
 
-    Ok(CredentialVaultUser {
+    Ok(KeyShareNodeUser {
         user_id: row.get("user_id"),
         email: row.get("email"),
         status: row.get("status"),
@@ -16,15 +16,12 @@ pub async fn create_user(client: &Client, email: &str) -> Result<CredentialVault
     })
 }
 
-pub async fn get_user_by_email(
-    client: &Client,
-    email: &str,
-) -> Result<Option<CredentialVaultUser>> {
+pub async fn get_user_by_email(client: &Client, email: &str) -> Result<Option<KeyShareNodeUser>> {
     let query = "SELECT * FROM users WHERE email = $1 LIMIT 1";
     let rows = client.query(query, &[&email]).await?;
 
     if let Some(row) = rows.first() {
-        Ok(Some(CredentialVaultUser {
+        Ok(Some(KeyShareNodeUser {
             user_id: row.get("user_id"),
             email: row.get("email"),
             status: row.get("status"),
@@ -36,14 +33,14 @@ pub async fn get_user_by_email(
     }
 }
 
-pub async fn get_user_from_user_id(client: &Client, user_id: Uuid) -> Result<CredentialVaultUser> {
+pub async fn get_user_from_user_id(client: &Client, user_id: Uuid) -> Result<KeyShareNodeUser> {
     let query = "SELECT * FROM users WHERE user_id = $1 LIMIT 1";
     let row = client
         .query_one(query, &[&user_id])
         .await
         .map_err(|_| Error::Custom("User not found".to_string()))?;
 
-    Ok(CredentialVaultUser {
+    Ok(KeyShareNodeUser {
         user_id: row.get("user_id"),
         email: row.get("email"),
         status: row.get("status"),

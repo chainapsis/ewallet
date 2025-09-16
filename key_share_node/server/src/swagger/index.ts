@@ -10,9 +10,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const apis = (function () {
-  const credentialVaultApi = path.resolve(__dirname, "../routes/**/*.ts");
+  const ksNodeApi = path.resolve(__dirname, "../routes/**/*.ts");
 
-  const paths = [credentialVaultApi];
+  const paths = [ksNodeApi];
 
   return paths;
 })();
@@ -20,9 +20,9 @@ const apis = (function () {
 const swaggerDefinition: SwaggerDefinition = {
   openapi: "3.0.0",
   info: {
-    title: "Credential Vault API documentation",
+    title: "Key Share Node API documentation",
     version: "0.0.1",
-    description: "Credential Vault API documentation",
+    description: "Key Share Node API documentation",
   },
   servers: [
     {
