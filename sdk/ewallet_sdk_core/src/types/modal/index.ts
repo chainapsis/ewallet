@@ -79,9 +79,17 @@ export type OtherModalRejectAckPayload = {
   type: "reject";
 };
 
+export type OtherModalErrorAckPayload = {
+  modal_type: "other";
+  modal_id: string;
+  type: "error";
+  error: string;
+};
+
 export type OpenModalAckPayload =
   | MakeSigModalApproveAckPayload
   | MakeSigModalRejectAckPayload
   | MakeSigModalErrorAckPayload
   | OtherModalApproveAckPayload
-  | OtherModalRejectAckPayload;
+  | OtherModalRejectAckPayload
+  | OtherModalErrorAckPayload;
