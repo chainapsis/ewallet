@@ -9,9 +9,9 @@ export const testPgConfig: PgDatabaseConfig = {
   ssl: false,
 };
 
-export const createTestPgConfig = (committeeId: number): PgDatabaseConfig => {
+export const createTestPgConfig = (nodeId: number): PgDatabaseConfig => {
   return {
-    database: `key_share_node_dev${committeeId}`,
+    database: `key_share_node_dev${nodeId}`,
     host: "localhost",
     password: "postgres",
     user: "postgres",

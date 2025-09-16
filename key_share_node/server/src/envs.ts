@@ -25,10 +25,10 @@ const envSchema = z.object({
   ADMIN_PASSWORD: z.string(),
 });
 
-export function loadEnv(committeeId: string): Result<void, string> {
-  const committeeIdSuffix = committeeId === "1" ? "" : `_${committeeId}`;
+export function loadEnv(nodeId: string): Result<void, string> {
+  const nodeIdSuffix = nodeId === "1" ? "" : `_${nodeId}`;
 
-  const envFileName = `${ENV_FILE_NAME_STEM}${committeeIdSuffix}.env`;
+  const envFileName = `${ENV_FILE_NAME_STEM}${nodeIdSuffix}.env`;
 
   const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
 

@@ -16,9 +16,9 @@ const envSchema = z.object({
   DB_SSL: z.boolean(),
 });
 
-export function loadEnvs(committeeId: number): PgDatabaseConfig {
-  const committeeIdSuffix = committeeId === 1 ? "" : `_${committeeId}`;
-  const envFileName = `${ENV_FILE_NAME_STEM}${committeeIdSuffix}.env`;
+export function loadEnvs(nodeId: number): PgDatabaseConfig {
+  const nodeIdSuffix = nodeId === 1 ? "" : `_${nodeId}`;
+  const envFileName = `${ENV_FILE_NAME_STEM}${nodeIdSuffix}.env`;
   console.log("Loading envs from: %s", envFileName);
   const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
 

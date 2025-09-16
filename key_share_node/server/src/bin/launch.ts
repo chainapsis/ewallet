@@ -23,7 +23,7 @@ async function main() {
   const opts = parseCLIArgs();
   console.log("CLI opts: %j", opts);
 
-  const loadEnvRes = loadEnv(opts.committeeId);
+  const loadEnvRes = loadEnv(opts.nodeId);
   if (!loadEnvRes.success) {
     console.warn("ENV didn't exist, but we will continue");
   }
