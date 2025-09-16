@@ -13,4 +13,14 @@ export interface KSNodeApiErrorResponse {
   msg: string;
 }
 
-export type KSNodeApiErrorCode = string;
+export type KSNodeApiErrorCode =
+  | "UNKNOWN_ERROR"
+  | "DUPLICATE_PUBLIC_KEY"
+  | "USER_NOT_FOUND"
+  | "WALLET_NOT_FOUND"
+  | "UNAUTHORIZED"
+  | "KEY_SHARE_NOT_FOUND"
+  | "ID_TOKEN_INVALID"
+  | "ID_TOKEN_MISMATCHED"
+  | "PUBLIC_KEY_INVALID"
+  | "RATE_LIMIT_EXCEEDED";

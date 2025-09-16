@@ -6,7 +6,10 @@ import type {
   GetKeyShareResponse,
   RegisterKeyShareBody,
 } from "@keplr-ewallet/ksn-interface/key_share";
-import type { KSNodeApiResponse } from "@keplr-ewallet/ksn-interface/response";
+import type {
+  KSNodeApiErrorCode,
+  KSNodeApiResponse,
+} from "@keplr-ewallet/ksn-interface/response";
 
 import {
   checkKeyShare,
@@ -17,7 +20,6 @@ import {
   bearerTokenMiddleware,
   type AuthenticatedRequest,
 } from "@keplr-ewallet-ksn-server/middlewares";
-import type { ErrorCode } from "@keplr-ewallet-ksn-server/error";
 import { Bytes } from "@keplr-ewallet/bytes";
 
 export function setKeysharesRoutes(router: Router) {
@@ -121,11 +123,11 @@ export function setKeysharesRoutes(router: Router) {
       );
       if (registerKeyShareRes.success === false) {
         return res
-          .status(mapKeyShareErrorCodeToStatus(registerKeyShareRes.err.code))
+          .status(mapKeyShareErrorCodeToStatus(registerKeyShareRes.code))
           .json({
             success: false,
-            code: registerKeyShareRes.err.code,
-            msg: registerKeyShareRes.err.message,
+            code: registerKeyShareRes.code,
+            msg: registerKeyShareRes.msg,
           });
       }
 
@@ -245,11 +247,11 @@ export function setKeysharesRoutes(router: Router) {
       );
       if (getKeyShareRes.success === false) {
         return res
-          .status(mapKeyShareErrorCodeToStatus(getKeyShareRes.err.code))
+          .status(mapKeyShareErrorCodeToStatus(getKeyShareRes.code))
           .json({
             success: false,
-            code: getKeyShareRes.err.code,
-            msg: getKeyShareRes.err.message,
+            code: getKeyShareRes.code,
+            msg: getKeyShareRes.msg,
           });
       }
 
@@ -327,11 +329,11 @@ export function setKeysharesRoutes(router: Router) {
       });
       if (checkKeyShareRes.success === false) {
         return res
-          .status(mapKeyShareErrorCodeToStatus(checkKeyShareRes.err.code))
+          .status(mapKeyShareErrorCodeToStatus(checkKeyShareRes.code))
           .json({
             success: false,
-            code: checkKeyShareRes.err.code,
-            msg: checkKeyShareRes.err.message,
+            code: checkKeyShareRes.code,
+            msg: checkKeyShareRes.msg,
           });
       }
 
@@ -343,16 +345,17 @@ export function setKeysharesRoutes(router: Router) {
   );
 }
 
-function mapKeyShareErrorCodeToStatus(code: ErrorCode): number {
-  const KeyShareErrorCodeToStatus: Partial<Record<ErrorCode, number>> = {
-    DUPLICATE_PUBLIC_KEY: 409,
-    USER_NOT_FOUND: 404,
-    WALLET_NOT_FOUND: 404,
-    UNAUTHORIZED: 401,
-    KEY_SHARE_NOT_FOUND: 404,
-    PUBLIC_KEY_INVALID: 400,
-    UNKNOWN_ERROR: 500,
-  };
+function mapKeyShareErrorCodeToStatus(code: KSNodeApiErrorCode): number {
+  const KeyShareErrorCodeToStatus: Partial<Record<KSNodeApiErrorCode, number>> =
+    {
+      DUPLICATE_PUBLIC_KEY: 409,
+      USER_NOT_FOUND: 404,
+      WALLET_NOT_FOUND: 404,
+      UNAUTHORIZED: 401,
+      KEY_SHARE_NOT_FOUND: 404,
+      PUBLIC_KEY_INVALID: 400,
+      UNKNOWN_ERROR: 500,
+    };
 
   return KeyShareErrorCodeToStatus[code] ?? 500;
 }

@@ -77,7 +77,7 @@ describe("key_share_test", () => {
 
       expect(registerKeyShareRes.success).toBe(true);
       if (registerKeyShareRes.success === false) {
-        console.error(registerKeyShareRes.err);
+        console.error(registerKeyShareRes.msg);
         throw new Error("Failed to register key share");
       }
 
@@ -153,8 +153,8 @@ describe("key_share_test", () => {
       }
 
       expect(registerKeyShareRes.success).toBe(false);
-      expect(registerKeyShareRes.err.code).toBe("DUPLICATE_PUBLIC_KEY");
-      expect(registerKeyShareRes.err.message).toBe("Duplicate public key");
+      expect(registerKeyShareRes.code).toBe("DUPLICATE_PUBLIC_KEY");
+      expect(registerKeyShareRes.msg).toBe("Duplicate public key");
     });
   });
 
@@ -194,7 +194,7 @@ describe("key_share_test", () => {
       );
 
       if (getKeyShareRes.success === false) {
-        console.error(getKeyShareRes.err);
+        console.error(getKeyShareRes.msg);
         throw new Error("Failed to get key share");
       }
 
@@ -241,8 +241,8 @@ describe("key_share_test", () => {
       if (getKeyShareRes.success === true) {
         throw new Error("get key share should fail");
       }
-      expect(getKeyShareRes.err.code).toBe("USER_NOT_FOUND");
-      expect(getKeyShareRes.err.message).toBe("User not found");
+      expect(getKeyShareRes.code).toBe("USER_NOT_FOUND");
+      expect(getKeyShareRes.msg).toBe("User not found");
     });
 
     it("get key share failure - wallet not found", async () => {
@@ -297,8 +297,8 @@ describe("key_share_test", () => {
       if (getKeyShareRes.success === true) {
         throw new Error("get key share should fail");
       }
-      expect(getKeyShareRes.err.code).toBe("WALLET_NOT_FOUND");
-      expect(getKeyShareRes.err.message).toBe("Wallet not found");
+      expect(getKeyShareRes.code).toBe("WALLET_NOT_FOUND");
+      expect(getKeyShareRes.msg).toBe("Wallet not found");
     });
 
     it("get key share failure - unauthorized", async () => {
@@ -334,8 +334,8 @@ describe("key_share_test", () => {
       if (getKeyShareRes.success === true) {
         throw new Error("get key share should fail");
       }
-      expect(getKeyShareRes.err.code).toBe("UNAUTHORIZED");
-      expect(getKeyShareRes.err.message).toBe("Unauthorized");
+      expect(getKeyShareRes.code).toBe("UNAUTHORIZED");
+      expect(getKeyShareRes.msg).toBe("Unauthorized");
     });
 
     it("get key share failure - key share not found", async () => {
@@ -379,8 +379,8 @@ describe("key_share_test", () => {
       if (getKeyShareRes.success === true) {
         throw new Error("get key share should fail");
       }
-      expect(getKeyShareRes.err.code).toBe("KEY_SHARE_NOT_FOUND");
-      expect(getKeyShareRes.err.message).toBe("Key share not found");
+      expect(getKeyShareRes.code).toBe("KEY_SHARE_NOT_FOUND");
+      expect(getKeyShareRes.msg).toBe("Key share not found");
     });
   });
 
@@ -428,7 +428,7 @@ describe("key_share_test", () => {
         public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
-        console.error(checkKeyShareRes.err);
+        console.error(checkKeyShareRes.msg);
         throw new Error("Failed to check key share");
       }
 
@@ -453,7 +453,7 @@ describe("key_share_test", () => {
         public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
-        console.error(checkKeyShareRes.err);
+        console.error(checkKeyShareRes.msg);
         throw new Error("Failed to check key share");
       }
 
@@ -484,7 +484,7 @@ describe("key_share_test", () => {
         public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
-        console.error(checkKeyShareRes.err);
+        console.error(checkKeyShareRes.msg);
         throw new Error("Failed to check key share");
       }
 
@@ -529,8 +529,8 @@ describe("key_share_test", () => {
       }
 
       expect(checkKeyShareRes.success).toBe(false);
-      expect(checkKeyShareRes.err.code).toBe("PUBLIC_KEY_INVALID");
-      expect(checkKeyShareRes.err.message).toBe("Public key is not valid");
+      expect(checkKeyShareRes.code).toBe("PUBLIC_KEY_INVALID");
+      expect(checkKeyShareRes.msg).toBe("Public key is not valid");
     });
 
     it("should return false if key share not found", async () => {
@@ -566,7 +566,7 @@ describe("key_share_test", () => {
         public_key: publicKeyBytes,
       });
       if (checkKeyShareRes.success === false) {
-        console.error(checkKeyShareRes.err);
+        console.error(checkKeyShareRes.msg);
         throw new Error("Failed to check key share");
       }
 

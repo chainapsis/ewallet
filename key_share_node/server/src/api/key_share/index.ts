@@ -14,16 +14,15 @@ import type {
   GetKeyShareResponse,
   RegisterKeyShareRequest,
 } from "@keplr-ewallet/ksn-interface/key_share";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { KSNodeApiResponse } from "@keplr-ewallet/ksn-interface/response";
 
-import type { ErrorResponse } from "@keplr-ewallet-ksn-server/error";
 import { decryptData, encryptData } from "@keplr-ewallet-ksn-server/encrypt";
 
 export async function registerKeyShare(
   db: Pool,
   registerKeyShareRequest: RegisterKeyShareRequest,
   encryptionSecret: string,
-): Promise<Result<void, ErrorResponse>> {
+): Promise<KSNodeApiResponse<void>> {
   try {
     const { email, curve_type, public_key, share } = registerKeyShareRequest;
 
@@ -31,20 +30,16 @@ export async function registerKeyShare(
     if (getWalletRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getWalletRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getWalletRes.err,
       };
     }
 
     if (getWalletRes.data !== null) {
       return {
         success: false,
-        err: {
-          code: "DUPLICATE_PUBLIC_KEY",
-          message: "Duplicate public key",
-        },
+        code: "DUPLICATE_PUBLIC_KEY",
+        msg: "Duplicate public key",
       };
     }
 
@@ -52,10 +47,8 @@ export async function registerKeyShare(
     if (getUserRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getUserRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getUserRes.err,
       };
     }
 
@@ -65,12 +58,11 @@ export async function registerKeyShare(
       if (createUserRes.success === false) {
         return {
           success: false,
-          err: {
-            code: "UNKNOWN_ERROR",
-            message: createUserRes.err,
-          },
+          code: "UNKNOWN_ERROR",
+          msg: createUserRes.err,
         };
       }
+
       user_id = createUserRes.data.user_id;
     } else {
       user_id = getUserRes.data.user_id;
@@ -84,10 +76,8 @@ export async function registerKeyShare(
     if (createWalletRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: createWalletRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: createWalletRes.err,
       };
     }
 
@@ -103,10 +93,8 @@ export async function registerKeyShare(
     if (createKeyShareRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: createKeyShareRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: createKeyShareRes.err,
       };
     }
 
@@ -114,10 +102,8 @@ export async function registerKeyShare(
   } catch (error) {
     return {
       success: false,
-      err: {
-        code: "UNKNOWN_ERROR",
-        message: String(error),
-      },
+      code: "UNKNOWN_ERROR",
+      msg: String(error),
     };
   }
 }
@@ -126,7 +112,7 @@ export async function getKeyShare(
   db: Pool,
   getKeyShareRequest: GetKeyShareRequest,
   encryptionSecret: string,
-): Promise<Result<GetKeyShareResponse, ErrorResponse>> {
+): Promise<KSNodeApiResponse<GetKeyShareResponse>> {
   try {
     const { email, public_key } = getKeyShareRequest;
 
@@ -134,20 +120,16 @@ export async function getKeyShare(
     if (getUserRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getUserRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getUserRes.err,
       };
     }
 
     if (getUserRes.data === null) {
       return {
         success: false,
-        err: {
-          code: "USER_NOT_FOUND",
-          message: "User not found",
-        },
+        code: "USER_NOT_FOUND",
+        msg: "User not found",
       };
     }
 
@@ -155,28 +137,22 @@ export async function getKeyShare(
     if (getWalletRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getWalletRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getWalletRes.err,
       };
     }
     if (getWalletRes.data === null) {
       return {
         success: false,
-        err: {
-          code: "WALLET_NOT_FOUND",
-          message: "Wallet not found",
-        },
+        code: "WALLET_NOT_FOUND",
+        msg: "Wallet not found",
       };
     }
     if (getWalletRes.data.user_id !== getUserRes.data.user_id) {
       return {
         success: false,
-        err: {
-          code: "UNAUTHORIZED",
-          message: "Unauthorized",
-        },
+        code: "UNAUTHORIZED",
+        msg: "Unauthorized",
       };
     }
 
@@ -187,20 +163,16 @@ export async function getKeyShare(
     if (getKeyShareRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getKeyShareRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getKeyShareRes.err,
       };
     }
 
     if (getKeyShareRes.data === null) {
       return {
         success: false,
-        err: {
-          code: "KEY_SHARE_NOT_FOUND",
-          message: "Key share not found",
-        },
+        code: "KEY_SHARE_NOT_FOUND",
+        msg: "Key share not found",
       };
     }
 
@@ -219,10 +191,8 @@ export async function getKeyShare(
   } catch (error) {
     return {
       success: false,
-      err: {
-        code: "UNKNOWN_ERROR",
-        message: String(error),
-      },
+      code: "UNKNOWN_ERROR",
+      msg: String(error),
     };
   }
 }
@@ -230,7 +200,7 @@ export async function getKeyShare(
 export async function checkKeyShare(
   db: Pool,
   checkKeyShareRequest: CheckKeyShareRequest,
-): Promise<Result<CheckKeyShareResponse, ErrorResponse>> {
+): Promise<KSNodeApiResponse<CheckKeyShareResponse>> {
   try {
     const { email, public_key } = checkKeyShareRequest;
 
@@ -238,10 +208,8 @@ export async function checkKeyShare(
     if (getUserRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getUserRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getUserRes.err,
       };
     }
     if (getUserRes.data === null) {
@@ -257,10 +225,8 @@ export async function checkKeyShare(
     if (getWalletRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getWalletRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getWalletRes.err,
       };
     }
     if (getWalletRes.data === null) {
@@ -274,10 +240,8 @@ export async function checkKeyShare(
     if (getWalletRes.data.user_id !== getUserRes.data.user_id) {
       return {
         success: false,
-        err: {
-          code: "PUBLIC_KEY_INVALID",
-          message: "Public key is not valid",
-        },
+        code: "PUBLIC_KEY_INVALID",
+        msg: "Public key is not valid",
       };
     }
 
@@ -288,10 +252,8 @@ export async function checkKeyShare(
     if (getKeyShareRes.success === false) {
       return {
         success: false,
-        err: {
-          code: "UNKNOWN_ERROR",
-          message: getKeyShareRes.err,
-        },
+        code: "UNKNOWN_ERROR",
+        msg: getKeyShareRes.err,
       };
     }
 
@@ -313,10 +275,8 @@ export async function checkKeyShare(
   } catch (error) {
     return {
       success: false,
-      err: {
-        code: "UNKNOWN_ERROR",
-        message: String(error),
-      },
+      code: "UNKNOWN_ERROR",
+      msg: String(error),
     };
   }
 }
