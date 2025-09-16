@@ -18,7 +18,7 @@ export function doBuildPkgs() {
     paths.sdk_cosmos,
     paths.sdk_eth,
     paths.crypto_bytes,
-    paths.cv_interface,
+    paths.ksn_interface,
     paths.tecdsa_interface,
   ];
 

@@ -1,0 +1,46 @@
+services:
+  key_share_node_pg:
+    image: postgres:17.4
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: key_share_node
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: "UTC"
+      PGTZ: "UTC"
+    volumes:
+      - ksn_pg_data:/var/lib/postgresql/data
+      - ../../key_share_node/pg_interface/scripts/migrate/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
+
+  key_share_node:
+    build:
+      context: ../../
+      dockerfile: key_share_node/docker/key_share_node.Dockerfile
+    ports:
+      # You can change the port number to your desired port number
+      - "4201:4201"
+    platform: linux/amd64
+    restart: unless-stopped
+    environment:
+      # You can change the port number to your desired port number
+      PORT: "4201"
+      DB_HOST: "key_share_node_pg"
+      DB_PORT: "5432"
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+      DB_NAME: "key_share_node"
+      DB_SSL: "false"
+      # Please change it to your own secret.
+      ENCRYPTION_SECRET: "temp_enc_secret"
+      # Please change it to your own password.
+      ADMIN_PASSWORD: "admin_password"
+
+    volumes:
+      - ~/keplr_ewallet_data:/home/node/keplr_ewallet_data
+    depends_on:
+      - key_share_node_pg
+
+volumes:
+  key_share_node_pg_data:

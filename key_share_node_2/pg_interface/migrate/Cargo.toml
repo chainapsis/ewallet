@@ -1,0 +1,14 @@
+[package]
+name = "key-share-node-migrate"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[[bin]]
+name = "migrate"
+path = "src/main.rs"
+
+[dependencies]
+ksn-pg-interface = { path = ".." }
+tokio = { version = "1.0", features = ["full"] }

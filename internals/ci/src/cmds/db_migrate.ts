@@ -5,9 +5,9 @@ import { expectSuccess } from "../expect";
 
 export async function dbMigrate(options: { useEnv: boolean }) {
   console.log(
-    "db_migrate, useEnv: %j, cv pg interface path: %s",
+    "db_migrate, useEnv: %j, ksn pg interface path: %s",
     options.useEnv,
-    paths.credential_vault_pg_interface,
+    paths.ksn_pg_interface,
   );
 
   const env = {
@@ -16,7 +16,7 @@ export async function dbMigrate(options: { useEnv: boolean }) {
   };
 
   const dbMigrateRet = spawnSync("yarn", ["run", "migrate"], {
-    cwd: paths.credential_vault_pg_interface,
+    cwd: paths.ksn_pg_interface,
     stdio: "inherit",
     env,
   });

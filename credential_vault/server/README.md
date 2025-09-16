@@ -1,3 +1,0 @@
-# Credential Vault Server
-
-TBD

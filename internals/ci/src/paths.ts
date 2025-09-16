@@ -3,12 +3,17 @@ import path from "node:path";
 export const paths = (function() {
   const root = path.join(__dirname, "../../../");
 
-  const cv_interface = path.join(
+  const ksn_interface = path.join(
     __dirname,
-    "../../../credential_vault/cv_interface",
+    "../../../key_share_node/ksn_interface/",
   );
 
-  const cv_server = path.join(__dirname, "../../../credential_vault/server");
+  const ksn_server = path.join(__dirname, "../../../key_share_node/server");
+
+  const ksn_pg_interface = path.join(
+    __dirname,
+    "../../../key_share_node/pg_interface/",
+  );
 
   const dotenv = path.join(__dirname, "../../../lib/dotenv");
 
@@ -34,11 +39,6 @@ export const paths = (function() {
     "../../../crypto/tecdsa/tecdsa_interface/",
   );
 
-  const credential_vault_pg_interface = path.join(
-    __dirname,
-    "../../../credential_vault/pg_interface/",
-  );
-
   return {
     root,
     stdlib,
@@ -48,9 +48,9 @@ export const paths = (function() {
     sdk_cosmos,
     sdk_common,
     crypto_bytes,
-    cv_interface,
-    cv_server,
-    credential_vault_pg_interface,
+    ksn_interface,
+    ksn_server,
+    ksn_pg_interface,
     sandbox_simple_host,
     tecdsa_interface,
   };

@@ -3130,83 +3130,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/credential-vault-interface@workspace:*, @keplr-ewallet/credential-vault-interface@workspace:credential_vault/cv_interface":
-  version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/credential-vault-interface@workspace:credential_vault/cv_interface"
-  dependencies:
-    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.35"
-    "@types/jest": "npm:*"
-    "@types/node": "npm:*"
-    "@typescript-eslint/eslint-plugin": "npm:*"
-    "@typescript-eslint/parser": "npm:*"
-    del-cli: "npm:*"
-    jest: "npm:*"
-    ts-jest: "npm:*"
-    tsc-alias: "npm:*"
-    tsx: "npm:*"
-    typescript: "npm:*"
-  languageName: unknown
-  linkType: soft
-
-"@keplr-ewallet/credential-vault-pg-interface@workspace:*, @keplr-ewallet/credential-vault-pg-interface@workspace:credential_vault/pg_interface":
-  version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/credential-vault-pg-interface@workspace:credential_vault/pg_interface"
-  dependencies:
-    "@keplr-ewallet/bytes": "workspace:*"
-    "@keplr-ewallet/credential-vault-interface": "workspace:*"
-    "@keplr-ewallet/stdlib-js": "workspace:*"
-    "@types/jest": "npm:*"
-    "@types/node": "npm:*"
-    "@typescript-eslint/eslint-plugin": "npm:*"
-    "@typescript-eslint/parser": "npm:*"
-    jest: "npm:*"
-    pg: "npm:*"
-    pgsql-parser: "npm:^17.7.8"
-    ts-jest: "npm:*"
-    tsx: "npm:*"
-    typescript: "npm:*"
-    uuid: "npm:*"
-  languageName: unknown
-  linkType: soft
-
-"@keplr-ewallet/credential-vault-server@workspace:credential_vault/server":
-  version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/credential-vault-server@workspace:credential_vault/server"
-  dependencies:
-    "@keplr-ewallet/bytes": "workspace:*"
-    "@keplr-ewallet/credential-vault-interface": "workspace:*"
-    "@keplr-ewallet/credential-vault-pg-interface": "workspace:*"
-    "@keplr-ewallet/stdlib-js": "workspace:*"
-    "@types/cors": "npm:^2.8.17"
-    "@types/express": "npm:^4.17.20"
-    "@types/jest": "npm:^29.5.13"
-    "@types/morgan": "npm:^1.9.9"
-    "@types/node": "npm:^22.7.5"
-    "@types/pg": "npm:^8"
-    "@types/supertest": "npm:^6.0.2"
-    "@types/swagger-jsdoc": "npm:^6.0.4"
-    "@types/swagger-ui-express": "npm:^4.1.8"
-    "@typescript-eslint/eslint-plugin": "npm:^7.16.1"
-    "@typescript-eslint/parser": "npm:^7.16.1"
-    chalk: "npm:*"
-    commander: "npm:*"
-    cors: "npm:^2.8.5"
-    dotenv: "npm:^16.4.5"
-    express: "npm:^4.21.1"
-    helmet: "npm:^8.0.0"
-    jest: "npm:*"
-    morgan: "npm:^1.10.0"
-    pg: "npm:^8.16.3"
-    supertest: "npm:*"
-    swagger-jsdoc: "npm:^6.2.8"
-    swagger-ui-express: "npm:^5.0.1"
-    ts-jest: "npm:*"
-    tsx: "npm:*"
-    typescript: "npm:*"
-    zod: "npm:^4.0.5"
-  languageName: unknown
-  linkType: soft
-
 "@keplr-ewallet/dotenv@workspace:lib/dotenv":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/dotenv@workspace:lib/dotenv"
@@ -3341,6 +3264,83 @@ __metadata:
     typescript: "npm:*"
     uuid: "npm:*"
     viem: "npm:*"
+  languageName: unknown
+  linkType: soft
+
+"@keplr-ewallet/key-share-node-server@workspace:key_share_node/server":
+  version: 0.0.0-use.local
+  resolution: "@keplr-ewallet/key-share-node-server@workspace:key_share_node/server"
+  dependencies:
+    "@keplr-ewallet/bytes": "workspace:*"
+    "@keplr-ewallet/ksn-interface": "workspace:*"
+    "@keplr-ewallet/ksn-pg-interface": "workspace:*"
+    "@keplr-ewallet/stdlib-js": "workspace:*"
+    "@types/cors": "npm:^2.8.17"
+    "@types/express": "npm:^4.17.20"
+    "@types/jest": "npm:^29.5.13"
+    "@types/morgan": "npm:^1.9.9"
+    "@types/node": "npm:^22.7.5"
+    "@types/pg": "npm:^8"
+    "@types/supertest": "npm:^6.0.2"
+    "@types/swagger-jsdoc": "npm:^6.0.4"
+    "@types/swagger-ui-express": "npm:^4.1.8"
+    "@typescript-eslint/eslint-plugin": "npm:^7.16.1"
+    "@typescript-eslint/parser": "npm:^7.16.1"
+    chalk: "npm:*"
+    commander: "npm:*"
+    cors: "npm:^2.8.5"
+    dotenv: "npm:^16.4.5"
+    express: "npm:^4.21.1"
+    helmet: "npm:^8.0.0"
+    jest: "npm:*"
+    morgan: "npm:^1.10.0"
+    pg: "npm:^8.16.3"
+    supertest: "npm:*"
+    swagger-jsdoc: "npm:^6.2.8"
+    swagger-ui-express: "npm:^5.0.1"
+    ts-jest: "npm:*"
+    tsx: "npm:*"
+    typescript: "npm:*"
+    zod: "npm:^4.0.5"
+  languageName: unknown
+  linkType: soft
+
+"@keplr-ewallet/ksn-interface@workspace:*, @keplr-ewallet/ksn-interface@workspace:key_share_node/ksn_interface":
+  version: 0.0.0-use.local
+  resolution: "@keplr-ewallet/ksn-interface@workspace:key_share_node/ksn_interface"
+  dependencies:
+    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.35"
+    "@types/jest": "npm:*"
+    "@types/node": "npm:*"
+    "@typescript-eslint/eslint-plugin": "npm:*"
+    "@typescript-eslint/parser": "npm:*"
+    del-cli: "npm:*"
+    jest: "npm:*"
+    ts-jest: "npm:*"
+    tsc-alias: "npm:*"
+    tsx: "npm:*"
+    typescript: "npm:*"
+  languageName: unknown
+  linkType: soft
+
+"@keplr-ewallet/ksn-pg-interface@workspace:*, @keplr-ewallet/ksn-pg-interface@workspace:key_share_node/pg_interface":
+  version: 0.0.0-use.local
+  resolution: "@keplr-ewallet/ksn-pg-interface@workspace:key_share_node/pg_interface"
+  dependencies:
+    "@keplr-ewallet/bytes": "workspace:*"
+    "@keplr-ewallet/ksn-interface": "workspace:*"
+    "@keplr-ewallet/stdlib-js": "workspace:*"
+    "@types/jest": "npm:*"
+    "@types/node": "npm:*"
+    "@typescript-eslint/eslint-plugin": "npm:*"
+    "@typescript-eslint/parser": "npm:*"
+    jest: "npm:*"
+    pg: "npm:*"
+    pgsql-parser: "npm:^17.7.8"
+    ts-jest: "npm:*"
+    tsx: "npm:*"
+    typescript: "npm:*"
+    uuid: "npm:*"
   languageName: unknown
   linkType: soft
 
