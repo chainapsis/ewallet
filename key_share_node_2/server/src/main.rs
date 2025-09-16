@@ -1,5 +1,5 @@
 use axum::Server;
-use credential_vault_server::create_app;
+use key_share_node::create_app;
 use std::net::SocketAddr;
 
 #[tokio::main]

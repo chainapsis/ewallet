@@ -1,14 +1,14 @@
 [package]
-name = "credential-vault-server"
+name = "key-share-node-server"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "credential_vault_server"
+name = "key_share_node"
 path = "src/lib.rs"
 
 [[bin]]
-name = "credential_vault_server"
+name = "key_share_node_server"
 path = "src/main.rs"
 
 [dependencies]

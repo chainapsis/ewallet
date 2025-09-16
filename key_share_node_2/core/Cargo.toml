@@ -1,5 +1,5 @@
 [package]
-name = "credential-vault-core"
+name = "key-share-node-core"
 version = "0.1.0"
 edition = "2021"
 

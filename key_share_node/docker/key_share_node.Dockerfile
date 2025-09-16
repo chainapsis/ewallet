@@ -8,40 +8,40 @@ RUN corepack enable
 
 # Create working directory and copy source code
 USER node
-RUN mkdir -p /home/node/credential_vault/node_modules && chown -R node:node /home/node/credential_vault
+RUN mkdir -p /home/node/key_share_node/node_modules && chown -R node:node /home/node/key_share_node
 RUN mkdir -p /home/node/keplr_ewallet_data && chown -R node:node /home/node/keplr_ewallet_data
-WORKDIR /home/node/credential_vault
+WORKDIR /home/node/key_share_node
 COPY --chown=node:node . .
 
 # Install dependencies for stdlib-js
-WORKDIR /home/node/credential_vault
+WORKDIR /home/node/key_share_node
 RUN yarn workspaces focus @keplr-ewallet/stdlib-js
 
 # Build stdlib-js
-WORKDIR /home/node/credential_vault/lib/stdlib_js
+WORKDIR /home/node/key_share_node/lib/stdlib_js
 RUN yarn run build
 
 # Install dependencies for crypto/bytes
-WORKDIR /home/node/credential_vault
+WORKDIR /home/node/key_share_node
 RUN yarn workspaces focus @keplr-ewallet/bytes
 
 # Build crypto/bytes
-WORKDIR /home/node/credential_vault/crypto/bytes
+WORKDIR /home/node/key_share_node/crypto/bytes
 RUN yarn run build
 
 # Install dependencies for cv_interface
-WORKDIR /home/node/credential_vault
+WORKDIR /home/node/key_share_node
 RUN yarn workspaces focus @keplr-ewallet/ksn-interface
 
 # Build cv_interface
-WORKDIR /home/node/credential_vault/credential_vault/cv_interface
+WORKDIR /home/node/key_share_node/key_share_node/cv_interface
 RUN yarn run build
 
-# Install dependencies for credential_vault server
-WORKDIR /home/node/credential_vault
+# Install dependencies for key share node server
+WORKDIR /home/node/key_share_node
 RUN yarn workspaces focus --production \
-    @keplr-ewallet/credential-vault-server
+    @keplr-ewallet/key-share-node-server
 
-WORKDIR /home/node/credential_vault/credential_vault/server
+WORKDIR /home/node/key_share_node/key_share_node/server
 
 CMD [ "yarn", "start" ]

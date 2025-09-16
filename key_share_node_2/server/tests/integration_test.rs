@@ -1,5 +1,5 @@
-use credential_vault_server::create_app;
 use hyper::{Body, Method, Request, StatusCode};
+use key_share_node::create_app;
 use serde_json::{json, Value};
 use tower::{Service, ServiceExt};
 

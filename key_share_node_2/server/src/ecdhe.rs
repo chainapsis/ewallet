@@ -10,7 +10,7 @@ use once_cell::sync::Lazy;
 use rand::thread_rng;
 use std::sync::{Arc, Mutex};
 
-use credential_vault_core::bytes::HexSerializedBytes;
+use key_share_node_core::bytes::HexSerializedBytes;
 
 pub struct EcdheServer {
     private_key: SecretKey<Secp256k1>,

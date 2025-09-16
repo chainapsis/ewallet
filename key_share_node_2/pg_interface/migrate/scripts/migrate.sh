@@ -9,7 +9,7 @@ COMMITTEE_COUNT=${COMMITTEE_COUNT:-"2"}
 DB_HOST=${DB_HOST:-"localhost"}
 DB_USER=${DB_USER:-"postgres"}
 DB_PASSWORD=${DB_PASSWORD:-"password"}
-DB_NAME=${DB_NAME:-"credential_vault"}
+DB_NAME=${DB_NAME:-"key_share_node"}
 DB_PORT=${DB_PORT:-"5432"}
 
 echo "🔧 Credential Vault Migration Tool"

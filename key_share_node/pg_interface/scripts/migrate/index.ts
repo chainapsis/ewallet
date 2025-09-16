@@ -4,7 +4,7 @@ import { dropAllTablesIfExist } from "@keplr-ewallet-ksn-pg-interface/postgres";
 import { createDBConn, readMigrateSql, type PgDatabaseConfig } from "./utils";
 import { loadEnvs } from "./envs";
 
-const DEFAULT_DB_NAME = process.env.DB_NAME || "credential_vault_dev";
+const DEFAULT_DB_NAME = process.env.DB_NAME || "key_share_node_dev";
 
 const USE_ENV = process.env.USE_ENV === "true";
 const MIGRATE_MODE = process.env.MIGRATE_MODE || "all"; // "all" or "one"

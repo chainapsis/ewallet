@@ -1,23 +1,23 @@
 services:
-  credential_vault_pg:
+  key_share_node_pg:
     image: postgres:17.4
     restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: credential_vault
+      POSTGRES_DB: key_share_node
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       TZ: "UTC"
       PGTZ: "UTC"
     volumes:
-      - credential_vault_pg_data:/var/lib/postgresql/data
-      - ../../credential_vault/pg_interface/scripts/migrate/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
+      - ksn_pg_data:/var/lib/postgresql/data
+      - ../../key_share_node/pg_interface/scripts/migrate/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
 
-  credential_vault:
+  key_share_node:
     build:
       context: ../../
-      dockerfile: credential_vault/docker/credential_vault.Dockerfile
+      dockerfile: key_share_node/docker/key_share_node.Dockerfile
     ports:
       # You can change the port number to your desired port number
       - "4201:4201"
@@ -26,11 +26,11 @@ services:
     environment:
       # You can change the port number to your desired port number
       PORT: "4201"
-      DB_HOST: "credential_vault_pg"
+      DB_HOST: "key_share_node_pg"
       DB_PORT: "5432"
       DB_USER: "postgres"
       DB_PASSWORD: "postgres"
-      DB_NAME: "credential_vault"
+      DB_NAME: "key_share_node"
       DB_SSL: "false"
       # Please change it to your own secret.
       ENCRYPTION_SECRET: "temp_enc_secret"
@@ -40,7 +40,7 @@ services:
     volumes:
       - ~/keplr_ewallet_data:/home/node/keplr_ewallet_data
     depends_on:
-      - credential_vault_pg
+      - key_share_node_pg
 
 volumes:
-  credential_vault_pg_data:
+  key_share_node_pg_data:

@@ -7,7 +7,8 @@ A Rust tool for PostgreSQL database migrations.
 ### Environment Variables
 
 - `MIGRATE_MODE`: Migration mode (`all` or `one`)
-- `COMMITTEE_ID`: Committee ID for single-committee migration (required when `MIGRATE_MODE=one`)
+- `COMMITTEE_ID`: Committee ID for single-committee migration (required when
+  `MIGRATE_MODE=one`)
 - `COMMITTEE_COUNT`: Total number of committees (default: 2)
 - `DATABASE_URL`: Full database connection string (optional)
 
@@ -16,7 +17,7 @@ Individual database connection settings (when `DATABASE_URL` is not set):
 - `DB_HOST`: Database host (default: localhost)
 - `DB_USER`: Database user (default: postgres)
 - `DB_PASSWORD`: Database password (default: password)
-- `DB_NAME`: Database name (default: credential_vault)
+- `DB_NAME`: Database name (default: key_share_node)
 - `DB_PORT`: Database port (default: 5432)
 
 ### Commands
@@ -44,8 +45,8 @@ MIGRATE_MODE=one COMMITTEE_ID=2 cargo run --bin migrate
 
 ### Database Naming Convention
 
-- Full migration: `credential_vault_rust_1`, `credential_vault_rust_2`, ...
-- Single migration: `credential_vault_rust_{COMMITTEE_ID}`
+- Full migration: `key_share_node_rust_1`, `key_share_node_rust_2`, ...
+- Single migration: `key_share_node_rust_{COMMITTEE_ID}`
 
 ## Examples
 

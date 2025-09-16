@@ -39,7 +39,7 @@ system.
 
 ```bash
 git clone [https://github.com/chainapsis/ewallet.git](https://github.com/chainapsis/ewallet-public.git)
-cd ewallet/credential_vault/docker
+cd ewallet/key_share_node/docker
 ```
 
 2. Start the services using Docker Compose:
@@ -55,8 +55,8 @@ docker compose up -d
 
 While the application suite already includes the database service to run
 together, you may want to use your own. For this, refer to the settings in the
-path `credential_vault/docker/docker-compose.yml` . Values that are relevant to
-the database are written in the `environment` attribute of `credential_vault`.
+path `key_share_node/docker/docker-compose.yml` . Values that are relevant to
+the database are written in the `environment` attribute of `key_share_node`.
 
 | **Variable**      | **Description**           |
 | ----------------- | ------------------------- |
@@ -71,10 +71,10 @@ the database are written in the `environment` attribute of `credential_vault`.
 ### Example configuration
 
 ```yaml
-credential_vault:
+key_share_node:
   build:
     context: ../../
-    dockerfile: credential_vault/docker/credential_vault.Dockerfile
+    dockerfile: key_share_node/docker/key_share_node.Dockerfile
   ports:
     # You can change the port number to your desired port number
     - "4201:4201"
@@ -87,7 +87,7 @@ credential_vault:
     DB_PORT: "1234"
     DB_USER: "admin"
     DB_PASSWORD: "admin_password"
-    DB_NAME: "credential_vault"
+    DB_NAME: "key_share_node"
     DB_SSL: "true"
     # Please change it to your own secret.
     ENCRYPTION_SECRET: "temp_enc_secret"

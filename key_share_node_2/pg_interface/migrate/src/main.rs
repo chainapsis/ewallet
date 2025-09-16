@@ -1,4 +1,4 @@
-use credential_vault_pg_interface::*;
+use ksn_pg_interface::*;
 use std::env;
 
 #[tokio::main]

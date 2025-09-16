@@ -5,7 +5,7 @@ import os from "node:os";
 
 import type { PgDatabaseConfig } from "./utils";
 
-const ENV_FILE_NAME_STEM = "credential_vault";
+const ENV_FILE_NAME_STEM = "key_share_node";
 
 const envSchema = z.object({
   DB_HOST: z.string("DB_HOST is required"),
