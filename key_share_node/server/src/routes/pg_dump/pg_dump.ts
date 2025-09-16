@@ -1,6 +1,6 @@
 import { Router, type Response } from "express";
 import fs from "node:fs/promises";
-import type { CVApiResponse } from "@keplr-ewallet/key-share-node-interface/response";
+import type { CVApiResponse } from "@keplr-ewallet/ksn-interface/response";
 import {
   getAllPgDumps,
   restore,

@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import type { CredentialVaultUser } from "@keplr-ewallet/key-share-node-interface/user";
+import type { CredentialVaultUser } from "@keplr-ewallet/ksn-interface/user";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function createUser(

@@ -31,7 +31,7 @@ RUN yarn run build
 
 # Install dependencies for cv_interface
 WORKDIR /home/node/credential_vault
-RUN yarn workspaces focus @keplr-ewallet/key-share-node-interface
+RUN yarn workspaces focus @keplr-ewallet/ksn-interface
 
 # Build cv_interface
 WORKDIR /home/node/credential_vault/credential_vault/cv_interface

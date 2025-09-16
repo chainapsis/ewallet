@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import type { CommitIdTokenRequest } from "@keplr-ewallet/key-share-node-interface/witnessed_id_tokens";
+import type { CommitIdTokenRequest } from "@keplr-ewallet/ksn-interface/witnessed_id_tokens";
 import { commitIdToken } from "@keplr-ewallet/ksn-pg-interface";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 

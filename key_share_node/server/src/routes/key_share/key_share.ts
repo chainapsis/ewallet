@@ -5,8 +5,8 @@ import type {
   GetKeyShareRequestBody,
   GetKeyShareResponse,
   RegisterKeyShareBody,
-} from "@keplr-ewallet/key-share-node-interface/key_share";
-import type { CVApiResponse } from "@keplr-ewallet/key-share-node-interface/response";
+} from "@keplr-ewallet/ksn-interface/key_share";
+import type { CVApiResponse } from "@keplr-ewallet/ksn-interface/response";
 
 import {
   checkKeyShare,
