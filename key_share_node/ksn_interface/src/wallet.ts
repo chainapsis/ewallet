@@ -1,6 +1,6 @@
 import type { CurveType } from "./curve_type";
 
-export interface CredentialVaultWallet {
+export interface KSNodeWallet {
   wallet_id: string;
   user_id: string;
   curve_type: CurveType;
@@ -10,7 +10,7 @@ export interface CredentialVaultWallet {
   updated_at: Date;
 }
 
-export type CreateCredentialVaultWalletRequest = {
+export type CreateKSNodeWalletRequest = {
   user_id: string;
   curve_type: CurveType;
   public_key: Uint8Array;

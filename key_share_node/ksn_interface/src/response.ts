@@ -1,14 +1,16 @@
-export type CVApiResponse<T> = CVApiSuccessResponse<T> | CVApiErrorResponse;
+export type KSNodeApiResponse<T> =
+  | KSNodeApiSuccessResponse<T>
+  | KSNodeApiErrorResponse;
 
-export interface CVApiSuccessResponse<T> {
+export interface KSNodeApiSuccessResponse<T> {
   success: true;
   data: T;
 }
 
-export interface CVApiErrorResponse {
+export interface KSNodeApiErrorResponse {
   success: false;
-  code: CVApiErrorCode;
+  code: KSNodeApiErrorCode;
   msg: string;
 }
 
-export type CVApiErrorCode = string;
+export type KSNodeApiErrorCode = string;

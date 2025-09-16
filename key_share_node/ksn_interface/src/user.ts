@@ -1,4 +1,4 @@
-export interface CredentialVaultUser {
+export interface KSNodeUser {
   user_id: string;
   email: string;
   status: string;

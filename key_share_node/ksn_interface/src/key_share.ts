@@ -2,7 +2,7 @@ import type { Bytes33 } from "@keplr-ewallet/bytes";
 
 import type { CurveType } from "./curve_type";
 
-export interface CredentialVaultKeyShare {
+export interface KeyShare {
   share_id: string;
   wallet_id: string;
   enc_share: Buffer;
@@ -10,7 +10,7 @@ export interface CredentialVaultKeyShare {
   updated_at: Date;
 }
 
-export type CreateCredentialVaultKeyShareRequest = {
+export type CreateKeyShareRequest = {
   wallet_id: string;
   enc_share: Buffer;
 };
