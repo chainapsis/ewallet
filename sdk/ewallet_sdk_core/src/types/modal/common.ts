@@ -2,7 +2,6 @@ import type {
   AppCurrency,
   Bech32Config,
   BIP44,
-  ChainInfo,
   EVMInfo,
   FeeCurrency,
 } from "@keplr-wallet/types";

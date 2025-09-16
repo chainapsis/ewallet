@@ -17,7 +17,7 @@ export async function openModal(
     target: "keplr_ewallet_attached",
     msg_type: "open_modal",
     payload: {
-      modal_type: "make_signature",
+      modal_type: "cosmos/make_signature",
       modal_id,
       data,
     },

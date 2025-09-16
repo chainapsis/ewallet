@@ -13,16 +13,22 @@ export interface OtherModalPayload {
   data: {};
 }
 
-export type MakeSigModalPayload = {
-  modal_type: "make_signature";
-  modal_id: string;
-  data: MakeCosmosSigData | MakeEthereumSigData;
-};
+export type MakeSigModalPayload =
+  | {
+    modal_type: "cosmos/make_signature";
+    modal_id: string;
+    data: MakeCosmosSigData;
+  }
+  | {
+    modal_type: "eth/make_signature";
+    modal_id: string;
+    data: MakeEthereumSigData;
+  };
 
-export type MakeSignatureModalResult =
-  | MakeEthSigModalResult
-  | MakeCosmosSigModalResult;
-
+// export type MakeSignatureModalResult =
+//   | MakeEthSigModalResult
+//   | MakeCosmosSigModalResult;
+//
 export interface MakeEthSigModalResult {
   chain_type: "eth";
   sig_result: MakeEthereumSigResult;
@@ -33,21 +39,28 @@ export interface MakeCosmosSigModalResult {
   sig_result: MakeCosmosSigResult;
 }
 
-interface MakeSigModalApproveAckPayload {
-  modal_type: "make_signature";
-  modal_id: string;
-  type: "approve";
-  data: MakeSignatureModalResult;
-}
+export type MakeSigModalApproveAckPayload =
+  | {
+    modal_type: "cosmos/make_signature";
+    modal_id: string;
+    type: "approve";
+    data: MakeCosmosSigModalResult;
+  }
+  | {
+    modal_type: "eth/make_signature";
+    modal_id: string;
+    type: "approve";
+    data: MakeEthSigModalResult;
+  };
 
 interface MakeSigModalRejectAckPayload {
-  modal_type: "make_signature";
+  modal_type: "eth/make_signature" | "cosmos/make_signature";
   modal_id: string;
   type: "reject";
 }
 
 interface MakeSigModalErrorAckPayload {
-  modal_type: "make_signature";
+  modal_type: "eth/make_signature" | "cosmos/make_signature";
   modal_id: string;
   type: "error";
   error: string;

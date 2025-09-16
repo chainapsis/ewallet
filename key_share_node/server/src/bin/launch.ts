@@ -68,6 +68,7 @@ async function main() {
     {
       sleepTimeSeconds: ONE_DAY_MS, // 1 day
       retentionDays: 7,
+      dumpDir: "",
     },
   );
 
