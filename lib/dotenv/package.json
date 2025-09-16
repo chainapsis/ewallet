@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/dotenv",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -17,7 +17,7 @@
     "directory": "stdlib_js"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.17"
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.18"
   },
   "devDependencies": {
     "@types/jest": "*",
