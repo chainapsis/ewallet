@@ -28,7 +28,7 @@ export function makeApp() {
 
   app.use(
     rateLimitMiddleware({
-      windowSeconds: 30,
+      windowSeconds: 60,
       maxRequests: 100,
     }),
   );
