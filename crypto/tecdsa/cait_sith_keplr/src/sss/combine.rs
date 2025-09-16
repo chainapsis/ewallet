@@ -6,27 +6,15 @@ use crate::sss::keyshares::KeysharePoints;
 use crate::sss::point::Point256;
 
 pub fn combine<C: CSCurve>(split_points: Vec<Point256>) -> Result<Vec<u8>, String> {
-    if split_points.len() < 2 {
-        return Err("Need at least 2 points to reconstruct".to_string());
-    }
-    let points = split_points.clone();
-
-    for point in &split_points {
-        if point.x == [0; 32] {
-            return Err("Point x is 0".to_string());
-        }
-    }
-
-    let truncated_points = points.iter().collect::<Vec<_>>();
-
     // 1. interpolate
     let mut secret_scalar: C::Scalar = C::Scalar::ZERO;
-    let kss = KeysharePoints::new(points.clone());
-    if kss.is_err() {
-        return Err(kss.err().unwrap());
-    }
-    let keyshare_points = kss.unwrap();
-    for (_, &point) in truncated_points.iter().enumerate() {
+    let ksp = KeysharePoints::new(split_points.clone());
+    let keyshare_points = match ksp {
+        Ok(val) => val,
+        Err(e) => return Err(e),
+    };
+
+    for (_, point) in keyshare_points.to_point_vec().iter().enumerate() {
         let lagrange_coefficient = lagrange_coefficient::<C>(keyshare_points.clone(), point);
         if lagrange_coefficient.is_err() {
             return Err(lagrange_coefficient.err().unwrap());
@@ -53,8 +41,6 @@ pub fn lagrange_coefficient<C: CSCurve>(
     ksp: KeysharePoints,
     p: &Point256,
 ) -> Result<C::Scalar, String> {
-    let mut is_p_included = false;
-
     if !ksp.contain_point(p) {
         return Err("Participant p is not included in participants".to_string());
     }
