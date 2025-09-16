@@ -8,8 +8,14 @@ export async function createUser(
 ): Promise<Result<KSNodeUser, string>> {
   try {
     const query = `
-    INSERT INTO users (email) VALUES ($1) RETURNING *
-    `;
+INSERT INTO users (
+  email
+) 
+VALUES (
+  $1
+) 
+RETURNING *
+`;
 
     const values = [email];
 
@@ -31,7 +37,11 @@ export async function getUserByEmail(
   email: string,
 ): Promise<Result<KSNodeUser | null, string>> {
   try {
-    const query = `SELECT * FROM users WHERE email = $1 LIMIT 1`;
+    const query = `
+SELECT * FROM users 
+WHERE email = $1 
+LIMIT 1
+`;
     const result = await db.query(query, [email]);
 
     const row = result.rows[0];
@@ -50,7 +60,11 @@ export async function getUserFromUserId(
   user_id: string,
 ): Promise<Result<KSNodeUser, string>> {
   try {
-    const query = `SELECT * FROM users WHERE user_id = $1 LIMIT 1`;
+    const query = `
+SELECT * FROM users 
+WHERE user_id = $1 
+LIMIT 1
+`;
     const result = await db.query(query, [user_id]);
 
     const row = result.rows[0];

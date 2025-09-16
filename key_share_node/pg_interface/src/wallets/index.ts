@@ -13,16 +13,16 @@ export async function createWallet(
 ): Promise<Result<KSNodeWallet, string>> {
   try {
     const query = `
-    INSERT INTO wallets (
-      wallet_id, user_id, curve_type, 
-      public_key
-    )
-    VALUES (
-      $1, $2, $3, 
-      $4
-    )
-    RETURNING *
-    `;
+INSERT INTO wallets (
+  wallet_id, user_id, curve_type, 
+  public_key
+)
+VALUES (
+  $1, $2, $3, 
+  $4
+)
+RETURNING *
+`;
 
     const values = [
       uuidv4(),
@@ -59,8 +59,10 @@ export async function getWalletById(
 ): Promise<Result<KSNodeWallet | null, string>> {
   try {
     const query = `
-    SELECT * FROM wallets WHERE wallet_id = $1 LIMIT 1
-    `;
+SELECT * FROM wallets 
+WHERE wallet_id = $1 
+LIMIT 1
+`;
 
     const result = await db.query(query, [walletId]);
 
@@ -87,8 +89,10 @@ export async function getWalletByPublicKey(
 ): Promise<Result<KSNodeWallet | null, string>> {
   try {
     const query = `
-    SELECT * FROM wallets WHERE public_key = $1 LIMIT 1
-    `;
+SELECT * FROM wallets 
+WHERE public_key = $1 
+LIMIT 1
+`;
 
     const result = await db.query(query, [publicKey.toUint8Array()]);
 

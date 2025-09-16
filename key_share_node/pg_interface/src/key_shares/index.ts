@@ -12,13 +12,13 @@ export async function createKeyShare(
 ): Promise<Result<KeyShare, string>> {
   try {
     const query = `
-    INSERT INTO key_shares (
-      share_id, wallet_id, enc_share
-    )
-    VALUES (
-      $1, $2, $3
-    )
-    RETURNING *
+INSERT INTO key_shares (
+  share_id, wallet_id, enc_share
+)
+VALUES (
+  $1, $2, $3
+)
+RETURNING *
     `;
 
     const values = [uuidv4(), keyShareData.wallet_id, keyShareData.enc_share];
@@ -41,7 +41,11 @@ export async function getKeyShareByShareId(
   shareId: string,
 ): Promise<Result<KeyShare | null, string>> {
   try {
-    const query = `SELECT * FROM key_shares WHERE share_id = $1 LIMIT 1`;
+    const query = `
+SELECT * FROM key_shares 
+WHERE share_id = $1 
+LIMIT 1
+`;
     const result = await db.query(query, [shareId]);
 
     const row = result.rows[0];
@@ -60,7 +64,11 @@ export async function getKeyShareByWalletId(
   walletId: string,
 ): Promise<Result<KeyShare | null, string>> {
   try {
-    const query = `SELECT * FROM key_shares WHERE wallet_id = $1 LIMIT 1`;
+    const query = `
+SELECT * FROM key_shares 
+WHERE wallet_id = $1 
+LIMIT 1
+`;
     const result = await db.query(query, [walletId]);
 
     const row = result.rows[0];
