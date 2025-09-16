@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/key-share-node-interface",
+  "name": "@keplr-ewallet/ksn-interface",
   "packageManager": "yarn@4.7.0",
   "version": "0.0.2-alpha.30",
   "type": "module",

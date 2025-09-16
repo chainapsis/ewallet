@@ -7,7 +7,7 @@
       "lib/dotenv",
       "key_share_node/pg_interface",
       "key_share_node/server",
-      "key_share_node/cv_interface",
+      "key_share_node/ksn_interface",
       "sdk/ewallet_cosmos_kit",
       "sdk/ewallet_sdk_common",
       "sdk/ewallet_sdk_core",

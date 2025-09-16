@@ -8,7 +8,7 @@
     "crypto/bytes",
     "crypto/sss",
     "crypto/tecdsa/tecdsa_interface",
-    "credential_vault/cv_interface"
+    "key_share_node/ksn_interface"
   ],
   "version": "independent",
   "npmClient": "yarn"

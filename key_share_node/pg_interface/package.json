@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/ks-node-pg-interface",
+  "name": "@keplr-ewallet/ksn-pg-interface",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "main": "./src/index.ts",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@keplr-ewallet/bytes": "workspace:*",
-    "@keplr-ewallet/key-share-node-interface": "workspace:*",
+    "@keplr-ewallet/ksn-interface": "workspace:*",
     "@keplr-ewallet/stdlib-js": "workspace:*",
     "pg": "*",
     "pgsql-parser": "^17.7.8",
