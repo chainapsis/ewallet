@@ -9,13 +9,13 @@ use crate::sss::point::Point256;
 pub fn split<C: CSCurve>(
     secret: Vec<u8>,
     ks_node_hashes: Vec<Vec<u8>>,
-    t: usize,
+    t: u32,
 ) -> Result<Vec<Point256>, String> {
     if secret.len() != 32 {
         return Err("Secret must be 32 bytes".to_string());
     }
 
-    if ks_node_hashes.len() < t {
+    if (ks_node_hashes.len() as u32) < t {
         return Err("KS node hashes must be greater than t".to_string());
     }
 
@@ -24,18 +24,18 @@ pub fn split<C: CSCurve>(
     }
 
     let secret_scalar = ScalarPrimitive::<C>::from_slice(&secret)
-        .map_err(|_| "Failed to convert secret to scalar".to_string())?;
+        .map_err(|err| format!("Failed to convert secret to scalar, err: {}", err))?;
     let constant = C::Scalar::from(secret_scalar);
 
     let mut rng = OsRng;
 
-    let polynomial = Polynomial::<C>::extend_random(&mut rng, t, &constant);
+    let polynomial = Polynomial::<C>::extend_random(&mut rng, t as usize, &constant);
 
     let ks_node_hash_scalars = ks_node_hashes
         .iter()
         .map(|hash| {
             let sp = ScalarPrimitive::<C>::from_slice(hash)
-                .map_err(|_| "Failed to convert hash to scalar".to_string())?;
+                .map_err(|err| format!("Failed to convert hash to scalar, err: {}", err))?;
             Ok(C::Scalar::from(sp))
         })
         .collect::<Result<Vec<C::Scalar>, String>>()?;

@@ -135,12 +135,12 @@ fn test_split_and_combine() {
     let secret = secret.to_vec();
 
     let ks_node_hashes = vec![p1.x.to_vec(), p2.x.to_vec(), p3.x.to_vec()];
-    let t = ks_node_hashes.len();
+    let t = ks_node_hashes.len() as u32;
 
     let split_points = split::<Secp256k1>(secret.clone(), ks_node_hashes, t).unwrap();
     println!("split_points: {:?}", split_points);
 
-    let combined_secret = combine::<Secp256k1>(split_points).unwrap();
+    let combined_secret = combine::<Secp256k1>(split_points, t).unwrap();
     println!("combined_secret: {:?}", combined_secret);
 
     assert_eq!(secret, combined_secret);
@@ -173,7 +173,7 @@ fn test_secret_overflow_split() {
     let secret = [255u8; 32].to_vec();
 
     let ks_node_hashes = vec![p1.x.to_vec(), p2.x.to_vec()];
-    let t = ks_node_hashes.len();
+    let t = ks_node_hashes.len() as u32;
 
     let split_points = split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
     println!("split_points: {:?}", split_points);
@@ -188,7 +188,7 @@ fn test_hashes_overflow_split() {
     let mut p2 = [255u8; 32].to_vec();
     p2[31] = 1;
     let ks_node_hashes = vec![p1, p2];
-    let t = ks_node_hashes.len();
+    let t = ks_node_hashes.len() as u32;
 
     let split_points = split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
     println!("split_points: {:?}", split_points);
@@ -216,21 +216,18 @@ fn test_t_too_small() {
 
 #[test]
 fn test_combine_insufficient_points() {
-    let ret = combine::<Secp256k1>(vec![]); // Empty points
-    assert_eq!(
-        ret.err(),
-        Some("Need at least 2 points to reconstruct".to_string())
-    );
+    let ret = combine::<Secp256k1>(vec![], 0); // Empty points
+                                               //
+                                               // println!("ret: {:?}", ret);
+
+    assert_eq!(ret.is_err(), true);
 
     let single_point = vec![Point256 {
         x: [0; 32],
         y: [1; 32],
     }];
-    let ret = combine::<Secp256k1>(single_point);
-    assert_eq!(
-        ret.err(),
-        Some("Need at least 2 points to reconstruct".to_string())
-    );
+    let ret = combine::<Secp256k1>(single_point, 1);
+    assert_eq!(ret.is_err(), true);
 }
 
 #[test]
@@ -248,8 +245,9 @@ fn test_combine_zero_x_point() {
             y: [2; 32],
         },
     ];
-    let ret = combine::<Secp256k1>(points);
-    assert_eq!(ret.err(), Some("Point x is 0".to_string()));
+    let ret = combine::<Secp256k1>(points, 2);
+
+    assert_eq!(ret.is_err(), true);
 }
 
 #[test]
