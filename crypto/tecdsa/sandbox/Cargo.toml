@@ -4,6 +4,12 @@ edition = "2021"
 
 [dependencies]
 cait_sith_keplr = { path = "../cait_sith_keplr" }
+elliptic-curve = { version = "0.13.5", features = ["serde"] }
+k256 = { version = "0.13.4", features = ["sha256", "ecdsa", "serde"] }
+serde = { version = "1.0.175", features = ["derive"] }
+subtle = "2.5.0"
+rand_core = { version = "0.6.4", features = ["getrandom"] }
+getrandom = { version = "0.2", features = ["js"] }
 
 [dev-dependencies]
 
