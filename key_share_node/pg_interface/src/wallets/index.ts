@@ -1,16 +1,16 @@
 import { Pool } from "pg";
 import { v4 as uuidv4 } from "uuid";
 import type {
-  CredentialVaultWallet,
-  CreateCredentialVaultWalletRequest,
+  KSNodeWallet,
+  CreateKSNodeWalletRequest,
 } from "@keplr-ewallet/ksn-interface/wallet";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { Bytes33 } from "@keplr-ewallet/bytes";
 
 export async function createWallet(
   db: Pool,
-  createCredentialVaultWalletRequest: CreateCredentialVaultWalletRequest,
-): Promise<Result<CredentialVaultWallet, string>> {
+  createCredentialVaultWalletRequest: CreateKSNodeWalletRequest,
+): Promise<Result<KSNodeWallet, string>> {
   try {
     const query = `
     INSERT INTO wallets (
@@ -43,7 +43,7 @@ export async function createWallet(
 
     return {
       success: true,
-      data: row as CredentialVaultWallet,
+      data: row as KSNodeWallet,
     };
   } catch (error) {
     return {
@@ -56,7 +56,7 @@ export async function createWallet(
 export async function getWalletById(
   db: Pool,
   walletId: string,
-): Promise<Result<CredentialVaultWallet | null, string>> {
+): Promise<Result<KSNodeWallet | null, string>> {
   try {
     const query = `
     SELECT * FROM wallets WHERE wallet_id = $1 LIMIT 1
@@ -64,9 +64,9 @@ export async function getWalletById(
 
     const result = await db.query(query, [walletId]);
 
-    let wallet: CredentialVaultWallet | null = null;
+    let wallet: KSNodeWallet | null = null;
     if (result.rows.length > 0) {
-      wallet = result.rows[0] as CredentialVaultWallet;
+      wallet = result.rows[0] as KSNodeWallet;
     }
 
     return {
@@ -84,7 +84,7 @@ export async function getWalletById(
 export async function getWalletByPublicKey(
   db: Pool,
   publicKey: Bytes33,
-): Promise<Result<CredentialVaultWallet | null, string>> {
+): Promise<Result<KSNodeWallet | null, string>> {
   try {
     const query = `
     SELECT * FROM wallets WHERE public_key = $1 LIMIT 1
@@ -92,9 +92,9 @@ export async function getWalletByPublicKey(
 
     const result = await db.query(query, [publicKey.toUint8Array()]);
 
-    let wallet: CredentialVaultWallet | null = null;
+    let wallet: KSNodeWallet | null = null;
     if (result.rows.length > 0) {
-      wallet = result.rows[0] as CredentialVaultWallet;
+      wallet = result.rows[0] as KSNodeWallet;
     }
 
     return {
