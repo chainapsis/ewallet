@@ -1,6 +1,6 @@
 import { Router, type Response } from "express";
 import fs from "node:fs/promises";
-import type { CVApiResponse } from "@keplr-ewallet/ksn-interface/response";
+import type { KSNodeApiResponse } from "@keplr-ewallet/ksn-interface/response";
 import {
   getAllPgDumps,
   restore,
@@ -69,7 +69,7 @@ export function setPgDumpRoutes(router: Router) {
     adminAuthMiddleware,
     async (
       req: AdminAuthenticatedRequest,
-      res: Response<CVApiResponse<PgDumpResult>>,
+      res: Response<KSNodeApiResponse<PgDumpResult>>,
     ) => {
       const state = req.app.locals as any;
 
@@ -148,7 +148,7 @@ export function setPgDumpRoutes(router: Router) {
    *               code: UNKNOWN_ERROR
    *               msg: "Failed to retrieve pg dump history"
    */
-  router.get("/", async (req, res: Response<CVApiResponse<PgDump[]>>) => {
+  router.get("/", async (req, res: Response<KSNodeApiResponse<PgDump[]>>) => {
     const { days } = req.query;
     const state = req.app.locals as any;
 
@@ -267,7 +267,7 @@ export function setPgDumpRoutes(router: Router) {
     adminAuthMiddleware,
     async (
       req: AdminAuthenticatedRequest<{ dump_path: string }>,
-      res: Response<CVApiResponse<{ dump_path: string }>>,
+      res: Response<KSNodeApiResponse<{ dump_path: string }>>,
     ) => {
       const state = req.app.locals as any;
 
