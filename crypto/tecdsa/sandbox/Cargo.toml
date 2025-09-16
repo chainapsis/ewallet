@@ -1,0 +1,9 @@
+[package]
+name = "cait_sith_keplr_sandbox"
+edition = "2021"
+
+[dependencies]
+cait_sith_keplr = { path = "../cait_sith_keplr" }
+
+[dev-dependencies]
+
