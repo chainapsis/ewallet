@@ -36,13 +36,14 @@ import {
   isValidChainId,
   validateChain,
 } from "@keplr-ewallet-sdk-eth/utils";
+import { ProviderEventEmitter } from "./emitter";
 import type {
   EIP1193Provider,
   EWalletEIP1193ProviderOptions,
   ProviderConnectInfo,
   RpcChainWithStatus,
-} from "@keplr-ewallet-sdk-eth/provider";
-import { ProviderEventEmitter, VERSION } from "@keplr-ewallet-sdk-eth/provider";
+} from "./types";
+import { VERSION } from "./version";
 
 export class EWalletEIP1193Provider
   extends ProviderEventEmitter
