@@ -1,7 +1,10 @@
 <a href="https://demo.embed.keplr.app/">
-  <img
-    src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.png"
-    alt="Logo">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo_dark.svg">
+    <img src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.svg" alt="Logo"
+    style="width: 361px; height: auto;">
+  </picture>
 </a>
 
 Crypto wallet seamlessly built in your apps.
