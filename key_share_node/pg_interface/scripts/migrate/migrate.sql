@@ -62,25 +62,3 @@ CREATE TABLE IF NOT EXISTS public.pg_dumps (
 	updated_at timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT pg_dumps_pkey PRIMARY KEY (dump_id)
 );
-
--- public.witnessed_id_tokens definition
-
--- Drop table
-
--- DROP TABLE public.witnessed_id_tokens;
-
-CREATE TABLE IF NOT EXISTS public.witnessed_id_tokens (
-    witness_id uuid DEFAULT gen_random_uuid() NOT NULL,
-    user_id uuid NOT NULL,
-    user_session_public_key bytea NOT NULL, -- 33 bytes (secp256k1 public key)
-    id_token_hash bytea NOT NULL, -- 32 bytes (SHA256)
-    status varchar(6) NOT NULL, -- 'commit' or 'reveal'
-    created_at timestamptz DEFAULT now() NOT NULL,
-    updated_at timestamptz DEFAULT now() NOT NULL,
-    CONSTRAINT witnessed_id_tokens_pkey PRIMARY KEY (witness_id)
-);
-
--- Indexes for witnessed_id_tokens
-CREATE INDEX IF NOT EXISTS idx_witnessed_id_tokens_user_id ON public.witnessed_id_tokens(user_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_witnessed_id_tokens_hash ON public.witnessed_id_tokens(id_token_hash);
-CREATE INDEX IF NOT EXISTS idx_witnessed_id_tokens_status ON public.witnessed_id_tokens(status);

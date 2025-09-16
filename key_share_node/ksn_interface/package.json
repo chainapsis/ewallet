@@ -14,10 +14,6 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./witnessed_id_tokens": {
-      "import": "./dist/witnessed_id_tokens.js",
-      "types": "./dist/witnessed_id_tokens.d.ts"
-    },
     "./key_share": {
       "import": "./dist/key_share.js",
       "types": "./dist/key_share.d.ts"

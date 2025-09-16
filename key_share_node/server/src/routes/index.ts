@@ -1,7 +1,6 @@
 import type { Express } from "express";
 
 import { makeKeyshareRouter } from "./key_share";
-import { makeCommitRouter } from "./commit";
 import { makePgDumpRouter } from "./pg_dump";
 
 export function setRoutes(app: Express) {
@@ -10,7 +9,4 @@ export function setRoutes(app: Express) {
 
   const pgDumpRouter = makePgDumpRouter();
   app.use("/pg_dump/v1", pgDumpRouter);
-
-  const commitRouter = makeCommitRouter();
-  app.use("/commit/v1", commitRouter);
 }

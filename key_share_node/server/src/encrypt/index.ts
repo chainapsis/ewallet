@@ -40,5 +40,4 @@ export function decryptData(encryptedBase64: string, password: string): string {
   return decrypted.toString("utf8");
 }
 
-// TODO remove temp secret
 export const TEMP_ENC_SECRET = "temp_enc_secret";
