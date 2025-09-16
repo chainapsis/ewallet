@@ -17,7 +17,7 @@ import {
 import {
   adminAuthMiddleware,
   type AdminAuthenticatedRequest,
-} from "@keplr-ewallet-ksn-server/middlewares/admin_auth";
+} from "@keplr-ewallet-ksn-server/middlewares";
 import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
 
 export function setPgDumpRoutes(router: Router) {

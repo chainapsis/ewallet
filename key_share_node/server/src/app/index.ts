@@ -6,6 +6,7 @@ import { config as dotenvConfig } from "dotenv";
 
 import { installSwaggerDocs } from "@keplr-ewallet-ksn-server/swagger";
 import { setRoutes } from "@keplr-ewallet-ksn-server/routes";
+import { rateLimitMiddleware } from "@keplr-ewallet-ksn-server/middlewares";
 
 dotenvConfig();
 
@@ -24,6 +25,13 @@ export function makeApp() {
   );
   app.use(cors());
   app.use(express.json());
+
+  app.use(
+    rateLimitMiddleware({
+      windowSeconds: 30,
+      maxRequests: 100,
+    }),
+  );
 
   app.get<{}, string>("/", (_, res) => {
     res.send("Ok");
