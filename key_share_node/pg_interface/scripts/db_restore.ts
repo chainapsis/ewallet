@@ -1,5 +1,5 @@
 import { loadEnvs } from "./migrate/envs";
-import { restore } from "@keplr-ewallet-credential-vault-pg-interface/dump";
+import { restore } from "@keplr-ewallet-ksn-pg-interface/dump";
 
 const COMMITTEE_ID = parseInt(process.env.COMMITTEE_ID || "1", 10);
 const DUMP_PATH = process.env.DUMP_PATH;

@@ -2,7 +2,7 @@ import { join } from "node:path";
 import os from "node:os";
 
 import { loadEnvs } from "./migrate/envs";
-import { dump } from "@keplr-ewallet-credential-vault-pg-interface/dump";
+import { dump } from "@keplr-ewallet-ksn-pg-interface/dump";
 
 const DUMP_DIR = join(os.homedir(), "keplr_ewallet_data");
 

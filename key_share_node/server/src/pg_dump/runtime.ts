@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { type PgDumpConfig } from "@keplr-ewallet/credential-vault-pg-interface";
+import { type PgDumpConfig } from "@keplr-ewallet/ksn-pg-interface";
 
 import { sleep } from "@keplr-ewallet-cv-server/utils";
 import { deleteOldPgDumps, processPgDump } from "./dump";

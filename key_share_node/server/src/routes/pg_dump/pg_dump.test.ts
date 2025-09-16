@@ -2,14 +2,8 @@ import request from "supertest";
 import express from "express";
 import { Pool } from "pg";
 import fs from "node:fs/promises";
-import {
-  getPgDumpById,
-  getAllPgDumps,
-} from "@keplr-ewallet/credential-vault-pg-interface";
-import {
-  createUser,
-  getUserByEmail,
-} from "@keplr-ewallet/credential-vault-pg-interface";
+import { getPgDumpById, getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
+import { createUser, getUserByEmail } from "@keplr-ewallet/ksn-pg-interface";
 
 import {
   createPgDatabase,

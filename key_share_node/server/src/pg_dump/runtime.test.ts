@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import fs from "node:fs/promises";
-import { getAllPgDumps } from "@keplr-ewallet/credential-vault-pg-interface";
+import { getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
 
 import {
   createPgDatabase,

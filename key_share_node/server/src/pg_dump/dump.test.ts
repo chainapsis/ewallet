@@ -4,7 +4,7 @@ import {
   getPgDumpById,
   getAllPgDumps,
   type PgDumpConfig,
-} from "@keplr-ewallet/credential-vault-pg-interface";
+} from "@keplr-ewallet/ksn-pg-interface";
 
 import {
   createPgDatabase,

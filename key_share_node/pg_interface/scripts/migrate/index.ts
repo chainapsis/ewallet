@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { dropAllTablesIfExist } from "@keplr-ewallet-credential-vault-pg-interface/postgres";
+import { dropAllTablesIfExist } from "@keplr-ewallet-ksn-pg-interface/postgres";
 
 import { createDBConn, readMigrateSql, type PgDatabaseConfig } from "./utils";
 import { loadEnvs } from "./envs";
@@ -89,16 +89,16 @@ async function migrateOne(useEnv: boolean) {
   const pgConfig: PgDatabaseConfig = useEnv
     ? loadEnvs(COMMITTEE_ID)
     : {
-        database:
-          COMMITTEE_ID === 1
-            ? DEFAULT_DB_NAME
-            : `${DEFAULT_DB_NAME}${COMMITTEE_ID}`,
-        user: "postgres",
-        password: "postgres",
-        host: "localhost",
-        port: 5432,
-        ssl: false,
-      };
+      database:
+        COMMITTEE_ID === 1
+          ? DEFAULT_DB_NAME
+          : `${DEFAULT_DB_NAME}${COMMITTEE_ID}`,
+      user: "postgres",
+      password: "postgres",
+      host: "localhost",
+      port: 5432,
+      ssl: false,
+    };
 
   await createDBIfNotExists(
     { ...pgConfig, database: "postgres" },

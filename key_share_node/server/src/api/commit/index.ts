@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import type { CommitIdTokenRequest } from "@keplr-ewallet/key-share-node-interface/witnessed_id_tokens";
-import { commitIdToken } from "@keplr-ewallet/credential-vault-pg-interface";
+import { commitIdToken } from "@keplr-ewallet/ksn-pg-interface";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";

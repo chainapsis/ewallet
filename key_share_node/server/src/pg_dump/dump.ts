@@ -10,7 +10,7 @@ import {
   getOldCompletedPgDumps,
   type PgDumpConfig,
   updatePgDumpStatus,
-} from "@keplr-ewallet/credential-vault-pg-interface";
+} from "@keplr-ewallet/ksn-pg-interface";
 
 import { getSecondsFromNow } from "@keplr-ewallet-cv-server/utils";
 

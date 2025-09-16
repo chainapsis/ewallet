@@ -1,5 +1,5 @@
 [package]
-name = "credential-vault-pg-interface"
+name = "ksn-pg-interface"
 version = "0.1.0"
 edition = "2021"
 

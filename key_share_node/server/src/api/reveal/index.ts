@@ -3,7 +3,7 @@ import {
   getUserFromUserId,
   getCommittedIdTokenByUserSessionPublicKeyAndThreshold,
   revealIdToken,
-} from "@keplr-ewallet/credential-vault-pg-interface";
+} from "@keplr-ewallet/ksn-pg-interface";
 import type { Bytes33 } from "@keplr-ewallet/bytes";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 

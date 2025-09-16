@@ -6,7 +6,7 @@ import {
   getKeyShareByWalletId,
   getUserByEmail,
   getWalletByPublicKey,
-} from "@keplr-ewallet/credential-vault-pg-interface";
+} from "@keplr-ewallet/ksn-pg-interface";
 import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
 
 import {

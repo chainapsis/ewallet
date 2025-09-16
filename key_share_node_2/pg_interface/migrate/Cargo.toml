@@ -10,5 +10,5 @@ name = "migrate"
 path = "src/main.rs"
 
 [dependencies]
-credential-vault-pg-interface = { path = ".." }
+ksn-pg-interface = { path = ".." }
 tokio = { version = "1.0", features = ["full"] }

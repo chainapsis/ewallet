@@ -5,7 +5,7 @@ import {
   getAllPgDumps,
   restore,
   type PgDump,
-} from "@keplr-ewallet/credential-vault-pg-interface";
+} from "@keplr-ewallet/ksn-pg-interface";
 
 import {
   processPgDump,
