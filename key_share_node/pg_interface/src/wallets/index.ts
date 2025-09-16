@@ -9,7 +9,7 @@ import type { Bytes33 } from "@keplr-ewallet/bytes";
 
 export async function createWallet(
   db: Pool,
-  createCredentialVaultWalletRequest: CreateKSNodeWalletRequest,
+  createKSNodeWalletRequest: CreateKSNodeWalletRequest,
 ): Promise<Result<KSNodeWallet, string>> {
   try {
     const query = `
@@ -26,9 +26,9 @@ export async function createWallet(
 
     const values = [
       uuidv4(),
-      createCredentialVaultWalletRequest.user_id,
-      createCredentialVaultWalletRequest.curve_type,
-      createCredentialVaultWalletRequest.public_key,
+      createKSNodeWalletRequest.user_id,
+      createKSNodeWalletRequest.curve_type,
+      createKSNodeWalletRequest.public_key,
     ];
 
     const result = await db.query(query, values);

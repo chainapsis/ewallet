@@ -1,3 +1,3 @@
-# Credential Vault Server
+# Key Share Node Server
 
 TBD

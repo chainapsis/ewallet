@@ -8,9 +8,7 @@ import { startPgDumpRuntime } from "@keplr-ewallet-cv-server/pg_dump/runtime";
 const ONE_DAY_MS = 1 * 86400;
 
 function parseCLIArgs() {
-  const command = program
-    .version("0.0.1")
-    .description("Credential vault server");
+  const command = program.version("0.0.1").description("Key share node server");
 
   command.requiredOption("--committee-id <id>");
 
