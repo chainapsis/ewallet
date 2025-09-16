@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-rate-limit": "^8.0.1",
     "helmet": "^8.0.0",
     "morgan": "^1.10.0",
     "pg": "^8.16.3",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.20",
+    "@types/express-rate-limit": "^6.0.2",
     "@types/jest": "^29.5.13",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.7.5",
