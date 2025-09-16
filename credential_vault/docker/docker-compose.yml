@@ -12,7 +12,7 @@ services:
       PGTZ: "UTC"
     volumes:
       - credential_vault_pg_data:/var/lib/postgresql/data
-      - ../../credential_vault/pg_interface/migrate/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
+      - ../../credential_vault/pg_interface/scripts/migrate/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
 
   credential_vault:
     build:

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, type FC } from "react";
 
 import { Widget } from "../widget_components";
 import styles from "./login_widget.module.scss";
@@ -7,7 +7,7 @@ import { useUserInfoState } from "@/state/user_info";
 import { useAddresses } from "@/hooks/ewallet";
 import { CosmosAccountsModal } from "@/components/cosmos_accounts_modal/cosmos_accounts_modal";
 
-export const LoginWidget: React.FC<LoginWidgetProps> = () => {
+export const LoginWidget: FC<LoginWidgetProps> = () => {
   const { cosmosEWallet } = useKeplrEwallet();
   const [isSigningIn, setIsSigningIn] = useState(false);
   const { isSignedIn, email, publicKey } = useUserInfoState();
@@ -20,7 +20,8 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
         setIsSigningIn(true);
 
         const eWallet = cosmosEWallet.eWallet;
-        await eWallet.signIn("google");
+        // await eWallet.signIn("google");
+        eWallet.signIn("google");
       }
     } catch (error) {
       console.error(error);
@@ -102,4 +103,4 @@ export const LoginWidget: React.FC<LoginWidgetProps> = () => {
   );
 };
 
-export interface LoginWidgetProps {}
+export interface LoginWidgetProps { }

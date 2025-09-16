@@ -3,6 +3,8 @@ import type {
   KeplrEWalletInterface,
   OAuthState,
   EWalletMsg,
+  EWalletMsgOAuthSignInResult,
+  EWalletMsgOAuthSignInResultAck,
 } from "@keplr-ewallet-sdk-core/types";
 import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
 import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
@@ -10,18 +12,35 @@ import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
 const FIVE_MINS_MS = 5 * 60 * 1000;
 
 export async function signIn(this: KeplrEWalletInterface, type: "google") {
-  switch (type) {
-    case "google": {
-      await tryGoogleSignIn(
-        this.sdkEndpoint,
-        this.apiKey,
-        this.sendMsgToIframe.bind(this),
-      );
-      break;
+  let signInRes: EWalletMsgOAuthSignInResult;
+  try {
+    switch (type) {
+      case "google": {
+        signInRes = await tryGoogleSignIn(
+          this.sdkEndpoint,
+          this.apiKey,
+          this.sendMsgToIframe.bind(this),
+        );
+        break;
+      }
+      default:
+        throw new Error(`not supported sign in type, type: ${type}`);
     }
-    default:
-      throw new Error(`not supported sign in type, type: ${type}`);
+  } catch (err) {
+    throw new Error(`Sign in error, err: ${err}`);
   }
+
+  if (!signInRes.payload.success) {
+    throw new Error(`sign in fail, err: ${signInRes.payload.err}`);
+  }
+
+  const msg: EWalletMsg = {
+    target: "keplr_ewallet_attached",
+    msg_type: "oauth_sign_in",
+    payload: signInRes.payload.data,
+  };
+
+  await this.sendMsgToIframe(msg);
 
   const publicKey = await this.getPublicKey();
   const email = await this.getEmail();
@@ -41,7 +60,7 @@ async function tryGoogleSignIn(
   sdkEndpoint: string,
   apiKey: string,
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>,
-) {
+): Promise<EWalletMsgOAuthSignInResult> {
   const clientId = GOOGLE_CLIENT_ID;
   if (!clientId) {
     throw new Error("GOOGLE_CLIENT_ID is not set");
@@ -56,9 +75,9 @@ async function tryGoogleSignIn(
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  // NOTE: safari browser block the new window when async operation is used
-  // between user interaction and window opening.
-  // so we need to send the message to iframe first and wait for the ack after window opening.
+  // NOTE: Safari browser sets a strict rule in the amount of time a script
+  // can handle function that involes window.open(). window.open() had better
+  // be executed without awaiting any long operations
   const ackPromise = sendMsgToIframe({
     target: EWALLET_ATTACHED_TARGET,
     msg_type: "set_oauth_nonce",
@@ -98,54 +117,80 @@ async function tryGoogleSignIn(
 
   const ack = await ackPromise;
   if (ack.msg_type !== "set_oauth_nonce_ack" || !ack.payload.success) {
-    popup.close();
+    // Closing will be handled in the popup window
+    // popup.close();
     throw new Error("Failed to set nonce for google oauth sign in");
   }
 
-  return new Promise<void>((resolve, reject) => {
-    let focusTimer: number;
-    let timeoutId: number;
+  return new Promise<EWalletMsgOAuthSignInResult>(async (resolve, reject) => {
+    // let focusTimer: number;
+    let timeout: number;
 
-    function onFocus(e: FocusEvent) {
-      // when user focus back to the parent window, check if the popup is closed
-      // a small delay to handle the case message is sent but not received yet
-      focusTimer = window.setTimeout(() => {
-        if (popup && popup.closed) {
-          cleanup();
-          reject(new Error("Window closed by user"));
-        }
-      }, 200);
-    }
-    window.addEventListener("focus", onFocus);
+    // function onFocus(e: FocusEvent) {
+    //   // when user focus back to the parent window, check if the popup is closed
+    //   // a small delay to handle the case message is sent but not received yet
+    //   focusTimer = window.setTimeout(() => {
+    //     if (popup && popup.closed) {
+    //       cleanup();
+    //       reject(new Error("Window closed by user"));
+    //       closePopup(popup);
+    //     }
+    //   }, 200);
+    // }
+    // window.addEventListener("focus", onFocus);
 
-    function onMessage(e: MessageEvent) {
-      const data = e.data as EWalletMsg;
+    function onMessage(event: MessageEvent) {
+      if (event.ports.length < 1) {
+        // do nothing
 
-      if (data.msg_type === "oauth_sign_in_ack") {
-        cleanup();
+        return;
+      }
+
+      const port = event.ports[0];
+      const data = event.data as EWalletMsg;
+
+      if (data.msg_type === "oauth_sign_in_result") {
+        console.log("[keplr] oauth_sign_in_result recv, %o", data);
+
+        const msg: EWalletMsgOAuthSignInResultAck = {
+          target: "keplr_ewallet_attached",
+          msg_type: "oauth_sign_in_result_ack",
+          payload: null,
+        };
+
+        port.postMessage(msg);
+
         if (data.payload.success) {
-          resolve();
+          resolve(data);
         } else {
-          reject(new Error(data.payload.err));
+          reject(new Error(data.payload.err.type));
         }
+
+        cleanup();
       }
     }
     window.addEventListener("message", onMessage);
 
-    timeoutId = window.setTimeout(() => {
+    timeout = window.setTimeout(() => {
       cleanup();
       reject(new Error("Timeout: no response within 5 minutes"));
+      closePopup(popup);
     }, FIVE_MINS_MS);
 
     function cleanup() {
-      window.clearTimeout(focusTimer);
-      window.clearTimeout(timeoutId);
-      window.removeEventListener("focus", onFocus);
-      window.removeEventListener("message", onMessage);
+      console.log("[keplr] clean up oauth sign in listener");
 
-      if (popup && !popup.closed) {
-        popup.close();
-      }
+      // window.clearTimeout(focusTimer);
+      // window.removeEventListener("focus", onFocus);
+
+      window.clearTimeout(timeout);
+      window.removeEventListener("message", onMessage);
     }
   });
+}
+
+function closePopup(popup: Window) {
+  if (popup && !popup.closed) {
+    popup.close();
+  }
 }

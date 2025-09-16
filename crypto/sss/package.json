@@ -1,32 +1,36 @@
 {
-  "name": "@keplr-ewallet/dotenv",
-  "version": "0.0.2-alpha.2",
-  "packageManager": "yarn@4.7.0",
+  "name": "@keplr-ewallet/sss",
   "type": "module",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "version": "0.0.2-alpha.2",
+  "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
-  },
-  "scripts": {
-    "clean": "del-cli dist",
-    "build": "yarn clean && tsc && tsc-alias"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/chainapsis/ewallet.git",
-    "directory": "stdlib_js"
+    "directory": "crypto/bytes"
+  },
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "yarn clean && tsc",
+    "start": "node ./dist/index.js",
+    "test": "jest"
   },
   "dependencies": {
+    "@guildofweavers/galois": "^0.4.22",
+    "@keplr-ewallet/bytes": "workspace:*",
     "@keplr-ewallet/stdlib-js": "^0.0.2-rc.17"
   },
   "devDependencies": {
+    "@jest/globals": "*",
     "@types/jest": "*",
     "@types/node": "*",
     "del-cli": "*",
     "jest": "*",
     "ts-jest": "*",
-    "tsc-alias": "*",
-    "tsx": "*",
     "typescript": "*"
   },
   "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"

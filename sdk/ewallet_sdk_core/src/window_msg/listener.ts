@@ -1,24 +1,47 @@
-import type { AckPayload, EWalletMsg } from "@keplr-ewallet-sdk-core/types";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+
+import type {
+  EWalletMsg,
+  EWalletMsgInitAck,
+  KeplrEWalletInterface,
+} from "@keplr-ewallet-sdk-core/types";
 import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
 
-// Only used for "init" message which is triggered by the child.
-// After initialization, message communication is only triggered
-// by parent window and child replies on the dedicated channel
-export function registerMsgListener(): Promise<AckPayload<InitPayload>> {
+export function registerMsgListener(
+  _eWallet: KeplrEWalletInterface,
+): Promise<Result<InitPayload, string>> {
   if (window.__keplr_ewallet_ev) {
-    console.warn("[keplr] isn't it already initailized?");
+    // TODO: unreachable but is allowed. Report to centralized logging system
+    // required
+    console.error("[keplr] isn't it already initailized?");
   }
 
   return new Promise((resolve, reject) => {
-    const handler = (event: MessageEvent) => {
+    async function handler(event: MessageEvent) {
+      if (event.ports.length < 1) {
+        // do nothing
+
+        return;
+      }
+
+      const port = event.ports[0];
       const msg = event.data as EWalletMsg;
+
       if (msg.msg_type === "init") {
+        const ack: EWalletMsgInitAck = {
+          target: "keplr_ewallet_sdk",
+          msg_type: "init_ack",
+          payload: { success: true, data: null },
+        };
+
+        port.postMessage(ack);
+
         window.removeEventListener("message", handler);
 
-        // Resolve regardless, caller can branch on payload.success
         resolve(msg.payload);
+      } else {
       }
-    };
+    }
 
     window.addEventListener("message", handler);
     window.__keplr_ewallet_ev = handler;

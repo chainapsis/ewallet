@@ -7,7 +7,7 @@ use crate::compat::CSCurve;
 use crate::crypto::{commit, hash, Digest};
 use crate::math::Polynomial;
 use crate::proofs::dlog;
-use crate::protocol::{Participant, Protocol, ProtocolError};
+use crate::protocol::{Participant, ProtocolError};
 use crate::serde::encode;
 
 use super::state::KeyshareState;

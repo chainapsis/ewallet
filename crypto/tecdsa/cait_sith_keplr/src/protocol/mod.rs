@@ -213,6 +213,7 @@ pub fn run_protocol<T>(
 ///
 /// This is more useful for testing two party protocols with assymetric results,
 /// since the return types for the two protocols can be different.
+/*
 pub(crate) fn run_two_party_protocol<T0: fmt::Debug, T1: fmt::Debug>(
     p0: Participant,
     p1: Participant,
@@ -254,6 +255,7 @@ pub(crate) fn run_two_party_protocol<T0: fmt::Debug, T1: fmt::Debug>(
 
     Ok((out0.unwrap(), out1.unwrap()))
 }
+*/
 
 #[cfg(feature = "async")]
 pub(crate) mod internal;

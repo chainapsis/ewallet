@@ -1,7 +1,7 @@
 use ck_meow::Meow;
-use elliptic_curve::CurveArithmetic;
+// use elliptic_curve::CurveArithmetic;
 use magikitten::MeowRng;
-use subtle::Choice;
+// use subtle::Choice;
 
 use crate::{compat::CSCurve, constants::SECURITY_PARAMETER};
 
@@ -38,6 +38,7 @@ pub struct RandomOtExtensionParams<'sid> {
     pub batch_size: usize,
 }
 
+/*
 /// The result that the sender gets.
 pub type RandomOTExtensionSenderOut<C> = Vec<(
     <C as CurveArithmetic>::Scalar,
@@ -46,3 +47,4 @@ pub type RandomOTExtensionSenderOut<C> = Vec<(
 
 /// The result that the receiver gets.
 pub type RandomOTExtensionReceiverOut<C> = Vec<(Choice, <C as CurveArithmetic>::Scalar)>;
+*/

@@ -2,7 +2,7 @@ use std::io::Write;
 
 use crate::compat::{CSCurve, SerializablePoint};
 use ecdsa::elliptic_curve::ScalarPrimitive;
-use serde::{de::DeserializeOwned, Deserialize, Deserializer, Serialize, Serializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Encode an arbitrary serializable value into a vec.
 pub fn encode<T: Serialize>(val: &T) -> Vec<u8> {
@@ -14,6 +14,7 @@ pub fn encode_writer<T: Serialize, W: Write>(w: &mut W, val: &T) {
     rmp_serde::encode::write(w, val).expect("failed to encode value");
 }
 
+/*
 /// Encode an arbitrary serializable with a tag.
 pub fn encode_with_tag<T: Serialize>(tag: &[u8], val: &T) -> Vec<u8> {
     // Matches rmp_serde's internal default.
@@ -22,6 +23,7 @@ pub fn encode_with_tag<T: Serialize>(tag: &[u8], val: &T) -> Vec<u8> {
     rmp_serde::encode::write(&mut out, val).expect("failed to encode value");
     out
 }
+*/
 
 /// Serialize a list of projective points.
 pub fn serialize_projective_points<C: CSCurve, S: Serializer>(
@@ -70,7 +72,9 @@ where
     Ok(out.into())
 }
 
+/*
 /// Decode an arbitrary value from a slice of bytes.
 pub fn decode<T: DeserializeOwned>(input: &[u8]) -> Result<T, rmp_serde::decode::Error> {
     rmp_serde::decode::from_slice(input)
 }
+*/
