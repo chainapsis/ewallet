@@ -20,3 +20,5 @@ ptype.toViemAccount = toViemAccount;
 ptype.getPublicKey = getPublicKey;
 ptype.getAddress = getAddress;
 ptype.makeSignature = makeSignature;
+
+export { EthEWallet };

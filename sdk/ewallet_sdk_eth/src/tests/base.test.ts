@@ -23,10 +23,8 @@ import {
   MOCK_ADDRESS,
   MOCK_SIGNATURE,
 } from "./mock";
-import {
-  EWalletEIP1193Provider,
-  ProviderEventEmitter,
-} from "@keplr-ewallet-sdk-eth/provider";
+import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
+import { ProviderEventEmitter } from "@keplr-ewallet-sdk-eth/provider/emitter";
 
 describe("EWallet Provider - Base", () => {
   describe("Basic Properties", () => {
