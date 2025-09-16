@@ -12,6 +12,7 @@ import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
 const FIVE_MINS_MS = 5 * 60 * 1000;
 
 export async function signIn(this: KeplrEWalletInterface, type: "google") {
+  // SDK takes oauth_sign_in_result msg from the popup window
   let signInRes: EWalletMsgOAuthSignInResult;
   try {
     switch (type) {
@@ -40,6 +41,7 @@ export async function signIn(this: KeplrEWalletInterface, type: "google") {
     payload: signInRes.payload.data,
   };
 
+  // SDK sends "oauth_sign_in" msg to attached w/ oauth payload
   await this.sendMsgToIframe(msg);
 
   const publicKey = await this.getPublicKey();
@@ -75,10 +77,7 @@ async function tryGoogleSignIn(
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-  // NOTE: Safari browser sets a strict rule in the amount of time a script
-  // can handle function that involes window.open(). window.open() had better
-  // be executed without awaiting any long operations
-  const ackPromise = sendMsgToIframe({
+  const nonceAckPromise = sendMsgToIframe({
     target: EWALLET_ATTACHED_TARGET,
     msg_type: "set_oauth_nonce",
     payload: nonce,
@@ -105,6 +104,10 @@ async function tryGoogleSignIn(
   authUrl.searchParams.set("nonce", nonce);
   authUrl.searchParams.set(RedirectUriSearchParamsKey.STATE, oauthStateString);
 
+  // NOTE: Safari browser sets a strict rule in the amount of time a script
+  // can handle function that involes window.open(). window.open() should be
+  // executed without awaiting any long operations (1000ms limit at the time
+  // of writing)
   const popup = window.open(
     authUrl.toString(),
     "google_oauth",
@@ -115,10 +118,8 @@ async function tryGoogleSignIn(
     throw new Error("Failed to open new window for google oauth sign in");
   }
 
-  const ack = await ackPromise;
+  const ack = await nonceAckPromise;
   if (ack.msg_type !== "set_oauth_nonce_ack" || !ack.payload.success) {
-    // Closing will be handled in the popup window
-    // popup.close();
     throw new Error("Failed to set nonce for google oauth sign in");
   }
 
@@ -139,10 +140,9 @@ async function tryGoogleSignIn(
     // }
     // window.addEventListener("focus", onFocus);
 
+    // This takes "oauth result msg" from the sign-in popup window
     function onMessage(event: MessageEvent) {
       if (event.ports.length < 1) {
-        // do nothing
-
         return;
       }
 
