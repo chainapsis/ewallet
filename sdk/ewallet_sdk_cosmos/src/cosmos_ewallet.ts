@@ -1,8 +1,3 @@
-import {
-  EventEmitter3,
-  type KeplrEWalletInterface,
-} from "@keplr-ewallet/ewallet-sdk-core";
-
 import { enable } from "@keplr-ewallet-sdk-cosmos/methods/enable";
 import { getCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/methods/get_cosmos_chain_info";
 import { getAccounts } from "@keplr-ewallet-sdk-cosmos/methods/get_accounts";
@@ -20,32 +15,12 @@ import { verifyArbitrary } from "@keplr-ewallet-sdk-cosmos/methods/verify_arbitr
 import { openModal } from "@keplr-ewallet-sdk-cosmos/methods/open_modal";
 import { getPublicKey } from "@keplr-ewallet-sdk-cosmos/methods/get_public_key";
 import { on } from "@keplr-ewallet-sdk-cosmos/methods/on";
-import type {
-  CosmosEWalletInterface,
-  KeplrEWalletCosmosEvent2,
-  KeplrEWalletCosmosEventHandler2,
-} from "@keplr-ewallet-sdk-cosmos/types";
-import { init, initAsync } from "./static/init";
-import { lazyInit } from "./private/lazy_init";
-
-export function CosmosEWallet(
-  this: CosmosEWalletInterface,
-  eWallet: KeplrEWalletInterface,
-) {
-  this.eWallet = eWallet;
-  this.eventEmitter = new EventEmitter3<
-    KeplrEWalletCosmosEvent2,
-    KeplrEWalletCosmosEventHandler2
-  >();
-  this.state = {
-    publicKey: null,
-    publicKeyRaw: null,
-  };
-  this.waitUntilInitialized = lazyInit(this).then();
-}
+import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import { init } from "./static/init";
+import { CosmosEWallet } from "./constructor";
 
 CosmosEWallet.init = init;
-CosmosEWallet.initAsync = initAsync;
+// CosmosEWallet.initAsync = initAsync;
 
 const ptype: CosmosEWalletInterface = CosmosEWallet.prototype;
 
@@ -66,3 +41,5 @@ ptype.signDirect = signDirect;
 ptype.signArbitrary = signArbitrary;
 ptype.verifyArbitrary = verifyArbitrary;
 ptype.openModal = openModal;
+
+export { CosmosEWallet };
