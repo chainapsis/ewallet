@@ -7,8 +7,8 @@ use crate::math::Polynomial;
 use crate::sss::point::Point256;
 
 pub fn split<C: CSCurve>(
-    secret: Vec<u8>,
-    ks_node_hashes: Vec<Vec<u8>>,
+    secret: [u8; 32],
+    ks_node_hashes: Vec<[u8; 32]>,
     t: u32,
 ) -> Result<Vec<Point256>, String> {
     if secret.len() != 32 {

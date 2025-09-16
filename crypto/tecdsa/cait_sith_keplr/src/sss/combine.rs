@@ -5,7 +5,7 @@ use crate::compat::CSCurve;
 use crate::sss::keyshares::KeysharePoints;
 use crate::sss::point::Point256;
 
-pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<Vec<u8>, String> {
+pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<[u8; 32], String> {
     let mut secret_scalar: C::Scalar = C::Scalar::ZERO;
     let ksp = KeysharePoints::new(split_points.clone());
     let keyshare_points = match ksp {
@@ -22,7 +22,7 @@ pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<Vec<u8
     }
 
     let secret_bytes = Into::<C::Uint>::into(secret_scalar).to_be_bytes();
-    let secret: Result<Vec<u8>, String> = secret_bytes
+    let secret: Result<[u8; 32], String> = secret_bytes
         .as_ref()
         .try_into()
         .map_err(|_| "Failed to convert secret to Vec<u8>".to_string());

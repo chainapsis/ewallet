@@ -10,7 +10,7 @@ use crate::sss::{combine::combine, combine::lagrange_coefficient, point::Point25
 #[test]
 fn test_no_ks_node_hashes() {
     let ret = split::split::<Secp256k1>(
-        vec![
+        [
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
         ], // 32bytes
@@ -26,26 +26,26 @@ fn test_no_ks_node_hashes() {
 #[test]
 fn test_split_success() {
     let ks_node_hashes = vec![
-        vec![
+        [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 1,
         ],
-        vec![
+        [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 2,
         ],
-        vec![
+        [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 3,
         ],
-        vec![
+        [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 4,
         ],
     ];
 
     let ret = split::split::<Secp256k1>(
-        vec![
+        [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 1,
         ],
@@ -132,12 +132,12 @@ fn test_split_and_combine() {
 
     let mut secret = [0u8; 32];
     let _ = rng.try_fill_bytes(&mut secret);
-    let secret = secret.to_vec();
+    let secret = secret;
 
-    let ks_node_hashes = vec![p1.x.to_vec(), p2.x.to_vec(), p3.x.to_vec()];
+    let ks_node_hashes = vec![p1.x, p2.x, p3.x];
     let t = ks_node_hashes.len() as u32;
 
-    let split_points = split::<Secp256k1>(secret.clone(), ks_node_hashes, t).unwrap();
+    let split_points = split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
     println!("split_points: {:?}", split_points);
 
     let combined_secret = combine::<Secp256k1>(split_points, t).unwrap();
@@ -170,9 +170,9 @@ fn test_secret_overflow_split() {
             0, 0, 2,
         ],
     };
-    let secret = [255u8; 32].to_vec();
+    let secret = [255u8; 32];
 
-    let ks_node_hashes = vec![p1.x.to_vec(), p2.x.to_vec()];
+    let ks_node_hashes = vec![p1.x, p2.x];
     let t = ks_node_hashes.len() as u32;
 
     let split_points = split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
@@ -182,10 +182,10 @@ fn test_secret_overflow_split() {
 #[test]
 #[should_panic]
 fn test_hashes_overflow_split() {
-    let secret = [1u8; 32].to_vec();
+    let secret = [1u8; 32];
 
-    let p1 = [255u8; 32].to_vec();
-    let mut p2 = [255u8; 32].to_vec();
+    let p1 = [255u8; 32];
+    let mut p2 = [255u8; 32];
     p2[31] = 1;
     let ks_node_hashes = vec![p1, p2];
     let t = ks_node_hashes.len() as u32;
@@ -195,20 +195,10 @@ fn test_hashes_overflow_split() {
 }
 
 #[test]
-fn test_invalid_secret_length() {
-    let ret = split::split::<Secp256k1>(
-        vec![1, 2, 3], // Only 3 bytes instead of 32
-        vec![vec![0; 32], vec![1; 32]],
-        2,
-    );
-    assert_eq!(ret.err(), Some("Secret must be 32 bytes".to_string()));
-}
-
-#[test]
 fn test_t_too_small() {
     let ret = split::split::<Secp256k1>(
-        vec![0; 32],
-        vec![vec![0; 32], vec![1; 32]],
+        [0; 32],
+        vec![[0; 32], [1; 32]],
         1, // t = 1, should be >= 2
     );
     assert_eq!(ret.err(), Some("T must be greater than 2".to_string()));
