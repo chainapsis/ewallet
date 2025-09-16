@@ -1,6 +1,9 @@
 import { Router, type Response } from "express";
 import fs from "node:fs/promises";
-import type { KSNodeApiResponse } from "@keplr-ewallet/ksn-interface/response";
+import type {
+  KSNodeApiErrorResponse,
+  KSNodeApiResponse,
+} from "@keplr-ewallet/ksn-interface/response";
 import {
   getAllPgDumps,
   restore,
@@ -15,6 +18,7 @@ import {
   adminAuthMiddleware,
   type AdminAuthenticatedRequest,
 } from "@keplr-ewallet-ksn-server/middlewares/admin_auth";
+import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
 
 export function setPgDumpRoutes(router: Router) {
   /**
@@ -81,11 +85,12 @@ export function setPgDumpRoutes(router: Router) {
         port: state.env.DB_PORT,
       });
       if (processPgDumpRes.success === false) {
-        return res.status(500).json({
+        const errorRes: KSNodeApiErrorResponse = {
           success: false,
           code: "PG_DUMP_FAILED",
           msg: processPgDumpRes.err,
-        });
+        };
+        return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       }
 
       return res.status(200).json({
@@ -156,21 +161,23 @@ export function setPgDumpRoutes(router: Router) {
     if (days !== undefined) {
       daysNum = parseInt(days as string, 10);
       if (isNaN(daysNum) || daysNum < 1 || daysNum > 1000) {
-        return res.status(400).json({
+        const errorRes: KSNodeApiErrorResponse = {
           success: false,
           code: "INVALID_DAYS",
           msg: "Days parameter must be between 1 and 1000",
-        });
+        };
+        return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       }
     }
 
     const dumpsResult = await getAllPgDumps(state.db, daysNum);
     if (dumpsResult.success === false) {
-      return res.status(500).json({
+      const errorRes: KSNodeApiErrorResponse = {
         success: false,
         code: "UNKNOWN_ERROR",
         msg: dumpsResult.err,
-      });
+      };
+      return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
     }
 
     return res.status(200).json({
@@ -274,38 +281,42 @@ export function setPgDumpRoutes(router: Router) {
       const dumpPath = req.body.dump_path;
 
       if (!dumpPath) {
-        return res.status(400).json({
+        const errorRes: KSNodeApiErrorResponse = {
           success: false,
           code: "INVALID_DUMP_PATH",
           msg: "dump_path parameter is required",
-        });
+        };
+        return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       }
 
       try {
         await fs.access(dumpPath);
       } catch (error) {
-        return res.status(400).json({
+        const errorRes: KSNodeApiErrorResponse = {
           success: false,
           code: "DUMP_FILE_NOT_FOUND",
           msg: `Dump file not found at path: ${dumpPath}`,
-        });
+        };
+        return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       }
 
       try {
         const stats = await fs.stat(dumpPath);
         if (!stats.isFile()) {
-          return res.status(400).json({
+          const errorRes: KSNodeApiErrorResponse = {
             success: false,
             code: "INVALID_DUMP_FILE",
             msg: `Path is not a file: ${dumpPath}`,
-          });
+          };
+          return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
         }
       } catch (error) {
-        return res.status(400).json({
+        const errorRes: KSNodeApiErrorResponse = {
           success: false,
           code: "DUMP_FILE_ACCESS_ERROR",
           msg: `Cannot access dump file: ${dumpPath}`,
-        });
+        };
+        return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       }
 
       const restoreRes = await restore(
@@ -319,11 +330,12 @@ export function setPgDumpRoutes(router: Router) {
         dumpPath,
       );
       if (restoreRes.success === false) {
-        return res.status(500).json({
+        const errorRes: KSNodeApiErrorResponse = {
           success: false,
           code: "PG_RESTORE_FAILED",
           msg: restoreRes.err,
-        });
+        };
+        return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       }
 
       return res.status(200).json({

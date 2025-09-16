@@ -1,4 +1,7 @@
+import type { KSNodeApiErrorResponse } from "@keplr-ewallet/ksn-interface/response";
 import type { Request, Response, NextFunction } from "express";
+
+import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
 
 export interface AdminAuthenticatedRequest<T = any> extends Request {
   body: T;
@@ -13,11 +16,12 @@ export async function adminAuthMiddleware(
   const state = req.app.locals as any;
 
   if (password !== state.env.ADMIN_PASSWORD) {
-    return res.status(401).json({
+    const errorRes: KSNodeApiErrorResponse = {
       success: false,
       code: "UNAUTHORIZED",
       msg: "Invalid admin password",
-    });
+    };
+    return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
   }
 
   next();

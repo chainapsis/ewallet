@@ -1,6 +1,8 @@
 import type { KSNodeApiErrorResponse } from "@keplr-ewallet/ksn-interface/response";
 import rateLimit from "express-rate-limit";
 
+import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
+
 export interface RateLimitMiddlewareOption {
   windowSeconds: number;
   maxRequests: number;
@@ -17,7 +19,7 @@ export function rateLimitMiddleware(option: RateLimitMiddlewareOption) {
     windowMs: option.windowSeconds * 1000,
     max: option.maxRequests,
     message,
-    statusCode: 429,
+    statusCode: ErrorCodeMap[message.code],
     standardHeaders: true,
     legacyHeaders: false,
   });
