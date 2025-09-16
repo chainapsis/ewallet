@@ -8,12 +8,22 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import type { EWalletAccount } from "./account";
 import type { EthSignParams, EthSignResult } from "./sign";
-import type { LazyInitError } from "@keplr-ewallet-sdk-eth/errors";
+import type {
+  EthEwalletInitError,
+  LazyInitError,
+} from "@keplr-ewallet-sdk-eth/errors";
 
 export interface EthEWalletState {
   publicKey: Hex | null;
   address: Address | null;
   publicKeyRaw: string | null;
+}
+
+export interface EthEWalletStaticInterface {
+  new (eWallet: KeplrEWalletInterface): void;
+  init: (
+    args: EthEWalletInitArgs,
+  ) => Result<EthEWalletInterface, EthEwalletInitError>;
 }
 
 export interface EthEWalletInterface {

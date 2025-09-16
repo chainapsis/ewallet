@@ -20,7 +20,6 @@ import { init } from "./static/init";
 import { CosmosEWallet } from "./constructor";
 
 CosmosEWallet.init = init;
-// CosmosEWallet.initAsync = initAsync;
 
 const ptype: CosmosEWalletInterface = CosmosEWallet.prototype;
 

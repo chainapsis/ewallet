@@ -1,4 +1,4 @@
 export * from "./cosmos_ewallet";
 export * from "./utils";
-
-export type * from "./types";
+export * from "./errors";
+export * from "./types";
