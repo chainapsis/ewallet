@@ -5,13 +5,13 @@ import { z } from "zod";
 import os from "node:os";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-const ENV_FILE_NAME_STEM = "credential_vault";
+const ENV_FILE_NAME_STEM = "key_share_node";
 
-export const ENV_FILE_NAME = "credential_vault.env";
-export const EXAMPLE_ENV_FILE = "credential_vault.env.example";
+export const ENV_FILE_NAME = "key_share_node.env";
+export const EXAMPLE_ENV_FILE = "key_share_node.env.example";
 
-export const ENV_FILE_NAME_2 = "credential_vault_2.env";
-export const EXAMPLE_ENV_FILE_2 = "credential_vault_2.env.example";
+export const ENV_FILE_NAME_2 = "key_share_node_2.env";
+export const EXAMPLE_ENV_FILE_2 = "key_share_node_2.env.example";
 
 const envSchema = z.object({
   PORT: z.string(),

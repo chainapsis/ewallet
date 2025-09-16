@@ -15,7 +15,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let host = env::var("DB_HOST").unwrap_or_else(|_| "localhost".to_string());
         let user = env::var("DB_USER").unwrap_or_else(|_| "postgres".to_string());
         let password = env::var("DB_PASSWORD").unwrap_or_else(|_| "password".to_string());
-        let dbname = env::var("DB_NAME").unwrap_or_else(|_| "credential_vault".to_string());
+        let dbname = env::var("DB_NAME").unwrap_or_else(|_| "key_share_node".to_string());
         let port = env::var("DB_PORT").unwrap_or_else(|_| "5432".to_string());
 
         format!(
@@ -38,8 +38,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         "all" => {
             println!("\nRunning migration for all committees...");
             for i in 1..=committee_count {
-                let db_name = format!("credential_vault_rs_dev_{}", i);
-                let connection_string = database_url.replace("credential_vault", &db_name);
+                let db_name = format!("key_share_node_rs_dev_{}", i);
+                let connection_string = database_url.replace("key_share_node", &db_name);
 
                 println!("\nMigrating committee {} database: {}", i, db_name);
                 run_single_migration(&connection_string, i).await?;
@@ -51,8 +51,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .ok_or("COMMITTEE_ID must be set when MIGRATE_MODE=one")?
                 .parse::<u32>()?;
 
-            let db_name = format!("credential_vault_rust_{}", committee_id);
-            let connection_string = database_url.replace("credential_vault", &db_name);
+            let db_name = format!("key_share_node_rust{}", committee_id);
+            let connection_string = database_url.replace("key_share_node", &db_name);
 
             println!(
                 "\nMigrating single committee {} database: {}",

@@ -1,7 +1,7 @@
 import type { PgDatabaseConfig } from ".";
 
 export const testPgConfig: PgDatabaseConfig = {
-  database: "credential_vault_dev",
+  database: "key_share_node_dev",
   host: "localhost",
   password: "postgres",
   user: "postgres",
@@ -11,7 +11,7 @@ export const testPgConfig: PgDatabaseConfig = {
 
 export const createTestPgConfig = (committeeId: number): PgDatabaseConfig => {
   return {
-    database: `credential_vault_dev${committeeId}`,
+    database: `key_share_node_dev${committeeId}`,
     host: "localhost",
     password: "postgres",
     user: "postgres",
