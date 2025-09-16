@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/credential-vault-server",
+  "name": "@keplr-ewallet/key-share-node-server",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "scripts": {
