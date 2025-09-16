@@ -1,5 +1,5 @@
 import type { Router, Request, Response } from "express";
-import type { CommitIdTokenRequest } from "@keplr-ewallet/credential-vault-interface/witnessed_id_tokens";
+import type { CommitIdTokenRequest } from "@keplr-ewallet/key-share-node-interface/witnessed_id_tokens";
 
 import { commitIdTokenWithUserSessionPublicKey } from "@keplr-ewallet-cv-server/api/commit";
 import { bearerTokenMiddleware } from "@keplr-ewallet-cv-server/middlewares";

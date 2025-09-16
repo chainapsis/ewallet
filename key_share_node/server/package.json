@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@keplr-ewallet/bytes": "workspace:*",
-    "@keplr-ewallet/credential-vault-interface": "workspace:*",
+    "@keplr-ewallet/key-share-node-interface": "workspace:*",
     "@keplr-ewallet/credential-vault-pg-interface": "workspace:*",
     "@keplr-ewallet/stdlib-js": "workspace:*",
     "chalk": "*",

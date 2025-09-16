@@ -22,7 +22,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@keplr-ewallet-credential-vault-pg-interface/*": ["./src/*"]
+      "@keplr-ewallet-ks-node-pg-interface/*": ["./src/*"]
     }
   },
   "include": ["src/**/*", "scripts/**/*"],

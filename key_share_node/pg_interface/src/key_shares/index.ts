@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   CreateCredentialVaultKeyShareRequest,
   CredentialVaultKeyShare,
-} from "@keplr-ewallet/credential-vault-interface/key_share";
+} from "@keplr-ewallet/key-share-node-interface/key_share";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function createKeyShare(
