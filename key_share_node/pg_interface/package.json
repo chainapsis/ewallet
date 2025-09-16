@@ -4,9 +4,9 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "migrate": "MIGRATE_MODE=all COMMITTEE_COUNT=2 tsx ./scripts/migrate/index.ts",
-    "migrate_1": "MIGRATE_MODE=one COMMITTEE_ID=1 tsx ./scripts/migrate/index.ts",
-    "migrate_2": "MIGRATE_MODE=one COMMITTEE_ID=2 tsx ./scripts/migrate/index.ts",
+    "migrate": "MIGRATE_MODE=all NODE_COUNT=2 tsx ./scripts/migrate/index.ts",
+    "migrate_1": "MIGRATE_MODE=one NODE_ID=1 tsx ./scripts/migrate/index.ts",
+    "migrate_2": "MIGRATE_MODE=one NODE_ID=2 tsx ./scripts/migrate/index.ts",
     "db_backup": "tsx ./scripts/db_backup.ts",
     "db_restore": "tsx ./scripts/db_restore.ts",
     "typecheck": "tsc --noEmit"

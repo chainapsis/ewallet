@@ -10,7 +10,7 @@ const ONE_DAY_MS = 1 * 86400;
 function parseCLIArgs() {
   const command = program.version("0.0.1").description("Key share node server");
 
-  command.requiredOption("--committee-id <id>");
+  command.requiredOption("--node-id <id>");
 
   command.parse(process.argv);
 

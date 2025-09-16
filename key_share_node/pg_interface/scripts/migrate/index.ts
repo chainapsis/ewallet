@@ -8,8 +8,8 @@ const DEFAULT_DB_NAME = process.env.DB_NAME || "key_share_node_dev";
 
 const USE_ENV = process.env.USE_ENV === "true";
 const MIGRATE_MODE = process.env.MIGRATE_MODE || "all"; // "all" or "one"
-const COMMITTEE_ID = parseInt(process.env.COMMITTEE_ID || "1", 10);
-const COMMITTEE_COUNT = parseInt(process.env.COMMITTEE_COUNT || "2", 10);
+const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);
+const NODE_COUNT = parseInt(process.env.NODE_COUNT || "2", 10);
 
 async function createDBIfNotExists(pgConfig: PgDatabaseConfig, dbName: string) {
   console.log(`Creating database ${dbName} if not exists...`);
@@ -47,7 +47,7 @@ async function migrateAll(useEnv: boolean) {
   console.log("connecting pg...");
 
   const pgConfigs: PgDatabaseConfig[] = [];
-  for (let i = 1; i <= COMMITTEE_COUNT; i++) {
+  for (let i = 1; i <= NODE_COUNT; i++) {
     if (useEnv) {
       pgConfigs.push(loadEnvs(i));
     } else {
@@ -87,18 +87,16 @@ async function migrateAll(useEnv: boolean) {
 
 async function migrateOne(useEnv: boolean) {
   const pgConfig: PgDatabaseConfig = useEnv
-    ? loadEnvs(COMMITTEE_ID)
+    ? loadEnvs(NODE_ID)
     : {
-      database:
-        COMMITTEE_ID === 1
-          ? DEFAULT_DB_NAME
-          : `${DEFAULT_DB_NAME}${COMMITTEE_ID}`,
-      user: "postgres",
-      password: "postgres",
-      host: "localhost",
-      port: 5432,
-      ssl: false,
-    };
+        database:
+          NODE_ID === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${NODE_ID}`,
+        user: "postgres",
+        password: "postgres",
+        host: "localhost",
+        port: 5432,
+        ssl: false,
+      };
 
   await createDBIfNotExists(
     { ...pgConfig, database: "postgres" },

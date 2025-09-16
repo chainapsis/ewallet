@@ -1,7 +1,7 @@
 import { loadEnvs } from "./migrate/envs";
 import { restore } from "@keplr-ewallet-ksn-pg-interface/dump";
 
-const COMMITTEE_ID = parseInt(process.env.COMMITTEE_ID || "1", 10);
+const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);
 const DUMP_PATH = process.env.DUMP_PATH;
 
 async function main() {
@@ -11,7 +11,7 @@ async function main() {
     throw new Error("DUMP_PATH is not set");
   }
 
-  const env = loadEnvs(COMMITTEE_ID);
+  const env = loadEnvs(NODE_ID);
 
   const pgConfig = {
     host: env.host,

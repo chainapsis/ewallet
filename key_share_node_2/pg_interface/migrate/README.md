@@ -7,9 +7,9 @@ A Rust tool for PostgreSQL database migrations.
 ### Environment Variables
 
 - `MIGRATE_MODE`: Migration mode (`all` or `one`)
-- `COMMITTEE_ID`: Committee ID for single-committee migration (required when
+- `NODE_ID`: Node ID for single-node migration (required when
   `MIGRATE_MODE=one`)
-- `COMMITTEE_COUNT`: Total number of committees (default: 2)
+- `NODE_COUNT`: Total number of nodes (default: 2)
 - `DATABASE_URL`: Full database connection string (optional)
 
 Individual database connection settings (when `DATABASE_URL` is not set):
@@ -22,31 +22,31 @@ Individual database connection settings (when `DATABASE_URL` is not set):
 
 ### Commands
 
-Migrate all committee databases:
+Migrate all node databases:
 
 ```bash
-# Migrate all committees with default settings
-MIGRATE_MODE=all COMMITTEE_COUNT=2 cargo run --bin migrate
+# Migrate all nodes with default settings
+MIGRATE_MODE=all NODE_COUNT=2 cargo run --bin migrate
 
 # Provide database settings via environment variables
 DB_HOST=localhost DB_USER=postgres DB_PASSWORD=mypassword \
-MIGRATE_MODE=all COMMITTEE_COUNT=3 cargo run --bin migrate
+MIGRATE_MODE=all NODE_COUNT=3 cargo run --bin migrate
 ```
 
-Migrate a single committee database:
+Migrate a single node database:
 
 ```bash
-# only committee 1
-MIGRATE_MODE=one COMMITTEE_ID=1 cargo run --bin migrate
+# only node 1
+MIGRATE_MODE=one NODE_ID=1 cargo run --bin migrate
 
-# only committee 2
-MIGRATE_MODE=one COMMITTEE_ID=2 cargo run --bin migrate
+# only node 2
+MIGRATE_MODE=one NODE_ID=2 cargo run --bin migrate
 ```
 
 ### Database Naming Convention
 
 - Full migration: `key_share_node_rust_1`, `key_share_node_rust_2`, ...
-- Single migration: `key_share_node_rust_{COMMITTEE_ID}`
+- Single migration: `key_share_node_rust_{NODE_ID}`
 
 ## Examples
 
@@ -58,7 +58,7 @@ export DB_HOST=localhost
 export DB_USER=postgres
 export DB_PASSWORD=password
 export MIGRATE_MODE=all
-export COMMITTEE_COUNT=2
+export NODE_COUNT=2
 
 cargo run --bin migrate
 ```

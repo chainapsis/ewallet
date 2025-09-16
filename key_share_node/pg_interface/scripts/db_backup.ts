@@ -6,12 +6,12 @@ import { dump } from "@keplr-ewallet-ksn-pg-interface/dump";
 
 const DUMP_DIR = join(os.homedir(), "keplr_ewallet_data");
 
-const COMMITTEE_ID = parseInt(process.env.COMMITTEE_ID || "1", 10);
+const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);
 
 async function main() {
-  console.log("Starting db backup... COMMITTEE_ID: %s", COMMITTEE_ID);
+  console.log("Starting db backup... NODE_ID: %s", NODE_ID);
 
-  const env = loadEnvs(COMMITTEE_ID);
+  const env = loadEnvs(NODE_ID);
 
   const pgConfig = {
     host: env.host,

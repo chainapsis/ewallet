@@ -4,8 +4,8 @@ use std::env;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let migrate_mode = env::var("MIGRATE_MODE").unwrap_or_else(|_| "all".to_string());
-    let committee_id = env::var("COMMITTEE_ID").ok();
-    let committee_count = env::var("COMMITTEE_COUNT")
+    let node_id = env::var("NODE_ID").ok();
+    let node_count = env::var("NODE_COUNT")
         .unwrap_or_else(|_| "2".to_string())
         .parse::<u32>()
         .unwrap_or(2);
@@ -25,10 +25,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     println!("Migration Mode: {}", migrate_mode);
-    if let Some(ref id) = committee_id {
-        println!("Committee ID: {}", id);
+    if let Some(ref id) = node_id {
+        println!("Node ID: {}", id);
     }
-    println!("Committee Count: {}", committee_count);
+    println!("Node Count: {}", node_count);
     println!(
         "Database URL: {}",
         database_url.replace(&env::var("DB_PASSWORD").unwrap_or_default(), "***")
@@ -36,33 +36,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match migrate_mode.as_str() {
         "all" => {
-            println!("\nRunning migration for all committees...");
-            for i in 1..=committee_count {
+            println!("\nRunning migration for all nodes...");
+            for i in 1..=node_count {
                 let db_name = format!("key_share_node_rs_dev_{}", i);
                 let connection_string = database_url.replace("key_share_node", &db_name);
 
-                println!("\nMigrating committee {} database: {}", i, db_name);
+                println!("\nMigrating node {} database: {}", i, db_name);
                 run_single_migration(&connection_string, i).await?;
             }
-            println!("\nAll committee migrations completed successfully!");
+            println!("\nAll node migrations completed successfully!");
         }
         "one" => {
-            let committee_id = committee_id
-                .ok_or("COMMITTEE_ID must be set when MIGRATE_MODE=one")?
+            let node_id = node_id
+                .ok_or("NODE_ID must be set when MIGRATE_MODE=one")?
                 .parse::<u32>()?;
 
-            let db_name = format!("key_share_node_rust{}", committee_id);
+            let db_name = format!("key_share_node_rust{}", node_id);
             let connection_string = database_url.replace("key_share_node", &db_name);
 
-            println!(
-                "\nMigrating single committee {} database: {}",
-                committee_id, db_name
-            );
-            run_single_migration(&connection_string, committee_id).await?;
-            println!(
-                "\nCommittee {} migration completed successfully!",
-                committee_id
-            );
+            println!("\nMigrating single node {} database: {}", node_id, db_name);
+            run_single_migration(&connection_string, node_id).await?;
+            println!("\nNode {} migration completed successfully!", node_id);
         }
         _ => {
             eprintln!("Invalid MIGRATE_MODE: {}. Use 'all' or 'one'", migrate_mode);
@@ -75,32 +69,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 async fn run_single_migration(
     connection_string: &str,
-    committee_id: u32,
+    node_id: u32,
 ) -> Result<(), Box<dyn std::error::Error>> {
     println!("  Connecting to database...");
-    let client = connect_to_postgres(connection_string).await.map_err(|e| {
-        format!(
-            "Failed to connect to database for committee {}: {}",
-            committee_id, e
-        )
-    })?;
+    let client = connect_to_postgres(connection_string)
+        .await
+        .map_err(|e| format!("Failed to connect to database for node {}: {}", node_id, e))?;
 
     println!("  Dropping existing tables...");
-    drop_all_tables_if_exist(&client).await.map_err(|e| {
-        format!(
-            "Failed to drop tables for committee {}: {}",
-            committee_id, e
-        )
-    })?;
+    drop_all_tables_if_exist(&client)
+        .await
+        .map_err(|e| format!("Failed to drop tables for node {}: {}", node_id, e))?;
 
     println!("  Running migration script...");
-    run_migration(&client).await.map_err(|e| {
-        format!(
-            "Failed to run migration for committee {}: {}",
-            committee_id, e
-        )
-    })?;
+    run_migration(&client)
+        .await
+        .map_err(|e| format!("Failed to run migration for node {}: {}", node_id, e))?;
 
-    println!("  Committee {} migration completed", committee_id);
+    println!("  Node {} migration completed", node_id);
     Ok(())
 }
