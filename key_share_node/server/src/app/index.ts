@@ -4,8 +4,8 @@ import cors from "cors";
 import morgan from "morgan";
 import { config as dotenvConfig } from "dotenv";
 
-import { installSwaggerDocs } from "@keplr-ewallet-cv-server/swagger";
-import { setRoutes } from "@keplr-ewallet-cv-server/routes";
+import { installSwaggerDocs } from "@keplr-ewallet-ksn-server/swagger";
+import { setRoutes } from "@keplr-ewallet-ksn-server/routes";
 
 dotenvConfig();
 

@@ -5,10 +5,10 @@ import { getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
 import {
   createPgDatabase,
   resetPgDatabase,
-} from "@keplr-ewallet-cv-server/database";
-import { testPgConfig } from "@keplr-ewallet-cv-server/database/test_config";
-import { startPgDumpRuntime } from "@keplr-ewallet-cv-server/pg_dump/runtime";
-import { processPgDump } from "@keplr-ewallet-cv-server/pg_dump/dump";
+} from "@keplr-ewallet-ksn-server/database";
+import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
+import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
+import { processPgDump } from "@keplr-ewallet-ksn-server/pg_dump/dump";
 
 describe("pg_dump_runtime_test", () => {
   let pool: Pool;

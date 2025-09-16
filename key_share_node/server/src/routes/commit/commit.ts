@@ -1,8 +1,8 @@
 import type { Router, Request, Response } from "express";
 import type { CommitIdTokenRequest } from "@keplr-ewallet/ksn-interface/witnessed_id_tokens";
 
-import { commitIdTokenWithUserSessionPublicKey } from "@keplr-ewallet-cv-server/api/commit";
-import { bearerTokenMiddleware } from "@keplr-ewallet-cv-server/middlewares";
+import { commitIdTokenWithUserSessionPublicKey } from "@keplr-ewallet-ksn-server/api/commit";
+import { bearerTokenMiddleware } from "@keplr-ewallet-ksn-server/middlewares";
 
 export function setCommitRoutes(router: Router) {
   router.post(

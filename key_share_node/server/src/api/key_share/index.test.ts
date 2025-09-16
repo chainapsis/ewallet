@@ -12,14 +12,17 @@ import { Bytes, type Bytes33 } from "@keplr-ewallet/bytes";
 import {
   createPgDatabase,
   resetPgDatabase,
-} from "@keplr-ewallet-cv-server/database";
-import { testPgConfig } from "@keplr-ewallet-cv-server/database/test_config";
+} from "@keplr-ewallet-ksn-server/database";
+import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import {
   checkKeyShare,
   getKeyShare,
   registerKeyShare,
-} from "@keplr-ewallet-cv-server/api/key_share";
-import { decryptData, TEMP_ENC_SECRET } from "@keplr-ewallet-cv-server/encrypt";
+} from "@keplr-ewallet-ksn-server/api/key_share";
+import {
+  decryptData,
+  TEMP_ENC_SECRET,
+} from "@keplr-ewallet-ksn-server/encrypt";
 
 describe("key_share_test", () => {
   let pool: Pool;

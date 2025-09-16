@@ -7,8 +7,8 @@ import {
 import type { Bytes33 } from "@keplr-ewallet/bytes";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
-import { hashIdTokenWithUserSessionPublicKey } from "@keplr-ewallet-cv-server/utils";
+import type { ErrorResponse } from "@keplr-ewallet-ksn-server/error";
+import { hashIdTokenWithUserSessionPublicKey } from "@keplr-ewallet-ksn-server/utils";
 
 const COMMIT_TTL = 1000 * 60 * 3; // 3 minutes
 

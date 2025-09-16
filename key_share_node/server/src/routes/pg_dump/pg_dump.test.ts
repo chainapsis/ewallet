@@ -8,9 +8,9 @@ import { createUser, getUserByEmail } from "@keplr-ewallet/ksn-pg-interface";
 import {
   createPgDatabase,
   resetPgDatabase,
-} from "@keplr-ewallet-cv-server/database";
-import { testPgConfig } from "@keplr-ewallet-cv-server/database/test_config";
-import { setPgDumpRoutes } from "@keplr-ewallet-cv-server/routes/pg_dump/pg_dump";
+} from "@keplr-ewallet-ksn-server/database";
+import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
+import { setPgDumpRoutes } from "@keplr-ewallet-ksn-server/routes/pg_dump/pg_dump";
 
 describe("pg_dump_route_test", () => {
   let pool: Pool;

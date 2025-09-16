@@ -1,9 +1,9 @@
 import { program } from "commander";
 
-import { createPgDatabase } from "@keplr-ewallet-cv-server/database";
-import { makeApp } from "@keplr-ewallet-cv-server/app";
-import { loadEnv, verifyEnv } from "@keplr-ewallet-cv-server/envs";
-import { startPgDumpRuntime } from "@keplr-ewallet-cv-server/pg_dump/runtime";
+import { createPgDatabase } from "@keplr-ewallet-ksn-server/database";
+import { makeApp } from "@keplr-ewallet-ksn-server/app";
+import { loadEnv, verifyEnv } from "@keplr-ewallet-ksn-server/envs";
+import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
 
 const ONE_DAY_MS = 1 * 86400;
 

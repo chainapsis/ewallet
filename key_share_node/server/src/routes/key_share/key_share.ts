@@ -12,12 +12,12 @@ import {
   checkKeyShare,
   getKeyShare,
   registerKeyShare,
-} from "@keplr-ewallet-cv-server/api/key_share";
+} from "@keplr-ewallet-ksn-server/api/key_share";
 import {
   bearerTokenMiddleware,
   type AuthenticatedRequest,
-} from "@keplr-ewallet-cv-server/middlewares";
-import type { ErrorCode } from "@keplr-ewallet-cv-server/error";
+} from "@keplr-ewallet-ksn-server/middlewares";
+import type { ErrorCode } from "@keplr-ewallet-ksn-server/error";
 import { Bytes } from "@keplr-ewallet/bytes";
 
 export function setKeysharesRoutes(router: Router) {

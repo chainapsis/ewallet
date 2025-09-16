@@ -8,7 +8,7 @@ import {
   EXAMPLE_ENV_FILE,
   ENV_FILE_NAME_2,
   EXAMPLE_ENV_FILE_2,
-} from "@keplr-ewallet-cv-server/envs";
+} from "@keplr-ewallet-ksn-server/envs";
 
 const CONFIG_DIR_NAME = ".keplr_ewallet";
 

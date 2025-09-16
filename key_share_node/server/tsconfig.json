@@ -21,7 +21,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@keplr-ewallet-cv-server/*": ["./src/*"]
+      "@keplr-ewallet-ksn-server/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

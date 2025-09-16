@@ -16,8 +16,8 @@ import type {
 } from "@keplr-ewallet/ksn-interface/key_share";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
-import { decryptData, encryptData } from "@keplr-ewallet-cv-server/encrypt";
+import type { ErrorResponse } from "@keplr-ewallet-ksn-server/error";
+import { decryptData, encryptData } from "@keplr-ewallet-ksn-server/encrypt";
 
 export async function registerKeyShare(
   db: Pool,

@@ -10,11 +10,11 @@ import {
 import {
   processPgDump,
   type PgDumpResult,
-} from "@keplr-ewallet-cv-server/pg_dump/dump";
+} from "@keplr-ewallet-ksn-server/pg_dump/dump";
 import {
   adminAuthMiddleware,
   type AdminAuthenticatedRequest,
-} from "@keplr-ewallet-cv-server/middlewares/admin_auth";
+} from "@keplr-ewallet-ksn-server/middlewares/admin_auth";
 
 export function setPgDumpRoutes(router: Router) {
   /**

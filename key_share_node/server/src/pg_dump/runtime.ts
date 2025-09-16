@@ -1,7 +1,7 @@
 import type { Pool } from "pg";
 import { type PgDumpConfig } from "@keplr-ewallet/ksn-pg-interface";
 
-import { sleep } from "@keplr-ewallet-cv-server/utils";
+import { sleep } from "@keplr-ewallet-ksn-server/utils";
 import { deleteOldPgDumps, processPgDump } from "./dump";
 
 export interface PgDumpRuntimeOptions {

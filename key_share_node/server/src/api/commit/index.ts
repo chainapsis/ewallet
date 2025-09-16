@@ -3,7 +3,7 @@ import type { CommitIdTokenRequest } from "@keplr-ewallet/ksn-interface/witnesse
 import { commitIdToken } from "@keplr-ewallet/ksn-pg-interface";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { ErrorResponse } from "@keplr-ewallet-cv-server/error";
+import type { ErrorResponse } from "@keplr-ewallet-ksn-server/error";
 
 export async function commitIdTokenWithUserSessionPublicKey(
   db: Pool,

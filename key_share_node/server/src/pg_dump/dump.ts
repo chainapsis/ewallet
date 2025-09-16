@@ -12,7 +12,7 @@ import {
   updatePgDumpStatus,
 } from "@keplr-ewallet/ksn-pg-interface";
 
-import { getSecondsFromNow } from "@keplr-ewallet-cv-server/utils";
+import { getSecondsFromNow } from "@keplr-ewallet-ksn-server/utils";
 
 const DUMP_DIR = join(os.homedir(), "keplr_ewallet_data");
 

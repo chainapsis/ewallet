@@ -9,12 +9,12 @@ import {
 import {
   createPgDatabase,
   resetPgDatabase,
-} from "@keplr-ewallet-cv-server/database";
-import { testPgConfig } from "@keplr-ewallet-cv-server/database/test_config";
+} from "@keplr-ewallet-ksn-server/database";
+import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import {
   processPgDump,
   deleteOldPgDumps,
-} from "@keplr-ewallet-cv-server/pg_dump/dump";
+} from "@keplr-ewallet-ksn-server/pg_dump/dump";
 
 describe("pg_dump_test", () => {
   let pool: Pool;
