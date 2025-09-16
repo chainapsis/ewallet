@@ -2,12 +2,9 @@ use elliptic_curve::bigint::Encoding;
 use elliptic_curve::Field;
 
 use crate::compat::CSCurve;
+use crate::sss::keyshares::KeysharePoints;
 use crate::sss::point::Point256;
 
-// export function combine(
-//   points: Bytes32Point[],
-//   t: number,
-// ): Result<Bytes32, string> {
 pub fn combine<C: CSCurve>(split_points: Vec<Point256>) -> Result<Vec<u8>, String> {
     if split_points.len() < 2 {
         return Err("Need at least 2 points to reconstruct".to_string());
@@ -24,8 +21,13 @@ pub fn combine<C: CSCurve>(split_points: Vec<Point256>) -> Result<Vec<u8>, Strin
 
     // 1. interpolate
     let mut secret_scalar: C::Scalar = C::Scalar::ZERO;
+    let kss = KeysharePoints::new(points.clone());
+    if kss.is_err() {
+        return Err(kss.err().unwrap());
+    }
+    let keyshare_points = kss.unwrap();
     for (_, &point) in truncated_points.iter().enumerate() {
-        let lagrange_coefficient = lagrange_coefficient::<C>(points.clone(), point);
+        let lagrange_coefficient = lagrange_coefficient::<C>(keyshare_points.clone(), point);
         if lagrange_coefficient.is_err() {
             return Err(lagrange_coefficient.err().unwrap());
         }
@@ -48,14 +50,20 @@ pub fn combine<C: CSCurve>(split_points: Vec<Point256>) -> Result<Vec<u8>, Strin
 // participants.rs
 // Get the lagrange coefficient for a participant, relative to this list.
 pub fn lagrange_coefficient<C: CSCurve>(
-    participants: Vec<Point256>,
+    ksp: KeysharePoints,
     p: &Point256,
 ) -> Result<C::Scalar, String> {
+    let mut is_p_included = false;
+
+    if !ksp.contain_point(p) {
+        return Err("Participant p is not included in participants".to_string());
+    }
+
     let p_scalar = p.x_scalar::<C>();
 
     let mut top = C::Scalar::ONE;
     let mut bot = C::Scalar::ONE;
-    for q in participants.clone() {
+    for q in ksp.to_point_vec() {
         if p.x_scalar::<C>() == q.x_scalar::<C>() {
             continue;
         }

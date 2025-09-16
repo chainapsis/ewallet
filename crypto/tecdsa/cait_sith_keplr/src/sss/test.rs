@@ -3,12 +3,12 @@ use k256::Secp256k1;
 use rand_core::OsRng;
 use rand_core::RngCore;
 
+use crate::sss::keyshares::KeysharePoints;
 use crate::sss::split::split;
 use crate::sss::{combine::combine, combine::lagrange_coefficient, point::Point256, split};
 
 #[test]
-#[should_panic]
-fn test_split_overflow() {
+fn test_no_ks_node_hashes() {
     let ret = split::split::<Secp256k1>(
         vec![
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -17,31 +17,9 @@ fn test_split_overflow() {
         vec![],
         3,
     );
-}
-
-#[test]
-#[should_panic]
-fn test_split_shorter_length() {
-    let _ret = split::split::<Secp256k1>(
-        vec![
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0,
-        ], // 31 bytes
-        vec![],
-        3,
-    );
-}
-
-#[test]
-#[should_panic]
-fn test_split_longer_length() {
-    let _ret = split::split::<Secp256k1>(
-        vec![
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 1, 1,
-        ], // 33 bytes
-        vec![],
-        3,
+    assert_eq!(
+        ret.err(),
+        Some("KS node hashes must be greater than t".to_string())
     );
 }
 
@@ -100,14 +78,16 @@ fn test_simple_lagrange_coeffs() {
         ],
     };
 
-    let lagrange_p1 = lagrange_coefficient::<Secp256k1>(vec![p1, p2], &p1).unwrap();
+    let lagrange_p1 =
+        lagrange_coefficient::<Secp256k1>(KeysharePoints::new(vec![p1, p2]).unwrap(), &p1).unwrap();
     // 2 * inverse of (2 - 1) = 1
     assert_eq!(
         lagrange_p1,
         <Secp256k1 as CurveArithmetic>::Scalar::from(2u64)
     );
 
-    let lagrange_p2 = lagrange_coefficient::<Secp256k1>(vec![p1, p2], &p2).unwrap();
+    let lagrange_p2 =
+        lagrange_coefficient::<Secp256k1>(KeysharePoints::new(vec![p1, p2]).unwrap(), &p2).unwrap();
     // 1 * inverse of (1 - 2) = neg_one
     println!("lagrange_p2: {:?}", lagrange_p2);
 
@@ -212,4 +192,89 @@ fn test_hashes_overflow_split() {
 
     let split_points = split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
     println!("split_points: {:?}", split_points);
+}
+
+#[test]
+fn test_invalid_secret_length() {
+    let ret = split::split::<Secp256k1>(
+        vec![1, 2, 3], // Only 3 bytes instead of 32
+        vec![vec![0; 32], vec![1; 32]],
+        2,
+    );
+    assert_eq!(ret.err(), Some("Secret must be 32 bytes".to_string()));
+}
+
+#[test]
+fn test_t_too_small() {
+    let ret = split::split::<Secp256k1>(
+        vec![0; 32],
+        vec![vec![0; 32], vec![1; 32]],
+        1, // t = 1, should be >= 2
+    );
+    assert_eq!(ret.err(), Some("T must be greater than 2".to_string()));
+}
+
+#[test]
+fn test_combine_insufficient_points() {
+    let ret = combine::<Secp256k1>(vec![]); // Empty points
+    assert_eq!(
+        ret.err(),
+        Some("Need at least 2 points to reconstruct".to_string())
+    );
+
+    let single_point = vec![Point256 {
+        x: [0; 32],
+        y: [1; 32],
+    }];
+    let ret = combine::<Secp256k1>(single_point);
+    assert_eq!(
+        ret.err(),
+        Some("Need at least 2 points to reconstruct".to_string())
+    );
+}
+
+#[test]
+fn test_combine_zero_x_point() {
+    let points = vec![
+        Point256 {
+            x: [0; 32], // x is zero, should fail
+            y: [1; 32],
+        },
+        Point256 {
+            x: [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 2,
+            ],
+            y: [2; 32],
+        },
+    ];
+    let ret = combine::<Secp256k1>(points);
+    assert_eq!(ret.err(), Some("Point x is 0".to_string()));
+}
+
+#[test]
+fn test_keyshares_points_duplicate_x() {
+    let p1 = Point256 {
+        x: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ],
+        y: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ],
+    };
+    let p2 = Point256 {
+        x: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ], // Same x as p1
+        y: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 2,
+        ],
+    };
+
+    // This should work since duplicate x values are skipped in lagrange_coefficient
+    assert!(KeysharePoints::new(vec![p1, p2]).is_err());
 }
