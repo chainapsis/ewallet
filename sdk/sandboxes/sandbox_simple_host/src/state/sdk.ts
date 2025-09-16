@@ -2,7 +2,10 @@ import {
   CosmosEWallet,
   type CosmosEWalletInterface,
 } from "@keplr-ewallet/ewallet-sdk-cosmos";
-import { type EthEWalletInterface } from "@keplr-ewallet/ewallet-sdk-eth";
+import {
+  EthEWallet,
+  type EthEWalletInterface,
+} from "@keplr-ewallet/ewallet-sdk-eth";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
