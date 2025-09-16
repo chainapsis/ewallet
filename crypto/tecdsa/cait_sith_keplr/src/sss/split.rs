@@ -27,20 +27,13 @@ pub fn split<C: CSCurve>(
         .map_err(|_| "Failed to convert secret to scalar".to_string())?;
     let constant = C::Scalar::from(secret_scalar);
 
-    println!("constant: {:?}", constant);
-
     let mut rng = OsRng;
 
     let polynomial = Polynomial::<C>::extend_random(&mut rng, t, &constant);
 
-    println!("polynomial: {:?}", polynomial);
-
-    println!("node length: {:?}", ks_node_hashes.len());
-
     let ks_node_hash_scalars = ks_node_hashes
         .iter()
         .map(|hash| {
-            // println!("hash: {:?}", hash);
             let sp = ScalarPrimitive::<C>::from_slice(hash)
                 .map_err(|_| "Failed to convert hash to scalar".to_string())?;
             Ok(C::Scalar::from(sp))
@@ -79,9 +72,6 @@ pub fn split<C: CSCurve>(
             Ok(point)
         })
         .collect::<Result<Vec<Point256>, String>>()?;
-
-    println!("points: {:?}", points.len());
-    println!("points: {:?}", points);
 
     Ok(points)
 }

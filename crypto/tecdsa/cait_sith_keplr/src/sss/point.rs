@@ -12,7 +12,6 @@ pub struct Point256 {
 
 impl Point256 {
     pub fn x_scalar<C: CSCurve>(&self) -> C::Scalar {
-        // x를 C::Uint::Repr 타입으로 변환해야 함
         let x_scalar_primitive = ScalarPrimitive::<C>::from_slice(&self.x).unwrap();
         let x_scalar = Scalar::<C>::from(x_scalar_primitive);
         x_scalar
