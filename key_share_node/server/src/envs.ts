@@ -13,6 +13,19 @@ export const EXAMPLE_ENV_FILE = "key_share_node.env.example";
 export const ENV_FILE_NAME_2 = "key_share_node_2.env";
 export const EXAMPLE_ENV_FILE_2 = "key_share_node_2.env.example";
 
+interface Env {
+  PORT: string;
+  DB_HOST: string;
+  DB_PORT: string;
+  DB_USER: string;
+  DB_PASSWORD: string;
+  DB_NAME: string;
+  DB_SSL: string;
+  ENCRYPTION_SECRET_PATH: string;
+  ADMIN_PASSWORD: string;
+  DUMP_DIR: string;
+}
+
 const envSchema = z.object({
   PORT: z.string(),
   DB_HOST: z.string(),
@@ -21,7 +34,7 @@ const envSchema = z.object({
   DB_PASSWORD: z.string(),
   DB_NAME: z.string(),
   DB_SSL: z.string(),
-  ENCRYPTION_SECRET: z.string(),
+  ENCRYPTION_SECRET_PATH: z.string(),
   ADMIN_PASSWORD: z.string(),
   DUMP_DIR: z.string(),
 });
@@ -49,11 +62,22 @@ export function loadEnv(nodeId: string): Result<void, string> {
   return { success: true, data: void 0 };
 }
 
-export function verifyEnv(envs: Record<string, any>): Result<void, string> {
+export function verifyEnv(envs: Record<string, any>): Result<Env, string> {
   const res = envSchema.safeParse(envs);
 
   if (res.success) {
-    return { success: true, data: void 0 };
+    const homeDir = os.homedir();
+
+    const processedEnv = {
+      ...res.data,
+      ENCRYPTION_SECRET_PATH: res.data.ENCRYPTION_SECRET_PATH.replace(
+        /^~/,
+        homeDir,
+      ),
+      DUMP_DIR: res.data.DUMP_DIR.replace(/^~/, homeDir),
+    };
+
+    return { success: true, data: processedEnv };
   } else {
     return { success: false, err: z.prettifyError(res.error) };
   }

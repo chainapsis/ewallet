@@ -120,7 +120,7 @@ export function setKeysharesRoutes(router: Router) {
           public_key: publicKeyBytesRes.data,
           share: body.share,
         },
-        state.env.ENCRYPTION_SECRET,
+        state.encryptionSecret,
       );
       if (registerKeyShareRes.success === false) {
         return res.status(ErrorCodeMap[registerKeyShareRes.code]).json({
@@ -242,7 +242,7 @@ export function setKeysharesRoutes(router: Router) {
           email: googleUser.email,
           public_key: publicKeyBytesRes.data,
         },
-        state.env.ENCRYPTION_SECRET,
+        state.encryptionSecret,
       );
       if (getKeyShareRes.success === false) {
         return res.status(ErrorCodeMap[getKeyShareRes.code]).json({
