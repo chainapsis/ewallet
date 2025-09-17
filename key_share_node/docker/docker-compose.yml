@@ -5,13 +5,13 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: key_share_node
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
       TZ: "UTC"
       PGTZ: "UTC"
     volumes:
-      - ksn_pg_data:/var/lib/postgresql/data
+      - ${PG_DATA_DIR}:/var/lib/postgresql/data
       - ../../key_share_node/pg_interface/scripts/migrate/migrate.sql:/docker-entrypoint-initdb.d/migrate.sql
 
   key_share_node:
@@ -19,35 +19,30 @@ services:
       context: ../../
       dockerfile: key_share_node/docker/key_share_node.Dockerfile
     ports:
-      # You can change the port number to your desired port number
-      - "4201:4201"
+      - ${SERVER_PORT}:${SERVER_PORT}
     platform: linux/amd64
     restart: unless-stopped
     environment:
-      # You can change the port number to your desired port number
-      PORT: "4201"
+      PORT: ${SERVER_PORT}
       DB_HOST: "key_share_node_pg"
       DB_PORT: "5432"
-      DB_USER: "postgres"
-      DB_PASSWORD: "postgres"
-      DB_NAME: "key_share_node"
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
       DB_SSL: "false"
+      # Path inside the container where the Docker secret is mounted
       ENCRYPTION_SECRET_PATH: "/run/secrets/encryption_secret"
-      # Please change it to your own password.
-      ADMIN_PASSWORD: "admin_password"
-      # Set the path where db dump files will be stored
-      DUMP_DIR: "/var/lib/key_share_node/dump"
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # Container path is fixed for consistency; you may change the host path in the volume mapping
+      DUMP_DIR: /home/node/key_share_node/dump
 
     volumes:
-      - ${DUMP_DIR}:/home/node/keplr_ewallet_data
+      - ${DUMP_DIR}:/home/node/key_share_node/dump
     secrets:
       - encryption_secret
     depends_on:
       - key_share_node_pg
 
-volumes:
-  key_share_node_pg_data:
-
 secrets:
   encryption_secret:
-    file: ~/secrets/encryption_secret.txt
+    file: ${ENCRYPTION_SECRET_FILE_PATH}

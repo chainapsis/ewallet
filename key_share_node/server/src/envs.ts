@@ -62,7 +62,9 @@ export function loadEnv(nodeId: string): Result<void, string> {
   return { success: true, data: void 0 };
 }
 
-export function verifyEnv(envs: Record<string, any>): Result<Env, string> {
+export function verifyAndExpandEnv(
+  envs: Record<string, any>,
+): Result<Env, string> {
   const res = envSchema.safeParse(envs);
 
   if (res.success) {
