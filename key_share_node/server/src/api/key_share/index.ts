@@ -83,8 +83,7 @@ export async function registerKeyShare(
 
     const wallet_id = createWalletRes.data.wallet_id;
 
-    // TODO: @jinwoo type "share"
-    const encryptedShare = encryptData(share as any, encryptionSecret);
+    const encryptedShare = encryptData(share.toHex(), encryptionSecret);
     const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
 
     const createKeyShareRes = await createKeyShare(db, {
