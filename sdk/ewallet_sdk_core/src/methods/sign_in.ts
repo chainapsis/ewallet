@@ -12,6 +12,8 @@ import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
 const FIVE_MINS_MS = 5 * 60 * 1000;
 
 export async function signIn(this: KeplrEWalletInterface, type: "google") {
+  await this.waitUntilInitialized;
+
   // SDK takes oauth_sign_in_result msg from the popup window
   let signInRes: EWalletMsgOAuthSignInUpdate;
   try {
