@@ -3,8 +3,8 @@ import type {
   KeplrEWalletInterface,
   OAuthState,
   EWalletMsg,
-  EWalletMsgOAuthSignInResult,
-  EWalletMsgOAuthSignInResultAck,
+  EWalletMsgOAuthSignInUpdateAck,
+  EWalletMsgOAuthSignInUpdate,
 } from "@keplr-ewallet-sdk-core/types";
 import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
 import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
@@ -13,7 +13,7 @@ const FIVE_MINS_MS = 5 * 60 * 1000;
 
 export async function signIn(this: KeplrEWalletInterface, type: "google") {
   // SDK takes oauth_sign_in_result msg from the popup window
-  let signInRes: EWalletMsgOAuthSignInResult;
+  let signInRes: EWalletMsgOAuthSignInUpdate;
   try {
     switch (type) {
       case "google": {
@@ -35,14 +35,14 @@ export async function signIn(this: KeplrEWalletInterface, type: "google") {
     throw new Error(`sign in fail, err: ${signInRes.payload.err}`);
   }
 
-  const msg: EWalletMsg = {
-    target: "keplr_ewallet_attached",
-    msg_type: "oauth_sign_in",
-    payload: signInRes.payload.data,
-  };
-
-  // SDK sends "oauth_sign_in" msg to attached w/ oauth payload
-  await this.sendMsgToIframe(msg);
+  // const msg: EWalletMsg = {
+  //   target: "keplr_ewallet_attached",
+  //   msg_type: "oauth_sign_in",
+  //   payload: signInRes.payload.data,
+  // };
+  //
+  // // SDK sends "oauth_sign_in" msg to attached w/ oauth payload
+  // await this.sendMsgToIframe(msg);
 
   const publicKey = await this.getPublicKey();
   const email = await this.getEmail();
@@ -62,7 +62,7 @@ async function tryGoogleSignIn(
   sdkEndpoint: string,
   apiKey: string,
   sendMsgToIframe: (msg: EWalletMsg) => Promise<EWalletMsg>,
-): Promise<EWalletMsgOAuthSignInResult> {
+): Promise<EWalletMsgOAuthSignInUpdate> {
   const clientId = GOOGLE_CLIENT_ID;
   if (!clientId) {
     throw new Error("GOOGLE_CLIENT_ID is not set");
@@ -123,7 +123,7 @@ async function tryGoogleSignIn(
     throw new Error("Failed to set nonce for google oauth sign in");
   }
 
-  return new Promise<EWalletMsgOAuthSignInResult>(async (resolve, reject) => {
+  return new Promise<EWalletMsgOAuthSignInUpdate>(async (resolve, reject) => {
     // let focusTimer: number;
     let timeout: number;
 
@@ -149,12 +149,12 @@ async function tryGoogleSignIn(
       const port = event.ports[0];
       const data = event.data as EWalletMsg;
 
-      if (data.msg_type === "oauth_sign_in_result") {
-        console.log("[keplr] oauth_sign_in_result recv, %o", data);
+      if (data.msg_type === "oauth_sign_in_update") {
+        console.log("[keplr] oauth_sign_in_update recv, %o", data);
 
-        const msg: EWalletMsgOAuthSignInResultAck = {
+        const msg: EWalletMsgOAuthSignInUpdateAck = {
           target: "keplr_ewallet_attached",
-          msg_type: "oauth_sign_in_result_ack",
+          msg_type: "oauth_sign_in_update_ack",
           payload: null,
         };
 
