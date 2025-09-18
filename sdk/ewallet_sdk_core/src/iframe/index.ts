@@ -28,9 +28,12 @@ export function setUpIframeElement(
 
   console.debug("[keplr] appending iframe");
 
-  // iframe setup
   const iframe = document.createElement("iframe");
   iframe.src = url.toString();
+
+  // NOTE: if not "lazy", this will consume a significant amount of compute
+  // resources such that it causes animation lagging
+  iframe.loading = "lazy";
 
   // iframe style
   iframe.id = KEPLR_IFRAME_ID;
