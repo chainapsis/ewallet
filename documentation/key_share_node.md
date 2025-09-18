@@ -30,68 +30,108 @@ If you plan to use your own database,
 
 ## [2/3] Installation
 
-We officially support launching the application suite using Docker Compose.
-Docker images and volumes are defined in the `docker-compose.yml` file. For
-those that want to use their own databases, use this file to configure the
-system.
+We officially support launching the application suite using Docker Compose. The
+system includes both the Key Share Node server and PostgreSQL database.
+
+### Prerequisites
 
 1. Clone the repository and navigate to the Docker setup directory:
 
 ```bash
-git clone [https://github.com/chainapsis/ewallet.git](https://github.com/chainapsis/ewallet-public.git)
+git clone https://github.com/chainapsis/ewallet-public.git
 cd ewallet/key_share_node/docker
 ```
 
-2. Start the services using Docker Compose:
+2. Prepare the encryption secret file:
+
+Create a secure encryption secret file at your desired location. This file will
+be used for data encryption within the Key Share Node.
+
+### Environment Configuration
+
+1. Copy the environment template and configure your settings:
+
+```bash
+cp env.example .env
+```
+
+2. Edit the `.env` file with your preferred values:
+
+```bash
+# Database Configuration
+DB_USER=postgres                    # PostgreSQL database username
+DB_PASSWORD=your_secure_password    # PostgreSQL database password
+DB_NAME=key_share_node              # PostgreSQL database name
+PG_DATA_DIR=/opt/key_share_node/pg_data     # Host directory for PostgreSQL data
+DUMP_DIR=/opt/key_share_node/dump           # Host directory for database dumps
+
+# Server Configuration
+SERVER_PORT=4201                    # Port number for the Key Share Node server
+ADMIN_PASSWORD=your_admin_password  # Admin password for dump/restore operations
+ENCRYPTION_SECRET_FILE_PATH=~/secrets/encryption_secret.txt  # Path to encryption secret
+```
+
+3. Create and set proper permissions for the dump directory:
+
+```bash
+# Create the dump directory (path should match DUMP_DIR in your .env file)
+sudo mkdir -p /opt/key_share_node/dump
+
+# Set permissions for dump directory (Node.js user: UID 1000, GID 1000)
+sudo chown -R 1000:1000 /opt/key_share_node/dump
+```
+
+### Starting the Services
+
+1. Start the services using Docker Compose:
 
 ```bash
 docker compose up -d
 ```
 
-3. Dockerized node software will soon be alive and you are set. Make sure you
-   set up the firewall (if any) correctly to allow in-bound traffic.
+2. Verify the services are running:
 
-### Database Configuration
+```bash
+docker compose ps
+```
 
-While the application suite already includes the database service to run
-together, you may want to use your own. For this, refer to the settings in the
-path `key_share_node/docker/docker-compose.yml` . Values that are relevant to
-the database are written in the `environment` attribute of `key_share_node`.
+3. Check the logs if needed:
 
-| **Variable**      | **Description**           |
-| ----------------- | ------------------------- |
-| DB_HOST           | PostgreSQL host address   |
-| DB_PORT           | PostgreSQL port           |
-| DB_USER           | Database username         |
-| DB_PASSWORD       | Database password         |
-| DB_NAME           | Database name             |
-| DB_SSL            | Use SSL (true or false)   |
-| ENCRYPTION_SECRET | Data encryption key (AES) |
+```bash
+docker compose logs key_share_node
+docker compose logs key_share_node_pg
+```
 
-### Example configuration
+### Using Your Own Database
+
+If you prefer to use your own PostgreSQL database instead of the included one:
+
+1. Update the `.env` file with your database connection details:
+
+```bash
+DB_HOST=your_database_host
+DB_PORT=5432
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_NAME=your_database_name
+DB_SSL=true  # or false
+```
+
+2. **Important**: Update the `docker-compose.yml` file to use your database
+   settings:
 
 ```yaml
-key_share_node:
-  build:
-    context: ../../
-    dockerfile: key_share_node/docker/key_share_node.Dockerfile
-  ports:
-    # You can change the port number to your desired port number
-    - "4201:4201"
-  platform: linux/amd64
-  restart: unless-stopped
-  environment:
-    # You can change the port number to your desired port number
-    PORT: "4201"
-    DB_HOST: "my_db_url.com"
-    DB_PORT: "1234"
-    DB_USER: "admin"
-    DB_PASSWORD: "admin_password"
-    DB_NAME: "key_share_node"
-    DB_SSL: "true"
-    # Please change it to your own secret.
-    ENCRYPTION_SECRET: "temp_enc_secret"
+environment:
+  DB_HOST: ${DB_HOST} # Use your external database host
+  DB_PORT: ${DB_PORT} # Use your database port (usually 5432)
+  DB_SSL: ${DB_SSL} # Enable/disable SSL as needed
+  # ... other environment variables
 ```
+
+3. Remove or comment out the `key_share_node_pg` service in `docker-compose.yml`
+
+4. Ensure your database is accessible from the Docker container and has the
+   required schema
 
 ## [3/3] Maintenance
 
@@ -129,7 +169,53 @@ key_share_node:
 The key share node automatically saves backups at regular intervals, ensuring
 recovery in case of failure. (7-day rolling)
 
-Data will be stored in the following path, `${HOME}/keplr_ewallet_data`.
+### Backup Configuration
+
+- **Backup frequency**: Daily
+- **Retention period**: 7 days
+- **Storage location**: Configured via `DUMP_DIR` environment variable
+
+### Backup Management
+
+The Key Share Node provides both automatic and manual backup capabilities.
+
+#### Automatic Backups
+
+Backups are automatically created daily and stored in the directory specified by
+the `DUMP_DIR` environment variable in your `.env` file. The system maintains a
+7-day rolling backup retention policy.
+
+#### Manual Backup Operations
+
+You can manually create and restore backups using the REST API:
+
+**Create a manual backup:**
+
+```bash
+curl -X POST http://localhost:4201/pg_dump/v1/ \
+  -H "Content-Type: application/json" \
+  -d '{"password": "your_admin_password"}'
+```
+
+**List available backups:**
+
+```bash
+curl -X GET http://localhost:4201/pg_dump/v1/
+```
+
+**Restore from a backup:**
+
+```bash
+curl -X POST http://localhost:4201/pg_dump/v1/restore \
+  -H "Content-Type: application/json" \
+  -d '{
+    "password": "your_admin_password",
+    "dump_path": "/home/node/key_share_node/dump/backup_file.dump"
+  }'
+```
+
+> **Note**: Use the container path (`/home/node/key_share_node/dump/`) when
+> specifying the dump file path, not the host path.
 
 ## Security
 
