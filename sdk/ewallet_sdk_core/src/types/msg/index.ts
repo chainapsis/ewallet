@@ -94,13 +94,13 @@ export type EWalletMsgHideModalAck = {
 };
 
 export type EWalletMsgInit = {
-  target: "keplr_ewallet_attached";
+  target: "keplr_ewallet_sdk";
   msg_type: "init";
   payload: Result<InitPayload, string>;
 };
 
 export type EWalletMsgInitAck = {
-  target: "keplr_ewallet_sdk";
+  target: "keplr_ewallet_attached";
   msg_type: "init_ack";
   payload: Result<null, string>;
 };
@@ -153,7 +153,7 @@ export type EWalletMsg =
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
   | {
-      target: "keplr_ewallet_sdk";
-      msg_type: "unknown_msg_type";
-      payload: string | null;
-    };
+    target: "keplr_ewallet_sdk";
+    msg_type: "unknown_msg_type";
+    payload: string | null;
+  };
