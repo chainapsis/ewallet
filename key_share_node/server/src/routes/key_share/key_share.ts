@@ -6,10 +6,7 @@ import type {
   GetKeyShareResponse,
   RegisterKeyShareBody,
 } from "@keplr-ewallet/ksn-interface/key_share";
-import type {
-  KSNodeApiErrorCode,
-  KSNodeApiResponse,
-} from "@keplr-ewallet/ksn-interface/response";
+import type { KSNodeApiResponse } from "@keplr-ewallet/ksn-interface/response";
 
 import {
   checkKeyShare,
@@ -20,7 +17,7 @@ import {
   bearerTokenMiddleware,
   type AuthenticatedRequest,
 } from "@keplr-ewallet-ksn-server/middlewares";
-import { Bytes } from "@keplr-ewallet/bytes";
+import { Bytes, type Bytes64 } from "@keplr-ewallet/bytes";
 import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
 
 export function setKeysharesRoutes(router: Router) {
@@ -112,13 +109,24 @@ export function setKeysharesRoutes(router: Router) {
         });
       }
 
+      const shareBytesRes = Bytes.fromHexString(body.share, 64);
+      if (shareBytesRes.success === false) {
+        return res.status(400).json({
+          success: false,
+          code: "SHARE_INVALID",
+          msg: "Share is not valid",
+        });
+      }
+
+      const shareBytes: Bytes64 = shareBytesRes.data;
+
       const registerKeyShareRes = await registerKeyShare(
         state.db,
         {
           email: googleUser.email,
           curve_type: body.curve_type,
           public_key: publicKeyBytesRes.data,
-          share: body.share,
+          share: shareBytes,
         },
         state.encryptionSecret,
       );
