@@ -38,14 +38,14 @@ system includes both the Key Share Node server and PostgreSQL database.
 1. Clone the repository and navigate to the Docker setup directory:
 
 ```bash
-git clone https://github.com/chainapsis/ewallet-public.git
+git clone https://github.com/chainapsis/ewallet.git
 cd ewallet/key_share_node/docker
 ```
 
 2. Prepare the encryption secret file:
 
 Create a secure encryption secret file at your desired location. This file will
-be used for data encryption within the Key Share Node.
+be used to encrypt user key shares within the Key Share Node.
 
 ### Environment Configuration
 
@@ -59,26 +59,26 @@ cp env.example .env
 
 ```bash
 # Database Configuration
-DB_USER=postgres                    # PostgreSQL database username
-DB_PASSWORD=your_secure_password    # PostgreSQL database password
-DB_NAME=key_share_node              # PostgreSQL database name
-PG_DATA_DIR=/opt/key_share_node/pg_data     # Host directory for PostgreSQL data
-DUMP_DIR=/opt/key_share_node/dump           # Host directory for database dumps
+## PostgreSQL database username
+DB_USER=postgres
+## PostgreSQL database password
+DB_PASSWORD=your_secure_password
+## PostgreSQL database name
+DB_NAME=key_share_node
+## Host directory path for PostgreSQL data persistence (mounted to container)
+PG_DATA_DIR=/opt/key_share_node/pg_data
+## Host directory path for database dump files storage (mounted to container)
+## NOTE: This directory must be writable by the Node.js user (UID:1000, GID:1000)
+## Example: chown -R 1000:1000 /opt/key_share_node/dump
+DUMP_DIR=/opt/key_share_node/dump
 
 # Server Configuration
-SERVER_PORT=4201                    # Port number for the Key Share Node server
-ADMIN_PASSWORD=your_admin_password  # Admin password for dump/restore operations
-ENCRYPTION_SECRET_FILE_PATH=~/secrets/encryption_secret.txt  # Path to encryption secret
-```
-
-3. Create and set proper permissions for the dump directory:
-
-```bash
-# Create the dump directory (path should match DUMP_DIR in your .env file)
-sudo mkdir -p /opt/key_share_node/dump
-
-# Set permissions for dump directory (Node.js user: UID 1000, GID 1000)
-sudo chown -R 1000:1000 /opt/key_share_node/dump
+## Port number for the Key Share Node server
+SERVER_PORT=4201
+## Admin password for database dump/restore operations authentication
+ADMIN_PASSWORD=admin_password
+## Host file path to encryption secret file (used to create docker secret)
+ENCRYPTION_SECRET_FILE_PATH=/opt/key_share_node/encryption_secret.txt
 ```
 
 ### Starting the Services
@@ -132,6 +132,88 @@ environment:
 
 4. Ensure your database is accessible from the Docker container and has the
    required schema
+
+### Set up Firewall
+
+#### Docker and Firewall Compatibility
+
+When using Docker Compose, **traditional firewall tools like UFW are bypassed**
+for published container ports. As documented in the
+[Docker official documentation](https://docs.docker.com/engine/network/packet-filtering-firewalls/#integration-with-firewalld),
+Docker routes container traffic in the `nat` table before it reaches the `INPUT`
+and `OUTPUT` chains that UFW uses, effectively ignoring your firewall
+configuration.
+
+#### Default Port Exposure
+
+By default, when you run the Key Share Node with Docker Compose:
+
+- **Server Port (e.g., 4201)**: Accessible from all IP addresses
+  (`0.0.0.0:SERVER_PORT`)
+- **Database Port (5432)**: Accessible from all IP addresses (`0.0.0.0:5432`)
+
+> **Note**: The actual server port is determined by the `SERVER_PORT`
+> environment variable in your `.env` file (default: 4201).
+
+This means your PostgreSQL database is **publicly accessible** by default, which
+poses a security risk.
+
+#### Recommended Security Configuration
+
+We strongly recommend restricting access to the PostgreSQL port (5432) to
+specific trusted IPs only. Below are examples for Ubuntu/Debian using `iptables`
+with the `DOCKER-USER` chain.
+
+#### 1. Check existing rules
+
+```bash
+sudo iptables -S DOCKER-USER
+```
+
+#### 2. Restrict PostgreSQL (5432) to trusted IPs only
+
+Replace `203.0.113.10` with your trusted IP address:
+
+```bash
+# Allow 5432 from trusted IP
+sudo iptables -I DOCKER-USER 1 -p tcp --dport 5432 -s 203.0.113.10 -j ACCEPT
+
+# (Optional) Allow localhost access
+sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
+
+# Deny all other access to 5432
+sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
+```
+
+> **🔒 Explanation:**
+>
+> - `-I` inserts the ACCEPT rules at the top so they are matched first
+> - `-A` appends the DROP rule at the bottom
+> - Only whitelisted IPs (and localhost if added) will be able to connect
+
+#### 3. Make firewall rules persistent
+
+On Ubuntu/Debian:
+
+```bash
+# Install persistence package
+sudo apt-get update
+sudo apt-get install -y iptables-persistent
+
+# Save current rules
+sudo netfilter-persistent save
+```
+
+Now, the rules will be automatically applied after reboot.
+
+#### 4. Verify rules
+
+```bash
+sudo iptables -L DOCKER-USER -n --line-numbers
+```
+
+You should see your trusted IP(s) ACCEPTed first, then a DROP rule for all other
+traffic to 5432.
 
 ## [3/3] Maintenance
 
