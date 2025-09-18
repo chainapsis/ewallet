@@ -1,4 +1,4 @@
-import type { Bytes33 } from "@keplr-ewallet/bytes";
+import type { Bytes33, Bytes64 } from "@keplr-ewallet/bytes";
 
 import type { CurveType } from "./curve_type";
 
@@ -19,7 +19,7 @@ export interface RegisterKeyShareRequest {
   email: string;
   curve_type: CurveType;
   public_key: Bytes33;
-  share: string;
+  share: Bytes64;
 }
 
 export type RegisterKeyShareBody = {
