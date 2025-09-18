@@ -7,7 +7,7 @@ import type {
 } from "@keplr-ewallet-sdk-core/types/modal";
 import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
 import type { OAuthSignInError } from "@keplr-ewallet-sdk-core/types/sign_in";
-import type { OAuthResultPayload } from "@keplr-ewallet-sdk-core/types/oauth";
+import type { OAuthPayload } from "@keplr-ewallet-sdk-core/types/oauth";
 
 export type EWalletMsgGetPublicKey = {
   target: "keplr_ewallet_attached";
@@ -48,7 +48,7 @@ export type EWalletMsgOAuthSignInUpdateAck = {
 export type EWalletMsgOAuthInfoPass = {
   target: "keplr_ewallet_attached";
   msg_type: "oauth_info_pass";
-  payload: Result<OAuthResultPayload, OAuthSignInError>;
+  payload: OAuthPayload;
 };
 
 export type EWalletMsgOAuthInfoPassAck = {
@@ -153,7 +153,7 @@ export type EWalletMsg =
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
   | {
-    target: "keplr_ewallet_sdk";
-    msg_type: "unknown_msg_type";
-    payload: string | null;
-  };
+      target: "keplr_ewallet_sdk";
+      msg_type: "unknown_msg_type";
+      payload: string | null;
+    };

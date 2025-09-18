@@ -7,7 +7,7 @@ export enum RedirectUriSearchParamsKey {
   STATE = "state",
 }
 
-export interface OAuthResultPayload {
+export interface OAuthPayload {
   access_token: string;
   id_token: string;
   api_key: string;
