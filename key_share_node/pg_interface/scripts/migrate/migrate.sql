@@ -62,3 +62,19 @@ CREATE TABLE IF NOT EXISTS public.pg_dumps (
 	updated_at timestamptz DEFAULT now() NOT NULL,
     CONSTRAINT pg_dumps_pkey PRIMARY KEY (dump_id)
 );
+
+-- public.key_share_node_meta definition
+
+-- Drop table
+
+-- DROP TABLE public.key_share_node_meta;
+
+CREATE TABLE public.key_share_node_meta (
+	meta_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    wallet_id uuid NOT NULL,
+	sss_threshold smallint NOT NULL,
+	created_at timestamptz DEFAULT now() NOT NULL,
+	updated_at timestamptz DEFAULT now() NOT NULL,
+	CONSTRAINT key_share_node_meta_pkey PRIMARY KEY (meta_id)
+    CONSTRAINT key_share_node_meta_wallet_id_key UNIQUE (wallet_id)
+);

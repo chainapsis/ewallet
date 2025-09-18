@@ -185,7 +185,7 @@ sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
 sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
 ```
 
-> **🔒 Explanation:**
+> **Explanation:**
 >
 > - `-I` inserts the ACCEPT rules at the top so they are matched first
 > - `-A` appends the DROP rule at the bottom
