@@ -10,9 +10,11 @@ export const KeplrEWalletProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <div>
-      <p>checking {isInitialized ? "true" : "false"}</p>
+      <p>isInitialized {isInitialized ? "true" : "false"}</p>
+
       {/* Animition smoothness test */}
       <Skeleton width="100px" height="100px" borderRadius="20px" />
+
       {isInitialized && <>{children}</>}
     </div>
   );

@@ -15,6 +15,8 @@ export async function lazyInit(
     return { success: false, err: { type: "eWallet failed to initailize" } };
   }
 
+  setUpEventHandlers.call(cosmosEWallet);
+
   const eWalletState = eWalletStateRes.data;
   if (eWalletState.publicKey) {
     const pk = Buffer.from(eWalletState.publicKey, "hex");
@@ -41,8 +43,6 @@ export async function lazyInit(
       publicKey: null,
     });
   }
-
-  setUpEventHandlers.call(cosmosEWallet);
 
   return { success: true, data: cosmosEWallet.state };
 }
