@@ -1,6 +1,7 @@
-import { exec } from "node:child_process";
+import { exec, spawnSync } from "node:child_process";
+import chalk from "chalk";
 import { promisify } from "node:util";
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import { join } from "node:path";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
@@ -21,32 +22,55 @@ export interface PgDumpResult {
 
 export async function dump(
   pgConfig: PgDumpConfig,
-  dumpDir: string,
+  _dumpDir: string,
 ): Promise<Result<PgDumpResult, string>> {
   try {
-    await fs.mkdir(dumpDir, { recursive: true });
+    const dumpDir = replaceTildeWithHome();
+
+    if (!fs.existsSync(dumpDir)) {
+      fs.mkdirSync(dumpDir, { recursive: true });
+
+      console.log(
+        "%s dump dir, path: %s",
+        chalk.bold.green("Created"),
+        dumpDir,
+      );
+    }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
-    const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U \
-${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
 
-    const { stdout, stderr } = await execAsync(command, {
-      env: {
-        ...process.env,
-        PGPASSWORD: pgConfig.password,
+    console.log("%s at %s", chalk.bold.green("Dump"), dumpPath);
+
+    //     const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U \
+    // ${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
+
+    const { stdout, stderr } = spawnSync(
+      "pg_dump",
+      [
+        "-h",
+        pgConfig.host,
+        "-p",
+        String(pgConfig.port),
+        "-U",
+        pgConfig.user,
+        "-d",
+        pgConfig.database,
+        "-Fc",
+        "-f",
+        dumpPath,
+      ],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          PGPASSWORD: pgConfig.password,
+        },
       },
-    });
+    );
 
-    if (stdout) {
-      console.log("pg_dump stdout:", stdout);
-    }
-    if (stderr) {
-      console.log("pg_dump stderr:", stderr);
-    }
-
-    const stats = await fs.stat(dumpPath);
+    const stats = fs.statSync(dumpPath);
     const dumpSize = stats.size;
 
     return { success: true, data: { dumpPath, dumpSize } };

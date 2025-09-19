@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import type { Result } from "@keplr-ewallet/stdlib-js";
-
-import { replaceTildeWithHome } from "@keplr-ewallet-ksn-server/utils/path";
+import { replaceTildeWithHome } from "@keplr-ewallet/stdlib-js/path";
 
 export function loadEncSecret(_path: string): Result<string, string> {
   try {
