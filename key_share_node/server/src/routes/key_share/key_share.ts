@@ -19,6 +19,7 @@ import {
 } from "@keplr-ewallet-ksn-server/middlewares";
 import { Bytes, type Bytes64 } from "@keplr-ewallet/bytes";
 import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
+import type { ResponseLocal } from "@keplr-ewallet-ksn-server/response";
 
 export function setKeysharesRoutes(router: Router) {
   /**
@@ -94,7 +95,7 @@ export function setKeysharesRoutes(router: Router) {
     bearerTokenMiddleware,
     async (
       req: AuthenticatedRequest<RegisterKeyShareBody>,
-      res: Response<KSNodeApiResponse<void>>,
+      res: Response<KSNodeApiResponse<void>, ResponseLocal>,
     ) => {
       const googleUser = res.locals.google_user;
       const state = req.app.locals;
@@ -233,7 +234,7 @@ export function setKeysharesRoutes(router: Router) {
       res: Response<KSNodeApiResponse<GetKeyShareResponse>>,
     ) => {
       const googleUser = res.locals.google_user;
-      const state = req.app.locals as any;
+      const state = req.app.locals;
 
       const publicKeyBytesRes = Bytes.fromHexString(req.body.public_key, 33);
       if (publicKeyBytesRes.success === false) {
