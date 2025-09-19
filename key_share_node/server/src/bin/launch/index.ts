@@ -76,7 +76,6 @@ async function main() {
 
   app.locals = {
     db: createPostgresRes.data,
-    // env,
     encryptionSecret: loadEncSecretRes.data,
   };
 
