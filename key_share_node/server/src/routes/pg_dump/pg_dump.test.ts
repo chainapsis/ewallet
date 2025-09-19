@@ -12,7 +12,8 @@ import {
   resetPgDatabase,
 } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
-import { setPgDumpRoutes } from "@keplr-ewallet-ksn-server/routes/pg_dump/pg_dump";
+import { makePgDumpRouter } from ".";
+// import { setPgDumpRoutes } from "@keplr-ewallet-ksn-server/routes/pg_dump/pg_dump";
 
 describe("pg_dump_route_test", () => {
   const testAdminPassword = "test_admin_password";
@@ -53,9 +54,8 @@ describe("pg_dump_route_test", () => {
     app = express();
     app.use(express.json());
 
-    const router = express.Router();
-    setPgDumpRoutes(router);
-    app.use("/pg_dump/v1", router);
+    const pgDumpRouter = makePgDumpRouter();
+    app.use("/pg_dump/v1", pgDumpRouter);
 
     app.locals = {
       db: pool,
@@ -154,9 +154,8 @@ describe("pg_dump_route_test", () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
       invalidApp.locals = {
         db: pool,
@@ -192,9 +191,8 @@ describe("pg_dump_route_test", () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
       process.env.DB_PASSWORD = "wrong_password";
 
@@ -377,9 +375,8 @@ describe("pg_dump_route_test", () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
       invalidApp.locals = {
         db: null as any, // Invalid database connection
@@ -657,9 +654,8 @@ describe("pg_dump_route_test", () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
       process.env.DB_NAME = "non_existent_db";
 
@@ -687,9 +683,8 @@ describe("pg_dump_route_test", () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
       process.env.DB_PASSWORD = "wrong_password";
 
