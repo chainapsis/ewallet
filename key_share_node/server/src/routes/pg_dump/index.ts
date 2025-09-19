@@ -77,7 +77,7 @@ export function makePgDumpRouter() {
    *               msg: "Failed to process pg dump"
    */
   router.post(
-    "/",
+    "/backup",
     adminAuthMiddleware,
     async (
       req: AdminAuthenticatedRequest,
@@ -166,7 +166,7 @@ export function makePgDumpRouter() {
    *               msg: "Failed to retrieve pg dump history"
    */
   router.post(
-    "/",
+    "/get_backup_history",
     async (
       req: KSNodeRequest<GetBackupHistoryRequest>,
       res: Response<KSNodeApiResponse<PgDump[]>>,
