@@ -46,10 +46,7 @@ export async function dump(
 
     console.log("%s dump, path: %s", chalk.bold.green("Finished"), dumpPath);
 
-    //     const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U \
-    // ${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
-
-    const { stdout, stderr } = spawnSync(
+    spawnSync(
       "pg_dump",
       [
         "-h",
