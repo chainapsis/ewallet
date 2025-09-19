@@ -30,8 +30,20 @@ export function makeApp() {
     }),
   );
 
-  app.get<{}, string>("/", (_, res) => {
-    res.send("Ok");
+  app.get<{}, string>("/", async (req, res) => {
+    try {
+      const db = req.app.locals.db;
+      if (!db) {
+        res.status(500).send("Error");
+        return;
+      }
+
+      await db.query("SELECT 1");
+      res.send("Ok");
+    } catch (error) {
+      console.error("Health check failed:", error);
+      res.status(500).send("Error");
+    }
   });
 
   setRoutes(app);
