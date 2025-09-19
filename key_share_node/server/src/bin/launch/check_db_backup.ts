@@ -26,6 +26,7 @@ export type CheckDBBackupError =
     type: "restored_data_mismatch";
     error: string;
   };
+
 export async function checkDBBackup(
   pgConfig: PgDatabaseConfig,
   dumpDir: string,
