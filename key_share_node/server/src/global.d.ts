@@ -10,8 +10,9 @@ declare global {
       DB_PASSWORD: string;
       DB_NAME: string;
       DB_SSL: string;
-      ENCRYPTION_SECRET: string;
+      ENCRYPTION_SECRET_PATH: string;
       ADMIN_PASSWORD: string;
+      DUMP_DIR: string;
     }
   }
 

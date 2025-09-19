@@ -22,6 +22,19 @@ describe("pg_dump_route_test", () => {
   let app: express.Application;
 
   beforeAll(async () => {
+    console.log("beforeAll");
+
+    process.env = {
+      ...process.env,
+      ADMIN_PASSWORD: testAdminPassword,
+      DB_NAME: testPgConfig.database,
+      DB_HOST: testPgConfig.host,
+      DB_PASSWORD: testPgConfig.password,
+      DB_USER: testPgConfig.user,
+      DB_PORT: testPgConfig.port.toString(),
+      DUMP_DIR: dumpDir,
+    };
+
     const config = testPgConfig;
     const createPostgresRes = await createPgDatabase({
       database: config.database,
@@ -67,6 +80,7 @@ describe("pg_dump_route_test", () => {
 
   describe("POST /pg_dump/v1/", () => {
     it("should successfully create pg dump with valid password", async () => {
+      console.log(123123);
       const response = await request(app)
         .post("/pg_dump/v1/")
         .send({ password: testAdminPassword })

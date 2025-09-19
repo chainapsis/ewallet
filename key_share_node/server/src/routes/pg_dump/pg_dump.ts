@@ -75,16 +75,16 @@ export function setPgDumpRoutes(router: Router) {
       req: AdminAuthenticatedRequest,
       res: Response<KSNodeApiResponse<PgDumpResult>>,
     ) => {
-      const state = req.app.locals as any;
+      const state = req.app.locals;
 
       const processPgDumpRes = await processPgDump(
         state.db,
         {
-          database: state.env.DB_NAME,
-          host: state.env.DB_HOST,
-          password: state.env.DB_PASSWORD,
-          user: state.env.DB_USER,
-          port: state.env.DB_PORT,
+          database: process.env.DB_NAME,
+          host: process.env.DB_HOST,
+          password: process.env.DB_PASSWORD,
+          user: process.env.DB_USER,
+          port: Number(process.env.DB_PORT),
         },
         state.env.DUMP_DIR,
       );
@@ -280,7 +280,7 @@ export function setPgDumpRoutes(router: Router) {
       req: AdminAuthenticatedRequest<{ dump_path: string }>,
       res: Response<KSNodeApiResponse<{ dump_path: string }>>,
     ) => {
-      const state = req.app.locals as any;
+      const state = req.app.locals;
 
       const dumpPath = req.body.dump_path;
 
@@ -325,11 +325,11 @@ export function setPgDumpRoutes(router: Router) {
 
       const restoreRes = await restore(
         {
-          database: state.env.DB_NAME,
-          host: state.env.DB_HOST,
-          password: state.env.DB_PASSWORD,
-          user: state.env.DB_USER,
-          port: state.env.DB_PORT,
+          database: process.env.DB_NAME,
+          host: process.env.DB_HOST,
+          password: process.env.DB_PASSWORD,
+          user: process.env.DB_USER,
+          port: Number(process.env.DB_PORT),
         },
         dumpPath,
       );

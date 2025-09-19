@@ -36,7 +36,7 @@ async function main() {
     process.exit(1);
   }
 
-  const env = verifyEnvRes.data;
+  const env = process.env;
 
   const loadEncSecretRes = loadEncSecret(env.ENCRYPTION_SECRET_PATH);
   if (!loadEncSecretRes.success) {
