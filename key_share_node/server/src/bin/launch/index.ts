@@ -1,5 +1,4 @@
 import chalk from "chalk";
-import { program } from "commander";
 
 import { connectPG } from "@keplr-ewallet-ksn-server/database";
 import { makeApp } from "@keplr-ewallet-ksn-server/app";
@@ -7,20 +6,9 @@ import { loadEnv, verifyEnv } from "@keplr-ewallet-ksn-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
 import { loadEncSecret } from "./load_enc_secret";
 import { checkDBBackup } from "./check_db_backup";
+import { parseCLIArgs } from "./cli_args";
 
 const ONE_DAY_MS = 1 * 86400;
-
-function parseCLIArgs() {
-  const command = program.version("0.0.1").description("Key share node server");
-
-  command.requiredOption("--node-id <id>");
-
-  command.parse(process.argv);
-
-  const opts = program.opts();
-
-  return opts;
-}
 
 async function main() {
   const opts = parseCLIArgs();
@@ -43,25 +31,31 @@ async function main() {
     process.exit(1);
   }
 
-  const backupRes = await checkDBBackup(
-    {
-      database: process.env.DB_NAME,
-      host: process.env.DB_HOST,
-      password: process.env.DB_PASSWORD,
-      user: process.env.DB_USER,
-      port: Number(process.env.DB_PORT),
-      ssl: process.env.DB_SSL === "true" ? true : false,
-    },
-    process.env.DUMP_DIR,
-  );
-  if (!backupRes.success) {
-    console.error(
-      "%s: Health check failed, exiting process, err: %s",
-      chalk.bold.red("Error"),
-      backupRes.err,
-    );
+  if (opts.nodeId === "1") {
+    console.log("Checking DB backup, nodeId: %s", opts.nodeId);
 
-    process.exit(1);
+    const backupRes = await checkDBBackup(
+      {
+        database: process.env.DB_NAME,
+        host: process.env.DB_HOST,
+        password: process.env.DB_PASSWORD,
+        user: process.env.DB_USER,
+        port: Number(process.env.DB_PORT),
+        ssl: process.env.DB_SSL === "true" ? true : false,
+      },
+      process.env.DUMP_DIR,
+    );
+    if (!backupRes.success) {
+      console.error(
+        "%s: Health check failed, exiting process, err: %s",
+        chalk.bold.red("Error"),
+        backupRes.err,
+      );
+
+      process.exit(1);
+    }
+  } else {
+    console.log("Bypass DB backup checking, nodeId: %s", opts.nodeId);
   }
 
   const createPostgresRes = await connectPG({
