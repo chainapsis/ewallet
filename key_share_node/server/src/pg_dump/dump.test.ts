@@ -8,10 +8,7 @@ import {
   type PgDumpConfig,
 } from "@keplr-ewallet/ksn-pg-interface";
 
-import {
-  createPgDatabase,
-  resetPgDatabase,
-} from "@keplr-ewallet-ksn-server/database";
+import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import {
   processPgDump,
@@ -25,7 +22,7 @@ describe("pg_dump_test", () => {
 
   beforeAll(async () => {
     const config = testPgConfig;
-    const createPostgresRes = await createPgDatabase({
+    const createPostgresRes = await connectPG({
       database: config.database,
       host: config.host,
       password: config.password,

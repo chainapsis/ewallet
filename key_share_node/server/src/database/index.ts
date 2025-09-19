@@ -11,7 +11,7 @@ export type PgDatabaseConfig = {
   ssl: boolean;
 };
 
-export async function createPgDatabase(
+export async function connectPG(
   config: PgDatabaseConfig,
 ): Promise<Result<Pool, string>> {
   const resolvedConfig = {

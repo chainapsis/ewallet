@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { program } from "commander";
 
-import { createPgDatabase } from "@keplr-ewallet-ksn-server/database";
+import { connectPG } from "@keplr-ewallet-ksn-server/database";
 import { makeApp } from "@keplr-ewallet-ksn-server/app";
 import { loadEnv, verifyEnv } from "@keplr-ewallet-ksn-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
@@ -64,7 +64,7 @@ async function main() {
     process.exit(1);
   }
 
-  const createPostgresRes = await createPgDatabase({
+  const createPostgresRes = await connectPG({
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
     password: process.env.DB_PASSWORD,

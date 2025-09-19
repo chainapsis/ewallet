@@ -7,10 +7,7 @@ import fs from "node:fs/promises";
 import { getPgDumpById, getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
 import { createUser, getUserByEmail } from "@keplr-ewallet/ksn-pg-interface";
 
-import {
-  createPgDatabase,
-  resetPgDatabase,
-} from "@keplr-ewallet-ksn-server/database";
+import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import { makePgDumpRouter } from ".";
 
@@ -34,7 +31,7 @@ describe("pg_dump_route_test", () => {
     };
 
     const config = testPgConfig;
-    const createPostgresRes = await createPgDatabase({
+    const createPostgresRes = await connectPG({
       database: config.database,
       host: config.host,
       password: config.password,

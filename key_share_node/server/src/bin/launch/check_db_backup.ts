@@ -1,27 +1,43 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
-import chalk from "chalk";
 import { dump, restore } from "@keplr-ewallet/ksn-pg-interface";
 import type { Pool } from "pg";
 
 import {
-  createPgDatabase,
+  connectPG,
   type PgDatabaseConfig,
 } from "@keplr-ewallet-ksn-server/database";
 
 const DUMP_TEST_DB = "dump_test_db";
 
+export type CheckDBBackupError =
+  | {
+    type: "connect_db_fail";
+    error: string;
+  }
+  | {
+    type: "dump_fail";
+    error: string;
+  }
+  | {
+    type: "restore_fail";
+    error: string;
+  };
+
 export async function checkDBBackup(
   pgConfig: PgDatabaseConfig,
   dumpDir: string,
-): Promise<Result<void, string>> {
+): Promise<Result<void, CheckDBBackupError>> {
   let originalPool: Pool | null = null;
   let masterPool: Pool | null = null;
   let restorePool: Pool | null = null;
 
   try {
-    const originalPoolRes = await createPgDatabase(pgConfig);
+    const originalPoolRes = await connectPG(pgConfig);
     if (originalPoolRes.success === false) {
-      return { success: false, err: originalPoolRes.err };
+      return {
+        success: false,
+        err: { type: "connect_db_fail", error: originalPoolRes.err },
+      };
     }
     originalPool = originalPoolRes.data;
 
@@ -36,19 +52,29 @@ VALUES
 
     const dumpRes = await dump(pgConfig, dumpDir);
     if (!dumpRes.success) {
-      return { success: false, err: `Failed to dump database: ${dumpRes.err}` };
+      return {
+        success: false,
+        err: {
+          type: "dump_fail",
+          error: `Failed to dump database: ${dumpRes.err}`,
+        },
+      };
     }
 
-    const masterPoolRes = await createPgDatabase({
+    const masterPoolRes = await connectPG({
       ...pgConfig,
       database: "postgres",
     });
     if (masterPoolRes.success === false) {
       return {
         success: false,
-        err: `Failed to create master pool: ${masterPoolRes.err}`,
+        err: {
+          type: "connect_db_fail",
+          error: `Failed to create master pool: ${masterPoolRes.err}`,
+        },
       };
     }
+
     masterPool = masterPoolRes.data;
 
     const { rows: existingDbs } = await masterPool.query(
@@ -70,18 +96,24 @@ WHERE datname = $1
     if (restoreRes.success === false) {
       return {
         success: false,
-        err: `Failed to restore database: ${restoreRes.err}`,
+        err: {
+          type: "restore_fail",
+          error: `Failed to restore database: ${restoreRes.err}`,
+        },
       };
     }
 
-    const restorePoolRes = await createPgDatabase({
+    const restorePoolRes = await connectPG({
       ...pgConfig,
       database: DUMP_TEST_DB,
     });
     if (restorePoolRes.success === false) {
       return {
         success: false,
-        err: `Failed to create restore pool: ${restorePoolRes.err}`,
+        err: {
+          type: "connect_db_fail",
+          error: `Failed to create restore pool: ${restorePoolRes.err}`,
+        },
       };
     }
     restorePool = restorePoolRes.data;
@@ -98,7 +130,7 @@ FROM users
     ) {
       return {
         success: false,
-        err: "Failed to restore database",
+        err: { type: "restore_fail", error: "Failed to restore database" },
       };
     }
 
