@@ -56,6 +56,11 @@ describe("pg_dump_route_test", () => {
     app.locals = {
       db: pool,
       encryptionSecret: "temp_enc_secret",
+
+      is_db_backup_checked: false,
+      latest_backup_time: null,
+      launch_time: new Date(),
+      git_hash: "",
     };
   });
 
@@ -156,6 +161,11 @@ describe("pg_dump_route_test", () => {
       invalidApp.locals = {
         db: pool,
         encryptionSecret: "temp_enc_secret",
+
+        is_db_backup_checked: false,
+        latest_backup_time: null,
+        launch_time: new Date(),
+        git_hash: "",
       };
 
       const response = await request(invalidApp)
@@ -195,6 +205,11 @@ describe("pg_dump_route_test", () => {
       invalidApp.locals = {
         db: pool,
         encryptionSecret: "temp_enc_secret",
+
+        is_db_backup_checked: false,
+        latest_backup_time: null,
+        launch_time: new Date(),
+        git_hash: "",
       };
 
       const response = await request(invalidApp)
@@ -334,6 +349,11 @@ describe("pg_dump_route_test", () => {
       invalidApp.locals = {
         db: null as any, // Invalid database connection
         encryptionSecret: "temp_enc_secret",
+
+        is_db_backup_checked: false,
+        latest_backup_time: null,
+        launch_time: new Date(),
+        git_hash: "",
       };
 
       const response = await request(invalidApp)
@@ -619,6 +639,11 @@ describe("pg_dump_route_test", () => {
       invalidApp.locals = {
         db: pool,
         encryptionSecret: "temp_enc_secret",
+
+        is_db_backup_checked: false,
+        latest_backup_time: null,
+        launch_time: new Date(),
+        git_hash: "",
       };
 
       const response = await request(invalidApp)
@@ -648,6 +673,11 @@ describe("pg_dump_route_test", () => {
       invalidApp.locals = {
         db: pool,
         encryptionSecret: "temp_enc_secret",
+
+        is_db_backup_checked: false,
+        latest_backup_time: null,
+        launch_time: new Date(),
+        git_hash: "",
       };
 
       const response = await request(invalidApp)
