@@ -27,21 +27,21 @@ export type CosmosTxSignPayload =
   | CosmosTxSignDirectPayload
   | CosmosTxSignAminoPayload;
 
-type CosmosTxSignDirectPayload = {
+export interface CosmosTxSignDirectPayload {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
   signDoc: SignDoc;
   signOptions?: KeplrSignOptions;
-};
+}
 
-type CosmosTxSignAminoPayload = {
+export interface CosmosTxSignAminoPayload {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
   signDoc: StdSignDoc;
   signOptions?: KeplrSignOptions;
-};
+}
 
 export type CosmosArbitrarySignPayload = {
   chain_info: ChainInfoForAttachedModal;
