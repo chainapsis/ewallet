@@ -2,13 +2,10 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
-// import { config as dotenvConfig } from "dotenv";
 
 import { installSwaggerDocs } from "@keplr-ewallet-ksn-server/swagger";
 import { setRoutes } from "@keplr-ewallet-ksn-server/routes";
 import { rateLimitMiddleware } from "@keplr-ewallet-ksn-server/middlewares";
-
-// dotenvConfig();
 
 export function makeApp() {
   const app = express();

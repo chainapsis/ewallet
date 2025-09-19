@@ -1,12 +1,9 @@
-import { exec, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import chalk from "chalk";
-import { promisify } from "node:util";
 import fs from "node:fs";
 import { join } from "node:path";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import { replaceTildeWithHome } from "@keplr-ewallet/stdlib-js/path";
-
-const execAsync = promisify(exec);
 
 export interface PgDumpConfig {
   host: string;
@@ -84,23 +81,43 @@ export async function restore(
   dumpPath: string,
 ): Promise<Result<void, string>> {
   try {
-    const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U \
-${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose \
-${dumpPath}`;
-
-    const { stdout, stderr } = await execAsync(command, {
-      env: {
-        ...process.env,
-        PGPASSWORD: pgConfig.password,
+    const result = spawnSync(
+      "pg_restore",
+      [
+        "-h",
+        pgConfig.host,
+        "-p",
+        String(pgConfig.port),
+        "-U",
+        pgConfig.user,
+        "-d",
+        pgConfig.database,
+        "--clean",
+        "--if-exists",
+        "--verbose",
+        dumpPath,
+      ],
+      {
+        stdio: "pipe",
+        env: {
+          ...process.env,
+          PGPASSWORD: pgConfig.password,
+        },
       },
-    });
+    );
 
-    if (stdout) {
-      console.log("pg_restore stdout:", stdout);
+    if (result.error) {
+      return { success: false, err: String(result.error) };
     }
-    if (stderr) {
-      console.log("pg_restore stderr:", stderr);
+
+    if (result.status !== 0) {
+      const errorMsg = result.stderr
+        ? result.stderr.toString()
+        : `pg_restore failed with exit code ${result.status}`;
+      return { success: false, err: errorMsg };
     }
+
+    console.log("%s pg_restore completed", chalk.bold.green("Finished"));
 
     return { success: true, data: void 0 };
   } catch (error) {
