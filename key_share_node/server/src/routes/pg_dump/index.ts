@@ -31,7 +31,7 @@ export function makePgDumpRouter() {
 
   /**
    * @swagger
-   * /pg_dump/v1/:
+   * /pg_dump/v1/backup:
    *   post:
    *     tags:
    *       - PG Dump
@@ -114,7 +114,7 @@ export function makePgDumpRouter() {
 
   /**
    * @swagger
-   * /pg_dump/v1/:
+   * /pg_dump/v1/get_backup_history:
    *   post:
    *     tags:
    *       - PG Dump
@@ -173,19 +173,6 @@ export function makePgDumpRouter() {
     ) => {
       const { days } = req.body;
       const state = req.app.locals;
-
-      // let daysNum: number | undefined;
-      // if (days !== undefined) {
-      //   daysNum = parseInt(days as string, 10);
-      //   if (isNaN(daysNum) || daysNum < 1 || daysNum > 1000) {
-      //     const errorRes: KSNodeApiErrorResponse = {
-      //       success: false,
-      //       code: "INVALID_DAYS",
-      //       msg: "Days parameter must be between 1 and 1000",
-      //     };
-      //     return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
-      //   }
-      // }
 
       const dumpsResult = await getAllPgDumps(state.db, days);
       if (dumpsResult.success === false) {

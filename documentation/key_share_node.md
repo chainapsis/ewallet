@@ -274,7 +274,7 @@ You can manually create and restore backups using the REST API:
 **Create a manual backup:**
 
 ```bash
-curl -X POST http://localhost:4201/pg_dump/v1/ \
+curl -X POST http://localhost:4201/pg_dump/v1/backup \
   -H "Content-Type: application/json" \
   -d '{"password": "your_admin_password"}'
 ```
@@ -282,7 +282,13 @@ curl -X POST http://localhost:4201/pg_dump/v1/ \
 **List available backups:**
 
 ```bash
-curl -X GET http://localhost:4201/pg_dump/v1/
+# Get all backups
+curl -X POST http://localhost:4201/pg_dump/v1/get_backup_history
+
+# Get backups from the last 7 days
+curl -X POST http://localhost:4201/pg_dump/v1/get_backup_history \
+  -H "Content-Type: application/json" \
+  -d '{"days": 7}'
 ```
 
 **Restore from a backup:**

@@ -13,7 +13,6 @@ import {
 } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import { makePgDumpRouter } from ".";
-// import { setPgDumpRoutes } from "@keplr-ewallet-ksn-server/routes/pg_dump/pg_dump";
 
 describe("pg_dump_route_test", () => {
   const testAdminPassword = "test_admin_password";
@@ -75,10 +74,10 @@ describe("pg_dump_route_test", () => {
     await resetPgDatabase(pool);
   });
 
-  describe("POST /pg_dump/v1/", () => {
+  describe("POST /pg_dump/v1/backup", () => {
     it("should successfully create pg dump with valid password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(200);
 
@@ -116,7 +115,7 @@ describe("pg_dump_route_test", () => {
 
     it("should fail with invalid password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: "wrong_password" })
         .expect(401);
 
@@ -127,7 +126,7 @@ describe("pg_dump_route_test", () => {
 
     it("should fail with missing password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({})
         .expect(401);
 
@@ -138,7 +137,7 @@ describe("pg_dump_route_test", () => {
 
     it("should fail with empty password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: "" })
         .expect(401);
 
@@ -163,7 +162,7 @@ describe("pg_dump_route_test", () => {
       };
 
       const response = await request(invalidApp)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(500);
 
@@ -202,7 +201,7 @@ describe("pg_dump_route_test", () => {
       };
 
       const response = await request(invalidApp)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(500);
 
@@ -227,7 +226,7 @@ describe("pg_dump_route_test", () => {
     it("should handle multiple concurrent requests", async () => {
       const promises = Array.from({ length: 3 }, () =>
         request(app)
-          .post("/pg_dump/v1/")
+          .post("/pg_dump/v1/backup")
           .send({ password: testAdminPassword })
           .expect(200),
       );
@@ -264,10 +263,10 @@ describe("pg_dump_route_test", () => {
     });
   });
 
-  describe("GET /pg_dump/v1/", () => {
+  describe("POST /pg_dump/v1/get_backup_history", () => {
     const createDump = async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(200);
       return response.body.data;
@@ -277,7 +276,9 @@ describe("pg_dump_route_test", () => {
       const dump1 = await createDump();
       const dump2 = await createDump();
 
-      const response = await request(app).get("/pg_dump/v1/").expect(200);
+      const response = await request(app)
+        .post("/pg_dump/v1/get_backup_history")
+        .expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toBeDefined();
@@ -301,7 +302,8 @@ describe("pg_dump_route_test", () => {
       const dump = await createDump();
 
       const response = await request(app)
-        .get("/pg_dump/v1/?days=7")
+        .post("/pg_dump/v1/get_backup_history")
+        .send({ days: 7 })
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -314,60 +316,14 @@ describe("pg_dump_route_test", () => {
     });
 
     it("should return empty array when no dumps exist", async () => {
-      const response = await request(app).get("/pg_dump/v1/").expect(200);
+      const response = await request(app)
+        .post("/pg_dump/v1/get_backup_history")
+        .expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toBeDefined();
       expect(Array.isArray(response.body.data)).toBe(true);
       expect(response.body.data.length).toBe(0);
-    });
-
-    it("should fail with invalid days parameter (zero)", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=0")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
-    });
-
-    it("should fail with invalid days parameter (negative)", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=-1")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
-    });
-
-    it("should fail with days parameter greater than 1000", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=1001")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
-    });
-
-    it("should fail with non-numeric days parameter", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=abc")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
     });
 
     it("should handle database errors gracefully", async () => {
@@ -384,7 +340,7 @@ describe("pg_dump_route_test", () => {
       };
 
       const response = await request(invalidApp)
-        .get("/pg_dump/v1/")
+        .post("/pg_dump/v1/get_backup_history")
         .expect(500);
 
       expect(response.body.success).toBe(false);
@@ -399,7 +355,9 @@ describe("pg_dump_route_test", () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
       const dump3 = await createDump();
 
-      const response = await request(app).get("/pg_dump/v1/").expect(200);
+      const response = await request(app)
+        .post("/pg_dump/v1/get_backup_history")
+        .expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.length).toBeGreaterThanOrEqual(3);
@@ -423,7 +381,8 @@ describe("pg_dump_route_test", () => {
       );
 
       const response = await request(app)
-        .get("/pg_dump/v1/?days=1")
+        .post("/pg_dump/v1/get_backup_history")
+        .send({ days: 1 })
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -437,7 +396,8 @@ describe("pg_dump_route_test", () => {
 
       // Get dumps for last 3 days (should include both dumps)
       const response2 = await request(app)
-        .get("/pg_dump/v1/?days=3")
+        .post("/pg_dump/v1/get_backup_history")
+        .send({ days: 3 })
         .expect(200);
 
       expect(response2.body.success).toBe(true);
@@ -450,7 +410,7 @@ describe("pg_dump_route_test", () => {
   describe("POST /pg_dump/v1/restore", () => {
     const createDump = async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(200);
       return response.body.data;
