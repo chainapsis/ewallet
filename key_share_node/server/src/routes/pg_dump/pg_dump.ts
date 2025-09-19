@@ -86,7 +86,7 @@ export function setPgDumpRoutes(router: Router) {
           user: process.env.DB_USER,
           port: Number(process.env.DB_PORT),
         },
-        state.env.DUMP_DIR,
+        process.env.DUMP_DIR,
       );
       if (processPgDumpRes.success === false) {
         const errorRes: KSNodeApiErrorResponse = {
