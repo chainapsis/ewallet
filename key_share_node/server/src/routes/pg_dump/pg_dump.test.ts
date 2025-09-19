@@ -22,8 +22,6 @@ describe("pg_dump_route_test", () => {
   let app: express.Application;
 
   beforeAll(async () => {
-    console.log("beforeAll");
-
     process.env = {
       ...process.env,
       ADMIN_PASSWORD: testAdminPassword,
