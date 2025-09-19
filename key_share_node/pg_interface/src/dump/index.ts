@@ -4,6 +4,7 @@ import { promisify } from "node:util";
 import fs from "node:fs";
 import { join } from "node:path";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+import { replaceTildeWithHome } from "@keplr-ewallet/stdlib-js/path";
 
 const execAsync = promisify(exec);
 
@@ -25,7 +26,7 @@ export async function dump(
   _dumpDir: string,
 ): Promise<Result<PgDumpResult, string>> {
   try {
-    const dumpDir = replaceTildeWithHome();
+    const dumpDir = replaceTildeWithHome(_dumpDir);
 
     if (!fs.existsSync(dumpDir)) {
       fs.mkdirSync(dumpDir, { recursive: true });
@@ -37,11 +38,13 @@ export async function dump(
       );
     }
 
+    console.log("%s", chalk.bold.green("Dumping"));
+
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
 
-    console.log("%s at %s", chalk.bold.green("Dump"), dumpPath);
+    console.log("%s dump, path: %s", chalk.bold.green("Finished"), dumpPath);
 
     //     const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U \
     // ${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
