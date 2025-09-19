@@ -52,7 +52,7 @@ export function loadEnv(nodeId: string): Result<void, string> {
 
     return { success: false, err: `Env file does not exist, path: ${envPath}` };
   } else {
-    console.log("%s env, path: %s", chalk.bold.green("Loading"), envPath);
+    console.log("Loading env, path: %s", envPath);
   }
 
   dotenv.config({

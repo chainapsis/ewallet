@@ -1,4 +1,5 @@
 import type { Pool } from "pg";
+import chalk from "chalk";
 import { type PgDumpConfig } from "@keplr-ewallet/ksn-pg-interface";
 
 import { sleep } from "@keplr-ewallet-ksn-server/utils/time";
@@ -16,7 +17,12 @@ export async function startPgDumpRuntime(
   pgDumpRuntimeOptions: PgDumpRuntimeOptions,
 ) {
   const sleepTime = pgDumpRuntimeOptions.sleepTimeSeconds * 1000;
-  console.log("Starting pg dump runtime with sleep time:", sleepTime);
+
+  console.log(
+    "%s pg dump runtime, sleep time: %s",
+    chalk.bold.green("Start"),
+    sleepTime,
+  );
 
   while (true) {
     await sleep(sleepTime);

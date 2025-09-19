@@ -35,13 +35,9 @@ export async function dump(
       );
     }
 
-    console.log("%s", chalk.bold.green("Dumping"));
-
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
-
-    console.log("%s dump, path: %s", chalk.bold.green("Finished"), dumpPath);
 
     spawnSync(
       "pg_dump",
@@ -70,6 +66,13 @@ export async function dump(
     const stats = fs.statSync(dumpPath);
     const dumpSize = stats.size;
 
+    console.log(
+      "%s dump, path: %s, dumpSize: %s",
+      chalk.bold.green("Finished"),
+      dumpPath,
+      dumpSize,
+    );
+
     return { success: true, data: { dumpPath, dumpSize } };
   } catch (error) {
     return { success: false, err: String(error) };
@@ -81,6 +84,10 @@ export async function restore(
   dumpPath: string,
 ): Promise<Result<void, string>> {
   try {
+    //     const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U \
+    // ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose \
+    // ${dumpPath}`;
+    //
     const result = spawnSync(
       "pg_restore",
       [
@@ -98,7 +105,7 @@ export async function restore(
         dumpPath,
       ],
       {
-        stdio: "pipe",
+        stdio: "inherit",
         env: {
           ...process.env,
           PGPASSWORD: pgConfig.password,

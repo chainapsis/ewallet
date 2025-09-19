@@ -39,8 +39,6 @@ VALUES
       return { success: false, err: `Failed to dump database: ${dumpRes.err}` };
     }
 
-    console.log("%s dump at %s", chalk.bold.green("Finished"), dumpDir);
-
     const masterPoolRes = await createPgDatabase({
       ...pgConfig,
       database: "postgres",
@@ -55,7 +53,9 @@ VALUES
 
     const { rows: existingDbs } = await masterPool.query(
       `
-SELECT 1 FROM pg_database WHERE datname = $1
+SELECT 1 
+FROM pg_database 
+WHERE datname = $1
 `,
       [DUMP_TEST_DB],
     );
@@ -87,7 +87,8 @@ SELECT 1 FROM pg_database WHERE datname = $1
     restorePool = restorePoolRes.data;
 
     const { rows: result } = await restorePool.query(`
-SELECT email FROM users
+SELECT email 
+FROM users
 `);
     const expectedEmails = ["test1@test.com", "test2@test.com"];
 
@@ -110,7 +111,9 @@ SELECT email FROM users
     if (masterPool) {
       const { rows: existingDbs } = await masterPool.query(
         `
-SELECT 1 FROM pg_database WHERE datname = $1
+SELECT 1 
+FROM pg_database 
+WHERE datname = $1
 `,
         [DUMP_TEST_DB],
       );

@@ -25,8 +25,7 @@ export async function createPgDatabase(
 
   try {
     console.log(
-      "%s to PostgreSQL, host: %s, database: %s",
-      chalk.bold.green("Checking"),
+      "Connecting to PostgreSQL, host: %s, database: %s",
       config.host,
       config.database,
     );

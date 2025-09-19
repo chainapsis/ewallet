@@ -1,4 +1,5 @@
 import path from "path";
+import chalk from "chalk";
 import { fileURLToPath } from "url";
 import swaggerJSDoc, { type SwaggerDefinition } from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
@@ -9,7 +10,7 @@ import { schemas } from "./schema";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const apis = (function () {
+const apis = (function() {
   const ksNodeApi = path.resolve(__dirname, "../routes/**/*.ts");
 
   const paths = [ksNodeApi];
@@ -41,7 +42,7 @@ const swaggerDefinition: SwaggerDefinition = {
 };
 
 export function installSwaggerDocs(app: Express) {
-  console.log("Installing Swagger docs, apis: %j", apis);
+  console.log("Serving Swagger docs, apis: %j", apis);
 
   const options = {
     swaggerDefinition,

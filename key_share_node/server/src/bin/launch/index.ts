@@ -24,7 +24,7 @@ function parseCLIArgs() {
 
 async function main() {
   const opts = parseCLIArgs();
-  console.log("CLI opts: %j", opts);
+  console.log("Launching ks node server, cli args: %j", opts);
 
   const loadEnvRes = loadEnv(opts.nodeId);
   if (!loadEnvRes.success) {
@@ -103,7 +103,11 @@ async function main() {
   );
 
   app.listen(process.env.PORT, () => {
-    console.log(`Server listening on port: %s`, process.env.PORT);
+    console.log(
+      "%s server, listening on port: %s",
+      chalk.bold.green("Start"),
+      process.env.PORT,
+    );
   });
 
   return;
