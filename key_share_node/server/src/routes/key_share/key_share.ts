@@ -97,7 +97,7 @@ export function setKeysharesRoutes(router: Router) {
       res: Response<KSNodeApiResponse<void>>,
     ) => {
       const googleUser = res.locals.google_user;
-      const state = req.app.locals as any;
+      const state = req.app.locals;
       const body = req.body;
 
       const publicKeyBytesRes = Bytes.fromHexString(body.public_key, 33);

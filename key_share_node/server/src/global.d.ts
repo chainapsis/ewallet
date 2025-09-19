@@ -1,3 +1,5 @@
+import type { ServerState } from "./state";
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -12,6 +14,10 @@ declare global {
       ADMIN_PASSWORD: string;
     }
   }
+
+  namespace Express {
+    interface Locals extends ServerState { }
+  }
 }
 
-export {};
+export { };

@@ -4,7 +4,7 @@ import { createPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { makeApp } from "@keplr-ewallet-ksn-server/app";
 import { loadEnv, verifyEnv } from "@keplr-ewallet-ksn-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
-import { loadEncSecret } from "@keplr-ewallet-ksn-server/bin/load_enc_secret";
+import { loadEncSecret } from "./load_enc_secret";
 import { launchHealthCheck } from "./health_check";
 
 const ONE_DAY_MS = 1 * 86400;
@@ -78,7 +78,7 @@ async function main() {
 
   app.locals = {
     db: createPostgresRes.data,
-    env,
+    // env,
     encryptionSecret: loadEncSecretRes.data,
   };
 
