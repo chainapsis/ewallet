@@ -79,8 +79,13 @@ describe("pg_dump_route_test", () => {
   });
 
   describe("POST /pg_dump/v1/", () => {
+    it("power123123", async () => {
+      console.log(123123);
+    });
+
     it("should successfully create pg dump with valid password", async () => {
       console.log(123123);
+
       const response = await request(app)
         .post("/pg_dump/v1/")
         .send({ password: testAdminPassword })
