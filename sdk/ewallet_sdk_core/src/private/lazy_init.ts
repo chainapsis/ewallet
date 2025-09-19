@@ -67,8 +67,8 @@ async function checkURL(url: string): Promise<Result<string, string>> {
   }
 }
 
-// Wait for the document to load then give the processor sometime to load
-// iframe (one-tick)
+// Wait for the document to load then give the processor one-tick to load
+// iframe
 async function waitUntilDocumentLoad() {
   return new Promise((resolve) => {
     if (document.readyState === "complete") {

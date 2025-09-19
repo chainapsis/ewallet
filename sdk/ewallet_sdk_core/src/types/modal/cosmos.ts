@@ -4,19 +4,19 @@ import type { KeplrSignOptions } from "@keplr-wallet/types";
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 import type { ChainInfoForAttachedModal } from "./common";
 
-export type MakeCosmosSignType = "tx" | "arbitrary";
+export type MakeCosmosSigData = CosmosTxSigData | CosmosArbitrarySigData;
 
-export type MakeCosmosSigData =
-  | {
-    chain_type: "cosmos";
-    sign_type: "tx";
-    payload: CosmosTxSignPayload;
-  }
-  | {
-    chain_type: "cosmos";
-    sign_type: "arbitrary";
-    payload: CosmosArbitrarySignPayload;
-  };
+export interface CosmosTxSigData {
+  chain_type: "cosmos";
+  sign_type: "tx";
+  payload: CosmosTxSignPayload;
+}
+
+export interface CosmosArbitrarySigData {
+  chain_type: "cosmos";
+  sign_type: "arbitrary";
+  payload: CosmosArbitrarySignPayload;
+}
 
 export type CosmosTxSignPayload =
   | CosmosTxSignDirectPayload
