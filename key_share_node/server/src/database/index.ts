@@ -1,4 +1,5 @@
 import { Pool, type PoolClient } from "pg";
+import chalk from "chalk";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export type PgDatabaseConfig = {
@@ -17,14 +18,15 @@ export async function createPgDatabase(
     ...config,
     ssl: config.ssl
       ? {
-          rejectUnauthorized: false,
-        }
+        rejectUnauthorized: false,
+      }
       : undefined,
   };
 
   try {
     console.log(
-      "Connecting to PostgreSQL... host: %s, database: %s",
+      "%s to PostgreSQL, host: %s, database: %s",
+      chalk.bold.green("Checking"),
       config.host,
       config.database,
     );
@@ -33,16 +35,19 @@ export async function createPgDatabase(
 
     // Test connection
     const { rows: result } = await pool.query("SELECT NOW()");
-    console.log("Connected to PostgreSQL, server time: %o", result);
+    console.log(
+      "%s to PostgreSQL, server time: %o",
+      chalk.bold.green("Connected"),
+      result,
+    );
 
     return { success: true, data: pool };
   } catch (error) {
     console.error("Failed to connect to PostgreSQL: %s", error);
     return {
       success: false,
-      err: `Failed to connect to PostgreSQL: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
+      err: `Failed to connect to PostgreSQL: ${error instanceof Error ? error.message : String(error)
+        }`,
     };
   }
 }

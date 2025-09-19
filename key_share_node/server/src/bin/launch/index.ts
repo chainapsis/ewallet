@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { program } from "commander";
 
 import { createPgDatabase } from "@keplr-ewallet-ksn-server/database";
@@ -56,7 +57,12 @@ async function main() {
     env.DUMP_DIR,
   );
   if (!healthCheckRes.success) {
-    console.error("Launch health check failed, err: %s", healthCheckRes.err);
+    console.error(
+      "%s: Health check failed, exiting process, err: %s",
+      chalk.bold.red("Error"),
+      healthCheckRes.err,
+    );
+
     process.exit(1);
   }
 
