@@ -81,6 +81,7 @@ async function migrateAll(useEnv: boolean) {
       console.log(`Dropping tables in db (${pgConfig.database})...`);
       await dropAllTablesIfExist(pool);
       await createTables(pool);
+      await pool.end();
     }
   }
 }
@@ -89,14 +90,14 @@ async function migrateOne(useEnv: boolean) {
   const pgConfig: PgDatabaseConfig = useEnv
     ? loadEnvs(NODE_ID)
     : {
-        database:
-          NODE_ID === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${NODE_ID}`,
-        user: "postgres",
-        password: "postgres",
-        host: "localhost",
-        port: 5432,
-        ssl: false,
-      };
+      database:
+        NODE_ID === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${NODE_ID}`,
+      user: "postgres",
+      password: "postgres",
+      host: "localhost",
+      port: 5432,
+      ssl: false,
+    };
 
   await createDBIfNotExists(
     { ...pgConfig, database: "postgres" },
