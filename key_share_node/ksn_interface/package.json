@@ -18,6 +18,10 @@
       "import": "./dist/response.js",
       "types": "./dist/response.d.ts"
     },
+    "./status": {
+      "import": "./dist/status.js",
+      "types": "./dist/status.d.ts"
+    },
     "./user": {
       "import": "./dist/user.js",
       "types": "./dist/user.d.ts"
