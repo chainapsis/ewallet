@@ -48,7 +48,7 @@ export async function signArbitrary(
 
     const openModalResp = await this.openModal(msg);
 
-    if (openModalResp.modal_type !== "make_signature") {
+    if (openModalResp.modal_type !== "cosmos/make_signature") {
       throw new Error("Invalid modal type response");
     }
 

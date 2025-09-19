@@ -1,5 +1,7 @@
 import type {
   EventEmitter3,
+  KeplrEwalletInitArgs,
+  KeplrEwalletInitError,
   KeplrEWalletInterface,
   MakeCosmosSigData,
   OpenModalAckPayload,
@@ -28,12 +30,22 @@ import type {
   KeplrEWalletCosmosEventHandler2,
 } from "./event";
 import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
-import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
+import type {
+  CosmosEwalletInitError,
+  LazyInitError,
+} from "@keplr-ewallet-sdk-cosmos/errors";
 import type { ArbitrarySigVerificationResult } from "@keplr-ewallet-sdk-cosmos/methods/verify_arbitrary";
 
 export interface CosmosEWalletState {
   publicKey: Uint8Array | null;
   publicKeyRaw: string | null;
+}
+
+export interface CosmosEWalletStaticInterface {
+  new (eWallet: KeplrEWalletInterface): void;
+  init: (
+    args: KeplrEwalletInitArgs,
+  ) => Result<CosmosEWalletInterface, CosmosEwalletInitError>;
 }
 
 export interface CosmosEWalletInterface {

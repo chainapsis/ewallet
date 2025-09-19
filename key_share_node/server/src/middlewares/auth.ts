@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
+import type { KSNodeApiErrorResponse } from "@keplr-ewallet/ksn-interface/response";
 
 import { validateOAuthToken } from "../auth";
+import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
 
 export interface AuthenticatedRequest<T = any> extends Request {
   user?: {
@@ -19,9 +21,12 @@ export async function bearerTokenMiddleware(
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res
-      .status(401)
-      .json({ error: "Authorization header with Bearer token required" });
+    const errorRes: KSNodeApiErrorResponse = {
+      success: false,
+      code: "UNAUTHORIZED",
+      msg: "Authorization header with Bearer token required",
+    };
+    res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
     return;
   }
 
@@ -31,21 +36,32 @@ export async function bearerTokenMiddleware(
     const result = await validateOAuthToken(idToken);
 
     if (!result.success) {
-      res.status(401).json({ error: result.err || "Invalid token" });
+      const errorRes: KSNodeApiErrorResponse = {
+        success: false,
+        code: "UNAUTHORIZED",
+        msg: result.err || "Invalid token",
+      };
+      res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       return;
     }
 
     if (!result.data) {
-      res.status(500).json({
-        error: "Internal server error: Token info missing after validation",
-      });
+      const errorRes: KSNodeApiErrorResponse = {
+        success: false,
+        code: "UNKNOWN_ERROR",
+        msg: "Token info missing after validation",
+      };
+      res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       return;
     }
 
     if (!result.data.email || !result.data.sub || !result.data.name) {
-      res.status(401).json({
-        error: "Unauthorized: Invalid token",
-      });
+      const errorRes: KSNodeApiErrorResponse = {
+        success: false,
+        code: "UNAUTHORIZED",
+        msg: "Invalid token",
+      };
+      res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       return;
     }
 
@@ -58,7 +74,12 @@ export async function bearerTokenMiddleware(
     next();
     return;
   } catch (error) {
-    res.status(500).json({ error: "Token validation failed" });
+    const errorRes: KSNodeApiErrorResponse = {
+      success: false,
+      code: "UNKNOWN_ERROR",
+      msg: "Token validation failed",
+    };
+    res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
     return;
   }
 }

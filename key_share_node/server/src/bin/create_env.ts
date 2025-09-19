@@ -45,6 +45,25 @@ function copyEnv(envFileName: string, exampleEnvFileName: string) {
   fs.copyFileSync(envExamplePath, envPath);
 
   const env = fs.readFileSync(envPath).toString();
+
+  const encryptionSecretPathMatch = env.match(/ENCRYPTION_SECRET_PATH=(.*)/);
+  if (encryptionSecretPathMatch) {
+    const homeDir = os.homedir();
+    const encryptionSecretPath = encryptionSecretPathMatch[1]
+      .replace(/"/g, "")
+      .replace(/\$HOME/g, homeDir)
+      .replace(/^~/, homeDir);
+
+    const encryptionSecretDir = path.dirname(encryptionSecretPath);
+
+    if (!fs.existsSync(encryptionSecretDir)) {
+      fs.mkdirSync(encryptionSecretDir, { recursive: true });
+    }
+
+    fs.writeFileSync(encryptionSecretPath, "temp_enc_secret");
+    console.log("Created encryption secret file: %s", encryptionSecretPath);
+  }
+
   console.log("%s", env);
 
   console.log("Create env done!, path: %s", envPath);

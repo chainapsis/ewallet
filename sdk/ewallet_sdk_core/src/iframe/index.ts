@@ -26,11 +26,31 @@ export function setUpIframeElement(
 
   const bodyEl = bodyEls[0];
 
-  console.debug("[keplr] appending iframe");
+  console.debug("[keplr] setting up iframe");
 
-  // iframe setup
   const iframe = document.createElement("iframe");
+
+  if (document.readyState === "complete") {
+    loadIframe(iframe, bodyEl, url);
+  } else {
+    window.addEventListener("load", () => loadIframe(iframe, bodyEl, url));
+  }
+
+  return { success: true, data: iframe };
+}
+
+function loadIframe(
+  iframe: HTMLIFrameElement,
+  bodyEl: HTMLBodyElement,
+  url: URL,
+) {
+  console.log("[keplr] loading iframe");
+
   iframe.src = url.toString();
+
+  // NOTE: If not loading at the startup, there is no way to initialize the app
+  // since its visibility is hidden from the viewport.
+  iframe.loading = "eager";
 
   // iframe style
   iframe.id = KEPLR_IFRAME_ID;
@@ -45,13 +65,5 @@ export function setUpIframeElement(
   iframe.style.overflow = "hidden";
   iframe.style.zIndex = "1000000";
 
-  // iframe.setAttribute(
-  //   "sandbox",
-  //   "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox",
-  // );
-
-  // attach
   bodyEl.appendChild(iframe);
-
-  return { success: true, data: iframe };
 }

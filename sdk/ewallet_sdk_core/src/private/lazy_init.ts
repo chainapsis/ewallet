@@ -1,16 +1,17 @@
+import type { Result } from "@keplr-ewallet/stdlib-js";
+
+import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/iframe";
 import { registerMsgListener } from "@keplr-ewallet-sdk-core/window_msg/listener";
 import type {
   KeplrEWalletInterface,
   KeplrEWalletState,
 } from "@keplr-ewallet-sdk-core/types";
-import type { Result } from "@keplr-ewallet/stdlib-js";
-
-import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/iframe";
 
 export async function lazyInit(
   eWallet: KeplrEWalletInterface,
 ): Promise<Result<KeplrEWalletState, string>> {
-  // If keplr_ewallet is initialized, iframe should exist
+  await waitUntilDocumentLoad();
+
   const el = document.getElementById(KEPLR_IFRAME_ID);
   if (el === null) {
     return {
@@ -64,4 +65,22 @@ async function checkURL(url: string): Promise<Result<string, string>> {
 
     return { success: false, err: `check url fail, ${err.toString()}` };
   }
+}
+
+// Wait for the document to load then give the processor one-tick to load
+// iframe
+async function waitUntilDocumentLoad() {
+  return new Promise((resolve) => {
+    if (document.readyState === "complete") {
+      Promise.resolve().then(() => {
+        resolve(0);
+      });
+    } else {
+      window.addEventListener("load", () => {
+        Promise.resolve().then(() => {
+          resolve(0);
+        });
+      });
+    }
+  });
 }

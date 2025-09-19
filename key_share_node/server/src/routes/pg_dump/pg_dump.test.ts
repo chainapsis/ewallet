@@ -1,3 +1,5 @@
+import { join } from "node:path";
+import os from "node:os";
 import request from "supertest";
 import express from "express";
 import { Pool } from "pg";
@@ -13,9 +15,11 @@ import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import { setPgDumpRoutes } from "@keplr-ewallet-ksn-server/routes/pg_dump/pg_dump";
 
 describe("pg_dump_route_test", () => {
+  const testAdminPassword = "test_admin_password";
+  const dumpDir = join(os.homedir(), "keplr_ewallet_data");
+
   let pool: Pool;
   let app: express.Application;
-  const testAdminPassword = "test_admin_password";
 
   beforeAll(async () => {
     const config = testPgConfig;
@@ -51,6 +55,7 @@ describe("pg_dump_route_test", () => {
         DB_PASSWORD: testPgConfig.password,
         DB_USER: testPgConfig.user,
         DB_PORT: testPgConfig.port,
+        DUMP_DIR: dumpDir,
       },
     };
   });
@@ -148,6 +153,7 @@ describe("pg_dump_route_test", () => {
           DB_PASSWORD: testPgConfig.password,
           DB_USER: testPgConfig.user,
           DB_PORT: testPgConfig.port,
+          DUMP_DIR: dumpDir,
         },
       };
 
@@ -191,6 +197,7 @@ describe("pg_dump_route_test", () => {
           DB_PASSWORD: "wrong_password",
           DB_USER: testPgConfig.user,
           DB_PORT: testPgConfig.port,
+          DUMP_DIR: dumpDir,
         },
       };
 
@@ -381,6 +388,7 @@ describe("pg_dump_route_test", () => {
           DB_PASSWORD: testPgConfig.password,
           DB_USER: testPgConfig.user,
           DB_PORT: testPgConfig.port,
+          DUMP_DIR: dumpDir,
         },
       };
 
@@ -668,6 +676,7 @@ describe("pg_dump_route_test", () => {
           DB_PASSWORD: testPgConfig.password,
           DB_USER: testPgConfig.user,
           DB_PORT: testPgConfig.port,
+          DUMP_DIR: dumpDir,
         },
       };
 
@@ -703,6 +712,7 @@ describe("pg_dump_route_test", () => {
           DB_PASSWORD: "wrong_password",
           DB_USER: testPgConfig.user,
           DB_PORT: testPgConfig.port,
+          DUMP_DIR: dumpDir,
         },
       };
 

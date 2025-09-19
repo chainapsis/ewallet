@@ -1,5 +1,3 @@
-import { join } from "node:path";
-import os from "node:os";
 import fs from "node:fs/promises";
 import type { Pool } from "pg";
 import type { Result } from "@keplr-ewallet/stdlib-js";
@@ -14,8 +12,6 @@ import {
 
 import { getSecondsFromNow } from "@keplr-ewallet-ksn-server/utils";
 
-const DUMP_DIR = join(os.homedir(), "keplr_ewallet_data");
-
 export interface PgDumpResult {
   dumpId: string;
   dumpPath: string;
@@ -26,6 +22,7 @@ export interface PgDumpResult {
 export async function processPgDump(
   pool: Pool,
   pgConfig: PgDumpConfig,
+  dumpDir: string,
 ): Promise<Result<PgDumpResult, string>> {
   try {
     const createPgDumpRes = await createPgDump(pool);
@@ -39,7 +36,7 @@ export async function processPgDump(
 
     const start = Date.now();
 
-    const dumpResult = await dump(pgConfig, DUMP_DIR);
+    const dumpResult = await dump(pgConfig, dumpDir);
     if (dumpResult.success === false) {
       await updatePgDump(pool, pgDump.dump_id, "FAILED", null, {
         error: dumpResult.err,

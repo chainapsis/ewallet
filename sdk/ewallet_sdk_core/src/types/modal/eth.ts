@@ -2,6 +2,11 @@ import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
 
 import type { ChainInfoForAttachedModal } from "./common";
 
+export interface MakeEthSigModalResult {
+  chain_type: "eth";
+  sig_result: MakeEthereumSigResult;
+}
+
 export type MakeEthereumSigData =
   | MakeTxSignSigData
   | MakeArbitrarySigData

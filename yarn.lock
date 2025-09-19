@@ -3098,12 +3098,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/bytes@npm:^0.0.3-alpha.35, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
+"@keplr-ewallet/bytes@npm:^0.0.3-alpha.36, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/bytes@workspace:crypto/bytes"
   dependencies:
     "@jest/globals": "npm:*"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.18"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
@@ -3134,7 +3134,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/dotenv@workspace:lib/dotenv"
   dependencies:
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.18"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
@@ -3160,11 +3160,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.80, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
+"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.87, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core"
   dependencies:
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.18"
     "@keplr-wallet/types": "npm:^0.12.257"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
@@ -3209,8 +3209,8 @@ __metadata:
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.80"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.87"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.18"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
     "@noble/curves": "npm:^2.0.0"
@@ -3241,8 +3241,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth"
   dependencies:
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.80"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
+    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.87"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.18"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
     "@rollup/plugin-terser": "npm:*"
@@ -3277,6 +3277,7 @@ __metadata:
     "@keplr-ewallet/stdlib-js": "workspace:*"
     "@types/cors": "npm:^2.8.17"
     "@types/express": "npm:^4.17.20"
+    "@types/express-rate-limit": "npm:^6.0.2"
     "@types/jest": "npm:^29.5.13"
     "@types/morgan": "npm:^1.9.9"
     "@types/node": "npm:^22.7.5"
@@ -3291,6 +3292,7 @@ __metadata:
     cors: "npm:^2.8.5"
     dotenv: "npm:^16.4.5"
     express: "npm:^4.21.1"
+    express-rate-limit: "npm:^8.0.1"
     helmet: "npm:^8.0.0"
     jest: "npm:*"
     morgan: "npm:^1.10.0"
@@ -3309,7 +3311,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/ksn-interface@workspace:key_share_node/ksn_interface"
   dependencies:
-    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.35"
+    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.36"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3351,7 +3353,7 @@ __metadata:
     "@guildofweavers/galois": "npm:^0.4.22"
     "@jest/globals": "npm:*"
     "@keplr-ewallet/bytes": "workspace:*"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.17"
+    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.18"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
@@ -3361,7 +3363,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/stdlib-js@npm:^0.0.2-rc.17, @keplr-ewallet/stdlib-js@npm:^0.0.2-rc.6, @keplr-ewallet/stdlib-js@workspace:*, @keplr-ewallet/stdlib-js@workspace:lib/stdlib_js":
+"@keplr-ewallet/stdlib-js@npm:^0.0.2-rc.18, @keplr-ewallet/stdlib-js@npm:^0.0.2-rc.6, @keplr-ewallet/stdlib-js@workspace:*, @keplr-ewallet/stdlib-js@workspace:lib/stdlib_js":
   version: 0.0.0-use.local
   resolution: "@keplr-ewallet/stdlib-js@workspace:lib/stdlib_js"
   dependencies:
@@ -7424,6 +7426,15 @@ __metadata:
   version: 1.0.8
   resolution: "@types/estree@npm:1.0.8"
   checksum: 10c0/39d34d1afaa338ab9763f37ad6066e3f349444f9052b9676a7cc0252ef9485a41c6d81c9c4e0d26e9077993354edf25efc853f3224dd4b447175ef62bdcc86a5
+  languageName: node
+  linkType: hard
+
+"@types/express-rate-limit@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "@types/express-rate-limit@npm:6.0.2"
+  dependencies:
+    express-rate-limit: "npm:*"
+  checksum: 10c0/079dcea4a65242e7777ffd36e336dc86762988eb91534d8c691e0d2856bb12e5c28d5b8812641f51e2f86bdd2994da23b7cff683453cf20d78501bd0b13a70ba
   languageName: node
   linkType: hard
 
@@ -12131,6 +12142,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"express-rate-limit@npm:*, express-rate-limit@npm:^8.0.1":
+  version: 8.1.0
+  resolution: "express-rate-limit@npm:8.1.0"
+  dependencies:
+    ip-address: "npm:10.0.1"
+  peerDependencies:
+    express: ">= 4.11"
+  checksum: 10c0/3bb7aa646f9b79ce4e8e0a683d1c200b5d393fed60c3ecda13748fc351a9ee822436e9eeb2cbb2f5da4aae2f94fe4aafad9b679468861a8cc2bb9cd812bc102b
+  languageName: node
+  linkType: hard
+
 "express@npm:^4.21.1":
   version: 4.21.2
   resolution: "express@npm:4.21.2"
@@ -13502,7 +13524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip-address@npm:^10.0.1":
+"ip-address@npm:10.0.1, ip-address@npm:^10.0.1":
   version: 10.0.1
   resolution: "ip-address@npm:10.0.1"
   checksum: 10c0/1634d79dae18394004775cb6d699dc46b7c23df6d2083164025a2b15240c1164fccde53d0e08bd5ee4fc53913d033ab6b5e395a809ad4b956a940c446e948843

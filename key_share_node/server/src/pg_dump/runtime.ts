@@ -5,6 +5,7 @@ import { sleep } from "@keplr-ewallet-ksn-server/utils";
 import { deleteOldPgDumps, processPgDump } from "./dump";
 
 export interface PgDumpRuntimeOptions {
+  dumpDir: string;
   sleepTimeSeconds: number;
   retentionDays: number;
 }
@@ -20,7 +21,11 @@ export async function startPgDumpRuntime(
   while (true) {
     await sleep(sleepTime);
 
-    const processPgDumpRes = await processPgDump(pool, pgConfig);
+    const processPgDumpRes = await processPgDump(
+      pool,
+      pgConfig,
+      pgDumpRuntimeOptions.dumpDir,
+    );
     if (processPgDumpRes.success === false) {
       console.error("Error processing pg dump:", processPgDumpRes.err);
     } else {

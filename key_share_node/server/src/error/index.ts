@@ -1,15 +1,20 @@
-export type ErrorCode =
-  | "UNKNOWN_ERROR"
-  | "DUPLICATE_PUBLIC_KEY"
-  | "USER_NOT_FOUND"
-  | "WALLET_NOT_FOUND"
-  | "UNAUTHORIZED"
-  | "KEY_SHARE_NOT_FOUND"
-  | "ID_TOKEN_INVALID"
-  | "ID_TOKEN_MISMATCHED"
-  | "PUBLIC_KEY_INVALID";
+import type { KSNodeApiErrorCode } from "@keplr-ewallet/ksn-interface/response";
 
-export interface ErrorResponse {
-  code: ErrorCode;
-  message: string;
-}
+export const ErrorCodeMap: Record<KSNodeApiErrorCode, number> = {
+  UNKNOWN_ERROR: 500,
+  DUPLICATE_PUBLIC_KEY: 409,
+  USER_NOT_FOUND: 404,
+  WALLET_NOT_FOUND: 404,
+  UNAUTHORIZED: 401,
+  KEY_SHARE_NOT_FOUND: 404,
+  PUBLIC_KEY_INVALID: 400,
+  SHARE_INVALID: 400,
+  PG_DUMP_FAILED: 500,
+  INVALID_DAYS: 400,
+  INVALID_DUMP_PATH: 400,
+  INVALID_DUMP_FILE: 400,
+  DUMP_FILE_ACCESS_ERROR: 400,
+  PG_RESTORE_FAILED: 500,
+  DUMP_FILE_NOT_FOUND: 400,
+  RATE_LIMIT_EXCEEDED: 429,
+};

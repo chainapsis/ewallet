@@ -4,7 +4,6 @@ use rand_core::OsRng;
 use rand_core::RngCore;
 
 use crate::sss::keyshares::KeysharePoints;
-use crate::sss::split::split;
 use crate::sss::{combine::combine, combine::lagrange_coefficient, point::Point256, split};
 
 #[test]

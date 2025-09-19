@@ -1,12 +1,13 @@
 import type { ChainInfo } from "@keplr-wallet/types";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { OpenModalAckPayload, OpenModalPayload } from "./modal";
-import type { InitPayload } from "./init";
-import type { OAuthSignInError } from "./sign_in";
-import type { OAuthResultPayload } from "./oauth";
-
-export type MsgTarget = "keplr_ewallet_attached" | "keplr_ewallet_sdk_core";
+import type {
+  OpenModalAckPayload,
+  OpenModalPayload,
+} from "@keplr-ewallet-sdk-core/types/modal";
+import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
+import type { OAuthSignInError } from "@keplr-ewallet-sdk-core/types/sign_in";
+import type { OAuthPayload } from "@keplr-ewallet-sdk-core/types/oauth";
 
 export type EWalletMsgGetPublicKey = {
   target: "keplr_ewallet_attached";
@@ -32,27 +33,27 @@ export type EWalletMsgSetOAuthNonceAck = {
   payload: Result<null, string>;
 };
 
-export type EWalletMsgOAuthSignIn = {
-  target: "keplr_ewallet_attached";
-  msg_type: "oauth_sign_in";
-  payload: OAuthResultPayload;
-};
-
-export type EWalletMsgOAuthSignInAck = {
+export type EWalletMsgOAuthSignInUpdate = {
   target: "keplr_ewallet_sdk";
-  msg_type: "oauth_sign_in_ack";
+  msg_type: "oauth_sign_in_update";
   payload: Result<null, OAuthSignInError>;
 };
 
-export type EWalletMsgOAuthSignInResult = {
-  target: "keplr_ewallet_sdk";
-  msg_type: "oauth_sign_in_result";
-  payload: Result<OAuthResultPayload, OAuthSignInError>;
+export type EWalletMsgOAuthSignInUpdateAck = {
+  target: "keplr_ewallet_attached";
+  msg_type: "oauth_sign_in_update_ack";
+  payload: null;
 };
 
-export type EWalletMsgOAuthSignInResultAck = {
+export type EWalletMsgOAuthInfoPass = {
   target: "keplr_ewallet_attached";
-  msg_type: "oauth_sign_in_result_ack";
+  msg_type: "oauth_info_pass";
+  payload: OAuthPayload;
+};
+
+export type EWalletMsgOAuthInfoPassAck = {
+  target: "keplr_ewallet_attached_popup";
+  msg_type: "oauth_info_pass_ack";
   payload: null;
 };
 
@@ -93,13 +94,13 @@ export type EWalletMsgHideModalAck = {
 };
 
 export type EWalletMsgInit = {
-  target: "keplr_ewallet_attached";
+  target: "keplr_ewallet_sdk";
   msg_type: "init";
   payload: Result<InitPayload, string>;
 };
 
 export type EWalletMsgInitAck = {
-  target: "keplr_ewallet_sdk";
+  target: "keplr_ewallet_attached";
   msg_type: "init_ack";
   payload: Result<null, string>;
 };
@@ -137,10 +138,10 @@ export type EWalletMsg =
   | EWalletMsgGetPublicKeyAck
   | EWalletMsgSetOAuthNonce
   | EWalletMsgSetOAuthNonceAck
-  | EWalletMsgOAuthSignIn
-  | EWalletMsgOAuthSignInAck
-  | EWalletMsgOAuthSignInResult
-  | EWalletMsgOAuthSignInResultAck
+  | EWalletMsgOAuthSignInUpdate
+  | EWalletMsgOAuthSignInUpdateAck
+  | EWalletMsgOAuthInfoPass
+  | EWalletMsgOAuthInfoPassAck
   | EWalletMsgSignOut
   | EWalletMsgSignOutAck
   | EWalletMsgOpenModal
@@ -149,7 +150,6 @@ export type EWalletMsg =
   | EWalletMsgHideModalAck
   | EWalletMsgGetEmail
   | EWalletMsgGetEmailAck
-  // TODO: @elden
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
   | {

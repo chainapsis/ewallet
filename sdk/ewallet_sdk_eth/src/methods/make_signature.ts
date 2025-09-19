@@ -135,7 +135,7 @@ async function handleSigningFlow(
       target: "keplr_ewallet_attached",
       msg_type: "open_modal",
       payload: {
-        modal_type: "make_signature",
+        modal_type: "eth/make_signature",
         modal_id,
         data,
       },
@@ -143,7 +143,7 @@ async function handleSigningFlow(
 
     const openModalResp = await eWallet.openModal(openModalMsg);
 
-    if (openModalResp.modal_type !== "make_signature") {
+    if (openModalResp.modal_type !== "eth/make_signature") {
       throw new Error("Invalid modal type response");
     }
 

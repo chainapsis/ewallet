@@ -3,7 +3,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "version": "0.0.2-alpha.2",
+  "version": "0.0.2-alpha.3",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
@@ -22,7 +22,7 @@
   "dependencies": {
     "@guildofweavers/galois": "^0.4.22",
     "@keplr-ewallet/bytes": "workspace:*",
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.17"
+    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.18"
   },
   "devDependencies": {
     "@jest/globals": "*",

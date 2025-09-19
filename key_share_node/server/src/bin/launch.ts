@@ -2,8 +2,9 @@ import { program } from "commander";
 
 import { createPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { makeApp } from "@keplr-ewallet-ksn-server/app";
-import { loadEnv, verifyEnv } from "@keplr-ewallet-ksn-server/envs";
+import { loadEnv, verifyAndExpandEnv } from "@keplr-ewallet-ksn-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
+import { loadEncSecret } from "@keplr-ewallet-ksn-server/bin/load_enc_secret";
 
 const ONE_DAY_MS = 1 * 86400;
 
@@ -28,13 +29,20 @@ async function main() {
     console.warn("ENV didn't exist, but we will continue");
   }
 
-  const verifyEnvRes = verifyEnv(process.env);
+  const verifyEnvRes = verifyAndExpandEnv(process.env);
   if (!verifyEnvRes.success) {
     console.error("ENV variables invalid, err: %s", verifyEnvRes.err);
     process.exit(1);
   }
 
-  const { env } = process;
+  const env = verifyEnvRes.data;
+
+  const loadEncSecretRes = loadEncSecret(env.ENCRYPTION_SECRET_PATH);
+  if (!loadEncSecretRes.success) {
+    console.error("Encryption secret invalid, err: %s", loadEncSecretRes.err);
+    process.exit(1);
+  }
+
   const createPostgresRes = await createPgDatabase({
     database: env.DB_NAME,
     host: env.DB_HOST,
@@ -54,6 +62,7 @@ async function main() {
   app.locals = {
     db: createPostgresRes.data,
     env,
+    encryptionSecret: loadEncSecretRes.data,
   };
 
   startPgDumpRuntime(
@@ -68,6 +77,7 @@ async function main() {
     {
       sleepTimeSeconds: ONE_DAY_MS, // 1 day
       retentionDays: 7,
+      dumpDir: env.DUMP_DIR,
     },
   );
 

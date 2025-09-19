@@ -4,39 +4,44 @@ import type { KeplrSignOptions } from "@keplr-wallet/types";
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 import type { ChainInfoForAttachedModal } from "./common";
 
-export type MakeCosmosSignType = "tx" | "arbitrary";
+export type MakeCosmosSigData = CosmosTxSigData | CosmosArbitrarySigData;
 
-export type MakeCosmosSigData =
-  | {
-      chain_type: "cosmos";
-      sign_type: "tx";
-      payload: CosmosTxSignPayload;
-    }
-  | {
-      chain_type: "cosmos";
-      sign_type: "arbitrary";
-      payload: CosmosArbitrarySignPayload;
-    };
+export interface MakeCosmosSigModalResult {
+  chain_type: "cosmos";
+  sig_result: MakeCosmosSigResult;
+}
+
+export interface CosmosTxSigData {
+  chain_type: "cosmos";
+  sign_type: "tx";
+  payload: CosmosTxSignPayload;
+}
+
+export interface CosmosArbitrarySigData {
+  chain_type: "cosmos";
+  sign_type: "arbitrary";
+  payload: CosmosArbitrarySignPayload;
+}
 
 export type CosmosTxSignPayload =
   | CosmosTxSignDirectPayload
   | CosmosTxSignAminoPayload;
 
-type CosmosTxSignDirectPayload = {
+export interface CosmosTxSignDirectPayload {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
   signDoc: SignDoc;
   signOptions?: KeplrSignOptions;
-};
+}
 
-type CosmosTxSignAminoPayload = {
+export interface CosmosTxSignAminoPayload {
   origin: string;
   chain_info: ChainInfoForAttachedModal;
   signer: string;
   signDoc: StdSignDoc;
   signOptions?: KeplrSignOptions;
-};
+}
 
 export type CosmosArbitrarySignPayload = {
   chain_info: ChainInfoForAttachedModal;
@@ -46,7 +51,6 @@ export type CosmosArbitrarySignPayload = {
   origin: string;
 };
 
-// TODO: define the response type for cosmos signature
 export type MakeCosmosSigResult = {
   signature: StdSignature;
   signed: StdSignDoc | SignDoc;
