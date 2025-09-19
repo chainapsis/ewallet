@@ -5,6 +5,7 @@ import { makeApp } from "@keplr-ewallet-ksn-server/app";
 import { loadEnv, verifyAndExpandEnv } from "@keplr-ewallet-ksn-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
 import { loadEncSecret } from "@keplr-ewallet-ksn-server/bin/load_enc_secret";
+import { launchHealthCheck } from "./health_check";
 
 const ONE_DAY_MS = 1 * 86400;
 
@@ -40,6 +41,22 @@ async function main() {
   const loadEncSecretRes = loadEncSecret(env.ENCRYPTION_SECRET_PATH);
   if (!loadEncSecretRes.success) {
     console.error("Encryption secret invalid, err: %s", loadEncSecretRes.err);
+    process.exit(1);
+  }
+
+  const healthCheckRes = await launchHealthCheck(
+    {
+      database: env.DB_NAME,
+      host: env.DB_HOST,
+      password: env.DB_PASSWORD,
+      user: env.DB_USER,
+      port: Number(env.DB_PORT),
+      ssl: env.DB_SSL === "true" ? true : false,
+    },
+    env.DUMP_DIR,
+  );
+  if (!healthCheckRes.success) {
+    console.error("Launch health check failed, err: %s", healthCheckRes.err);
     process.exit(1);
   }
 
