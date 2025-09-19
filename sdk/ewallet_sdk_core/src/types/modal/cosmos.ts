@@ -6,6 +6,11 @@ import type { ChainInfoForAttachedModal } from "./common";
 
 export type MakeCosmosSigData = CosmosTxSigData | CosmosArbitrarySigData;
 
+export interface MakeCosmosSigModalResult {
+  chain_type: "cosmos";
+  sig_result: MakeCosmosSigResult;
+}
+
 export interface CosmosTxSigData {
   chain_type: "cosmos";
   sign_type: "tx";
