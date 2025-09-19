@@ -77,6 +77,11 @@ async function main() {
   app.locals = {
     db: createPostgresRes.data,
     encryptionSecret: loadEncSecretRes.data,
+
+    is_db_backup_checked: true,
+    latest_backup_time: null,
+    launch_time: new Date(),
+    git_hash: "<to-be-upgraded>",
   };
 
   startPgDumpRuntime(

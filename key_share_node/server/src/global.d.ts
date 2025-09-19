@@ -13,6 +13,7 @@ declare global {
       ENCRYPTION_SECRET_PATH: string;
       ADMIN_PASSWORD: string;
       DUMP_DIR: string;
+      KS_NODE_PUBLIC_KEY: string;
     }
   }
 
