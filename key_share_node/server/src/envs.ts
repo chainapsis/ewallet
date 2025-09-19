@@ -62,24 +62,11 @@ export function loadEnv(nodeId: string): Result<void, string> {
   return { success: true, data: void 0 };
 }
 
-export function verifyAndExpandEnv(
-  envs: Record<string, any>,
-): Result<Env, string> {
+export function verifyEnv(envs: Record<string, any>): Result<Env, string> {
   const res = envSchema.safeParse(envs);
 
   if (res.success) {
-    const homeDir = os.homedir();
-
-    const processedEnv = {
-      ...res.data,
-      ENCRYPTION_SECRET_PATH: res.data.ENCRYPTION_SECRET_PATH.replace(
-        /^~/,
-        homeDir,
-      ),
-      DUMP_DIR: res.data.DUMP_DIR.replace(/^~/, homeDir),
-    };
-
-    return { success: true, data: processedEnv };
+    return { success: true, data: res.data };
   } else {
     return { success: false, err: z.prettifyError(res.error) };
   }

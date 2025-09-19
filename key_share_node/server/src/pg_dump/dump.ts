@@ -10,7 +10,7 @@ import {
   updatePgDumpStatus,
 } from "@keplr-ewallet/ksn-pg-interface";
 
-import { getSecondsFromNow } from "@keplr-ewallet-ksn-server/utils";
+import { getSecondsFromNow } from "@keplr-ewallet-ksn-server/utils/time";
 
 export interface PgDumpResult {
   dumpId: string;

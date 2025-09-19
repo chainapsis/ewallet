@@ -1,8 +1,10 @@
 import fs from "node:fs";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+import { replaceTildeWithHome } from "@keplr-ewallet-ksn-server/utils/path";
 
-export function loadEncSecret(path: string): Result<string, string> {
+export function loadEncSecret(_path: string): Result<string, string> {
   try {
+    const path = replaceTildeWithHome(_path);
     const encryptionSecret = fs.readFileSync(path, "utf8");
 
     if (encryptionSecret.length === 0) {
