@@ -31,10 +31,7 @@ pub fn split<C: CSCurve>(
 
     let polynomial = Polynomial::<C>::extend_random(&mut rng, t as usize, &constant);
 
-    let truncate_hashes = ks_node_hashes
-        .iter()
-        // .take(t as usize)
-        .collect::<Vec<_>>();
+    let truncate_hashes = ks_node_hashes.iter().collect::<Vec<_>>();
 
     let ks_node_hash_scalars = truncate_hashes
         .iter()
