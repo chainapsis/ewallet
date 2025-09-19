@@ -48,15 +48,16 @@ describe("pg_dump_route_test", () => {
 
     app.locals = {
       db: pool,
-      env: {
-        ADMIN_PASSWORD: testAdminPassword,
-        DB_NAME: testPgConfig.database,
-        DB_HOST: testPgConfig.host,
-        DB_PASSWORD: testPgConfig.password,
-        DB_USER: testPgConfig.user,
-        DB_PORT: testPgConfig.port,
-        DUMP_DIR: dumpDir,
-      },
+      encryptionSecret: "",
+      // env: {
+      //   ADMIN_PASSWORD: testAdminPassword,
+      //   DB_NAME: testPgConfig.database,
+      //   DB_HOST: testPgConfig.host,
+      //   DB_PASSWORD: testPgConfig.password,
+      //   DB_USER: testPgConfig.user,
+      //   DB_PORT: testPgConfig.port,
+      //   DUMP_DIR: dumpDir,
+      // },
     };
   });
 
@@ -146,15 +147,16 @@ describe("pg_dump_route_test", () => {
 
       invalidApp.locals = {
         db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: "non_existent_db",
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: testPgConfig.password,
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
+        encryptionSecret: "",
+        // env: {
+        //   ADMIN_PASSWORD: testAdminPassword,
+        //   DB_NAME: "non_existent_db",
+        //   DB_HOST: testPgConfig.host,
+        //   DB_PASSWORD: testPgConfig.password,
+        //   DB_USER: testPgConfig.user,
+        //   DB_PORT: testPgConfig.port,
+        //   DUMP_DIR: dumpDir,
+        // },
       };
 
       const response = await request(invalidApp)
@@ -190,15 +192,16 @@ describe("pg_dump_route_test", () => {
 
       invalidApp.locals = {
         db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: testPgConfig.database,
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: "wrong_password",
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
+        encryptionSecret: "",
+        // env: {
+        //   ADMIN_PASSWORD: testAdminPassword,
+        //   DB_NAME: testPgConfig.database,
+        //   DB_HOST: testPgConfig.host,
+        //   DB_PASSWORD: "wrong_password",
+        //   DB_USER: testPgConfig.user,
+        //   DB_PORT: testPgConfig.port,
+        //   DUMP_DIR: dumpDir,
+        // },
       };
 
       const response = await request(invalidApp)
@@ -380,16 +383,17 @@ describe("pg_dump_route_test", () => {
       invalidApp.use("/pg_dump/v1", router);
 
       invalidApp.locals = {
-        db: null, // Invalid database connection
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: testPgConfig.database,
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: testPgConfig.password,
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
+        db: null as any, // Invalid database connection
+        encryptionSecret: "",
+        // env: {
+        //   ADMIN_PASSWORD: testAdminPassword,
+        //   DB_NAME: testPgConfig.database,
+        //   DB_HOST: testPgConfig.host,
+        //   DB_PASSWORD: testPgConfig.password,
+        //   DB_USER: testPgConfig.user,
+        //   DB_PORT: testPgConfig.port,
+        //   DUMP_DIR: dumpDir,
+        // },
       };
 
       const response = await request(invalidApp)
@@ -669,15 +673,16 @@ describe("pg_dump_route_test", () => {
 
       invalidApp.locals = {
         db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: "non_existent_db",
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: testPgConfig.password,
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
+        encryptionSecret: "",
+        // env: {
+        //   ADMIN_PASSWORD: testAdminPassword,
+        //   DB_NAME: "non_existent_db",
+        //   DB_HOST: testPgConfig.host,
+        //   DB_PASSWORD: testPgConfig.password,
+        //   DB_USER: testPgConfig.user,
+        //   DB_PORT: testPgConfig.port,
+        //   DUMP_DIR: dumpDir,
+        // },
       };
 
       const response = await request(invalidApp)
@@ -705,15 +710,16 @@ describe("pg_dump_route_test", () => {
 
       invalidApp.locals = {
         db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: testPgConfig.database,
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: "wrong_password",
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
+        encryptionSecret: "",
+        // env: {
+        //   ADMIN_PASSWORD: testAdminPassword,
+        //   DB_NAME: testPgConfig.database,
+        //   DB_HOST: testPgConfig.host,
+        //   DB_PASSWORD: "wrong_password",
+        //   DB_USER: testPgConfig.user,
+        //   DB_PORT: testPgConfig.port,
+        //   DUMP_DIR: dumpDir,
+        // },
       };
 
       const response = await request(invalidApp)
