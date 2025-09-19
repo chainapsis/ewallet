@@ -163,7 +163,7 @@ export function setPgDumpRoutes(router: Router) {
    *               code: UNKNOWN_ERROR
    *               msg: "Failed to retrieve pg dump history"
    */
-  router.get(
+  router.post(
     "/",
     async (
       req: KSNodeRequest<GetBackupHistoryRequest>,
