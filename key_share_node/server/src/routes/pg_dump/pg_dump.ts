@@ -9,6 +9,11 @@ import {
   restore,
   type PgDump,
 } from "@keplr-ewallet/ksn-pg-interface";
+import type {
+  GetBackupHistoryRequest,
+  DBRestoreRequest,
+  DBRestoreResponse,
+} from "@keplr-ewallet/ksn-interface/db_backup";
 
 import {
   processPgDump,
@@ -19,6 +24,7 @@ import {
   type AdminAuthenticatedRequest,
 } from "@keplr-ewallet-ksn-server/middlewares";
 import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
+import type { KSNodeRequest } from "../io";
 
 export function setPgDumpRoutes(router: Router) {
   /**
@@ -107,7 +113,7 @@ export function setPgDumpRoutes(router: Router) {
   /**
    * @swagger
    * /pg_dump/v1/:
-   *   get:
+   *   post:
    *     tags:
    *       - PG Dump
    *     summary: Get pg dump history
@@ -157,38 +163,44 @@ export function setPgDumpRoutes(router: Router) {
    *               code: UNKNOWN_ERROR
    *               msg: "Failed to retrieve pg dump history"
    */
-  router.get("/", async (req, res: Response<KSNodeApiResponse<PgDump[]>>) => {
-    const { days } = req.query;
-    const state = req.app.locals as any;
+  router.get(
+    "/",
+    async (
+      req: KSNodeRequest<GetBackupHistoryRequest>,
+      res: Response<KSNodeApiResponse<PgDump[]>>,
+    ) => {
+      const { days } = req.body;
+      const state = req.app.locals;
 
-    let daysNum: number | undefined;
-    if (days !== undefined) {
-      daysNum = parseInt(days as string, 10);
-      if (isNaN(daysNum) || daysNum < 1 || daysNum > 1000) {
+      // let daysNum: number | undefined;
+      // if (days !== undefined) {
+      //   daysNum = parseInt(days as string, 10);
+      //   if (isNaN(daysNum) || daysNum < 1 || daysNum > 1000) {
+      //     const errorRes: KSNodeApiErrorResponse = {
+      //       success: false,
+      //       code: "INVALID_DAYS",
+      //       msg: "Days parameter must be between 1 and 1000",
+      //     };
+      //     return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
+      //   }
+      // }
+
+      const dumpsResult = await getAllPgDumps(state.db, days);
+      if (dumpsResult.success === false) {
         const errorRes: KSNodeApiErrorResponse = {
           success: false,
-          code: "INVALID_DAYS",
-          msg: "Days parameter must be between 1 and 1000",
+          code: "UNKNOWN_ERROR",
+          msg: dumpsResult.err,
         };
         return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       }
-    }
 
-    const dumpsResult = await getAllPgDumps(state.db, daysNum);
-    if (dumpsResult.success === false) {
-      const errorRes: KSNodeApiErrorResponse = {
-        success: false,
-        code: "UNKNOWN_ERROR",
-        msg: dumpsResult.err,
-      };
-      return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
-    }
-
-    return res.status(200).json({
-      success: true,
-      data: dumpsResult.data,
-    });
-  });
+      return res.status(200).json({
+        success: true,
+        data: dumpsResult.data,
+      });
+    },
+  );
 
   /**
    * @swagger
@@ -277,11 +289,9 @@ export function setPgDumpRoutes(router: Router) {
     "/restore",
     adminAuthMiddleware,
     async (
-      req: AdminAuthenticatedRequest<{ dump_path: string }>,
-      res: Response<KSNodeApiResponse<{ dump_path: string }>>,
+      req: AdminAuthenticatedRequest<DBRestoreRequest>,
+      res: Response<KSNodeApiResponse<DBRestoreResponse>>,
     ) => {
-      const state = req.app.locals;
-
       const dumpPath = req.body.dump_path;
 
       if (!dumpPath) {

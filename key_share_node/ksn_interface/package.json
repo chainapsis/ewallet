@@ -10,10 +10,6 @@
     "build": "yarn clean && tsc --build --force && tsc-alias"
   },
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
     "./key_share": {
       "import": "./dist/key_share.js",
       "types": "./dist/key_share.d.ts"
@@ -33,6 +29,10 @@
     "./auth": {
       "import": "./dist/auth.js",
       "types": "./dist/auth.d.ts"
+    },
+    "./db_backup": {
+      "import": "./dist/db_backup.js",
+      "types": "./dist/db_backup.d.ts"
     }
   },
   "publishConfig": {
