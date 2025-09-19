@@ -84,10 +84,6 @@ export async function restore(
   dumpPath: string,
 ): Promise<Result<void, string>> {
   try {
-    //     const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U \
-    // ${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose \
-    // ${dumpPath}`;
-
     const result = spawnSync(
       "pg_restore",
       [
