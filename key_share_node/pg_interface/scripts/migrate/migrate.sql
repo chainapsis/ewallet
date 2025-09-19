@@ -75,6 +75,6 @@ CREATE TABLE public.key_share_node_meta (
 	sss_threshold smallint NOT NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
-	CONSTRAINT key_share_node_meta_pkey PRIMARY KEY (meta_id)
+	CONSTRAINT key_share_node_meta_pkey PRIMARY KEY (meta_id),
     CONSTRAINT key_share_node_meta_wallet_id_key UNIQUE (wallet_id)
 );
