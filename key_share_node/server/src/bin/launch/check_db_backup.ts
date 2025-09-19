@@ -1,4 +1,5 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
+import chalk from "chalk";
 import { dump, restore } from "@keplr-ewallet/ksn-pg-interface";
 import type { Pool } from "pg";
 
@@ -9,7 +10,7 @@ import {
 
 const DUMP_TEST_DB = "dump_test_db";
 
-export async function launchHealthCheck(
+export async function checkDBBackup(
   pgConfig: PgDatabaseConfig,
   dumpDir: string,
 ): Promise<Result<void, string>> {
@@ -25,14 +26,20 @@ export async function launchHealthCheck(
     originalPool = originalPoolRes.data;
 
     await originalPool.query(`
-INSERT INTO users (email) 
-VALUES ('test1@test.com'), ('test2@test.com')
+INSERT INTO users (
+  email
+) 
+VALUES 
+( 'test1@test.com' ), 
+( 'test2@test.com' )
 `);
 
     const dumpRes = await dump(pgConfig, dumpDir);
-    if (dumpRes.success === false) {
+    if (!dumpRes.success) {
       return { success: false, err: `Failed to dump database: ${dumpRes.err}` };
     }
+
+    console.log("%s dump at %s", chalk.bold.green("Finished"), dumpDir);
 
     const masterPoolRes = await createPgDatabase({
       ...pgConfig,

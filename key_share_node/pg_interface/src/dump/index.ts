@@ -14,10 +14,15 @@ export interface PgDumpConfig {
   database: string;
 }
 
+export interface PgDumpResult {
+  dumpPath: string;
+  dumpSize: number;
+}
+
 export async function dump(
   pgConfig: PgDumpConfig,
   dumpDir: string,
-): Promise<Result<{ dumpPath: string; dumpSize: number }, string>> {
+): Promise<Result<PgDumpResult, string>> {
   try {
     await fs.mkdir(dumpDir, { recursive: true });
 

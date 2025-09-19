@@ -6,7 +6,7 @@ import { makeApp } from "@keplr-ewallet-ksn-server/app";
 import { loadEnv, verifyEnv } from "@keplr-ewallet-ksn-server/envs";
 import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
 import { loadEncSecret } from "./load_enc_secret";
-import { launchHealthCheck } from "./health_check";
+import { checkDBBackup } from "./check_db_backup";
 
 const ONE_DAY_MS = 1 * 86400;
 
@@ -37,42 +37,40 @@ async function main() {
     process.exit(1);
   }
 
-  const env = process.env;
-
-  const loadEncSecretRes = loadEncSecret(env.ENCRYPTION_SECRET_PATH);
+  const loadEncSecretRes = loadEncSecret(process.env.ENCRYPTION_SECRET_PATH);
   if (!loadEncSecretRes.success) {
     console.error("Encryption secret invalid, err: %s", loadEncSecretRes.err);
     process.exit(1);
   }
 
-  const healthCheckRes = await launchHealthCheck(
+  const backupRes = await checkDBBackup(
     {
-      database: env.DB_NAME,
-      host: env.DB_HOST,
-      password: env.DB_PASSWORD,
-      user: env.DB_USER,
-      port: Number(env.DB_PORT),
-      ssl: env.DB_SSL === "true" ? true : false,
+      database: process.env.DB_NAME,
+      host: process.env.DB_HOST,
+      password: process.env.DB_PASSWORD,
+      user: process.env.DB_USER,
+      port: Number(process.env.DB_PORT),
+      ssl: process.env.DB_SSL === "true" ? true : false,
     },
-    env.DUMP_DIR,
+    process.env.DUMP_DIR,
   );
-  if (!healthCheckRes.success) {
+  if (!backupRes.success) {
     console.error(
       "%s: Health check failed, exiting process, err: %s",
       chalk.bold.red("Error"),
-      healthCheckRes.err,
+      backupRes.err,
     );
 
     process.exit(1);
   }
 
   const createPostgresRes = await createPgDatabase({
-    database: env.DB_NAME,
-    host: env.DB_HOST,
-    password: env.DB_PASSWORD,
-    user: env.DB_USER,
-    port: Number(env.DB_PORT),
-    ssl: env.DB_SSL === "true" ? true : false,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    password: process.env.DB_PASSWORD,
+    user: process.env.DB_USER,
+    port: Number(process.env.DB_PORT),
+    ssl: process.env.DB_SSL === "true" ? true : false,
   });
 
   if (createPostgresRes.success === false) {
@@ -91,21 +89,21 @@ async function main() {
   startPgDumpRuntime(
     app.locals.db,
     {
-      database: env.DB_NAME,
-      host: env.DB_HOST,
-      password: env.DB_PASSWORD,
-      user: env.DB_USER,
-      port: Number(env.DB_PORT),
+      database: process.env.DB_NAME,
+      host: process.env.DB_HOST,
+      password: process.env.DB_PASSWORD,
+      user: process.env.DB_USER,
+      port: Number(process.env.DB_PORT),
     },
     {
       sleepTimeSeconds: ONE_DAY_MS,
       retentionDays: 7,
-      dumpDir: env.DUMP_DIR,
+      dumpDir: process.env.DUMP_DIR,
     },
   );
 
-  app.listen(env.PORT, () => {
-    console.log(`Server listening on port: %s`, env.PORT);
+  app.listen(process.env.PORT, () => {
+    console.log(`Server listening on port: %s`, process.env.PORT);
   });
 
   return;

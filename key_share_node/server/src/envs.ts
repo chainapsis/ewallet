@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import chalk from "chalk";
 import fs from "node:fs";
 import path from "path";
 import { z } from "zod";
@@ -51,7 +52,7 @@ export function loadEnv(nodeId: string): Result<void, string> {
 
     return { success: false, err: `Env file does not exist, path: ${envPath}` };
   } else {
-    console.info("Loading env, path: %s", envPath);
+    console.log("%s env, path: %s", chalk.bold.green("Loading"), envPath);
   }
 
   dotenv.config({
