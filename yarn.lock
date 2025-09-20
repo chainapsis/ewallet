@@ -18585,6 +18585,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.35.1"
     chalk: "npm:^5.5.0"
     del-cli: "npm:^6.0.0"
+    dotenv: "npm:^16.4.5"
     hardhat: "npm:^2.25.0"
     jest: "npm:^30.0.5"
     lerna: "npm:8.2.3"
