@@ -79,9 +79,8 @@ async function main() {
     encryptionSecret: loadEncSecretRes.data,
 
     is_db_backup_checked: true,
-    latest_backup_time: null,
     launch_time: new Date(),
-    git_hash: "<to-be-upgraded>",
+    git_hash: "to-be-upgraded",
   };
 
   startPgDumpRuntime(

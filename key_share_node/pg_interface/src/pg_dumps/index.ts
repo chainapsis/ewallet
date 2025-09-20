@@ -158,3 +158,24 @@ SELECT * FROM pg_dumps
     return { success: false, err: String(error) };
   }
 }
+
+export async function getLatestCompletedPgDump(
+  db: Pool,
+): Promise<Result<PgDump | null, string>> {
+  try {
+    const query = `
+SELECT * FROM pg_dumps 
+WHERE status = 'COMPLETED' 
+ORDER BY created_at DESC 
+LIMIT 1
+`;
+    const result = await db.query(query);
+    if (result.rows.length === 0) {
+      return { success: true, data: null };
+    }
+
+    return { success: true, data: result.rows[0] as PgDump };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}

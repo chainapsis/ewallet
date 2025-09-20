@@ -1,25 +1,35 @@
 import type { Express, Response } from "express";
 import type { ServerStatus } from "@keplr-ewallet/ksn-interface/status";
+import { getLatestCompletedPgDump } from "@keplr-ewallet/ksn-pg-interface";
 
 export function addStatusRoutes(app: Express) {
   app.get("/status", async (req, res: Response<ServerStatus>) => {
-    const locals = req.app.locals;
+    const state = req.app.locals;
+    const { db } = state;
 
-    let is_db_connected = false;
+    let isDbConnected = false;
     try {
-      await locals.db.query("SELECT 1");
-      is_db_connected = true;
-    } catch (err) {
-      console.log("Error querying db");
+      await db.query("SELECT 1");
+      isDbConnected = true;
+    } catch (error) {
+      console.error("Database connection check failed:", error);
+    }
+
+    let latestBackupTime: Date | null = null;
+    const getLatestDumpRes = await getLatestCompletedPgDump(db);
+    if (getLatestDumpRes.success) {
+      latestBackupTime = getLatestDumpRes.data?.created_at || null;
+    } else {
+      console.error("Failed to get latest dump:", getLatestDumpRes.err);
     }
 
     const status: ServerStatus = {
-      is_db_connected,
-      is_db_backup_checked: locals.is_db_backup_checked,
-      latest_backup_time: locals.latest_backup_time,
+      is_db_connected: isDbConnected,
+      is_db_backup_checked: state.is_db_backup_checked,
+      latest_backup_time: latestBackupTime,
       ks_node_public_key: process.env.KS_NODE_PUBLIC_KEY,
-      launch_time: locals.launch_time,
-      git_hash: locals.git_hash,
+      launch_time: state.launch_time,
+      git_hash: state.git_hash,
     };
 
     res.status(200).json(status);
