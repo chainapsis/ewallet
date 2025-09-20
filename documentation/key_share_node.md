@@ -238,6 +238,44 @@ traffic to 5432.
 2. Keplr may give an instruction to retrieve the server log to analyze the cause
    of the error, in which case, coordination will be appreciated.
 
+### Server status monitoring
+
+You can monitor the health and status of your Key Share Node using the `/status`
+endpoint. This API provides real-time information about the server's operational
+state.
+
+**Check server status:**
+
+```bash
+curl http://localhost:${SERVER_PORT}/status
+```
+
+**Response includes:**
+
+- `is_db_connected`: Database connection status (boolean)
+- `is_db_backup_checked`: Whether database backup verification is complete
+  (boolean)
+- `latest_backup_time`: Timestamp of the most recent successful backup (Date or
+  null)
+- `ks_node_public_key`: Public key of the Key Share Node (string) - _Currently
+  returns temporary value, will be updated in future releases_
+- `launch_time`: Server startup timestamp (Date)
+- `git_hash`: Git commit hash of the deployed version (string) - _Currently
+  returns temporary value, will be updated in future releases_
+
+**Example response:**
+
+```json
+{
+  "is_db_connected": true,
+  "is_db_backup_checked": true,
+  "latest_backup_time": "2024-01-15T10:30:00.000Z",
+  "ks_node_public_key": "your_public_key_here",
+  "launch_time": "2024-01-15T09:00:00.000Z",
+  "git_hash": "abc123def456"
+}
+```
+
 ### Overall workload
 
 1. We will roll the new versions periodically. At times, minor updates may take
@@ -274,7 +312,7 @@ You can manually create and restore backups using the REST API:
 **Create a manual backup:**
 
 ```bash
-curl -X POST http://localhost:4201/pg_dump/v1/backup \
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/backup \
   -H "Content-Type: application/json" \
   -d '{"password": "your_admin_password"}'
 ```
@@ -283,10 +321,10 @@ curl -X POST http://localhost:4201/pg_dump/v1/backup \
 
 ```bash
 # Get all backups
-curl -X POST http://localhost:4201/pg_dump/v1/get_backup_history
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/get_backup_history
 
 # Get backups from the last 7 days
-curl -X POST http://localhost:4201/pg_dump/v1/get_backup_history \
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/get_backup_history \
   -H "Content-Type: application/json" \
   -d '{"days": 7}'
 ```
@@ -294,7 +332,7 @@ curl -X POST http://localhost:4201/pg_dump/v1/get_backup_history \
 **Restore from a backup:**
 
 ```bash
-curl -X POST http://localhost:4201/pg_dump/v1/restore \
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/restore \
   -H "Content-Type: application/json" \
   -d '{
     "password": "your_admin_password",
