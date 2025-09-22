@@ -3,12 +3,8 @@
 ## Before you begin
 
 The key share node is a crucial component of the distributed signature
-generation scheme. To become a serving node, please contact our team in advance
-for bootstrapping. We will soon provide details on how to join our
-**communication channel (Slack)** for further discussion.
-
-If you are not familiar with the concepts, please read the Keplr Embedded
-[Ewallet documentation](../README.md) first to learn how the system works.
+generation scheme. Please read the Keplr Embedded Ewallet documentation first to
+learn how the system works.
 
 ## [1/3] System Requirements
 
@@ -45,7 +41,9 @@ cd ewallet/key_share_node/docker
 2. Prepare the encryption secret file:
 
 Create a secure encryption secret file at your desired location. This file will
-be used to encrypt user key shares within the Key Share Node.
+be used to encrypt user key shares within the Key Share Node. **You can use any
+random value you choose** - this will be referenced later in the
+`ENCRYPTION_SECRET_FILE_PATH` environment variable.
 
 ### Environment Configuration
 
@@ -68,8 +66,8 @@ DB_NAME=key_share_node
 ## Host directory path for PostgreSQL data persistence (mounted to container)
 PG_DATA_DIR=/opt/key_share_node/pg_data
 ## Host directory path for database dump files storage (mounted to container)
-## NOTE: This directory must be writable by the Node.js user (UID:1000, GID:1000)
-## Example: chown -R 1000:1000 /opt/key_share_node/dump
+## **NOTE: This directory must be writable by the Node.js user (UID:1000, GID:1000)**
+## **Example: chown -R 1000:1000 /opt/key_share_node/dump**
 DUMP_DIR=/opt/key_share_node/dump
 
 # Server Configuration
@@ -101,37 +99,6 @@ docker compose ps
 docker compose logs key_share_node
 docker compose logs key_share_node_pg
 ```
-
-### Using Your Own Database
-
-If you prefer to use your own PostgreSQL database instead of the included one:
-
-1. Update the `.env` file with your database connection details:
-
-```bash
-DB_HOST=your_database_host
-DB_PORT=5432
-DB_USER=your_username
-DB_PASSWORD=your_password
-DB_NAME=your_database_name
-DB_SSL=true  # or false
-```
-
-2. **Important**: Update the `docker-compose.yml` file to use your database
-   settings:
-
-```yaml
-environment:
-  DB_HOST: ${DB_HOST} # Use your external database host
-  DB_PORT: ${DB_PORT} # Use your database port (usually 5432)
-  DB_SSL: ${DB_SSL} # Enable/disable SSL as needed
-  # ... other environment variables
-```
-
-3. Remove or comment out the `key_share_node_pg` service in `docker-compose.yml`
-
-4. Ensure your database is accessible from the Docker container and has the
-   required schema
 
 ### Set up Firewall
 
@@ -252,6 +219,37 @@ You should see your rules in the following order:
 > **Note**: Your Key Share Node server port will be automatically accessible
 > through Docker's default rules, so no explicit rule is needed in DOCKER-USER
 > chain.
+
+## Optional: Using Your Own Database
+
+If you prefer to use your own PostgreSQL database instead of the included one:
+
+1. Update the `.env` file with your database connection details:
+
+```bash
+DB_HOST=your_database_host
+DB_PORT=5432
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_NAME=your_database_name
+DB_SSL=true  # or false
+```
+
+2. **Important**: Update the `docker-compose.yml` file to use your database
+   settings:
+
+```yaml
+environment:
+  DB_HOST: ${DB_HOST} # Use your external database host
+  DB_PORT: ${DB_PORT} # Use your database port (usually 5432)
+  DB_SSL: ${DB_SSL} # Enable/disable SSL as needed
+  # ... other environment variables
+```
+
+3. Remove or comment out the `key_share_node_pg` service in `docker-compose.yml`
+
+4. Ensure your database is accessible from the Docker container and has the
+   required schema
 
 ## [3/3] Maintenance
 
