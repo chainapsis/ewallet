@@ -7,6 +7,9 @@ import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
 import { loadEncSecret } from "./load_enc_secret";
 import { checkDBBackup } from "./check_db_backup";
 import { parseCLIArgs } from "./cli_args";
+import type { ServerState } from "@keplr-ewallet-ksn-server/state";
+import { getGitCommitHash } from "./git";
+import pJson from "../../../package.json";
 
 const ONE_DAY_MS = 1 * 86400;
 
@@ -74,14 +77,20 @@ async function main() {
 
   const app = makeApp();
 
-  app.locals = {
+  const git_hash = getGitCommitHash();
+  const version = pJson.version;
+
+  const state: ServerState = {
     db: createPostgresRes.data,
     encryptionSecret: loadEncSecretRes.data,
 
     is_db_backup_checked: true,
     launch_time: new Date(),
-    git_hash: "to-be-upgraded",
+    git_hash,
+    version,
   };
+
+  app.locals = state;
 
   startPgDumpRuntime(
     app.locals.db,

@@ -6,5 +6,6 @@ export interface ServerState {
 
   is_db_backup_checked: boolean;
   launch_time: Date;
-  git_hash: string;
+  git_hash: string | null;
+  version: string;
 }
