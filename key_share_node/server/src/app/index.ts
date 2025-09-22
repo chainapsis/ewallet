@@ -7,8 +7,6 @@ import { installSwaggerDocs } from "@keplr-ewallet-ksn-server/swagger";
 import { setRoutes } from "@keplr-ewallet-ksn-server/routes";
 import { rateLimitMiddleware } from "@keplr-ewallet-ksn-server/middlewares";
 
-export const test_version_diff = 1;
-
 export function makeApp() {
   const app = express();
 
