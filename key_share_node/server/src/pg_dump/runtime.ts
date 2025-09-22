@@ -25,31 +25,37 @@ export async function startPgDumpRuntime(
   );
 
   while (true) {
-    await sleep(sleepTime);
-
-    const processPgDumpRes = await processPgDump(
-      pool,
-      pgConfig,
-      pgDumpRuntimeOptions.dumpDir,
-    );
-    if (processPgDumpRes.success === false) {
-      console.error("Error processing pg dump:", processPgDumpRes.err);
-    } else {
-      const { dumpId, dumpPath, dumpSize, dumpDuration } =
-        processPgDumpRes.data;
-      console.log(
-        `Completed pg dump ${dumpId} in ${dumpDuration}s, path: ${dumpPath}, size: ${dumpSize} bytes`,
+    try {
+      const processPgDumpRes = await processPgDump(
+        pool,
+        pgConfig,
+        pgDumpRuntimeOptions.dumpDir,
       );
-    }
+      if (processPgDumpRes.success === false) {
+        console.error("Error processing pg dump:", processPgDumpRes.err);
+      } else {
+        const { dumpId, dumpPath, dumpSize, dumpDuration } =
+          processPgDumpRes.data;
 
-    const deleteOldPgDumpsRes = await deleteOldPgDumps(
-      pool,
-      pgDumpRuntimeOptions.retentionDays,
-    );
-    if (deleteOldPgDumpsRes.success === false) {
-      console.error("Error deleting old pg dumps:", deleteOldPgDumpsRes.err);
-    } else {
-      console.log(`Deleted ${deleteOldPgDumpsRes.data} old pg dumps`);
+        console.log(
+          `Completed pg dump ${dumpId} in ${dumpDuration}s, \
+path: ${dumpPath}, size: ${dumpSize} bytes`,
+        );
+      }
+
+      const deleteOldPgDumpsRes = await deleteOldPgDumps(
+        pool,
+        pgDumpRuntimeOptions.retentionDays,
+      );
+      if (deleteOldPgDumpsRes.success === false) {
+        console.error("Error deleting old pg dumps:", deleteOldPgDumpsRes.err);
+      } else {
+        console.log(`Deleted ${deleteOldPgDumpsRes.data} old pg dumps`);
+      }
+    } catch (err: any) {
+      console.error("Error running pg dump, err: %s", err);
+    } finally {
+      await sleep(sleepTime);
     }
   }
 }
