@@ -18,7 +18,6 @@ function makeUnsuccessfulAppStatus(pool: Pool): ServerState {
     db: pool,
     encryptionSecret: "temp_enc_secret",
 
-    latest_backup_time: null,
     is_db_backup_checked: false,
     launch_time: dayjs().toISOString(),
     git_hash: "",
@@ -73,7 +72,6 @@ describe("pg_dump_route_test", () => {
       encryptionSecret: "temp_enc_secret",
 
       is_db_backup_checked: false,
-      latest_backup_time: null,
       launch_time: dayjs().toISOString(),
       git_hash: "",
       version: "",
@@ -352,7 +350,6 @@ describe("pg_dump_route_test", () => {
         encryptionSecret: "temp_enc_secret",
 
         is_db_backup_checked: false,
-        latest_backup_time: null,
         launch_time: dayjs().toISOString(),
         git_hash: "",
         version: "",
