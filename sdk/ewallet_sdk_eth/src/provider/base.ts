@@ -319,6 +319,17 @@ export class EWalletEIP1193Provider
             ? parseTypedData<TypedDataDefinition>(rawTypedData)
             : rawTypedData;
 
+        if (typedData.domain && typedData.domain.chainId !== undefined) {
+          const activeChainId = BigInt(this.activeChain.chainId);
+          const typedDataChainId = BigInt(typedData.domain.chainId);
+
+          if (activeChainId !== typedDataChainId) {
+            throw new InvalidParamsRpcError(
+              new Error(`${typedDataChainId} does not match ${activeChainId}`),
+            );
+          }
+        }
+
         const result = await signer.sign({
           type: "sign_typedData_v4",
           data: {

@@ -134,6 +134,8 @@ export function Eip712SignWidget() {
         ),
       );
     } catch (e: any) {
+      console.error(e);
+
       setError(e?.message || "Signing failed");
     } finally {
       setIsSigning(false);
