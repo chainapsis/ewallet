@@ -66,12 +66,7 @@ export async function dump(
     const stats = fs.statSync(dumpPath);
     const dumpSize = stats.size;
 
-    console.log(
-      "%s dump, path: %s, dumpSize: %s",
-      chalk.bold.green("Finished"),
-      dumpPath,
-      dumpSize,
-    );
+    console.log("Finished dump, path: %s, dumpSize: %s", dumpPath, dumpSize);
 
     return { success: true, data: { dumpPath, dumpSize } };
   } catch (error) {

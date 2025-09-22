@@ -11,12 +11,14 @@ import { parseCLIArgs } from "./cli_args";
 import type { ServerState } from "@keplr-ewallet-ksn-server/state";
 import { getGitCommitHash } from "./git";
 import pJson from "@keplr-ewallet-ksn-server/../package.json";
+import { logger } from "@keplr-ewallet-ksn-server/logger";
 
 const ONE_DAY_MS = 1 * 86400;
 
 async function main() {
   const opts = parseCLIArgs();
   console.log("Launching ks node server, cli args: %j", opts);
+  logger.info("Launching, Logger initialized");
 
   const loadEnvRes = loadEnv(opts.nodeId);
   if (!loadEnvRes.success) {
@@ -57,6 +59,8 @@ async function main() {
       );
 
       process.exit(1);
+    } else {
+      console.log("%s DB backup check", chalk.bold.green("Finished"));
     }
   } else {
     console.log("Bypass DB backup checking, nodeId: %s", opts.nodeId);
