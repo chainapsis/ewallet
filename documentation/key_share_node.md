@@ -119,10 +119,22 @@ docker compose logs key_share_node_pg
 
 ### Set up Firewall
 
-#### Docker and Firewall Compatibility
+#### Firewall Options
 
-When using Docker Compose, **traditional firewall tools like UFW are bypassed**
-for published container ports. As documented in the
+**Option 1: Cloud Firewall Services**
+
+If you plan to use cloud-provided firewall services (AWS Security Groups, Google
+Cloud Firewall, Azure NSG, etc.), configure your ingress rules to allow only:
+
+- **SSH (22)**: For remote access
+- **SERVER_PORT**: Your Key Share Node server port (default: 4201)
+
+Block all other ports including PostgreSQL (5432) to maintain security.
+
+**Option 2: iptables-based Firewall**
+
+When using Docker Compose, **firewall tools like UFW are bypassed** for
+published container ports. As documented in the
 [Docker official documentation](https://docs.docker.com/engine/network/packet-filtering-firewalls/#integration-with-firewalld),
 Docker routes container traffic in the `nat` table before it reaches the `INPUT`
 and `OUTPUT` chains that UFW uses, effectively ignoring your firewall
@@ -146,8 +158,8 @@ poses a security risk.
 
 We strongly recommend implementing a comprehensive firewall strategy that allows
 only essential services while blocking unnecessary access. The following
-configuration allows SSH, HTTPS, and your Key Share Node server port, while
-restricting PostgreSQL access to trusted IPs only.
+configuration allows SSH and your Key Share Node server port, while restricting
+PostgreSQL access appropriately.
 
 #### 1. Check existing rules
 
@@ -157,30 +169,27 @@ sudo iptables -S DOCKER-USER
 
 #### 2. Configure comprehensive firewall rules
 
-Replace `203.0.113.10` with your trusted IP address and `4201` with your
+Replace `{YOUR_KSNODE_IP}` with your trusted IP address and `4201` with your
 `SERVER_PORT` value:
 
-**For host services (SSH, HTTPS only):**
+**For host services (SSH only):**
 
 ```bash
 # Allow SSH (22) from anywhere (adjust as needed for your security requirements)
 sudo iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT
 
-# Allow HTTPS (443) from anywhere
-sudo iptables -I INPUT 2 -p tcp --dport 443 -j ACCEPT
-
 # Deny all other traffic to host services
 sudo iptables -A INPUT -j DROP
 ```
 
-**For Docker PostgreSQL (whitelist only):**
+**For Docker PostgreSQL (default: localhost, optional: trusted IP):**
 
 ```bash
-# Allow PostgreSQL (5432) from trusted IP only
-sudo iptables -I DOCKER-USER 1 -p tcp --dport 5432 -s 203.0.113.10 -j ACCEPT
+# Allow localhost access to PostgreSQL (default)
+sudo iptables -I DOCKER-USER 1 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
 
-# (Optional) Allow localhost access to PostgreSQL
-sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
+# (Optional) Allow PostgreSQL (5432) from trusted IP only
+sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s {YOUR_KSNODE_IP} -j ACCEPT
 
 # Deny all other access to PostgreSQL
 sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
@@ -188,14 +197,16 @@ sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
 
 > **Explanation:**
 >
-> - **INPUT chain**: Blocks all host services except SSH and HTTPS
-> - **DOCKER-USER chain**: Only restricts PostgreSQL access to whitelisted IPs
+> - **INPUT chain**: Blocks all host services except SSH
+> - **DOCKER-USER chain**: Restricts PostgreSQL access to localhost by default,
+>   with optional trusted IP access
 > - Docker automatically allows your Key Share Node server port through its own
 >   rules
 > - `-I` inserts the ACCEPT rules at the top so they are matched first
 > - `-A` appends the DROP rule at the bottom
-> - SSH (22) and HTTPS (443) are allowed from anywhere for remote access
-> - PostgreSQL (5432) is restricted to whitelisted IPs only
+> - SSH (22) is allowed from anywhere for remote access
+> - PostgreSQL (5432) is restricted to localhost by default, with optional
+>   trusted IP access
 > - All other host services are blocked by the INPUT chain DROP rule
 
 #### 3. Make firewall rules persistent
@@ -211,7 +222,8 @@ sudo apt-get install -y iptables-persistent
 sudo netfilter-persistent save
 ```
 
-Now, the rules will be automatically applied after reboot.
+With this configuration, the iptables rules you set will be automatically
+applied even after future (unexpected) reboots.
 
 #### 4. Verify rules
 
@@ -224,13 +236,12 @@ You should see your rules in the following order:
 **INPUT chain:**
 
 1. SSH (22) - ACCEPT
-2. HTTPS (443) - ACCEPT
-3. All other traffic - DROP
+2. All other traffic - DROP
 
 **DOCKER-USER chain:**
 
-1. PostgreSQL (5432) from trusted IP - ACCEPT
-2. PostgreSQL (5432) from localhost - ACCEPT (if added)
+1. PostgreSQL (5432) from localhost - ACCEPT
+2. PostgreSQL (5432) from whitelisted IP - ACCEPT (if needed)
 3. PostgreSQL (5432) - DROP
 
 > **Note**: Your Key Share Node server port will be automatically accessible
