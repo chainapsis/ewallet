@@ -69,6 +69,10 @@ PG_DATA_DIR=/opt/key_share_node/pg_data
 ## **NOTE: This directory must be writable by the Node.js user (UID:1000, GID:1000)**
 ## **Example: chown -R 1000:1000 /opt/key_share_node/dump**
 DUMP_DIR=/opt/key_share_node/dump
+## Host directory path for log files storage (mounted to container)
+## **NOTE: This directory must be writable by the Node.js user (UID:1000, GID:1000)**
+## **Example: chown -R 1000:1000 /opt/key_share_node/logs**
+LOG_DIR=/opt/key_share_node/logs
 
 # Server Configuration
 ## Port number for the Key Share Node server
@@ -81,19 +85,32 @@ ENCRYPTION_SECRET_FILE_PATH=/opt/key_share_node/encryption_secret.txt
 
 ### Starting the Services
 
-1. Start the services using Docker Compose:
+1. Create required directories and set proper permissions:
+
+```bash
+# Create directories for data persistence
+sudo mkdir -p /opt/key_share_node/pg_data
+sudo mkdir -p /opt/key_share_node/dump
+sudo mkdir -p /opt/key_share_node/logs
+
+# Set proper permissions for Node.js user (UID:1000, GID:1000)
+sudo chown -R 1000:1000 /opt/key_share_node/dump
+sudo chown -R 1000:1000 /opt/key_share_node/logs
+```
+
+2. Start the services using Docker Compose:
 
 ```bash
 docker compose up -d
 ```
 
-2. Verify the services are running:
+3. Verify the services are running:
 
 ```bash
 docker compose ps
 ```
 
-3. Check the logs if needed:
+4. Check the logs if needed:
 
 ```bash
 docker compose logs key_share_node
@@ -273,6 +290,29 @@ environment:
    15 mins, please reach out to Keplr.
 2. Keplr may give an instruction to retrieve the server log to analyze the cause
    of the error, in which case, coordination will be appreciated.
+
+### Log management
+
+The Key Share Node automatically manages log files with the following
+configuration:
+
+- **Log location**: Configured via `LOG_DIR` environment variable (default:
+  `/opt/key_share_node/logs`)
+- **File rotation**: Daily rotation with date pattern `ksnode-YYYY-MM-DD.log`
+- **Retention policy**: **7-day rolling retention** - logs older than 7 days are
+  automatically deleted
+- **Log format**: Timestamped logs with different levels (debug, info, warn,
+  error)
+
+**Accessing logs:**
+
+```bash
+# View current day's log
+tail -f /opt/key_share_node/logs/ksnode-$(date +%Y-%m-%d).log
+
+# View all available log files
+ls -la /opt/key_share_node/logs/
+```
 
 ### Server status monitoring
 

@@ -38,6 +38,7 @@ services:
 
     volumes:
       - ${DUMP_DIR}:/home/node/key_share_node/dump
+      - ${LOG_DIR}:/home/node/key_share_node/key_share_node/server/log_data
     secrets:
       - encryption_secret
     depends_on:
