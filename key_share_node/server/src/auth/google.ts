@@ -1,7 +1,7 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { GoogleTokenInfo } from "@keplr-ewallet/ksn-interface/auth";
 
-import { GOOGLE_CLIENT_ID } from "./constants";
+import { GOOGLE_CLIENT_ID } from "./client_id";
 
 export async function validateOAuthToken(
   idToken: string,
