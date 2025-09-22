@@ -30,6 +30,7 @@ export function addStatusRoutes(app: Express) {
       ks_node_public_key: process.env.KS_NODE_PUBLIC_KEY || "to-be-upgraded",
       launch_time: state.launch_time,
       git_hash: state.git_hash,
+      version: state.version,
     };
 
     res.status(200).json(status);

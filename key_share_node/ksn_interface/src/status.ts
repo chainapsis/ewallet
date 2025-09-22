@@ -4,5 +4,6 @@ export interface ServerStatus {
   latest_backup_time: Date | null;
   ks_node_public_key: string;
   launch_time: Date;
-  git_hash: string;
+  git_hash: string | null;
+  version: string;
 }
