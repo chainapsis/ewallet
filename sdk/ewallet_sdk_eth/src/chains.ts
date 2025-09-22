@@ -1,24 +1,18 @@
 import { defineChain, type Address } from "viem";
 import {
   arbitrum,
-  arbitrumSepolia,
   avalanche,
-  avalancheFuji,
   base,
-  baseSepolia,
   berachain,
   blast,
-  blastSepolia,
   forma,
   mainnet,
   optimism,
-  optimismSepolia,
   polygon,
-  polygonAmoy,
   sepolia,
   unichain,
-  unichainSepolia,
   story,
+  citreaTestnet,
 } from "viem/chains";
 
 const bnbSmartChain = defineChain({
@@ -137,27 +131,9 @@ export const SUPPORTED_CHAINS = [
   },
 ];
 
-export const TESTNET_CHAINS = [
-  sepolia,
-  baseSepolia,
-  optimismSepolia,
-  avalancheFuji,
-  unichainSepolia,
-  polygonAmoy,
-  blastSepolia,
-  arbitrumSepolia,
-];
+export const TESTNET_CHAINS = [sepolia, citreaTestnet];
 
-export const OP_STACK_CHAIN_IDS = [
-  base.id,
-  optimism.id,
-  unichain.id,
-  blast.id,
-  baseSepolia.id,
-  optimismSepolia.id,
-  unichainSepolia.id,
-  blastSepolia.id,
-];
+export const OP_STACK_CHAIN_IDS = [base.id, optimism.id, unichain.id, blast.id];
 
 export function parseChainId(chainId: string | number): number {
   if (typeof chainId === "string") {
