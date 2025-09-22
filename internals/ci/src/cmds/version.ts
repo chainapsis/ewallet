@@ -29,7 +29,7 @@ export async function version(..._args: any[]) {
   });
   expectSuccess(fetchRet, "publish failed");
 
-  spawnSync("yarn", ["lerna", "version", "--no-private"], {
+  spawnSync("yarn", ["lerna", "version"], {
     cwd: paths.root,
     stdio: "inherit",
   });
