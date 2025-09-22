@@ -45,6 +45,12 @@ be used to encrypt user key shares within the Key Share Node. **You can use any
 random value you choose** - this will be referenced later in the
 `ENCRYPTION_SECRET_FILE_PATH` environment variable.
 
+**Example encryption secret (32-byte hex string):**
+
+```
+a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456
+```
+
 ### Environment Configuration
 
 1. Copy the environment template and configure your settings:
@@ -89,13 +95,13 @@ ENCRYPTION_SECRET_FILE_PATH=/opt/key_share_node/encryption_secret.txt
 
 ```bash
 # Create directories for data persistence
-sudo mkdir -p /opt/key_share_node/pg_data
-sudo mkdir -p /opt/key_share_node/dump
-sudo mkdir -p /opt/key_share_node/logs
+sudo mkdir -p ${PG_DATA_DIR}
+sudo mkdir -p ${DUMP_DIR}
+sudo mkdir -p ${LOG_DIR}
 
 # Set proper permissions for Node.js user (UID:1000, GID:1000)
-sudo chown -R 1000:1000 /opt/key_share_node/dump
-sudo chown -R 1000:1000 /opt/key_share_node/logs
+sudo chown -R 1000:1000 ${DUMP_DIR}
+sudo chown -R 1000:1000 ${LOG_DIR}
 ```
 
 2. Start the services using Docker Compose:
