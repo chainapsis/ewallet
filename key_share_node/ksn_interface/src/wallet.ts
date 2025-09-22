@@ -5,7 +5,7 @@ export interface KSNodeWallet {
   user_id: string;
   curve_type: CurveType;
   public_key: Buffer;
-  metadata?: Record<string, any>;
+  aux?: Record<string, any>;
   created_at: Date;
   updated_at: Date;
 }

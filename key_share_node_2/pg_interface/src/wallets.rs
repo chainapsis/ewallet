@@ -32,7 +32,7 @@ pub async fn create_wallet(
         user_id: row.get("user_id"),
         curve_type: row.get("curve_type"),
         public_key: row.get("public_key"),
-        metadata: row.get("metadata"),
+        aux: row.get("aux"),
         created_at: row.get("created_at"),
         updated_at: row.get("updated_at"),
     })
@@ -51,7 +51,7 @@ pub async fn get_wallet_by_id(
             user_id: row.get("user_id"),
             curve_type: row.get("curve_type"),
             public_key: row.get("public_key"),
-            metadata: row.get("metadata"),
+            aux: row.get("aux"),
             created_at: row.get("created_at"),
             updated_at: row.get("updated_at"),
         }))
@@ -73,7 +73,7 @@ pub async fn get_wallet_by_public_key(
             user_id: row.get("user_id"),
             curve_type: row.get("curve_type"),
             public_key: row.get("public_key"),
-            metadata: row.get("metadata"),
+            aux: row.get("aux"),
             created_at: row.get("created_at"),
             updated_at: row.get("updated_at"),
         }))

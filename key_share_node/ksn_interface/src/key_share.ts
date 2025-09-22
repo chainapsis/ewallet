@@ -8,6 +8,7 @@ export interface KeyShare {
   enc_share: Buffer;
   created_at: Date;
   updated_at: Date;
+  aux?: Record<string, any>;
 }
 
 export type CreateKeyShareRequest = {
