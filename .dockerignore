@@ -2,7 +2,6 @@ node_modules
 **/node_modules
 .yarn/cache
 .vscode
-.git
 .gitignore
 Dockerfile
 docker-compose.yml
