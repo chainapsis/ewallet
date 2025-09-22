@@ -160,9 +160,10 @@ poses a security risk.
 
 #### Recommended Security Configuration
 
-We strongly recommend restricting access to the PostgreSQL port (5432) to
-specific trusted IPs only. Below are examples for Ubuntu/Debian using `iptables`
-with the `DOCKER-USER` chain.
+We strongly recommend implementing a comprehensive firewall strategy that allows
+only essential services while blocking unnecessary access. The following
+configuration allows SSH, HTTPS, and your Key Share Node server port, while
+restricting PostgreSQL access to trusted IPs only.
 
 #### 1. Check existing rules
 
@@ -170,26 +171,48 @@ with the `DOCKER-USER` chain.
 sudo iptables -S DOCKER-USER
 ```
 
-#### 2. Restrict PostgreSQL (5432) to trusted IPs only
+#### 2. Configure comprehensive firewall rules
 
-Replace `203.0.113.10` with your trusted IP address:
+Replace `203.0.113.10` with your trusted IP address and `4201` with your
+`SERVER_PORT` value:
+
+**For host services (SSH, HTTPS only):**
 
 ```bash
-# Allow 5432 from trusted IP
+# Allow SSH (22) from anywhere (adjust as needed for your security requirements)
+sudo iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT
+
+# Allow HTTPS (443) from anywhere
+sudo iptables -I INPUT 2 -p tcp --dport 443 -j ACCEPT
+
+# Deny all other traffic to host services
+sudo iptables -A INPUT -j DROP
+```
+
+**For Docker PostgreSQL (whitelist only):**
+
+```bash
+# Allow PostgreSQL (5432) from trusted IP only
 sudo iptables -I DOCKER-USER 1 -p tcp --dport 5432 -s 203.0.113.10 -j ACCEPT
 
-# (Optional) Allow localhost access
+# (Optional) Allow localhost access to PostgreSQL
 sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
 
-# Deny all other access to 5432
+# Deny all other access to PostgreSQL
 sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
 ```
 
 > **Explanation:**
 >
+> - **INPUT chain**: Blocks all host services except SSH and HTTPS
+> - **DOCKER-USER chain**: Only restricts PostgreSQL access to whitelisted IPs
+> - Docker automatically allows your Key Share Node server port through its own
+>   rules
 > - `-I` inserts the ACCEPT rules at the top so they are matched first
 > - `-A` appends the DROP rule at the bottom
-> - Only whitelisted IPs (and localhost if added) will be able to connect
+> - SSH (22) and HTTPS (443) are allowed from anywhere for remote access
+> - PostgreSQL (5432) is restricted to whitelisted IPs only
+> - All other host services are blocked by the INPUT chain DROP rule
 
 #### 3. Make firewall rules persistent
 
@@ -212,8 +235,23 @@ Now, the rules will be automatically applied after reboot.
 sudo iptables -L DOCKER-USER -n --line-numbers
 ```
 
-You should see your trusted IP(s) ACCEPTed first, then a DROP rule for all other
-traffic to 5432.
+You should see your rules in the following order:
+
+**INPUT chain:**
+
+1. SSH (22) - ACCEPT
+2. HTTPS (443) - ACCEPT
+3. All other traffic - DROP
+
+**DOCKER-USER chain:**
+
+1. PostgreSQL (5432) from trusted IP - ACCEPT
+2. PostgreSQL (5432) from localhost - ACCEPT (if added)
+3. PostgreSQL (5432) - DROP
+
+> **Note**: Your Key Share Node server port will be automatically accessible
+> through Docker's default rules, so no explicit rule is needed in DOCKER-USER
+> chain.
 
 ## [3/3] Maintenance
 
