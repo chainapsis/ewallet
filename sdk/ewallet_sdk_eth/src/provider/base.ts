@@ -6,18 +6,9 @@ import type {
 } from "viem";
 import {
   hexToString,
-  InvalidInputRpcError,
-  InvalidParamsRpcError,
   isAddressEqual,
-  ProviderDisconnectedError,
-  ChainDisconnectedError,
-  ResourceUnavailableRpcError,
   serializeTypedData,
-  UnsupportedChainIdError,
-  UnsupportedProviderMethodError,
   isAddress,
-  UnauthorizedProviderError,
-  InternalRpcError,
 } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
@@ -44,6 +35,7 @@ import type {
   RpcChainWithStatus,
 } from "./types";
 import { VERSION } from "./version";
+import { EthereumRpcError, ProviderRpcErrorCode, RpcErrorCode } from "./error";
 
 export class EWalletEIP1193Provider
   extends ProviderEventEmitter
@@ -114,8 +106,9 @@ export class EWalletEIP1193Provider
       return await this.handleRequest(args);
     } catch (error: any) {
       if (this.isConnectionError(error)) {
-        const rpcError = new ResourceUnavailableRpcError(
-          new Error(error?.message || "Resource unavailable"),
+        const rpcError = new EthereumRpcError(
+          RpcErrorCode.ResourceUnavailable,
+          error?.message || "Resource unavailable",
         );
 
         this._handleConnected(false, rpcError);
@@ -167,8 +160,9 @@ export class EWalletEIP1193Provider
           rpcUrls: [rpcUrl],
         } = this.activeChain;
         if (!rpcUrl) {
-          throw new ProviderDisconnectedError(
-            new Error("No RPC URL for the active chain"),
+          throw new EthereumRpcError(
+            RpcErrorCode.ResourceUnavailable,
+            "No RPC URL for the active chain",
           );
         }
 
@@ -213,8 +207,9 @@ export class EWalletEIP1193Provider
           args.params as RpcRequestArgs<"wallet_addEthereumChain">["params"];
         const validation = validateChain(newChain);
         if (!validation.isValid) {
-          throw new InvalidInputRpcError(
-            new Error(validation.error || "Invalid chain parameter"),
+          throw new EthereumRpcError(
+            RpcErrorCode.InvalidInput,
+            validation.error || "Invalid chain parameter",
           );
         }
         const existing = this.addedChains.find(
@@ -237,7 +232,10 @@ export class EWalletEIP1193Provider
         );
 
         if (!chain) {
-          throw new UnsupportedChainIdError(new Error("Chain not found"));
+          throw new EthereumRpcError(
+            ProviderRpcErrorCode.UnsupportedChain,
+            `Chain ${chainIdToSwitch} not found`,
+          );
         }
 
         const prevChainId = this.activeChain?.chainId;
@@ -297,7 +295,10 @@ export class EWalletEIP1193Provider
         });
 
         if (result.type !== "signed_transaction") {
-          throw new InternalRpcError(new Error("Invalid result type"));
+          throw new EthereumRpcError(
+            RpcErrorCode.Internal,
+            "Invalid result type",
+          );
         }
 
         this._handleConnected(true, { chainId: this.activeChain.chainId });
@@ -311,7 +312,10 @@ export class EWalletEIP1193Provider
         const { signer, address } = this._getAuthenticatedSigner();
 
         if (!isAddressEqual(signWith, address)) {
-          throw new InvalidInputRpcError(new Error("Signer address mismatch"));
+          throw new EthereumRpcError(
+            RpcErrorCode.InvalidInput,
+            "Signer address mismatch",
+          );
         }
 
         const typedData =
@@ -324,8 +328,9 @@ export class EWalletEIP1193Provider
           const typedDataChainId = BigInt(typedData.domain.chainId);
 
           if (activeChainId !== typedDataChainId) {
-            throw new InvalidParamsRpcError(
-              new Error(`${typedDataChainId} does not match ${activeChainId}`),
+            throw new EthereumRpcError(
+              RpcErrorCode.InvalidParams,
+              `${typedDataChainId} does not match ${activeChainId}`,
             );
           }
         }
@@ -339,7 +344,10 @@ export class EWalletEIP1193Provider
         });
 
         if (result.type !== "signature") {
-          throw new InternalRpcError(new Error("Invalid result type"));
+          throw new EthereumRpcError(
+            RpcErrorCode.Internal,
+            "Invalid result type",
+          );
         }
 
         this._handleConnected(true, { chainId: this.activeChain.chainId });
@@ -353,7 +361,10 @@ export class EWalletEIP1193Provider
         const { signer, address } = this._getAuthenticatedSigner();
 
         if (!isAddressEqual(signWith, address)) {
-          throw new InvalidInputRpcError(new Error("Signer address mismatch"));
+          throw new EthereumRpcError(
+            RpcErrorCode.InvalidInput,
+            "Signer address mismatch",
+          );
         }
 
         const originalMessage = message.startsWith("0x")
@@ -369,7 +380,10 @@ export class EWalletEIP1193Provider
         });
 
         if (result.type !== "signature") {
-          throw new InternalRpcError(new Error("Invalid result type"));
+          throw new EthereumRpcError(
+            RpcErrorCode.Internal,
+            "Invalid result type",
+          );
         }
 
         this._handleConnected(true, { chainId: this.activeChain.chainId });
@@ -377,8 +391,9 @@ export class EWalletEIP1193Provider
         return result.signature;
       }
       default:
-        throw new UnsupportedProviderMethodError(
-          new Error("Method not supported"),
+        throw new EthereumRpcError(
+          RpcErrorCode.MethodNotSupported,
+          "Method not supported",
         );
     }
   }
@@ -393,15 +408,17 @@ export class EWalletEIP1193Provider
     const signer = this.signer;
 
     if (!signer) {
-      throw new UnauthorizedProviderError(
-        new Error("Signer is required for wallet RPC methods"),
+      throw new EthereumRpcError(
+        ProviderRpcErrorCode.Unauthorized,
+        "Signer is required for wallet RPC methods",
       );
     }
 
     const address = signer.getAddress();
     if (!address || !isAddress(address)) {
-      throw new UnauthorizedProviderError(
-        new Error("No authenticated signer for wallet RPC methods"),
+      throw new EthereumRpcError(
+        ProviderRpcErrorCode.Unauthorized,
+        "No authenticated signer for wallet RPC methods",
       );
     }
     return { signer, address };
@@ -416,22 +433,25 @@ export class EWalletEIP1193Provider
     args: RpcRequestArgs<M>,
   ): void {
     if (!args || typeof args !== "object" || Array.isArray(args)) {
-      throw new InvalidParamsRpcError(
-        new Error("Expected a single, non-array, object argument."),
+      throw new EthereumRpcError(
+        RpcErrorCode.InvalidParams,
+        "Expected a single, non-array, object argument.",
       );
     }
 
     const { method, params } = args;
 
     if (typeof method !== "string" || method.length === 0) {
-      throw new InvalidParamsRpcError(
-        new Error("Expected a non-empty string for method."),
+      throw new EthereumRpcError(
+        RpcErrorCode.InvalidParams,
+        "Expected a non-empty string for method.",
       );
     }
 
     if (typeof params !== "undefined" && typeof params !== "object") {
-      throw new InvalidParamsRpcError(
-        new Error("Expected a single, non-array, object argument."),
+      throw new EthereumRpcError(
+        RpcErrorCode.InvalidParams,
+        "Expected a single, non-array, object argument.",
       );
     }
 
@@ -440,8 +460,9 @@ export class EWalletEIP1193Provider
       !Array.isArray(params) &&
       (typeof params !== "object" || params === null)
     ) {
-      throw new InvalidParamsRpcError(
-        new Error("Expected a single, non-array, object argument."),
+      throw new EthereumRpcError(
+        RpcErrorCode.InvalidParams,
+        "Expected a single, non-array, object argument.",
       );
     }
   }
@@ -454,7 +475,7 @@ export class EWalletEIP1193Provider
    */
   protected _handleConnected(
     connected: boolean,
-    data: ProviderConnectInfo | RpcError,
+    data: ProviderConnectInfo | EthereumRpcError,
   ): void {
     if (this.activeChain) {
       const activeChainId = this.activeChain.chainId;
@@ -501,8 +522,8 @@ export class EWalletEIP1193Provider
     }
 
     if (
-      error?.code === ProviderDisconnectedError.code ||
-      error?.code === ChainDisconnectedError.code
+      error?.code === ProviderRpcErrorCode.Disconnected ||
+      error?.code === ProviderRpcErrorCode.ChainDisconnected
     ) {
       return true;
     }

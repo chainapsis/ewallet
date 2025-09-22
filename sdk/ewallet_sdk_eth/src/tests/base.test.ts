@@ -1,12 +1,5 @@
 import type { AddEthereumChainParameter } from "viem";
-import {
-  InvalidInputRpcError,
-  InvalidParamsRpcError,
-  MethodNotFoundRpcError,
-  toHex,
-  UnauthorizedProviderError,
-  UnsupportedChainIdError,
-} from "viem";
+import { toHex } from "viem";
 import { sepolia, mainnet } from "viem/chains";
 
 import {
@@ -23,7 +16,11 @@ import {
   MOCK_ADDRESS,
   MOCK_SIGNATURE,
 } from "./mock";
-import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
+import {
+  EWalletEIP1193Provider,
+  ProviderRpcErrorCode,
+  RpcErrorCode,
+} from "@keplr-ewallet-sdk-eth/provider";
 import { ProviderEventEmitter } from "@keplr-ewallet-sdk-eth/provider/emitter";
 
 describe("EWallet Provider - Base", () => {
@@ -162,8 +159,8 @@ describe("EWallet Provider - Base", () => {
         expect(thrownError).toBeDefined();
         // mainnet throws invalidParams, sepolia throws methodNotFound
         expect([
-          InvalidParamsRpcError.code,
-          MethodNotFoundRpcError.code,
+          RpcErrorCode.InvalidParams,
+          RpcErrorCode.MethodNotFound,
         ]).toContain(thrownError.code);
       });
 
@@ -242,7 +239,7 @@ describe("EWallet Provider - Base", () => {
             params: [invalidChainParam],
           }),
         ).rejects.toMatchObject({
-          code: InvalidInputRpcError.code,
+          code: RpcErrorCode.InvalidInput,
         });
       });
 
@@ -288,7 +285,7 @@ describe("EWallet Provider - Base", () => {
             params: [{ chainId: nonExistentChainId }],
           }),
         ).rejects.toMatchObject({
-          code: UnsupportedChainIdError.code,
+          code: ProviderRpcErrorCode.UnsupportedChain,
         });
       });
 
@@ -378,7 +375,7 @@ describe("EWallet Provider - Base", () => {
             params: [toHex("test"), MOCK_ADDRESS],
           }),
         ).rejects.toMatchObject({
-          code: UnauthorizedProviderError.code,
+          code: ProviderRpcErrorCode.Unauthorized,
           message: expect.stringContaining("Signer is required"),
         });
       });
@@ -420,7 +417,7 @@ describe("EWallet Provider - Base", () => {
             params: [toHex("test"), MOCK_ADDRESS],
           }),
         ).rejects.toMatchObject({
-          code: UnauthorizedProviderError.code,
+          code: ProviderRpcErrorCode.Unauthorized,
           message: expect.stringContaining("No authenticated signer"),
         });
       });

@@ -7,7 +7,7 @@ import type {
   EWalletMsgOAuthSignInUpdate,
 } from "@keplr-ewallet-sdk-core/types";
 import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
-import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth";
+import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth/google";
 
 const FIVE_MINS_MS = 5 * 60 * 1000;
 

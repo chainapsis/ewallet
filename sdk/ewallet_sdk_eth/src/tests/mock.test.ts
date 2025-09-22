@@ -7,8 +7,6 @@ import {
   recoverTransactionAddress,
   toHex,
   parseEther,
-  ResourceUnavailableRpcError,
-  UnauthorizedProviderError,
 } from "viem";
 import { mainnet, hardhat } from "viem/chains";
 
@@ -26,7 +24,11 @@ import {
   createMockSigner,
 } from "./mock";
 import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
-import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
+import {
+  EWalletEIP1193Provider,
+  ProviderRpcErrorCode,
+  RpcErrorCode,
+} from "@keplr-ewallet-sdk-eth/provider";
 
 describe("EWallet Provider - Mock RPC Testing", () => {
   let mockServer: MockRpcServer;
@@ -212,7 +214,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       await expect(
         provider.request({ method: "eth_blockNumber" }),
       ).rejects.toMatchObject({
-        code: ResourceUnavailableRpcError.code,
+        code: RpcErrorCode.ResourceUnavailable,
       });
 
       // Should have disconnect event
@@ -274,7 +276,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       await expect(
         provider.request({ method: "eth_blockNumber" }),
       ).rejects.toMatchObject({
-        code: ResourceUnavailableRpcError.code,
+        code: RpcErrorCode.ResourceUnavailable,
       });
 
       // Should have disconnect event
@@ -323,7 +325,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
       await expect(
         provider.request({ method: "eth_blockNumber" }),
       ).rejects.toMatchObject({
-        code: ResourceUnavailableRpcError.code,
+        code: RpcErrorCode.ResourceUnavailable,
       });
 
       expect(events).toHaveLength(1);
@@ -338,7 +340,7 @@ describe("EWallet Provider - Mock RPC Testing", () => {
           params: [toHex("Hello"), createMockSigner().getAddress()!],
         }),
       ).rejects.toMatchObject({
-        code: UnauthorizedProviderError.code,
+        code: ProviderRpcErrorCode.Unauthorized,
         message: expect.stringContaining("Signer is required"),
       });
 
