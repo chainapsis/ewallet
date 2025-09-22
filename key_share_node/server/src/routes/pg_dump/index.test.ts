@@ -17,6 +17,7 @@ function makeUnsuccessfulAppStatus(pool: Pool): ServerState {
     db: pool,
     encryptionSecret: "temp_enc_secret",
 
+    latest_backup_time: null,
     is_db_backup_checked: false,
     launch_time: new Date(),
     git_hash: "",
@@ -282,7 +283,8 @@ describe("pg_dump_route_test", () => {
       return response.body.data;
     };
 
-    it("should return all dumps when no days parameter is provided", async () => {
+    it("should return all dumps when no days parameter is \
+      provided", async () => {
       const dump1 = await createDump();
       const dump2 = await createDump();
 
@@ -392,7 +394,10 @@ describe("pg_dump_route_test", () => {
 
       // Update the old dump's created_at to be 2 days ago
       await pool.query(
-        `UPDATE pg_dumps SET created_at = created_at - INTERVAL '2 days' WHERE dump_id = $1`,
+        `
+UPDATE pg_dumps
+SET created_at = created_at - INTERVAL '2 days'
+WHERE dump_id = $1`,
         [oldDump.dumpId],
       );
 

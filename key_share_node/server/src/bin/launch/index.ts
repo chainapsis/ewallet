@@ -84,6 +84,7 @@ async function main() {
     db: createPostgresRes.data,
     encryptionSecret: loadEncSecretRes.data,
 
+    latest_backup_time: null,
     is_db_backup_checked: true,
     launch_time: new Date(),
     git_hash,
