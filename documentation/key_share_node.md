@@ -123,6 +123,42 @@ docker compose logs key_share_node
 docker compose logs key_share_node_pg
 ```
 
+### SSL and Reverse Proxy Configuration
+
+The Key Share Node should be accessed via HTTPS for security. You can set up SSL
+termination and reverse proxy using one of the following options:
+
+**Option 1: Self-managed Reverse Proxy (Nginx, Apache, etc.)**
+
+Set up a reverse proxy server (e.g., Nginx) on the same host or a separate
+server:
+
+1. Install and configure your preferred reverse proxy solution
+2. Configure SSL certificates (Let's Encrypt, commercial certificates, etc.)
+3. Set up reverse proxy rules to forward HTTPS traffic to your Key Share Node
+4. Configure the reverse proxy to listen on port 443 (HTTPS) and forward to
+   `localhost:${SERVER_PORT}`
+
+**Option 2: Managed Load Balancer (AWS ALB, Google Cloud Load Balancer, etc.)**
+
+Use cloud-provided load balancer services:
+
+1. Create a load balancer in your cloud provider's console
+2. Configure SSL/TLS termination at the load balancer level
+3. Set up target groups to forward traffic to your Key Share Node server
+4. Configure health checks to monitor your Key Share Node status
+
+**Final Steps:**
+
+1. Test your HTTPS configuration by accessing your Key Share Node via the
+   domain:
+
+   ```bash
+   curl https://your-domain.com/status
+   ```
+
+2. Provide your deployed server URL to the Keplr team.
+
 ### Set up Firewall
 
 #### Firewall Options
@@ -133,7 +169,9 @@ If you plan to use cloud-provided firewall services (AWS Security Groups, Google
 Cloud Firewall, Azure NSG, etc.), configure your ingress rules to allow only:
 
 - **SSH (22)**: For remote access
-- **SERVER_PORT**: Your Key Share Node server port (default: 4201)
+- **HTTPS (443)**: For Key Share Node access via reverse proxy/load balancer
+- **SERVER_PORT**: Your Key Share Node server port (default: 4201) - _Only if
+  using managed load balancer_
 
 Block all other ports including PostgreSQL (5432) to maintain security.
 
@@ -164,8 +202,8 @@ poses a security risk.
 
 We strongly recommend implementing a comprehensive firewall strategy that allows
 only essential services while blocking unnecessary access. The following
-configuration allows SSH and your Key Share Node server port, while restricting
-PostgreSQL access appropriately.
+configuration allows SSH and HTTPS access, while restricting direct access to
+your Key Share Node server port and PostgreSQL appropriately.
 
 #### 1. Check existing rules
 
@@ -175,20 +213,23 @@ sudo iptables -S DOCKER-USER
 
 #### 2. Configure comprehensive firewall rules
 
-Replace `{YOUR_KSNODE_IP}` with your trusted IP address and `4201` with your
-`SERVER_PORT` value:
+Replace `{YOUR_KSNODE_IP}` with your trusted IP address and `${SERVER_PORT}`
+with your server port value:
 
-**For host services (SSH only):**
+**For host services (SSH and HTTPS):**
 
 ```bash
 # Allow SSH (22) from anywhere (adjust as needed for your security requirements)
 sudo iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT
 
+# Allow HTTPS (443) from anywhere (for reverse proxy/load balancer access)
+sudo iptables -I INPUT 2 -p tcp --dport 443 -j ACCEPT
+
 # Deny all other traffic to host services
 sudo iptables -A INPUT -j DROP
 ```
 
-**For Docker PostgreSQL (default: localhost, optional: trusted IP):**
+**For Docker services (Key Share Node and PostgreSQL):**
 
 ```bash
 # Allow localhost access to PostgreSQL (default)
@@ -199,21 +240,28 @@ sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s {YOUR_KSNODE_IP} -j ACCEPT
 
 # Deny all other access to PostgreSQL
 sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
+
+# Restrict Key Share Node server port to localhost only (for reverse proxy access)
+sudo iptables -I DOCKER-USER 3 -p tcp --dport ${SERVER_PORT} -s 127.0.0.1 -j ACCEPT
+
+# Deny all other access to Key Share Node server port
+sudo iptables -A DOCKER-USER -p tcp --dport ${SERVER_PORT} -j DROP
 ```
 
 > **Explanation:**
 >
-> - **INPUT chain**: Blocks all host services except SSH
-> - **DOCKER-USER chain**: Restricts PostgreSQL access to localhost by default,
->   with optional trusted IP access
-> - Docker automatically allows your Key Share Node server port through its own
->   rules
+> - **INPUT chain**: Blocks all host services except SSH and HTTPS
+> - **DOCKER-USER chain**: Restricts PostgreSQL and Key Share Node server port
+>   access appropriately
 > - `-I` inserts the ACCEPT rules at the top so they are matched first
 > - `-A` appends the DROP rule at the bottom
-> - SSH (22) is allowed from anywhere for remote access
+> - SSH (22) and HTTPS (443) are allowed from anywhere for remote access and
+>   reverse proxy
 > - PostgreSQL (5432) is restricted to localhost by default, with optional
 >   trusted IP access
-> - All other host services are blocked by the INPUT chain DROP rule
+> - Key Share Node server port is restricted to localhost only (for reverse
+>   proxy access)
+> - All other services are blocked by the respective DROP rules
 
 #### 3. Make firewall rules persistent
 
@@ -242,17 +290,20 @@ You should see your rules in the following order:
 **INPUT chain:**
 
 1. SSH (22) - ACCEPT
-2. All other traffic - DROP
+2. HTTPS (443) - ACCEPT
+3. All other traffic - DROP
 
 **DOCKER-USER chain:**
 
 1. PostgreSQL (5432) from localhost - ACCEPT
 2. PostgreSQL (5432) from whitelisted IP - ACCEPT (if needed)
-3. PostgreSQL (5432) - DROP
+3. Key Share Node server port from localhost - ACCEPT
+4. PostgreSQL (5432) - DROP
+5. Key Share Node server port - DROP
 
-> **Note**: Your Key Share Node server port will be automatically accessible
-> through Docker's default rules, so no explicit rule is needed in DOCKER-USER
-> chain.
+> **Note**: The Key Share Node server port is restricted to localhost only for
+> reverse proxy access. External access to the server port is blocked for
+> security.
 
 ## Optional: Using Your Own Database
 
