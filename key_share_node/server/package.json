@@ -1,6 +1,7 @@
 {
   "name": "@keplr-ewallet/key-share-node-server",
   "packageManager": "yarn@4.7.0",
+  "private": true,
   "version": "0.0.1",
   "type": "module",
   "scripts": {
