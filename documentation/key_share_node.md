@@ -342,13 +342,14 @@ curl http://localhost:${SERVER_PORT}/status
 - `is_db_connected`: Database connection status (boolean)
 - `is_db_backup_checked`: Whether database backup verification is complete
   (boolean)
-- `latest_backup_time`: Timestamp of the most recent successful backup (Date or
-  null)
+- `latest_backup_time`: Timestamp of the most recent successful backup (ISO
+  string or null)
 - `ks_node_public_key`: Public key of the Key Share Node (string) - _Currently
   returns temporary value, will be updated in future releases_
-- `launch_time`: Server startup timestamp (Date)
+- `launch_time`: Server startup timestamp (ISO string)
 - `git_hash`: Git commit hash of the deployed version (string) - _Currently
   returns temporary value, will be updated in future releases_
+- `version`: Application version (string)
 
 **Example response:**
 
@@ -357,9 +358,10 @@ curl http://localhost:${SERVER_PORT}/status
   "is_db_connected": true,
   "is_db_backup_checked": true,
   "latest_backup_time": "2024-01-15T10:30:00.000Z",
-  "ks_node_public_key": "your_public_key_here",
+  "ks_node_public_key": "to-be-upgraded",
   "launch_time": "2024-01-15T09:00:00.000Z",
-  "git_hash": "abc123def456"
+  "git_hash": "abc123def456",
+  "version": "1.0.0"
 }
 ```
 
