@@ -3,9 +3,9 @@ import {
   InvalidInputRpcError,
   InvalidParamsRpcError,
   MethodNotFoundRpcError,
+  SwitchChainError,
   toHex,
   UnauthorizedProviderError,
-  UnsupportedChainIdError,
 } from "viem";
 import { sepolia, mainnet } from "viem/chains";
 
@@ -288,7 +288,7 @@ describe("EWallet Provider - Base", () => {
             params: [{ chainId: nonExistentChainId }],
           }),
         ).rejects.toMatchObject({
-          code: UnsupportedChainIdError.code,
+          code: SwitchChainError.code,
         });
       });
 

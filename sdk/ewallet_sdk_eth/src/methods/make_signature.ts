@@ -4,12 +4,7 @@ import type {
   ChainInfoForAttachedModal,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import { v4 as uuidv4 } from "uuid";
-import {
-  InternalRpcError,
-  UnsupportedChainIdError,
-  UserRejectedRequestError,
-  type Chain,
-} from "viem";
+import type { Chain } from "viem";
 
 import type {
   EthEWalletInterface,
@@ -22,6 +17,11 @@ import {
   SUPPORTED_CHAINS,
   TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
+import {
+  EthereumRpcError,
+  ProviderRpcErrorCode,
+  RpcErrorCode,
+} from "@keplr-ewallet-sdk-eth/provider";
 import { toSignableTransaction } from "@keplr-ewallet-sdk-eth/utils";
 
 export async function makeSignature(
@@ -43,8 +43,9 @@ export async function makeSignature(
 
   const activeChain = chains.find((chain) => chain.id === chainIdNumber);
   if (!activeChain) {
-    throw new UnsupportedChainIdError(
-      new Error("Chain not found in the supported chains"),
+    throw new EthereumRpcError(
+      ProviderRpcErrorCode.UnsupportedChain,
+      `Chain ${chainIdNumber} not found in the supported chains`,
     );
   }
 
@@ -115,8 +116,9 @@ function createMakeSignatureData(
     }
 
     default: {
-      throw new InternalRpcError(
-        new Error(`Unknown sign method: ${(params as any).type}`),
+      throw new EthereumRpcError(
+        RpcErrorCode.Internal,
+        `Unknown sign method: ${(params as any).type}`,
       );
     }
   }
@@ -159,8 +161,9 @@ async function handleSigningFlow(
       }
 
       case "reject": {
-        throw new UserRejectedRequestError(
-          new Error("User rejected the signature request"),
+        throw new EthereumRpcError(
+          ProviderRpcErrorCode.UserRejectedRequest,
+          "User rejected the signature request",
         );
       }
 
@@ -169,7 +172,9 @@ async function handleSigningFlow(
       }
 
       default: {
-        throw new Error("unreachable");
+        throw new Error(
+          `unreachable response type: ${(openModalResp as any).type}`,
+        );
       }
     }
   } catch (error) {
@@ -178,8 +183,9 @@ async function handleSigningFlow(
       throw error;
     }
 
-    throw new InternalRpcError(
-      new Error(error instanceof Error ? error.message : String(error)),
+    throw new EthereumRpcError(
+      RpcErrorCode.Internal,
+      error instanceof Error ? error.message : String(error),
     );
   } finally {
     eWallet.closeModal();
