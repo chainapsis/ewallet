@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export function createLogger() {
-  const { combine, timestamp, json, printf, colorize, splat } = winston.format;
+  const { combine, timestamp, printf, colorize, splat } = winston.format;
 
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
