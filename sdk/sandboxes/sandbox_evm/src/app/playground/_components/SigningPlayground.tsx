@@ -5,6 +5,7 @@ import { PermitSignWidget } from "./PermitSignWidget";
 import { SiweSignWidget } from "./SiweSignWidget";
 import { SignatureVerificationWidget } from "./SignatureVerificationWidget";
 import { NativeTransferWidget } from "./NativeTransferWidget";
+import { Eip712SignWidget } from "./EIP712SignWidget";
 
 export function SigningPlayground() {
   return (
@@ -20,6 +21,7 @@ export function SigningPlayground() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <PersonalSignWidget />
+          <Eip712SignWidget />
           <PermitSignWidget />
           <SiweSignWidget />
           <NativeTransferWidget />
