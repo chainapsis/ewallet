@@ -10,6 +10,19 @@ import { createUser, getUserByEmail } from "@keplr-ewallet/ksn-pg-interface";
 import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import { makePgDumpRouter } from ".";
+import type { ServerState } from "@keplr-ewallet-ksn-server/state";
+
+function makeUnsuccessfulAppStatus(pool: Pool): ServerState {
+  return {
+    db: pool,
+    encryptionSecret: "temp_enc_secret",
+
+    is_db_backup_checked: false,
+    launch_time: new Date(),
+    git_hash: "",
+    version: "",
+  };
+}
 
 describe("pg_dump_route_test", () => {
   const testAdminPassword = "test_admin_password";
@@ -61,6 +74,7 @@ describe("pg_dump_route_test", () => {
       latest_backup_time: null,
       launch_time: new Date(),
       git_hash: "",
+      version: "",
     };
   });
 
@@ -158,15 +172,7 @@ describe("pg_dump_route_test", () => {
       const pgDumpRouter = makePgDumpRouter();
       invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
-      invalidApp.locals = {
-        db: pool,
-        encryptionSecret: "temp_enc_secret",
-
-        is_db_backup_checked: false,
-        latest_backup_time: null,
-        launch_time: new Date(),
-        git_hash: "",
-      };
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
         .post("/pg_dump/v1/backup")
@@ -202,15 +208,7 @@ describe("pg_dump_route_test", () => {
 
       process.env.DB_PASSWORD = "wrong_password";
 
-      invalidApp.locals = {
-        db: pool,
-        encryptionSecret: "temp_enc_secret",
-
-        is_db_backup_checked: false,
-        latest_backup_time: null,
-        launch_time: new Date(),
-        git_hash: "",
-      };
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
         .post("/pg_dump/v1/backup")
@@ -354,6 +352,7 @@ describe("pg_dump_route_test", () => {
         latest_backup_time: null,
         launch_time: new Date(),
         git_hash: "",
+        version: "",
       };
 
       const response = await request(invalidApp)
@@ -636,15 +635,7 @@ describe("pg_dump_route_test", () => {
 
       process.env.DB_NAME = "non_existent_db";
 
-      invalidApp.locals = {
-        db: pool,
-        encryptionSecret: "temp_enc_secret",
-
-        is_db_backup_checked: false,
-        latest_backup_time: null,
-        launch_time: new Date(),
-        git_hash: "",
-      };
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
         .post("/pg_dump/v1/restore")
@@ -670,15 +661,7 @@ describe("pg_dump_route_test", () => {
 
       process.env.DB_PASSWORD = "wrong_password";
 
-      invalidApp.locals = {
-        db: pool,
-        encryptionSecret: "temp_enc_secret",
-
-        is_db_backup_checked: false,
-        latest_backup_time: null,
-        launch_time: new Date(),
-        git_hash: "",
-      };
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
         .post("/pg_dump/v1/restore")
