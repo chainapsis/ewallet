@@ -45,14 +45,19 @@ export async function checkDBBackup(
     }
     originalPool = originalPoolRes.data;
 
-    await originalPool.query(`
+    const data = [{ email: "test1@test.com" }, { email: "test2@test.com" }];
+
+    await originalPool.query(
+      `
 INSERT INTO users (
   email
 ) 
-VALUES 
-( 'test1@test.com' ), 
-( 'test2@test.com' )
-`);
+VALUES
+($1),
+($2)
+`,
+      data,
+    );
 
     const dumpRes = await dump(pgConfig, dumpDir);
     if (!dumpRes.success) {
@@ -126,14 +131,16 @@ WHERE datname = $1
 SELECT email 
 FROM users
 `);
-    const expectedEmails = ["test1@test.com", "test2@test.com"];
+
+    // const expectedEmails = ["test1@test.com", "test2@test.com"];
 
     if (result.length !== 2) {
       return {
         success: false,
         err: {
           type: "restored_data_mismatch",
-          error: `Failed to restore database, result len: ${result.length}`,
+          error: `Failed to restore database, result len: ${result.length},\
+expected: 2`,
         },
       };
     }
