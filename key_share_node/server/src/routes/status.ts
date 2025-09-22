@@ -1,6 +1,7 @@
 import type { Express, Response } from "express";
 import type { ServerStatus } from "@keplr-ewallet/ksn-interface/status";
 import { getLatestCompletedPgDump } from "@keplr-ewallet/ksn-pg-interface";
+import dayjs from "dayjs";
 
 export function addStatusRoutes(app: Express) {
   app.get("/status", async (req, res: Response<ServerStatus>) => {
@@ -15,10 +16,14 @@ export function addStatusRoutes(app: Express) {
       console.error("Database connection check failed:", error);
     }
 
-    let latestBackupTime: Date | null = null;
+    let latestBackupTime: string | null = null;
     const getLatestDumpRes = await getLatestCompletedPgDump(db);
     if (getLatestDumpRes.success) {
-      latestBackupTime = getLatestDumpRes.data?.created_at || null;
+      if (getLatestDumpRes.data?.created_at) {
+        latestBackupTime = dayjs(
+          getLatestDumpRes.data?.created_at,
+        ).toISOString();
+      }
     } else {
       console.error("Failed to get latest dump:", getLatestDumpRes.err);
     }
