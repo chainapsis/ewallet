@@ -40,7 +40,7 @@ export async function bearerTokenMiddleware(
       const errorRes: KSNodeApiErrorResponse = {
         success: false,
         code: "UNAUTHORIZED",
-        msg: result.err || "Invalid token",
+        msg: result.err.type || "Invalid token",
       };
       res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       return;
