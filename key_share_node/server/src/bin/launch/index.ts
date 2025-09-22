@@ -22,23 +22,25 @@ async function main() {
 
   const loadEnvRes = loadEnv(opts.nodeId);
   if (!loadEnvRes.success) {
-    console.warn("ENV didn't exist, but we will continue");
+    logger.info("ENV didn't exist, but we will continue");
   }
 
   const verifyEnvRes = verifyEnv(process.env);
   if (!verifyEnvRes.success) {
-    console.error("ENV variables invalid, err: %s", verifyEnvRes.err);
+    logger.error("ENV variables invalid, err: %s", verifyEnvRes.err);
+
     process.exit(1);
   }
 
   const loadEncSecretRes = loadEncSecret(process.env.ENCRYPTION_SECRET_PATH);
   if (!loadEncSecretRes.success) {
-    console.error("Encryption secret invalid, err: %s", loadEncSecretRes.err);
+    logger.error("Encryption secret invalid, err: %s", loadEncSecretRes.err);
+
     process.exit(1);
   }
 
   if (opts.nodeId === "1") {
-    console.log("Checking DB backup, nodeId: %s", opts.nodeId);
+    logger.debug("Checking DB backup, nodeId: %s", opts.nodeId);
 
     const backupRes = await checkDBBackup(
       {
@@ -52,7 +54,7 @@ async function main() {
       process.env.DUMP_DIR,
     );
     if (!backupRes.success) {
-      console.error(
+      logger.error(
         "%s: Health check failed, exiting process, err: %s",
         chalk.bold.red("Error"),
         backupRes.err,
@@ -60,10 +62,10 @@ async function main() {
 
       process.exit(1);
     } else {
-      console.log("%s DB backup check", chalk.bold.green("Finished"));
+      logger.info("Finished DB backup check");
     }
   } else {
-    console.log("Bypass DB backup checking, nodeId: %s", opts.nodeId);
+    logger.info("Bypass DB backup checking, nodeId: %s", opts.nodeId);
   }
 
   const createPostgresRes = await connectPG({
@@ -76,7 +78,8 @@ async function main() {
   });
 
   if (createPostgresRes.success === false) {
-    console.error(createPostgresRes.err);
+    logger.error(createPostgresRes.err);
+
     return createPostgresRes;
   }
 
@@ -117,11 +120,7 @@ async function main() {
   );
 
   app.listen(process.env.PORT, () => {
-    console.log(
-      "%s server, listening on port: %s",
-      chalk.bold.green("Start"),
-      process.env.PORT,
-    );
+    logger.info("Start server, listening on port: %s", process.env.PORT);
   });
 
   return;

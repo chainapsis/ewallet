@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export function createLogger() {
-  const { combine, timestamp, json } = winston.format;
+  const { combine, timestamp, json, printf, colorize, splat } = winston.format;
 
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
@@ -17,12 +17,28 @@ export function createLogger() {
     datePattern: "YYYY-MM-DD",
     maxFiles: "7d",
     dirname: log_path,
+    format: combine(
+      timestamp(),
+      splat(),
+      printf((info) => {
+        return `${info.timestamp} ${info.level}: ${info.message}`;
+      }),
+    ),
+  });
+
+  const consoleTransport = new winston.transports.Console({
+    level: "debug",
+    format: combine(
+      colorize(),
+      splat(),
+      printf((info) => `${info.level}: ${info.message}`),
+    ),
   });
 
   const logger = winston.createLogger({
     level: process.env.LOG_LEVEL || "info",
-    format: combine(timestamp(), json()),
-    transports: [fileRotateTransport],
+    // format: combine(timestamp(), json()),
+    transports: [consoleTransport, fileRotateTransport],
   });
 
   return logger;

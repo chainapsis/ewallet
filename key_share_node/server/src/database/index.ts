@@ -1,6 +1,7 @@
 import { Pool, type PoolClient } from "pg";
-import chalk from "chalk";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+
+import { logger } from "@keplr-ewallet-ksn-server/logger";
 
 export type PgDatabaseConfig = {
   database: string;
@@ -24,7 +25,7 @@ export async function connectPG(
   };
 
   try {
-    console.log(
+    logger.debug(
       "Connecting to PostgreSQL, host: %s, database: %s",
       config.host,
       config.database,
@@ -34,15 +35,13 @@ export async function connectPG(
 
     // Test connection
     const { rows: result } = await pool.query("SELECT NOW()");
-    console.log(
-      "%s to PostgreSQL, server time: %o",
-      chalk.bold.green("Connected"),
-      result,
-    );
+
+    logger.info("Connected to PostgreSQL, server time: %o", result);
 
     return { success: true, data: pool };
   } catch (error) {
-    console.error("Failed to connect to PostgreSQL: %s", error);
+    logger.error("Failed to connect to PostgreSQL: %s", error);
+
     return {
       success: false,
       err: `Failed to connect to PostgreSQL: ${error instanceof Error ? error.message : String(error)
@@ -74,9 +73,9 @@ export async function resetPgDatabase(pool: Pool) {
     }
     await client.query("COMMIT");
 
-    console.log("Truncated tables in pg");
+    logger.debug("Truncated tables in pg");
   } catch (err) {
-    console.error("Error truncating table, err: %s", err);
+    logger.error("Error truncating table, err: %s", err);
 
     await client.query("ROLLBACK");
   } finally {

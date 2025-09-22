@@ -28,11 +28,7 @@ export async function dump(
     if (!fs.existsSync(dumpDir)) {
       fs.mkdirSync(dumpDir, { recursive: true });
 
-      console.log(
-        "%s dump dir, path: %s",
-        chalk.bold.green("Created"),
-        dumpDir,
-      );
+      console.log("Created dump dir, path: %s", dumpDir);
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -115,7 +111,7 @@ export async function restore(
       return { success: false, err: errorMsg };
     }
 
-    console.log("%s pg_restore completed", chalk.bold.green("Finished"));
+    console.log("Finished pg_restore");
 
     return { success: true, data: void 0 };
   } catch (error) {

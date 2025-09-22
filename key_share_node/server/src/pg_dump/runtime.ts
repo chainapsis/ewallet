@@ -1,9 +1,9 @@
 import type { Pool } from "pg";
-import chalk from "chalk";
 import { type PgDumpConfig } from "@keplr-ewallet/ksn-pg-interface";
 
 import { sleep } from "@keplr-ewallet-ksn-server/utils/time";
 import { deleteOldPgDumps, processPgDump } from "./dump";
+import { logger } from "@keplr-ewallet-ksn-server/logger";
 
 export interface PgDumpRuntimeOptions {
   dumpDir: string;
@@ -18,11 +18,7 @@ export async function startPgDumpRuntime(
 ) {
   const sleepTime = pgDumpRuntimeOptions.sleepTimeSeconds * 1000;
 
-  console.log(
-    "%s pg dump runtime, sleep time: %s",
-    chalk.bold.green("Start"),
-    sleepTime,
-  );
+  logger.info("Start pg dump runtime, sleep time: %s", sleepTime);
 
   while (true) {
     try {
@@ -32,12 +28,12 @@ export async function startPgDumpRuntime(
         pgDumpRuntimeOptions.dumpDir,
       );
       if (processPgDumpRes.success === false) {
-        console.error("Error processing pg dump:", processPgDumpRes.err);
+        logger.error("Error processing pg dump:", processPgDumpRes.err);
       } else {
         const { dumpId, dumpPath, dumpSize, dumpDuration } =
           processPgDumpRes.data;
 
-        console.log(
+        logger.debug(
           `Completed pg dump ${dumpId} in ${dumpDuration}s, \
 path: ${dumpPath}, size: ${dumpSize} bytes`,
         );
@@ -48,12 +44,12 @@ path: ${dumpPath}, size: ${dumpSize} bytes`,
         pgDumpRuntimeOptions.retentionDays,
       );
       if (deleteOldPgDumpsRes.success === false) {
-        console.error("Error deleting old pg dumps:", deleteOldPgDumpsRes.err);
+        logger.error("Error deleting old pg dumps:", deleteOldPgDumpsRes.err);
       } else {
-        console.log(`Deleted ${deleteOldPgDumpsRes.data} old pg dumps`);
+        logger.debug(`Deleted ${deleteOldPgDumpsRes.data} old pg dumps`);
       }
     } catch (err: any) {
-      console.error("Error running pg dump, err: %s", err);
+      logger.error("Error running pg dump, err: %s", err);
     } finally {
       await sleep(sleepTime);
     }

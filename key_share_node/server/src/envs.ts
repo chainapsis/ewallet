@@ -1,10 +1,11 @@
 import * as dotenv from "dotenv";
-import chalk from "chalk";
 import fs from "node:fs";
 import path from "path";
 import { z } from "zod";
 import os from "node:os";
 import type { Result } from "@keplr-ewallet/stdlib-js";
+
+import { logger } from "./logger";
 
 const ENV_FILE_NAME_STEM = "key_share_node";
 
@@ -48,11 +49,11 @@ export function loadEnv(nodeId: string): Result<void, string> {
   const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
 
   if (!fs.existsSync(envPath)) {
-    console.log("Env file does not exist, path: %s", envPath);
+    logger.debug("Env file does not exist, path: %s", envPath);
 
     return { success: false, err: `Env file does not exist, path: ${envPath}` };
   } else {
-    console.log("Loading env, path: %s", envPath);
+    logger.debug("Loading env, path: %s", envPath);
   }
 
   dotenv.config({
