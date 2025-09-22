@@ -213,8 +213,8 @@ sudo iptables -S DOCKER-USER
 
 #### 2. Configure comprehensive firewall rules
 
-Replace `{YOUR_KSNODE_IP}` with your trusted IP address and `${SERVER_PORT}`
-with your server port value:
+Replace `{YOUR_WHITELIST_IP}` with your whitelisted IP address and
+`${SERVER_PORT}` with your server port value:
 
 **For host services (SSH and HTTPS):**
 
@@ -235,8 +235,8 @@ sudo iptables -A INPUT -j DROP
 # Allow localhost access to PostgreSQL (default)
 sudo iptables -I DOCKER-USER 1 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
 
-# (Optional) Allow PostgreSQL (5432) from trusted IP only
-sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s {YOUR_KSNODE_IP} -j ACCEPT
+# (Optional) Allow PostgreSQL (5432) from whitelisted IP only
+sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s {YOUR_WHITELIST_IP} -j ACCEPT
 
 # Deny all other access to PostgreSQL
 sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
@@ -258,7 +258,7 @@ sudo iptables -A DOCKER-USER -p tcp --dport ${SERVER_PORT} -j DROP
 > - SSH (22) and HTTPS (443) are allowed from anywhere for remote access and
 >   reverse proxy
 > - PostgreSQL (5432) is restricted to localhost by default, with optional
->   trusted IP access
+>   whitelisted IP access
 > - Key Share Node server port is restricted to localhost only (for reverse
 >   proxy access)
 > - All other services are blocked by the respective DROP rules
