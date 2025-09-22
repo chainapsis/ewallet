@@ -7,14 +7,25 @@ use crate::sss::point::Point256;
 
 pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<[u8; 32], String> {
     let mut secret_scalar: C::Scalar = C::Scalar::ZERO;
-    let ksp = KeysharePoints::new(split_points.clone());
+
+    if split_points.len() < t as usize {
+        return Err("Split points must be greater than t".to_string());
+    }
+
+    let ksp = KeysharePoints::new(
+        split_points
+            .iter()
+            .take(t as usize)
+            .cloned()
+            .collect::<Vec<_>>(),
+    );
     let keyshare_points = match ksp {
         Ok(val) => val,
         Err(e) => return Err(e),
     };
 
     for (_, point) in keyshare_points.to_point_vec().iter().enumerate() {
-        let lagrange_coefficient = lagrange_coefficient::<C>(keyshare_points.clone(), point);
+        let lagrange_coefficient = lagrange_coefficient::<C>(&keyshare_points, point);
         if lagrange_coefficient.is_err() {
             return Err(lagrange_coefficient.err().unwrap());
         }
@@ -37,7 +48,7 @@ pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<[u8; 3
 // participants.rs
 // Get the lagrange coefficient for a participant, relative to this list.
 pub fn lagrange_coefficient<C: CSCurve>(
-    ksp: KeysharePoints,
+    ksp: &KeysharePoints,
     p: &Point256,
 ) -> Result<C::Scalar, String> {
     if !ksp.contain_point(p) {
