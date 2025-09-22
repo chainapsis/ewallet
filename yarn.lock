@@ -3290,6 +3290,7 @@ __metadata:
     chalk: "npm:*"
     commander: "npm:*"
     cors: "npm:^2.8.5"
+    dayjs: "npm:*"
     dotenv: "npm:^16.4.5"
     express: "npm:^4.21.1"
     express-rate-limit: "npm:^8.0.1"
@@ -11041,6 +11042,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:*, dayjs@npm:^1.11.18":
+  version: 1.11.18
+  resolution: "dayjs@npm:1.11.18"
+  checksum: 10c0/83b67f5d977e2634edf4f5abdd91d9041a696943143638063016915d2cd8c7e57e0751e40379a07ebca8be7a48dd380bef8752d22a63670f2d15970e34f96d7a
+  languageName: node
+  linkType: hard
+
 "dayjs@npm:1.11.13":
   version: 1.11.13
   resolution: "dayjs@npm:1.11.13"
@@ -18584,6 +18592,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8.35.1"
     "@typescript-eslint/parser": "npm:^8.35.1"
     chalk: "npm:^5.5.0"
+    dayjs: "npm:^1.11.18"
     del-cli: "npm:^6.0.0"
     dotenv: "npm:^16.4.5"
     hardhat: "npm:^2.25.0"

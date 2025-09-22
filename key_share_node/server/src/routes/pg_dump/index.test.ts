@@ -6,6 +6,7 @@ import { Pool } from "pg";
 import fs from "node:fs/promises";
 import { getPgDumpById, getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
 import { createUser, getUserByEmail } from "@keplr-ewallet/ksn-pg-interface";
+import dayjs from "dayjs";
 
 import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
@@ -19,7 +20,7 @@ function makeUnsuccessfulAppStatus(pool: Pool): ServerState {
 
     latest_backup_time: null,
     is_db_backup_checked: false,
-    launch_time: new Date(),
+    launch_time: dayjs().toISOString(),
     git_hash: "",
     version: "",
   };
@@ -73,7 +74,7 @@ describe("pg_dump_route_test", () => {
 
       is_db_backup_checked: false,
       latest_backup_time: null,
-      launch_time: new Date(),
+      launch_time: dayjs().toISOString(),
       git_hash: "",
       version: "",
     };
@@ -352,7 +353,7 @@ describe("pg_dump_route_test", () => {
 
         is_db_backup_checked: false,
         latest_backup_time: null,
-        launch_time: new Date(),
+        launch_time: dayjs().toISOString(),
         git_hash: "",
         version: "",
       };

@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import dayjs from "dayjs";
 
 import { connectPG } from "@keplr-ewallet-ksn-server/database";
 import { makeApp } from "@keplr-ewallet-ksn-server/app";
@@ -9,7 +10,7 @@ import { checkDBBackup } from "./check_db_backup";
 import { parseCLIArgs } from "./cli_args";
 import type { ServerState } from "@keplr-ewallet-ksn-server/state";
 import { getGitCommitHash } from "./git";
-import pJson from "../../../package.json";
+import pJson from "@keplr-ewallet-ksn-server/../package.json";
 
 const ONE_DAY_MS = 1 * 86400;
 
@@ -80,13 +81,16 @@ async function main() {
   const git_hash = getGitCommitHash();
   const version = pJson.version;
 
+  const now = dayjs();
+  const launch_time = now.toISOString();
+
   const state: ServerState = {
     db: createPostgresRes.data,
     encryptionSecret: loadEncSecretRes.data,
 
     latest_backup_time: null,
     is_db_backup_checked: true,
-    launch_time: new Date(),
+    launch_time,
     git_hash,
     version,
   };
