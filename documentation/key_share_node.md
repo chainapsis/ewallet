@@ -31,11 +31,13 @@ system includes both the Key Share Node server and PostgreSQL database.
 
 ### Prerequisites
 
-1. Clone the repository and navigate to the Docker setup directory:
+1. Clone repository and setup:
 
 ```bash
 git clone https://github.com/chainapsis/ewallet.git
-cd ewallet/key_share_node/docker
+cd ewallet
+git fetch && git checkout <version>
+cd key_share_node/docker
 ```
 
 2. Prepare the encryption secret file:
