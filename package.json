@@ -33,7 +33,9 @@
     "dayjs": "^1.11.18",
     "dotenv": "^16.4.5",
     "uuid": "^11.1.0",
-    "viem": "^2.31.7"
+    "viem": "^2.31.7",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.4",

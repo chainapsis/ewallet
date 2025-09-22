@@ -29,6 +29,8 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "tsx": "*",
+    "winston": "*",
+    "winston-daily-rotate-file": "*",
     "zod": "^4.0.5"
   },
   "devDependencies": {
