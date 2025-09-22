@@ -21,7 +21,7 @@ export function split(
   const field = galois.createPrimeField(SECP256K1_ORDER);
 
   const coeffs: bigint[] = [secret.toBigInt()];
-  for (let idx = 1; idx < t; idx += 1) {
+  for (let idx = 1; idx < n; idx += 1) {
     const coeff = field.rand();
     coeffs.push(coeff);
   }

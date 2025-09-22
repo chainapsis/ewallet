@@ -4,10 +4,7 @@ import { Pool } from "pg";
 import fs from "node:fs/promises";
 import { getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
 
-import {
-  createPgDatabase,
-  resetPgDatabase,
-} from "@keplr-ewallet-ksn-server/database";
+import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
 import { processPgDump } from "@keplr-ewallet-ksn-server/pg_dump/dump";
@@ -19,7 +16,7 @@ describe("pg_dump_runtime_test", () => {
 
   beforeAll(async () => {
     const config = testPgConfig;
-    const createPostgresRes = await createPgDatabase({
+    const createPostgresRes = await connectPG({
       database: config.database,
       host: config.host,
       password: config.password,

@@ -31,12 +31,10 @@ pub fn split<C: CSCurve>(
 
     let polynomial = Polynomial::<C>::extend_random(&mut rng, t as usize, &constant);
 
-    let truncate_hashes = ks_node_hashes.iter().take(t as usize).collect::<Vec<_>>();
-
-    let ks_node_hash_scalars = truncate_hashes
+    let ks_node_hash_scalars = ks_node_hashes
         .iter()
         .map(|&hash| {
-            let sp = ScalarPrimitive::<C>::from_slice(hash)
+            let sp = ScalarPrimitive::<C>::from_slice(hash.as_slice())
                 .map_err(|err| format!("Failed to convert hash to scalar, err: {}", err))?;
             Ok(C::Scalar::from(sp))
         })

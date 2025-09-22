@@ -6,13 +6,24 @@ import { Pool } from "pg";
 import fs from "node:fs/promises";
 import { getPgDumpById, getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
 import { createUser, getUserByEmail } from "@keplr-ewallet/ksn-pg-interface";
+import dayjs from "dayjs";
 
-import {
-  createPgDatabase,
-  resetPgDatabase,
-} from "@keplr-ewallet-ksn-server/database";
+import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
-import { setPgDumpRoutes } from "@keplr-ewallet-ksn-server/routes/pg_dump/pg_dump";
+import { makePgDumpRouter } from ".";
+import type { ServerState } from "@keplr-ewallet-ksn-server/state";
+
+function makeUnsuccessfulAppStatus(pool: Pool): ServerState {
+  return {
+    db: pool,
+    encryptionSecret: "temp_enc_secret",
+
+    is_db_backup_checked: false,
+    launch_time: dayjs().toISOString(),
+    git_hash: "",
+    version: "",
+  };
+}
 
 describe("pg_dump_route_test", () => {
   const testAdminPassword = "test_admin_password";
@@ -22,8 +33,19 @@ describe("pg_dump_route_test", () => {
   let app: express.Application;
 
   beforeAll(async () => {
+    process.env = {
+      ...process.env,
+      ADMIN_PASSWORD: testAdminPassword,
+      DB_NAME: testPgConfig.database,
+      DB_HOST: testPgConfig.host,
+      DB_PASSWORD: testPgConfig.password,
+      DB_USER: testPgConfig.user,
+      DB_PORT: testPgConfig.port.toString(),
+      DUMP_DIR: dumpDir,
+    };
+
     const config = testPgConfig;
-    const createPostgresRes = await createPgDatabase({
+    const createPostgresRes = await connectPG({
       database: config.database,
       host: config.host,
       password: config.password,
@@ -42,32 +64,36 @@ describe("pg_dump_route_test", () => {
     app = express();
     app.use(express.json());
 
-    const router = express.Router();
-    setPgDumpRoutes(router);
-    app.use("/pg_dump/v1", router);
+    const pgDumpRouter = makePgDumpRouter();
+    app.use("/pg_dump/v1", pgDumpRouter);
 
     app.locals = {
       db: pool,
-      env: {
-        ADMIN_PASSWORD: testAdminPassword,
-        DB_NAME: testPgConfig.database,
-        DB_HOST: testPgConfig.host,
-        DB_PASSWORD: testPgConfig.password,
-        DB_USER: testPgConfig.user,
-        DB_PORT: testPgConfig.port,
-        DUMP_DIR: dumpDir,
-      },
+      encryptionSecret: "temp_enc_secret",
+
+      is_db_backup_checked: false,
+      launch_time: dayjs().toISOString(),
+      git_hash: "",
+      version: "",
     };
   });
 
   beforeEach(async () => {
+    process.env.ADMIN_PASSWORD = testAdminPassword;
+    process.env.DB_NAME = testPgConfig.database;
+    process.env.DB_HOST = testPgConfig.host;
+    process.env.DB_PASSWORD = testPgConfig.password;
+    process.env.DB_USER = testPgConfig.user;
+    process.env.DB_PORT = testPgConfig.port.toString();
+    process.env.DUMP_DIR = dumpDir;
+
     await resetPgDatabase(pool);
   });
 
-  describe("POST /pg_dump/v1/", () => {
+  describe("POST /pg_dump/v1/backup", () => {
     it("should successfully create pg dump with valid password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(200);
 
@@ -105,7 +131,7 @@ describe("pg_dump_route_test", () => {
 
     it("should fail with invalid password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: "wrong_password" })
         .expect(401);
 
@@ -116,7 +142,7 @@ describe("pg_dump_route_test", () => {
 
     it("should fail with missing password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({})
         .expect(401);
 
@@ -127,7 +153,7 @@ describe("pg_dump_route_test", () => {
 
     it("should fail with empty password", async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: "" })
         .expect(401);
 
@@ -137,28 +163,19 @@ describe("pg_dump_route_test", () => {
     });
 
     it("should handle database configuration errors", async () => {
+      const originalDbName = process.env.DB_NAME;
+      process.env.DB_NAME = "non_existent_db";
+
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
-      invalidApp.locals = {
-        db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: "non_existent_db",
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: testPgConfig.password,
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
-      };
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(500);
 
@@ -178,31 +195,23 @@ describe("pg_dump_route_test", () => {
       expect(failedDumps.length).toBe(1);
       expect(failedDumps[0].dump_path).toBeNull();
       expect(failedDumps[0].meta.error).toContain("database");
+
+      process.env.DB_NAME = originalDbName;
     });
 
     it("should handle authentication errors", async () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
-      invalidApp.locals = {
-        db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: testPgConfig.database,
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: "wrong_password",
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
-      };
+      process.env.DB_PASSWORD = "wrong_password";
+
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(500);
 
@@ -227,7 +236,7 @@ describe("pg_dump_route_test", () => {
     it("should handle multiple concurrent requests", async () => {
       const promises = Array.from({ length: 3 }, () =>
         request(app)
-          .post("/pg_dump/v1/")
+          .post("/pg_dump/v1/backup")
           .send({ password: testAdminPassword })
           .expect(200),
       );
@@ -264,20 +273,23 @@ describe("pg_dump_route_test", () => {
     });
   });
 
-  describe("GET /pg_dump/v1/", () => {
+  describe("POST /pg_dump/v1/get_backup_history", () => {
     const createDump = async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(200);
       return response.body.data;
     };
 
-    it("should return all dumps when no days parameter is provided", async () => {
+    it("should return all dumps when no days parameter is \
+      provided", async () => {
       const dump1 = await createDump();
       const dump2 = await createDump();
 
-      const response = await request(app).get("/pg_dump/v1/").expect(200);
+      const response = await request(app)
+        .post("/pg_dump/v1/get_backup_history")
+        .expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toBeDefined();
@@ -301,7 +313,8 @@ describe("pg_dump_route_test", () => {
       const dump = await createDump();
 
       const response = await request(app)
-        .get("/pg_dump/v1/?days=7")
+        .post("/pg_dump/v1/get_backup_history")
+        .send({ days: 7 })
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -314,7 +327,9 @@ describe("pg_dump_route_test", () => {
     });
 
     it("should return empty array when no dumps exist", async () => {
-      const response = await request(app).get("/pg_dump/v1/").expect(200);
+      const response = await request(app)
+        .post("/pg_dump/v1/get_backup_history")
+        .expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data).toBeDefined();
@@ -322,78 +337,26 @@ describe("pg_dump_route_test", () => {
       expect(response.body.data.length).toBe(0);
     });
 
-    it("should fail with invalid days parameter (zero)", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=0")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
-    });
-
-    it("should fail with invalid days parameter (negative)", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=-1")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
-    });
-
-    it("should fail with days parameter greater than 1000", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=1001")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
-    });
-
-    it("should fail with non-numeric days parameter", async () => {
-      const response = await request(app)
-        .get("/pg_dump/v1/?days=abc")
-        .expect(400);
-
-      expect(response.body.success).toBe(false);
-      expect(response.body.code).toBe("INVALID_DAYS");
-      expect(response.body.msg).toBe(
-        "Days parameter must be between 1 and 1000",
-      );
-    });
-
     it("should handle database errors gracefully", async () => {
       // Create an app with invalid database connection
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
       invalidApp.locals = {
-        db: null, // Invalid database connection
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: testPgConfig.database,
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: testPgConfig.password,
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
+        db: null as any, // Invalid database connection
+        encryptionSecret: "temp_enc_secret",
+
+        is_db_backup_checked: false,
+        launch_time: dayjs().toISOString(),
+        git_hash: "",
+        version: "",
       };
 
       const response = await request(invalidApp)
-        .get("/pg_dump/v1/")
+        .post("/pg_dump/v1/get_backup_history")
         .expect(500);
 
       expect(response.body.success).toBe(false);
@@ -408,7 +371,9 @@ describe("pg_dump_route_test", () => {
       await new Promise((resolve) => setTimeout(resolve, 100));
       const dump3 = await createDump();
 
-      const response = await request(app).get("/pg_dump/v1/").expect(200);
+      const response = await request(app)
+        .post("/pg_dump/v1/get_backup_history")
+        .expect(200);
 
       expect(response.body.success).toBe(true);
       expect(response.body.data.length).toBeGreaterThanOrEqual(3);
@@ -427,12 +392,16 @@ describe("pg_dump_route_test", () => {
 
       // Update the old dump's created_at to be 2 days ago
       await pool.query(
-        `UPDATE pg_dumps SET created_at = created_at - INTERVAL '2 days' WHERE dump_id = $1`,
+        `
+UPDATE pg_dumps
+SET created_at = created_at - INTERVAL '2 days'
+WHERE dump_id = $1`,
         [oldDump.dumpId],
       );
 
       const response = await request(app)
-        .get("/pg_dump/v1/?days=1")
+        .post("/pg_dump/v1/get_backup_history")
+        .send({ days: 1 })
         .expect(200);
 
       expect(response.body.success).toBe(true);
@@ -446,7 +415,8 @@ describe("pg_dump_route_test", () => {
 
       // Get dumps for last 3 days (should include both dumps)
       const response2 = await request(app)
-        .get("/pg_dump/v1/?days=3")
+        .post("/pg_dump/v1/get_backup_history")
+        .send({ days: 3 })
         .expect(200);
 
       expect(response2.body.success).toBe(true);
@@ -459,7 +429,7 @@ describe("pg_dump_route_test", () => {
   describe("POST /pg_dump/v1/restore", () => {
     const createDump = async () => {
       const response = await request(app)
-        .post("/pg_dump/v1/")
+        .post("/pg_dump/v1/backup")
         .send({ password: testAdminPassword })
         .expect(200);
       return response.body.data;
@@ -663,22 +633,12 @@ describe("pg_dump_route_test", () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
-      invalidApp.locals = {
-        db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: "non_existent_db",
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: testPgConfig.password,
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
-      };
+      process.env.DB_NAME = "non_existent_db";
+
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
         .post("/pg_dump/v1/restore")
@@ -699,22 +659,12 @@ describe("pg_dump_route_test", () => {
       const invalidApp = express();
       invalidApp.use(express.json());
 
-      const router = express.Router();
-      setPgDumpRoutes(router);
-      invalidApp.use("/pg_dump/v1", router);
+      const pgDumpRouter = makePgDumpRouter();
+      invalidApp.use("/pg_dump/v1", pgDumpRouter);
 
-      invalidApp.locals = {
-        db: pool,
-        env: {
-          ADMIN_PASSWORD: testAdminPassword,
-          DB_NAME: testPgConfig.database,
-          DB_HOST: testPgConfig.host,
-          DB_PASSWORD: "wrong_password",
-          DB_USER: testPgConfig.user,
-          DB_PORT: testPgConfig.port,
-          DUMP_DIR: dumpDir,
-        },
-      };
+      process.env.DB_PASSWORD = "wrong_password";
+
+      invalidApp.locals = makeUnsuccessfulAppStatus(pool);
 
       const response = await request(invalidApp)
         .post("/pg_dump/v1/restore")

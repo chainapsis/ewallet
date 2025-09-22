@@ -145,7 +145,7 @@ pub struct KeyShareNodeWallet {
     pub user_id: Uuid,
     pub curve_type: Option<String>,
     pub public_key: Option<Vec<u8>>,
-    pub metadata: Option<serde_json::Value>,
+    pub aux: Option<serde_json::Value>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

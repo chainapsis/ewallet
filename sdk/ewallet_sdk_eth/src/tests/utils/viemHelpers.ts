@@ -9,11 +9,11 @@ import type {
 } from "viem";
 import { encodeDeployData } from "viem";
 
-export const createTypedData = (): TypedDataDefinition => {
+export const createTypedData = (chainId?: bigint): TypedDataDefinition => {
   const domain = {
     name: "Ether Mail",
     version: "1",
-    chainId: BigInt(1),
+    chainId: chainId ?? BigInt(1),
     verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
   } as const;
 

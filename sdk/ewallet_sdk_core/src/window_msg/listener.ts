@@ -11,8 +11,8 @@ export function registerMsgListener(
   _eWallet: KeplrEWalletInterface,
 ): Promise<Result<InitPayload, string>> {
   if (window.__keplr_ewallet_ev) {
-    // TODO: unreachable but is allowed. Report to centralized logging system
-    // required
+    // TODO: theoretically unreachable but this can happen
+    // Later we will report to centralized logging system
     console.error("[keplr] isn't it already initailized?");
   }
 

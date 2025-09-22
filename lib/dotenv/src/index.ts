@@ -30,7 +30,7 @@ export function loadEnv(envFileName: string): Result<void, string> {
 
     return { success: false, err: `Env file does not exist, path: ${envPath}` };
   } else {
-    console.info("Loading env, path: %s", envPath);
+    console.log("Loading env, path: %s", envPath);
   }
 
   dotenv.config({

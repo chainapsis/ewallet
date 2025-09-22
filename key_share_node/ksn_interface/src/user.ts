@@ -4,4 +4,5 @@ export interface KSNodeUser {
   status: string;
   created_at: Date;
   updated_at: Date;
+  aux?: Record<string, any>;
 }

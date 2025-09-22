@@ -9,10 +9,7 @@ import {
 } from "@keplr-ewallet/ksn-pg-interface";
 import { Bytes, type Bytes33, type Bytes64 } from "@keplr-ewallet/bytes";
 
-import {
-  createPgDatabase,
-  resetPgDatabase,
-} from "@keplr-ewallet-ksn-server/database";
+import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
 import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
 import {
   checkKeyShare,
@@ -29,7 +26,7 @@ describe("key_share_test", () => {
 
   beforeAll(async () => {
     const config = testPgConfig;
-    const createPostgresRes = await createPgDatabase({
+    const createPostgresRes = await connectPG({
       database: config.database,
       host: config.host,
       password: config.password,

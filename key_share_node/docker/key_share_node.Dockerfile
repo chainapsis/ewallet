@@ -1,7 +1,7 @@
 FROM node:22-alpine3.21
 
-# Install PostgreSQL client tools for pg_dump
-RUN apk add --no-cache postgresql17-client
+# Install PostgreSQL client tools for pg_dump and git
+RUN apk add --no-cache postgresql17-client git
 
 # Enable Corepack for Yarn version management
 RUN corepack enable

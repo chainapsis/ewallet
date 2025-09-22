@@ -1,10 +1,9 @@
-import { exec } from "node:child_process";
-import { promisify } from "node:util";
-import fs from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import chalk from "chalk";
+import fs from "node:fs";
 import { join } from "node:path";
 import type { Result } from "@keplr-ewallet/stdlib-js";
-
-const execAsync = promisify(exec);
+import { replaceTildeWithHome } from "@keplr-ewallet/stdlib-js/path";
 
 export interface PgDumpConfig {
   host: string;
@@ -14,35 +13,56 @@ export interface PgDumpConfig {
   database: string;
 }
 
+export interface PgDumpResult {
+  dumpPath: string;
+  dumpSize: number;
+}
+
 export async function dump(
   pgConfig: PgDumpConfig,
-  dumpDir: string,
-): Promise<Result<{ dumpPath: string; dumpSize: number }, string>> {
+  _dumpDir: string,
+): Promise<Result<PgDumpResult, string>> {
   try {
-    await fs.mkdir(dumpDir, { recursive: true });
+    const dumpDir = replaceTildeWithHome(_dumpDir);
+
+    if (!fs.existsSync(dumpDir)) {
+      fs.mkdirSync(dumpDir, { recursive: true });
+
+      console.log("Created dump dir, path: %s", dumpDir);
+    }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
-    const command = `pg_dump -h ${pgConfig.host} -p ${pgConfig.port} -U \
-${pgConfig.user} -d ${pgConfig.database} -Fc -f ${dumpPath}`;
 
-    const { stdout, stderr } = await execAsync(command, {
-      env: {
-        ...process.env,
-        PGPASSWORD: pgConfig.password,
+    spawnSync(
+      "pg_dump",
+      [
+        "-h",
+        pgConfig.host,
+        "-p",
+        String(pgConfig.port),
+        "-U",
+        pgConfig.user,
+        "-d",
+        pgConfig.database,
+        "-Fc",
+        "-f",
+        dumpPath,
+      ],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          PGPASSWORD: pgConfig.password,
+        },
       },
-    });
+    );
 
-    if (stdout) {
-      console.log("pg_dump stdout:", stdout);
-    }
-    if (stderr) {
-      console.log("pg_dump stderr:", stderr);
-    }
-
-    const stats = await fs.stat(dumpPath);
+    const stats = fs.statSync(dumpPath);
     const dumpSize = stats.size;
+
+    console.log("Finished dump, path: %s, dumpSize: %s", dumpPath, dumpSize);
 
     return { success: true, data: { dumpPath, dumpSize } };
   } catch (error) {
@@ -55,23 +75,43 @@ export async function restore(
   dumpPath: string,
 ): Promise<Result<void, string>> {
   try {
-    const command = `pg_restore -h ${pgConfig.host} -p ${pgConfig.port} -U \
-${pgConfig.user} -d ${pgConfig.database} --clean --if-exists --verbose \
-${dumpPath}`;
-
-    const { stdout, stderr } = await execAsync(command, {
-      env: {
-        ...process.env,
-        PGPASSWORD: pgConfig.password,
+    const result = spawnSync(
+      "pg_restore",
+      [
+        "-h",
+        pgConfig.host,
+        "-p",
+        String(pgConfig.port),
+        "-U",
+        pgConfig.user,
+        "-d",
+        pgConfig.database,
+        "--clean",
+        "--if-exists",
+        "--verbose",
+        dumpPath,
+      ],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          PGPASSWORD: pgConfig.password,
+        },
       },
-    });
+    );
 
-    if (stdout) {
-      console.log("pg_restore stdout:", stdout);
+    if (result.error) {
+      return { success: false, err: String(result.error) };
     }
-    if (stderr) {
-      console.log("pg_restore stderr:", stderr);
+
+    if (result.status !== 0) {
+      const errorMsg = result.stderr
+        ? result.stderr.toString()
+        : `pg_restore failed with exit code ${result.status}`;
+      return { success: false, err: errorMsg };
     }
+
+    console.log("Finished pg_restore");
 
     return { success: true, data: void 0 };
   } catch (error) {

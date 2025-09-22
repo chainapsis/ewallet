@@ -71,11 +71,13 @@ function keplrEWalletConnector(
 
     // lazy import to avoid SSR issues and optimize bundle size
     const { EthEWallet } = await import("@keplr-ewallet/ewallet-sdk-eth");
-    const initRes = await EthEWallet.initAsync(args);
+    const initRes = EthEWallet.init(args);
 
     if (!initRes.success) {
       throw new Error(`init fail: ${initRes.err}`);
     }
+
+    await initRes.data.waitUntilInitialized;
 
     ethEWallet = initRes.data;
     return ethEWallet;

@@ -1,7 +1,7 @@
 {
   "name": "@keplr-ewallet/ksn-interface",
   "packageManager": "yarn@4.7.0",
-  "version": "0.0.2-alpha.32",
+  "version": "0.0.2-alpha.33",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,10 +10,6 @@
     "build": "yarn clean && tsc --build --force && tsc-alias"
   },
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
     "./key_share": {
       "import": "./dist/key_share.js",
       "types": "./dist/key_share.d.ts"
@@ -21,6 +17,10 @@
     "./response": {
       "import": "./dist/response.js",
       "types": "./dist/response.d.ts"
+    },
+    "./status": {
+      "import": "./dist/status.js",
+      "types": "./dist/status.d.ts"
     },
     "./user": {
       "import": "./dist/user.js",
@@ -33,6 +33,10 @@
     "./auth": {
       "import": "./dist/auth.js",
       "types": "./dist/auth.d.ts"
+    },
+    "./db_backup": {
+      "import": "./dist/db_backup.js",
+      "types": "./dist/db_backup.d.ts"
     }
   },
   "publishConfig": {
@@ -44,7 +48,7 @@
     "directory": "key_share_node/ksn_interface"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "^0.0.3-alpha.36"
+    "@keplr-ewallet/bytes": "^0.0.3-alpha.37"
   },
   "devDependencies": {
     "@types/jest": "*",

@@ -1,8 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 import type { KSNodeApiErrorResponse } from "@keplr-ewallet/ksn-interface/response";
 
-import { validateOAuthToken } from "../auth";
+import { validateOAuthToken } from "@keplr-ewallet-ksn-server/auth";
 import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
+import type { ResponseLocal } from "@keplr-ewallet-ksn-server/routes/io";
 
 export interface AuthenticatedRequest<T = any> extends Request {
   user?: {
@@ -15,7 +16,7 @@ export interface AuthenticatedRequest<T = any> extends Request {
 
 export async function bearerTokenMiddleware(
   req: AuthenticatedRequest,
-  res: Response,
+  res: Response<any, ResponseLocal>,
   next: NextFunction,
 ) {
   const authHeader = req.headers.authorization;

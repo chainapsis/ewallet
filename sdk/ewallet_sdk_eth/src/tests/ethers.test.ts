@@ -168,7 +168,7 @@ describe("EWallet Provider - Ethers.js Integration", () => {
         const domain = {
           name: "Ether Mail",
           version: "1",
-          chainId: BigInt(1),
+          chainId: BigInt(hardhat.id), // Chain ID should match the hardhat chain ID
           verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
         };
 

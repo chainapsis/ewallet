@@ -1,15 +1,17 @@
 import path from "path";
+import chalk from "chalk";
 import { fileURLToPath } from "url";
 import swaggerJSDoc, { type SwaggerDefinition } from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { type Express } from "express";
 
 import { schemas } from "./schema";
+import { logger } from "@keplr-ewallet-ksn-server/logger";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const apis = (function () {
+const apis = (function() {
   const ksNodeApi = path.resolve(__dirname, "../routes/**/*.ts");
 
   const paths = [ksNodeApi];
@@ -41,7 +43,7 @@ const swaggerDefinition: SwaggerDefinition = {
 };
 
 export function installSwaggerDocs(app: Express) {
-  console.log("Installing Swagger docs, apis: %j", apis);
+  logger.debug("Serving Swagger docs, apis: %j", apis);
 
   const options = {
     swaggerDefinition,

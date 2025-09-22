@@ -8,6 +8,7 @@
     "crypto/bytes",
     "crypto/sss",
     "crypto/tecdsa/tecdsa_interface",
+    "key_share_node/server",
     "key_share_node/ksn_interface"
   ],
   "version": "independent",

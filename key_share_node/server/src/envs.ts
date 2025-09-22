@@ -5,6 +5,8 @@ import { z } from "zod";
 import os from "node:os";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
+import { logger } from "./logger";
+
 const ENV_FILE_NAME_STEM = "key_share_node";
 
 export const ENV_FILE_NAME = "key_share_node.env";
@@ -47,11 +49,11 @@ export function loadEnv(nodeId: string): Result<void, string> {
   const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
 
   if (!fs.existsSync(envPath)) {
-    console.log("Env file does not exist, path: %s", envPath);
+    logger.debug("Env file does not exist, path: %s", envPath);
 
     return { success: false, err: `Env file does not exist, path: ${envPath}` };
   } else {
-    console.info("Loading env, path: %s", envPath);
+    logger.debug("Loading env, path: %s", envPath);
   }
 
   dotenv.config({
@@ -62,24 +64,11 @@ export function loadEnv(nodeId: string): Result<void, string> {
   return { success: true, data: void 0 };
 }
 
-export function verifyAndExpandEnv(
-  envs: Record<string, any>,
-): Result<Env, string> {
+export function verifyEnv(envs: Record<string, any>): Result<Env, string> {
   const res = envSchema.safeParse(envs);
 
   if (res.success) {
-    const homeDir = os.homedir();
-
-    const processedEnv = {
-      ...res.data,
-      ENCRYPTION_SECRET_PATH: res.data.ENCRYPTION_SECRET_PATH.replace(
-        /^~/,
-        homeDir,
-      ),
-      DUMP_DIR: res.data.DUMP_DIR.replace(/^~/, homeDir),
-    };
-
-    return { success: true, data: processedEnv };
+    return { success: true, data: res.data };
   } else {
     return { success: false, err: z.prettifyError(res.error) };
   }

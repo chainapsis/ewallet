@@ -1,12 +1,14 @@
 {
   "name": "@keplr-ewallet/key-share-node-server",
   "packageManager": "yarn@4.7.0",
+  "private": true,
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "create_env": "tsx src/bin/create_env.ts",
-    "start": "tsx src/bin/launch.ts --node-id=1",
-    "start_2": "tsx src/bin/launch.ts --node-id=2",
+    "start": "tsx src/bin/launch/index.ts --node-id=1",
+    "start_2": "tsx src/bin/launch/index.ts --node-id=2",
     "jest": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
@@ -17,6 +19,7 @@
     "chalk": "*",
     "commander": "*",
     "cors": "^2.8.5",
+    "dayjs": "*",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-rate-limit": "^8.0.1",
@@ -26,6 +29,8 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "tsx": "*",
+    "winston": "*",
+    "winston-daily-rotate-file": "*",
     "zod": "^4.0.5"
   },
   "devDependencies": {

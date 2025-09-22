@@ -3,12 +3,8 @@
 ## Before you begin
 
 The key share node is a crucial component of the distributed signature
-generation scheme. To become a serving node, please contact our team in advance
-for bootstrapping. We will soon provide details on how to join our
-**communication channel (Slack)** for further discussion.
-
-If you are not familiar with the concepts, please read the Keplr Embedded
-[Ewallet documentation](../README.md) first to learn how the system works.
+generation scheme. Please read the Keplr Embedded Ewallet documentation first to
+learn how the system works.
 
 ## [1/3] System Requirements
 
@@ -45,7 +41,9 @@ cd ewallet/key_share_node/docker
 2. Prepare the encryption secret file:
 
 Create a secure encryption secret file at your desired location. This file will
-be used to encrypt user key shares within the Key Share Node.
+be used to encrypt user key shares within the Key Share Node. **You can use any
+random value you choose** - this will be referenced later in the
+`ENCRYPTION_SECRET_FILE_PATH` environment variable.
 
 ### Environment Configuration
 
@@ -68,8 +66,8 @@ DB_NAME=key_share_node
 ## Host directory path for PostgreSQL data persistence (mounted to container)
 PG_DATA_DIR=/opt/key_share_node/pg_data
 ## Host directory path for database dump files storage (mounted to container)
-## NOTE: This directory must be writable by the Node.js user (UID:1000, GID:1000)
-## Example: chown -R 1000:1000 /opt/key_share_node/dump
+## **NOTE: This directory must be writable by the Node.js user (UID:1000, GID:1000)**
+## **Example: chown -R 1000:1000 /opt/key_share_node/dump**
 DUMP_DIR=/opt/key_share_node/dump
 
 # Server Configuration
@@ -102,7 +100,127 @@ docker compose logs key_share_node
 docker compose logs key_share_node_pg
 ```
 
-### Using Your Own Database
+### Set up Firewall
+
+#### Docker and Firewall Compatibility
+
+When using Docker Compose, **traditional firewall tools like UFW are bypassed**
+for published container ports. As documented in the
+[Docker official documentation](https://docs.docker.com/engine/network/packet-filtering-firewalls/#integration-with-firewalld),
+Docker routes container traffic in the `nat` table before it reaches the `INPUT`
+and `OUTPUT` chains that UFW uses, effectively ignoring your firewall
+configuration.
+
+#### Default Port Exposure
+
+By default, when you run the Key Share Node with Docker Compose:
+
+- **Server Port (e.g., 4201)**: Accessible from all IP addresses
+  (`0.0.0.0:SERVER_PORT`)
+- **Database Port (5432)**: Accessible from all IP addresses (`0.0.0.0:5432`)
+
+> **Note**: The actual server port is determined by the `SERVER_PORT`
+> environment variable in your `.env` file (default: 4201).
+
+This means your PostgreSQL database is **publicly accessible** by default, which
+poses a security risk.
+
+#### Recommended Security Configuration
+
+We strongly recommend implementing a comprehensive firewall strategy that allows
+only essential services while blocking unnecessary access. The following
+configuration allows SSH, HTTPS, and your Key Share Node server port, while
+restricting PostgreSQL access to trusted IPs only.
+
+#### 1. Check existing rules
+
+```bash
+sudo iptables -S DOCKER-USER
+```
+
+#### 2. Configure comprehensive firewall rules
+
+Replace `203.0.113.10` with your trusted IP address and `4201` with your
+`SERVER_PORT` value:
+
+**For host services (SSH, HTTPS only):**
+
+```bash
+# Allow SSH (22) from anywhere (adjust as needed for your security requirements)
+sudo iptables -I INPUT 1 -p tcp --dport 22 -j ACCEPT
+
+# Allow HTTPS (443) from anywhere
+sudo iptables -I INPUT 2 -p tcp --dport 443 -j ACCEPT
+
+# Deny all other traffic to host services
+sudo iptables -A INPUT -j DROP
+```
+
+**For Docker PostgreSQL (whitelist only):**
+
+```bash
+# Allow PostgreSQL (5432) from trusted IP only
+sudo iptables -I DOCKER-USER 1 -p tcp --dport 5432 -s 203.0.113.10 -j ACCEPT
+
+# (Optional) Allow localhost access to PostgreSQL
+sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
+
+# Deny all other access to PostgreSQL
+sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
+```
+
+> **Explanation:**
+>
+> - **INPUT chain**: Blocks all host services except SSH and HTTPS
+> - **DOCKER-USER chain**: Only restricts PostgreSQL access to whitelisted IPs
+> - Docker automatically allows your Key Share Node server port through its own
+>   rules
+> - `-I` inserts the ACCEPT rules at the top so they are matched first
+> - `-A` appends the DROP rule at the bottom
+> - SSH (22) and HTTPS (443) are allowed from anywhere for remote access
+> - PostgreSQL (5432) is restricted to whitelisted IPs only
+> - All other host services are blocked by the INPUT chain DROP rule
+
+#### 3. Make firewall rules persistent
+
+On Ubuntu/Debian:
+
+```bash
+# Install persistence package
+sudo apt-get update
+sudo apt-get install -y iptables-persistent
+
+# Save current rules
+sudo netfilter-persistent save
+```
+
+Now, the rules will be automatically applied after reboot.
+
+#### 4. Verify rules
+
+```bash
+sudo iptables -L DOCKER-USER -n --line-numbers
+```
+
+You should see your rules in the following order:
+
+**INPUT chain:**
+
+1. SSH (22) - ACCEPT
+2. HTTPS (443) - ACCEPT
+3. All other traffic - DROP
+
+**DOCKER-USER chain:**
+
+1. PostgreSQL (5432) from trusted IP - ACCEPT
+2. PostgreSQL (5432) from localhost - ACCEPT (if added)
+3. PostgreSQL (5432) - DROP
+
+> **Note**: Your Key Share Node server port will be automatically accessible
+> through Docker's default rules, so no explicit rule is needed in DOCKER-USER
+> chain.
+
+## Optional: Using Your Own Database
 
 If you prefer to use your own PostgreSQL database instead of the included one:
 
@@ -133,88 +251,6 @@ environment:
 4. Ensure your database is accessible from the Docker container and has the
    required schema
 
-### Set up Firewall
-
-#### Docker and Firewall Compatibility
-
-When using Docker Compose, **traditional firewall tools like UFW are bypassed**
-for published container ports. As documented in the
-[Docker official documentation](https://docs.docker.com/engine/network/packet-filtering-firewalls/#integration-with-firewalld),
-Docker routes container traffic in the `nat` table before it reaches the `INPUT`
-and `OUTPUT` chains that UFW uses, effectively ignoring your firewall
-configuration.
-
-#### Default Port Exposure
-
-By default, when you run the Key Share Node with Docker Compose:
-
-- **Server Port (e.g., 4201)**: Accessible from all IP addresses
-  (`0.0.0.0:SERVER_PORT`)
-- **Database Port (5432)**: Accessible from all IP addresses (`0.0.0.0:5432`)
-
-> **Note**: The actual server port is determined by the `SERVER_PORT`
-> environment variable in your `.env` file (default: 4201).
-
-This means your PostgreSQL database is **publicly accessible** by default, which
-poses a security risk.
-
-#### Recommended Security Configuration
-
-We strongly recommend restricting access to the PostgreSQL port (5432) to
-specific trusted IPs only. Below are examples for Ubuntu/Debian using `iptables`
-with the `DOCKER-USER` chain.
-
-#### 1. Check existing rules
-
-```bash
-sudo iptables -S DOCKER-USER
-```
-
-#### 2. Restrict PostgreSQL (5432) to trusted IPs only
-
-Replace `203.0.113.10` with your trusted IP address:
-
-```bash
-# Allow 5432 from trusted IP
-sudo iptables -I DOCKER-USER 1 -p tcp --dport 5432 -s 203.0.113.10 -j ACCEPT
-
-# (Optional) Allow localhost access
-sudo iptables -I DOCKER-USER 2 -p tcp --dport 5432 -s 127.0.0.1 -j ACCEPT
-
-# Deny all other access to 5432
-sudo iptables -A DOCKER-USER -p tcp --dport 5432 -j DROP
-```
-
-> **Explanation:**
->
-> - `-I` inserts the ACCEPT rules at the top so they are matched first
-> - `-A` appends the DROP rule at the bottom
-> - Only whitelisted IPs (and localhost if added) will be able to connect
-
-#### 3. Make firewall rules persistent
-
-On Ubuntu/Debian:
-
-```bash
-# Install persistence package
-sudo apt-get update
-sudo apt-get install -y iptables-persistent
-
-# Save current rules
-sudo netfilter-persistent save
-```
-
-Now, the rules will be automatically applied after reboot.
-
-#### 4. Verify rules
-
-```bash
-sudo iptables -L DOCKER-USER -n --line-numbers
-```
-
-You should see your trusted IP(s) ACCEPTed first, then a DROP rule for all other
-traffic to 5432.
-
 ## [3/3] Maintenance
 
 ### DevOps responsibilities
@@ -237,6 +273,44 @@ traffic to 5432.
    15 mins, please reach out to Keplr.
 2. Keplr may give an instruction to retrieve the server log to analyze the cause
    of the error, in which case, coordination will be appreciated.
+
+### Server status monitoring
+
+You can monitor the health and status of your Key Share Node using the `/status`
+endpoint. This API provides real-time information about the server's operational
+state.
+
+**Check server status:**
+
+```bash
+curl http://localhost:${SERVER_PORT}/status
+```
+
+**Response includes:**
+
+- `is_db_connected`: Database connection status (boolean)
+- `is_db_backup_checked`: Whether database backup verification is complete
+  (boolean)
+- `latest_backup_time`: Timestamp of the most recent successful backup (Date or
+  null)
+- `ks_node_public_key`: Public key of the Key Share Node (string) - _Currently
+  returns temporary value, will be updated in future releases_
+- `launch_time`: Server startup timestamp (Date)
+- `git_hash`: Git commit hash of the deployed version (string) - _Currently
+  returns temporary value, will be updated in future releases_
+
+**Example response:**
+
+```json
+{
+  "is_db_connected": true,
+  "is_db_backup_checked": true,
+  "latest_backup_time": "2024-01-15T10:30:00.000Z",
+  "ks_node_public_key": "your_public_key_here",
+  "launch_time": "2024-01-15T09:00:00.000Z",
+  "git_hash": "abc123def456"
+}
+```
 
 ### Overall workload
 
@@ -274,7 +348,7 @@ You can manually create and restore backups using the REST API:
 **Create a manual backup:**
 
 ```bash
-curl -X POST http://localhost:4201/pg_dump/v1/ \
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/backup \
   -H "Content-Type: application/json" \
   -d '{"password": "your_admin_password"}'
 ```
@@ -282,13 +356,19 @@ curl -X POST http://localhost:4201/pg_dump/v1/ \
 **List available backups:**
 
 ```bash
-curl -X GET http://localhost:4201/pg_dump/v1/
+# Get all backups
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/get_backup_history
+
+# Get backups from the last 7 days
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/get_backup_history \
+  -H "Content-Type: application/json" \
+  -d '{"days": 7}'
 ```
 
 **Restore from a backup:**
 
 ```bash
-curl -X POST http://localhost:4201/pg_dump/v1/restore \
+curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/restore \
   -H "Content-Type: application/json" \
   -d '{
     "password": "your_admin_password",
