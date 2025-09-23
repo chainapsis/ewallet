@@ -413,8 +413,7 @@ curl http://localhost:${SERVER_PORT}/status
 - `ks_node_public_key`: Public key of the Key Share Node (string) - _Currently
   returns temporary value, will be updated in future releases_
 - `launch_time`: Server startup timestamp (ISO string)
-- `git_hash`: Git commit hash of the deployed version (string) - _Currently
-  returns temporary value, will be updated in future releases_
+- `git_hash`: Git commit hash of the deployed version (string)
 - `version`: Application version (string)
 
 **Example response:**
