@@ -485,7 +485,7 @@ curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/get_backup_history \
 
 **Restore from a backup:**
 
-```sh
+```bash
 curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/restore \
   -H "Content-Type: application/json" \
   -d '{
