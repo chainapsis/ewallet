@@ -29,7 +29,8 @@ CREATE TABLE public.key_shares (
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
 	aux jsonb NULL,
-	CONSTRAINT key_shares_pkey PRIMARY KEY (share_id)
+	CONSTRAINT key_shares_pkey PRIMARY KEY (share_id),
+	CONSTRAINT key_shares_unique UNIQUE (wallet_id)
 );
 
 
