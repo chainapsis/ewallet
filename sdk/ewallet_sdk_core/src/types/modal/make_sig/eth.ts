@@ -1,6 +1,6 @@
 import type { Hex, RpcTransactionRequest, SignableMessage } from "viem";
 
-import type { ChainInfoForAttachedModal } from "./common";
+import type { ChainInfoForAttachedModal } from "@keplr-ewallet-sdk-core/types/modal/common";
 
 export interface MakeEthSigModalResult {
   chain_type: "eth";
@@ -68,4 +68,9 @@ export type EthereumEip712SignPayload = {
     version: "4";
     serialized_typed_data: string;
   };
+};
+
+export type MakeEthSigError = {
+  type: "unknown_error";
+  error: any;
 };
