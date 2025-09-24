@@ -153,8 +153,6 @@ async function handleSigningFlow(
 
     const ackPayload = openModalResp.data;
 
-    console.log("[keplr-eth] ackPayload: %o", ackPayload);
-
     if (ackPayload.modal_type !== "eth/make_signature") {
       throw new Error("Invalid modal type response");
     }
@@ -193,10 +191,16 @@ async function handleSigningFlow(
       throw error;
     }
 
-    throw new EthereumRpcError(
-      RpcErrorCode.Internal,
-      error instanceof Error ? error.message : String(error),
-    );
+    let message = "unknown empty error";
+    if (error instanceof Error) {
+      if (error.message && error.message.length > 0) {
+        message = error.message;
+      }
+    } else {
+      message = String(error);
+    }
+
+    throw new EthereumRpcError(RpcErrorCode.Internal, message);
   } finally {
     eWallet.closeModal();
   }
