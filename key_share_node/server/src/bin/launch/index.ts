@@ -20,10 +20,7 @@ async function main() {
   console.log("Launching ks node server, cli args: %j", opts);
   logger.info("Launching, Logger initialized");
 
-  const loadEnvRes = loadEnv(opts.nodeId);
-  if (!loadEnvRes.success) {
-    logger.info("ENV didn't exist, but we will continue");
-  }
+  loadEnv(opts.nodeId);
 
   const verifyEnvRes = verifyEnv(process.env);
   if (!verifyEnvRes.success) {
