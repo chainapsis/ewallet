@@ -176,7 +176,10 @@ async function handleSigningFlow(
       }
 
       case "error": {
-        throw new Error(ackPayload.error);
+        // TODO: @retto
+        const message = `${ackPayload.error.type}`;
+
+        throw new Error(message);
       }
 
       default: {
