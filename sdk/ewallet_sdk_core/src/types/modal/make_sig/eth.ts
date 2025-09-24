@@ -78,4 +78,5 @@ export type MakeEthSigError =
   | {
     // TODO: @retto
     type: "foo";
+    error: any;
   };
