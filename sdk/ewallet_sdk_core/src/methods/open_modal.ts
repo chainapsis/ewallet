@@ -1,16 +1,18 @@
+import type { Result } from "@keplr-ewallet/stdlib-js";
+
 import type {
   EWalletMsgOpenModal,
   KeplrEWalletInterface,
   OpenModalAckPayload,
 } from "@keplr-ewallet-sdk-core/types";
+import type { OpenModalError } from "@keplr-ewallet-sdk-core/errors";
 
-// 5 minutes in ms
-const WAIT_TIME = 60 * 5 * 1000;
+const FIVE_MINS = 60 * 5 * 1000;
 
 export async function openModal(
   this: KeplrEWalletInterface,
   msg: EWalletMsgOpenModal,
-): Promise<OpenModalAckPayload> {
+): Promise<Result<OpenModalAckPayload, OpenModalError>> {
   await this.waitUntilInitialized;
 
   let timeoutId: NodeJS.Timeout | null = null;
@@ -18,7 +20,7 @@ export async function openModal(
   const timeout = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(
       () => reject(new Error("Show modal timeout")),
-      WAIT_TIME,
+      FIVE_MINS,
     );
   });
 
@@ -36,25 +38,23 @@ export async function openModal(
     }
 
     if (openModalAck.msg_type !== "open_modal_ack") {
-      throw new Error("Unreachable");
+      return {
+        success: false,
+        err: { type: "invalid_ack_type", received: openModalAck.msg_type },
+      };
     }
 
-    if (openModalAck.payload.type === "reject") {
-      throw new Error("User rejected");
-    }
+    // if (openModalAck.payload.type === "reject") {
+    //   throw new Error("User rejected");
+    // }
+    //
+    // if (openModalAck.payload.type === "error") {
+    //   throw new Error(openModalAck.payload.error);
+    // }
 
-    if (openModalAck.payload.type === "error") {
-      throw new Error(openModalAck.payload.error);
-    }
-
-    return openModalAck.payload;
+    return { success: true, data: openModalAck.payload };
   } catch (error) {
-    if (error instanceof Error && error.message === "Show modal timeout") {
-      // this.closeModal();
-      throw new Error("Show modal timeout");
-    }
-
-    throw error;
+    return { success: false, err: { type: "unknown_error", error } };
   } finally {
     if (timeoutId) {
       clearTimeout(timeoutId);

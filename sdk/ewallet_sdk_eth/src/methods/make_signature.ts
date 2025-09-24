@@ -145,17 +145,27 @@ async function handleSigningFlow(
 
     const openModalResp = await eWallet.openModal(openModalMsg);
 
-    if (openModalResp.modal_type !== "eth/make_signature") {
+    if (!openModalResp.success) {
+      throw new Error(
+        `Error getting open modal response: ${openModalResp.err}`,
+      );
+    }
+
+    const ackPayload = openModalResp.data;
+
+    console.log("[keplr-eth] ackPayload: %o", ackPayload);
+
+    if (ackPayload.modal_type !== "eth/make_signature") {
       throw new Error("Invalid modal type response");
     }
 
-    switch (openModalResp.type) {
+    switch (ackPayload.type) {
       case "approve": {
-        if (openModalResp.data.chain_type !== "eth") {
+        if (ackPayload.data.chain_type !== "eth") {
           throw new Error("Invalid chain type sig response");
         }
 
-        const makeEthereumSigResult = openModalResp.data;
+        const makeEthereumSigResult = ackPayload.data;
 
         return makeEthereumSigResult.sig_result;
       }
@@ -168,7 +178,7 @@ async function handleSigningFlow(
       }
 
       case "error": {
-        throw new Error(openModalResp.error);
+        throw new Error(ackPayload.error);
       }
 
       default: {
