@@ -9,6 +9,9 @@ import type {
   MakeEthSigModalResult,
 } from "./eth";
 
+export * from "./cosmos";
+export * from "./eth";
+
 export type MakeSigModalPayload =
   | {
     modal_type: "cosmos/make_signature";
