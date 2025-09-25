@@ -56,7 +56,12 @@ export type MakeCosmosSigResult = {
   signed: StdSignDoc | SignDoc;
 };
 
-export type MakeCosmosSigError = {
-  type: "unknown_error";
-  error: any;
-};
+export type MakeCosmosSigError =
+  | {
+      type: "unknown_error";
+      error: any;
+    }
+  | {
+      type: "COSMOS_SIGN_DOC_PARSE_ERROR";
+      error: any;
+    };
