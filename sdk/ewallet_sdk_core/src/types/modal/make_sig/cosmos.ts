@@ -3,6 +3,7 @@ import type { KeplrSignOptions } from "@keplr-wallet/types";
 
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
 import type { ChainInfoForAttachedModal } from "@keplr-ewallet-sdk-core/types/modal/common";
+import type { MakeSigError } from "@keplr-ewallet-sdk-core/types/modal/make_sig/common";
 
 export type MakeCosmosSigData = CosmosTxSigData | CosmosArbitrarySigData;
 
@@ -64,4 +65,8 @@ export type MakeCosmosSigError =
   | {
       type: "COSMOS_SIGN_DOC_PARSE_ERROR";
       error: any;
+    }
+  | {
+      type: "COSMOS_MAKE_SIG_ERROR";
+      error: MakeSigError;
     };
