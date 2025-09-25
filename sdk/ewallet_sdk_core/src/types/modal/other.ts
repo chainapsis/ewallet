@@ -24,7 +24,12 @@ export type OtherModalErrorAckPayload = {
   error: OtherModalError;
 };
 
-export type OtherModalError = {
-  type: "unknown_error";
-  error: any;
-};
+export type OtherModalError =
+  | {
+    type: "unknown_error";
+    error: any;
+  }
+  | {
+    type: "data_null";
+    original_modal_type: string;
+  };
