@@ -9,6 +9,7 @@ import type {
   MakeEthSigModalResult,
 } from "./eth";
 
+export * from "./common";
 export * from "./cosmos";
 export * from "./eth";
 

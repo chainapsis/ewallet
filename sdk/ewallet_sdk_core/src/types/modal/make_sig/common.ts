@@ -16,6 +16,7 @@ export type MakeSigError =
 export type RunTriplesError =
   | { type: "aborted" }
   | { type: "error"; msg: string };
+
 export type RunSignError = { type: "aborted" } | { type: "error"; msg: string };
 
 export type RunPresignError =

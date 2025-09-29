@@ -66,4 +66,8 @@ export type MakeCosmosSigError =
     type: "sign_doc_parse_fail";
     error: any;
   }
+  | {
+    type: "sign_doc_extract_fail";
+    error: any;
+  }
   | MakeSigError;
