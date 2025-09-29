@@ -10,24 +10,22 @@ export type MakeSigError =
   }
   | {
     type: "jwt_not_found";
-  };
-// | MakeSignOutputError;
+  }
+  | MakeSignOutputError;
+
+export type MakeSignOutputError =
+  | RunTriplesError
+  | RunSignError
+  | RunPresignError;
 
 export type RunTriplesError =
   | { type: "aborted" }
-  | { type: "error"; msg: string };
+  | { type: "triples_fail"; error: any };
 
-export type RunSignError = { type: "aborted" } | { type: "error"; msg: string };
+export type RunSignError =
+  | { type: "aborted" }
+  | { type: "sign_fail"; error: any };
 
 export type RunPresignError =
   | { type: "aborted" }
-  | { type: "error"; msg: string };
-
-export type MakeSignOutputError =
-  | {
-    type: "aborted";
-  }
-  | {
-    type: "error";
-    error: RunTriplesError | RunSignError | RunPresignError;
-  };
+  | { type: "presign_fail"; error: any };

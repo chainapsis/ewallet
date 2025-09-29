@@ -70,13 +70,7 @@ export type EthereumEip712SignPayload = {
   };
 };
 
-export type MakeEthSigError =
-  | {
-    type: "unknown_error";
-    error: any;
-  }
-  | {
-    // TODO: @retto
-    type: "foo";
-    error: any;
-  };
+export type MakeEthSigError = {
+  type: "unknown_error";
+  error: any;
+};
