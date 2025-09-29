@@ -2,7 +2,8 @@ import type { StdSignDoc, StdSignature } from "@cosmjs/amino";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
 
 import type { SignDoc } from "@keplr-ewallet-sdk-core/types/cosmos_sign";
-import type { ChainInfoForAttachedModal } from "./common";
+import type { ChainInfoForAttachedModal } from "@keplr-ewallet-sdk-core/types/modal/common";
+import type { MakeSigError } from "@keplr-ewallet-sdk-core/types/modal/make_sig/common";
 
 export type MakeCosmosSigData = CosmosTxSigData | CosmosArbitrarySigData;
 
@@ -55,3 +56,18 @@ export type MakeCosmosSigResult = {
   signature: StdSignature;
   signed: StdSignDoc | SignDoc;
 };
+
+export type MakeCosmosSigError =
+  | {
+    type: "unknown_error";
+    error: any;
+  }
+  | {
+    type: "sign_doc_parse_fail";
+    error: any;
+  }
+  | {
+    type: "sign_doc_extract_fail";
+    error: any;
+  }
+  | MakeSigError;

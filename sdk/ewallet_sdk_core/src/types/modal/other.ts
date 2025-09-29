@@ -21,5 +21,15 @@ export type OtherModalErrorAckPayload = {
   modal_type: "other";
   modal_id: string;
   type: "error";
-  error: string;
+  error: OtherModalError;
 };
+
+export type OtherModalError =
+  | {
+    type: "unknown_error";
+    error: any;
+  }
+  | {
+    type: "data_null";
+    original_modal_type: string;
+  };

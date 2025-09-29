@@ -11,8 +11,6 @@ import type {
   OtherModalRejectAckPayload,
 } from "./other";
 
-export * from "./cosmos";
-export * from "./eth";
 export * from "./common";
 export * from "./other";
 export * from "./make_sig";

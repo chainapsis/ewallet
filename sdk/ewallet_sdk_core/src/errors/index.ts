@@ -19,3 +19,16 @@ export type KeplrEwalletInitError =
     type: "unknown_error";
     msg: string;
   };
+
+export type OpenModalError =
+  | {
+    type: "timeout";
+  }
+  | {
+    type: "invalid_ack_type";
+    received: string;
+  }
+  | {
+    type: "unknown_error";
+    error: any;
+  };

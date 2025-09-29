@@ -11,6 +11,7 @@ import { CosmosOnchainSignWidget } from "@/components/widgets/cosmos_onchain_sig
 import { CosmosOffChainSignWidget } from "@/components/widgets/cosmos_offchain_sign_widget/cosmos_offchain_sign_widget";
 import { EthereumOnchainSignWidget } from "@/components/widgets/ethereum_onchain_sign_widget/ethereum_onchain_sign_widget";
 import { CosmosOnchainCosmJsSignWidget } from "@/components/widgets/cosmos_onchain_cosmjs_sign_widget/cosmos_onchain_cosmjs_sign_widget";
+import { ErrorWidget } from "@/components/widgets/error_widget/error_widget";
 
 export const PreviewPanel = () => {
   return (
@@ -18,23 +19,12 @@ export const PreviewPanel = () => {
       <div className={cn(styles.inner, "common-list-scroll")}>
         <div className={styles.col}>
           <LoginWidget />
-          {/* <AddressWidget /> */}
-          {/* <UserDataWidget userData={mockUserData} /> */}
         </div>
         <div className={styles.col}>
           <h2>Ethereum</h2>
           <EthereumOffchainSignWidget />
           <EthereumOnchainSignWidget />
         </div>
-        {/*   <SignWidget */}
-        {/*     chain="Ethereum" */}
-        {/*     chainIcon={<EthereumIcon />} */}
-        {/*     signType="onchain" */}
-        {/*     signButtonOnClick={() => {}} */}
-        {/*   /> */}
-        {/*   <DocsWidget /> */}
-        {/* </div> */}
-
         <div className={styles.col}>
           <h2>Cosmos</h2>
           <CosmosOffChainSignWidget />
@@ -44,6 +34,11 @@ export const PreviewPanel = () => {
           <h2>Cosmos (cosmjs)</h2>
           <CosmosOnchainCosmJsSignWidget />
         </div>
+        <div className={styles.col}>
+          <h2>Error</h2>
+          <ErrorWidget />
+        </div>
+        <div className={styles.col}></div>
       </div>
     </div>
   );

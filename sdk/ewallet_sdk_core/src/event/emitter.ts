@@ -1,24 +1,6 @@
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-type EventType = {
-  type: string;
-  [key: string]: any;
-};
-
-type EventHandlerType = {
-  type: string;
-  handler: (payload: any) => void;
-};
-
-type EventEmitError =
-  | {
-    type: "handle_error";
-    error: string;
-  }
-  | {
-    type: "handler_not_found";
-    event_type: string;
-  };
+import type { EventEmitError, EventHandlerType, EventType } from "./types";
 
 export class EventEmitter3<E extends EventType, H extends EventHandlerType> {
   listeners: {

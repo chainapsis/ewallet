@@ -25,9 +25,13 @@ export async function openModal(
   try {
     const modalResult = await this.eWallet.openModal(openModalMsg);
 
+    if (!modalResult.success) {
+      throw new Error("modal result not success");
+    }
+
     this.eWallet.closeModal();
 
-    return modalResult;
+    return modalResult.data;
   } catch (err: any) {
     throw new Error(`Error getting modal response, err: ${err}`);
   }

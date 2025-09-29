@@ -81,7 +81,9 @@ export async function signArbitrary(
         throw new Error("User rejected modal request");
       }
       case "error": {
-        throw new Error(openModalResp.error);
+        const message = `${openModalResp.error.type}`;
+
+        throw new Error(message);
       }
       default: {
         throw new Error("unreachable");
