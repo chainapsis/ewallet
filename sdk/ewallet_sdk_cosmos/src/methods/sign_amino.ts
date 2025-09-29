@@ -73,7 +73,6 @@ export async function signAmino(
         throw new Error("User rejected modal request");
       }
       case "error": {
-        // TODO: @retto
         const message = `${openModalResp.error.type}`;
 
         throw new Error(message);
