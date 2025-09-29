@@ -44,14 +44,6 @@ export async function openModal(
       };
     }
 
-    // if (openModalAck.payload.type === "reject") {
-    //   throw new Error("User rejected");
-    // }
-    //
-    // if (openModalAck.payload.type === "error") {
-    //   throw new Error(openModalAck.payload.error);
-    // }
-
     return { success: true, data: openModalAck.payload };
   } catch (error) {
     return { success: false, err: { type: "unknown_error", error } };
