@@ -60,7 +60,7 @@ pub fn reshare<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<Vec<Po
             let x_scalar = point.x_scalar::<C>();
             let x_bytes = Into::<C::Uint>::into(x_scalar).to_be_bytes();
 
-            let y_scalar = polynomial.evaluate(x_scalar);
+            let y_scalar = polynomial.evaluate(&x_scalar);
             {}
             let y_bytes = Into::<C::Uint>::into(y_scalar).to_be_bytes();
 
