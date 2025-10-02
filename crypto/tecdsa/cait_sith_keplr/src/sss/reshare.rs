@@ -6,7 +6,7 @@ use crate::sss::keyshares::KeysharePoints;
 use crate::sss::lagrange_coefficient;
 use crate::sss::point::Point256;
 
-pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<[u8; 32], String> {
+pub fn reshare<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<Vec<Point256>, String> {
     let mut secret_scalar: C::Scalar = C::Scalar::ZERO;
 
     if split_points.len() < t as usize {
@@ -43,5 +43,6 @@ pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<[u8; 3
         Err(_) => return Err("Failed to convert secret to Vec<u8>".to_string()),
     };
 
-    Ok(secret)
+    // Ok(secret)
+    unimplemented!()
 }
