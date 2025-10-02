@@ -4,7 +4,9 @@ use rand_core::OsRng;
 use rand_core::RngCore;
 
 use crate::sss::keyshares::KeysharePoints;
-use crate::sss::{combine::combine, combine::lagrange_coefficient, point::Point256, split};
+use crate::sss::{
+    combine::combine, lagrange::lagrange_coefficient, point::Point256, reshare, split,
+};
 
 #[test]
 fn test_no_ks_node_hashes() {
@@ -319,4 +321,146 @@ fn test_keyshares_points_duplicate_x() {
 
     // This should work since duplicate x values are skipped in lagrange_coefficient
     assert!(KeysharePoints::new(vec![p1, p2]).is_err());
+}
+
+#[test]
+fn test_reshare_basic() {
+    let mut rng = OsRng;
+    let mut secret = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut secret);
+
+    // Initial split with N=3, T=2
+    let mut random_bytes_1 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_1);
+    let mut random_bytes_2 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_2);
+    let mut random_bytes_3 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_3);
+
+    let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
+    let t = 2;
+
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
+
+    // Reshare the split points
+    let reshared_points = reshare::reshare::<Secp256k1>(split_points.clone(), t).unwrap();
+
+    // Verify reshared points can recover the same secret
+    let recovered_secret = combine::<Secp256k1>(reshared_points, t).unwrap();
+    assert_eq!(secret, recovered_secret);
+}
+
+#[test]
+fn test_reshare_insufficient_points() {
+    let p1 = Point256 {
+        x: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ],
+        y: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ],
+    };
+
+    // Only 1 point but t=2
+    let ret = reshare::reshare::<Secp256k1>(vec![p1], 2);
+    assert_eq!(
+        ret.err(),
+        Some("Split points must be greater than t".to_string())
+    );
+}
+
+#[test]
+fn test_reshare_n3_t2() {
+    let mut rng = OsRng;
+    let mut secret = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut secret);
+
+    let mut random_bytes_1 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_1);
+    let mut random_bytes_2 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_2);
+    let mut random_bytes_3 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_3);
+
+    let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
+    let t = 2;
+
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
+    let reshared_points = reshare::reshare::<Secp256k1>(split_points, t).unwrap();
+
+    // Test any 2 points can recover the secret
+    let points_1_2 = vec![reshared_points[0].clone(), reshared_points[1].clone()];
+    let recovered_1_2 = combine::<Secp256k1>(points_1_2, t).unwrap();
+    assert_eq!(secret, recovered_1_2);
+
+    let points_1_3 = vec![reshared_points[0].clone(), reshared_points[2].clone()];
+    let recovered_1_3 = combine::<Secp256k1>(points_1_3, t).unwrap();
+    assert_eq!(secret, recovered_1_3);
+
+    let points_2_3 = vec![reshared_points[1].clone(), reshared_points[2].clone()];
+    let recovered_2_3 = combine::<Secp256k1>(points_2_3, t).unwrap();
+    assert_eq!(secret, recovered_2_3);
+}
+
+#[test]
+fn test_reshare_preserves_x_coordinates() {
+    let mut rng = OsRng;
+    let mut secret = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut secret);
+
+    let mut random_bytes_1 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_1);
+    let mut random_bytes_2 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_2);
+    let mut random_bytes_3 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_3);
+
+    let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
+    let t = 2;
+
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
+    let reshared_points = reshare::reshare::<Secp256k1>(split_points.clone(), t).unwrap();
+
+    // Verify that x coordinates are preserved and y coordinates are different
+    assert_eq!(split_points.len(), reshared_points.len());
+    for i in 0..split_points.len() {
+        assert_eq!(split_points[i].x, reshared_points[i].x);
+        assert_ne!(split_points[i].y, reshared_points[i].y);
+    }
+}
+
+#[test]
+fn test_reshare_multiple_rounds() {
+    let mut rng = OsRng;
+    let mut secret = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut secret);
+
+    let mut random_bytes_1 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_1);
+    let mut random_bytes_2 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_2);
+    let mut random_bytes_3 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_3);
+
+    let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
+    let t = 2;
+
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
+
+    // First reshare
+    let reshared_1 = reshare::reshare::<Secp256k1>(split_points, t).unwrap();
+    let recovered_1 = combine::<Secp256k1>(reshared_1.clone(), t).unwrap();
+    assert_eq!(secret, recovered_1);
+
+    // Second reshare
+    let reshared_2 = reshare::reshare::<Secp256k1>(reshared_1, t).unwrap();
+    let recovered_2 = combine::<Secp256k1>(reshared_2.clone(), t).unwrap();
+    assert_eq!(secret, recovered_2);
+
+    // Third reshare
+    let reshared_3 = reshare::reshare::<Secp256k1>(reshared_2, t).unwrap();
+    let recovered_3 = combine::<Secp256k1>(reshared_3, t).unwrap();
+    assert_eq!(secret, recovered_3);
 }
