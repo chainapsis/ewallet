@@ -55,6 +55,20 @@ TBD
 Distributed under the GPL v3 License. See
 [GPL V3 License](https://opensource.org/license/gpl-3-0) for more information.
 
-## Get involved
+## Development
 
-TBD
+### Prerequisites
+
+- Postgres 17+
+
+#### pg_dump
+
+During development, key share node assumes the system has "pg_dump" executable.
+pg_dump should be installed while installing Postgres. One way to install on
+MacOS is as follows.
+
+```sh
+brew install postgresql@18
+echo 'export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
