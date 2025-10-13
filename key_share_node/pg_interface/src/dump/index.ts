@@ -35,29 +35,34 @@ export async function dump(
     const dumpFile = `${pgConfig.database}_${timestamp}.dump`;
     const dumpPath = join(dumpDir, dumpFile);
 
-    spawnSync(
-      "pg_dump",
-      [
-        "-h",
-        pgConfig.host,
-        "-p",
-        String(pgConfig.port),
-        "-U",
-        pgConfig.user,
-        "-d",
-        pgConfig.database,
-        "-Fc",
-        "-f",
-        dumpPath,
-      ],
-      {
-        stdio: "inherit",
-        env: {
-          ...process.env,
-          PGPASSWORD: pgConfig.password,
-        },
+    const command = "pg_dump";
+    const args = [
+      "-h",
+      pgConfig.host,
+      "-p",
+      String(pgConfig.port),
+      "-U",
+      pgConfig.user,
+      "-d",
+      pgConfig.database,
+      "-Fc",
+      "-f",
+      dumpPath,
+    ];
+
+    console.log("Executing %s %s", command, args.join(" "));
+
+    const res = spawnSync(command, args, {
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        PGPASSWORD: pgConfig.password,
       },
-    );
+    });
+
+    if (res.error) {
+      console.error("Error dumping, err: %s", res.error);
+    }
 
     const stats = fs.statSync(dumpPath);
     const dumpSize = stats.size;
