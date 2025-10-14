@@ -1,0 +1,97 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/*.d.ts",
+      "!**/routeTree.gen.ts",
+      "!**/cait_sith_keplr_addon/addon/index.js"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto",
+    "useEditorconfig": true
+  },
+  "linter": {
+    "enabled": false,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "jsxQuoteStyle": "double",
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteProperties": "preserve",
+      "attributePosition": "auto"
+    }
+  },
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "off"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["lib/tecdsa/cait_sith_keplr_addon/**"],
+      "javascript": {
+        "formatter": {
+          "quoteStyle": "double",
+          "jsxQuoteStyle": "double",
+          "trailingCommas": "all",
+          "semicolons": "always",
+          "arrowParentheses": "always",
+          "bracketSpacing": true,
+          "bracketSameLine": false,
+          "quoteProperties": "preserve",
+          "attributePosition": "auto"
+        }
+      },
+      "linter": {
+        "enabled": true,
+        "rules": {
+          "recommended": true,
+          "style": {
+            "useConst": "error",
+            "useImportType": "off"
+          },
+          "suspicious": {
+            "noExplicitAny": "warn"
+          },
+          "correctness": {
+            "noUnusedVariables": "error"
+          },
+          "complexity": {
+            "noBannedTypes": "off"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -46,6 +46,20 @@ Any contributions you make are **greatly appreciated**.
 If you have a suggestion that would make this better, please fork the repo and
 create a pull request. You can also simply open an issue.
 
+### Format and Lint
+
+The current project uses the Biome for formatting.
+
+If you enable “Format on Save,” please install the Biome extension tailored to your IDE:
+
+VSCode, IntelliJ: https://biomejs.dev/guides/editors/first-party-extensions/
+Other IDEs: https://biomejs.dev/guides/editors/third-party-extensions/
+
+If the extension is not installed,
+please periodically run formatting using `yarn format` or `yarn check`.
+
+* The difference between `format` and `check` is that `check` also runs lint with format. 
+
 ## Security
 
 TBD
