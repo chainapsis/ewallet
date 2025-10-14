@@ -9,7 +9,9 @@ export const NO_ACCOUNT_ERROR = "No account";
 // Mock signer for testing wallet methods
 export function createMockSigner({
   noAccount = false,
-}: { noAccount?: boolean } = {}): EthSigner {
+}: {
+  noAccount?: boolean;
+} = {}): EthSigner {
   if (noAccount) {
     return {
       getAddress: () => null,
