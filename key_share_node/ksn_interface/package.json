@@ -1,7 +1,7 @@
 {
   "name": "@keplr-ewallet/ksn-interface",
   "packageManager": "yarn@4.7.0",
-  "version": "0.0.2-alpha.35",
+  "version": "0.0.2-alpha.36",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -48,7 +48,7 @@
     "directory": "key_share_node/ksn_interface"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "^0.0.3-alpha.39"
+    "@keplr-ewallet/bytes": "^0.0.3-alpha.40"
   },
   "devDependencies": {
     "@types/jest": "*",
