@@ -62,6 +62,7 @@ export async function dump(
 
     if (res.error) {
       console.error("Error dumping, err: %s", res.error);
+      return { success: false, err: String(res.error) };
     }
 
     const stats = fs.statSync(dumpPath);
