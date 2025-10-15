@@ -4,22 +4,20 @@ import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
 import {
   DEFAULT_CHAIN_ID,
   SUPPORTED_CHAINS,
-  TESTNET_CHAINS,
 } from "@keplr-ewallet-sdk-eth/chains";
 import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
-export function getEthereumProvider(
+export async function getEthereumProvider(
   this: EthEWalletInterface,
-): EWalletEIP1193Provider {
+): Promise<EWalletEIP1193Provider> {
   if (this.provider !== null) {
     return this.provider;
   }
 
-  let chains: Chain[] = SUPPORTED_CHAINS;
+  await this.waitUntilInitialized;
 
-  if (this.useTestnet) {
-    chains = [...chains, ...TESTNET_CHAINS];
-  }
+  // TODO: get chain info from attached
+  let chains: Chain[] = SUPPORTED_CHAINS;
 
   const activeChain =
     chains.find((chain) => chain.id === DEFAULT_CHAIN_ID) ?? chains[0];

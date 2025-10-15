@@ -1,11 +1,8 @@
-import type {
-  Hex,
-  Address,
-  ByteArray,
-  AddEthereumChainParameter as RpcChain,
-} from "viem";
+import type { Hex, Address, ByteArray } from "viem";
 import { publicKeyToAddress } from "viem/accounts";
 import { secp256k1 } from "@noble/curves/secp256k1";
+
+import type { RpcChain } from "@keplr-ewallet-sdk-eth/provider/types";
 
 export function publicKeyToEthereumAddress(
   publicKey: Hex | ByteArray,

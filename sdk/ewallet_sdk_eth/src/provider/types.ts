@@ -1,8 +1,5 @@
-import type {
-  Address,
-  AddEthereumChainParameter as RpcChain,
-  RpcError,
-} from "viem";
+import type { Address, AddEthereumChainParameter, RpcError } from "viem";
+import type { AppCurrency, BIP44, EVMInfo } from "@keplr-wallet/types";
 
 import type {
   RpcMethod,
@@ -42,11 +39,21 @@ export interface EIP1193Provider extends ProviderEventEmitter {
   ): Promise<RpcResponseData<M>>;
 }
 
-export type RpcChainWithStatus = RpcChain & {
+export type RpcChain = AddEthereumChainParameter;
+
+export type EWalletRpcChain = RpcChain & {
+  readonly chainSymbolImageUrl?: string;
+  readonly currencies?: AppCurrency[];
+  readonly bip44?: BIP44;
+  readonly features?: string[];
+  readonly evm?: EVMInfo;
+};
+
+export type EWalletRpcChainWithStatus = EWalletRpcChain & {
   connected: boolean;
 };
 
 export type EWalletEIP1193ProviderOptions = {
-  chains: RpcChain[];
+  chains: EWalletRpcChain[];
   signer?: EthSigner;
 };

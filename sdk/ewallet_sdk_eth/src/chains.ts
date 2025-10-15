@@ -1,4 +1,4 @@
-import { defineChain, type Address } from "viem";
+import { defineChain } from "viem";
 import {
   arbitrum,
   avalanche,
@@ -9,10 +9,8 @@ import {
   mainnet,
   optimism,
   polygon,
-  sepolia,
   unichain,
   story,
-  citreaTestnet,
 } from "viem/chains";
 
 const bnbSmartChain = defineChain({
@@ -130,55 +128,3 @@ export const SUPPORTED_CHAINS = [
     },
   },
 ];
-
-export const TESTNET_CHAINS = [sepolia, citreaTestnet];
-
-export const OP_STACK_CHAIN_IDS = [base.id, optimism.id, unichain.id, blast.id];
-
-export function parseChainId(chainId: string | number): number {
-  if (typeof chainId === "string") {
-    const [chainNamespace, chainIdStr] = chainId.split(":");
-    if (chainNamespace === "eip155") {
-      return parseInt(chainIdStr, 10);
-    } else {
-      return parseInt(chainId, 10);
-    }
-  } else {
-    return chainId;
-  }
-}
-
-export function getChainIconUrl(chainId: string | number) {
-  const chainIdNumber = parseChainId(chainId);
-  return `https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/eip155:${chainIdNumber}/chain.png`;
-}
-
-export function getTokenLogoURI(
-  chainId: string | number,
-  tokenAddress?: Address,
-) {
-  const chainIdNumber = parseChainId(chainId);
-  const baseUrl = `https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/eip155:${chainIdNumber}`;
-
-  if (tokenAddress) {
-    return `${baseUrl}/erc20/${tokenAddress.toLowerCase()}.png`;
-  }
-
-  switch (chainIdNumber) {
-    case 56:
-      return `${baseUrl}/binance-native.png`;
-    case 984122:
-      return `${baseUrl}/utia.png`;
-    case 11155111:
-      return `${baseUrl}/ethereum-sepolia-native.png`;
-    default:
-      const chain = SUPPORTED_CHAINS.find(
-        (chain) => chain.id === chainIdNumber,
-      );
-      if (chain) {
-        return `${baseUrl}/${chain.name.toLowerCase()}-native.png`;
-      }
-
-      return "";
-  }
-}

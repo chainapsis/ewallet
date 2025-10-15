@@ -1,9 +1,4 @@
-import type {
-  Address,
-  AddEthereumChainParameter as RpcChain,
-  RpcError,
-  TypedDataDefinition,
-} from "viem";
+import type { Address, RpcError, TypedDataDefinition } from "viem";
 import {
   hexToString,
   isAddressEqual,
@@ -32,7 +27,8 @@ import type {
   EIP1193Provider,
   EWalletEIP1193ProviderOptions,
   ProviderConnectInfo,
-  RpcChainWithStatus,
+  EWalletRpcChain,
+  EWalletRpcChainWithStatus,
 } from "./types";
 import { VERSION } from "./version";
 import { EthereumRpcError, ProviderRpcErrorCode, RpcErrorCode } from "./error";
@@ -43,8 +39,8 @@ export class EWalletEIP1193Provider
 {
   protected signer: EthSigner | null;
 
-  protected activeChain: RpcChain;
-  protected addedChains: RpcChainWithStatus[];
+  activeChain: EWalletRpcChain;
+  addedChains: EWalletRpcChainWithStatus[];
 
   private lastConnectedEmittedEvent: "connect" | "disconnect" | null;
 
