@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-widget: #24262a;
+  --color-widget-border: #2f3136;
+  --color-widget-field: #1f2125;
+  --color-widget-border-hover: #3a3f45;
+}
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button {
+    @apply rounded-lg border border-widget-border bg-[#18181b] px-4 py-2 transition-colors hover:border-widget-border-hover disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  input {
+    @apply w-full bg-widget-field border rounded-xl px-4 py-3 text-sm border-widget-border focus:outline-none focus:border-widget-border-hover focus:ring-2 focus:ring-widget-border-hover;
+  }
+}
