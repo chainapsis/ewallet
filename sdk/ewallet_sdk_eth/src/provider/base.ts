@@ -31,7 +31,12 @@ import type {
   EWalletRpcChainWithStatus,
 } from "./types";
 import { VERSION } from "./version";
-import { EthereumRpcError, ProviderRpcErrorCode, RpcErrorCode } from "./error";
+import {
+  EthereumRpcError,
+  ProviderRpcErrorCode,
+  RpcErrorCode,
+  isConnectionError,
+} from "./error";
 
 export class EWalletEIP1193Provider
   extends ProviderEventEmitter
@@ -39,8 +44,8 @@ export class EWalletEIP1193Provider
 {
   protected signer: EthSigner | null;
 
-  activeChain: EWalletRpcChain;
-  addedChains: EWalletRpcChainWithStatus[];
+  private activeChainState: EWalletRpcChain;
+  private addedChainsState: EWalletRpcChainWithStatus[];
 
   private lastConnectedEmittedEvent: "connect" | "disconnect" | null;
 
@@ -65,14 +70,14 @@ export class EWalletEIP1193Provider
 
     this.signer = options.signer ?? null;
 
-    this.addedChains = options.chains.map((chain) => ({
+    this.addedChainsState = options.chains.map((chain) => ({
       ...chain,
       connected: false,
     }));
 
-    this.activeChain = this.addedChains[0];
+    this.activeChainState = this.addedChainsState[0];
 
-    this._handleConnected(true, { chainId: this.activeChain.chainId });
+    this._handleConnected(true, { chainId: this.activeChainState.chainId });
 
     this.request = this.request.bind(this);
     this.on = this.on.bind(this);
@@ -80,11 +85,19 @@ export class EWalletEIP1193Provider
   }
 
   get chainId(): string {
-    return this.activeChain.chainId;
+    return this.activeChainState.chainId;
+  }
+
+  get activeChain(): EWalletRpcChain {
+    return this.activeChainState;
+  }
+
+  get addedChains(): ReadonlyArray<EWalletRpcChainWithStatus> {
+    return this.addedChainsState;
   }
 
   get isConnected(): boolean {
-    return this.addedChains.some((chain) => chain.connected);
+    return this.addedChainsState.some((chain) => chain.connected);
   }
 
   /**
@@ -101,7 +114,7 @@ export class EWalletEIP1193Provider
     try {
       return await this.handleRequest(args);
     } catch (error: any) {
-      if (this.isConnectionError(error)) {
+      if (isConnectionError(error)) {
         const rpcError = new EthereumRpcError(
           RpcErrorCode.ResourceUnavailable,
           error?.message || "Resource unavailable",
@@ -129,7 +142,7 @@ export class EWalletEIP1193Provider
         args as RpcRequestArgs<PublicRpcMethod>,
       );
 
-      this._handleConnected(true, { chainId: this.activeChain.chainId });
+      this._handleConnected(true, { chainId: this.activeChainState.chainId });
 
       return result;
     }
@@ -150,11 +163,11 @@ export class EWalletEIP1193Provider
       case "web3_clientVersion":
         return `${this.name}/${this.version}`;
       case "eth_chainId":
-        return this.activeChain.chainId;
+        return this.activeChainState.chainId;
       default:
         const {
           rpcUrls: [rpcUrl],
-        } = this.activeChain;
+        } = this.activeChainState;
         if (!rpcUrl) {
           throw new EthereumRpcError(
             RpcErrorCode.ResourceUnavailable,
@@ -208,14 +221,14 @@ export class EWalletEIP1193Provider
             validation.error || "Invalid chain parameter",
           );
         }
-        const existing = this.addedChains.find(
+        const existing = this.addedChainsState.find(
           (c) => c.chainId === newChain.chainId,
         );
         if (existing) {
           Object.assign(existing, newChain);
           existing.connected = false;
         } else {
-          this.addedChains.push({ ...newChain, connected: false });
+          this.addedChainsState.push({ ...newChain, connected: false });
         }
         return null;
       }
@@ -223,7 +236,7 @@ export class EWalletEIP1193Provider
         const [{ chainId: chainIdToSwitch }] =
           args.params as RpcRequestArgs<"wallet_switchEthereumChain">["params"];
 
-        const chain = this.addedChains.find(
+        const chain = this.addedChainsState.find(
           (chain) => chain.chainId === chainIdToSwitch,
         );
 
@@ -234,8 +247,8 @@ export class EWalletEIP1193Provider
           );
         }
 
-        const prevChainId = this.activeChain?.chainId;
-        this.activeChain = chain;
+        const prevChainId = this.activeChainState?.chainId;
+        this.activeChainState = chain;
 
         if (prevChainId !== chainIdToSwitch) {
           this._handleChainChanged(chainIdToSwitch);
@@ -252,7 +265,7 @@ export class EWalletEIP1193Provider
     switch (args.method) {
       case "eth_accounts":
       case "eth_requestAccounts":
-        this._handleConnected(true, { chainId: this.activeChain.chainId });
+        this._handleConnected(true, { chainId: this.activeChainState.chainId });
 
         try {
           const { address } = this._getAuthenticatedSigner();
@@ -273,7 +286,9 @@ export class EWalletEIP1193Provider
           params: [signedTx],
         });
 
-        this._handleConnected(true, { chainId: this.activeChain?.chainId });
+        this._handleConnected(true, {
+          chainId: this.activeChainState?.chainId,
+        });
 
         return txHash;
       case "eth_signTransaction": {
@@ -297,7 +312,7 @@ export class EWalletEIP1193Provider
           );
         }
 
-        this._handleConnected(true, { chainId: this.activeChain.chainId });
+        this._handleConnected(true, { chainId: this.activeChainState.chainId });
 
         return result.signedTransaction;
       }
@@ -320,7 +335,7 @@ export class EWalletEIP1193Provider
             : rawTypedData;
 
         if (typedData.domain && typedData.domain.chainId !== undefined) {
-          const activeChainId = BigInt(this.activeChain.chainId);
+          const activeChainId = BigInt(this.activeChainState.chainId);
           const typedDataChainId = BigInt(typedData.domain.chainId);
 
           if (activeChainId !== typedDataChainId) {
@@ -346,7 +361,7 @@ export class EWalletEIP1193Provider
           );
         }
 
-        this._handleConnected(true, { chainId: this.activeChain.chainId });
+        this._handleConnected(true, { chainId: this.activeChainState.chainId });
 
         return result.signature;
       }
@@ -382,7 +397,7 @@ export class EWalletEIP1193Provider
           );
         }
 
-        this._handleConnected(true, { chainId: this.activeChain.chainId });
+        this._handleConnected(true, { chainId: this.activeChainState.chainId });
 
         return result.signature;
       }
@@ -473,10 +488,10 @@ export class EWalletEIP1193Provider
     connected: boolean,
     data: ProviderConnectInfo | EthereumRpcError,
   ): void {
-    if (this.activeChain) {
-      const activeChainId = this.activeChain.chainId;
+    if (this.activeChainState) {
+      const activeChainId = this.activeChainState.chainId;
 
-      this.addedChains.forEach((chain) => {
+      this.addedChainsState.forEach((chain) => {
         chain.connected = chain.chainId === activeChainId ? connected : false;
       });
     }
@@ -486,49 +501,12 @@ export class EWalletEIP1193Provider
       this.lastConnectedEmittedEvent = "connect";
     } else if (
       !connected &&
-      this.addedChains.every(({ connected }) => !connected) &&
+      this.addedChainsState.every(({ connected }) => !connected) &&
       this.lastConnectedEmittedEvent !== "disconnect"
     ) {
       this.emit("disconnect", data as RpcError);
       this.lastConnectedEmittedEvent = "disconnect";
     }
-  }
-
-  /**
-   * Checks if the error is a connection error
-   * @param error - The error to check
-   * @returns True if the error is a connection error, false otherwise
-   */
-  protected isConnectionError(error: any): boolean {
-    if (error?.name === "TypeError" || error instanceof TypeError) {
-      const message = error.message?.toLowerCase() || "";
-      if (
-        message.includes("fetch failed") ||
-        message.includes("failed to fetch") ||
-        message.includes("network error") ||
-        message.includes("load failed") ||
-        message.includes("networkerror when attempting to fetch")
-      ) {
-        return true;
-      }
-    }
-
-    if (error instanceof SyntaxError && error.message?.includes("JSON")) {
-      return true;
-    }
-
-    if (
-      error?.code === ProviderRpcErrorCode.Disconnected ||
-      error?.code === ProviderRpcErrorCode.ChainDisconnected
-    ) {
-      return true;
-    }
-
-    if (error?.name === "AbortError") {
-      return true;
-    }
-
-    return false;
   }
 
   /**

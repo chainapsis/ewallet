@@ -40,3 +40,40 @@ export class EthereumRpcError extends Error {
     }
   }
 }
+
+/**
+ * Checks if the error is a connection error
+ * @param error - The error to check
+ * @returns True if the error is a connection error, false otherwise
+ */
+export function isConnectionError(error: any): boolean {
+  if (error?.name === "TypeError" || error instanceof TypeError) {
+    const message = error.message?.toLowerCase() || "";
+    if (
+      message.includes("fetch failed") ||
+      message.includes("failed to fetch") ||
+      message.includes("network error") ||
+      message.includes("load failed") ||
+      message.includes("networkerror when attempting to fetch")
+    ) {
+      return true;
+    }
+  }
+
+  if (error instanceof SyntaxError && error.message?.includes("JSON")) {
+    return true;
+  }
+
+  if (
+    error?.code === ProviderRpcErrorCode.Disconnected ||
+    error?.code === ProviderRpcErrorCode.ChainDisconnected
+  ) {
+    return true;
+  }
+
+  if (error?.name === "AbortError") {
+    return true;
+  }
+
+  return false;
+}
