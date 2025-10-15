@@ -11,3 +11,7 @@ export type EthEwalletInitError =
 export type LazyInitError = {
   type: "eWallet failed to initialize";
 };
+
+export type SendGetEthChainInfoError =
+  | { type: "wrong_ack_message_type" }
+  | { type: "payload_contains_err"; err: any };

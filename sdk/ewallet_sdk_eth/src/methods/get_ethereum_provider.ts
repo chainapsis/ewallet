@@ -1,5 +1,3 @@
-import { toHex } from "viem";
-
 import {
   EWalletEIP1193Provider,
   type EWalletRpcChain,

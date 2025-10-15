@@ -4,8 +4,10 @@ import type {
 } from "@keplr-ewallet/ewallet-sdk-core";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { ChainInfo } from "@keplr-wallet/types";
-import type { EWalletRpcChain } from "@keplr-ewallet-sdk-eth/provider";
 import { toHex } from "viem";
+
+import type { EWalletRpcChain } from "@keplr-ewallet-sdk-eth/provider";
+import type { SendGetEthChainInfoError } from "@keplr-ewallet-sdk-eth/errors";
 
 export const DEFAULT_CHAIN_ID = 1;
 
@@ -45,10 +47,6 @@ export function convertChainInfoToRpcChain(
     evm: chainInfo.evm,
   };
 }
-
-type SendGetEthChainInfoError =
-  | { type: "wrong_ack_message_type" }
-  | { type: "payload_contains_err"; err: any };
 
 export async function sendGetEthChainInfo(
   ewallet: KeplrEWalletInterface,
