@@ -18,7 +18,8 @@
       "sdk/sandboxes/sandbox_simple_host",
       "crypto/bytes",
       "crypto/sss",
-      "crypto/tecdsa/tecdsa_interface"
+      "crypto/tecdsa/tecdsa_interface",
+      "examples/*"
     ]
   },
   "packageManager": "yarn@4.7.0",
