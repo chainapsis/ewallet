@@ -82,7 +82,6 @@ LIMIT 1
   }
 }
 
-
 export async function updateKeyShare(
   db: Pool,
   keyShareData: CreateKeyShareRequest,
@@ -112,7 +111,10 @@ RETURNING ks.*
 
     const row = result.rows[0];
     if (!row) {
-      return { success: false, err: "Failed to update key share: not found for wallet" };
+      return {
+        success: false,
+        err: "Failed to update key share: not found for wallet",
+      };
     }
 
     return { success: true, data: row as KeyShare };
