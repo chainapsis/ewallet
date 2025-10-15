@@ -10,7 +10,7 @@ export default function TxResult({
   onBack: () => void;
 }) {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-[240px]">
       <div className="flex flex-col items-center justify-center gap-6 text-center flex-1">
         <div
           className={`h-12 w-12 rounded-full flex items-center justify-center ${
