@@ -3611,7 +3611,7 @@ __metadata:
     "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.22"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
-    "@noble/curves": "npm:^2.0.0"
+    "@noble/curves": "npm:1.9.7"
     "@noble/hashes": "npm:^1.8.0"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
@@ -4576,7 +4576,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:^1.5.0, @noble/curves@npm:^1.6.0, @noble/curves@npm:^1.9.1, @noble/curves@npm:^1.9.2, @noble/curves@npm:^1.9.7, @noble/curves@npm:~1.9.0":
+"@noble/curves@npm:1.9.7, @noble/curves@npm:^1.5.0, @noble/curves@npm:^1.6.0, @noble/curves@npm:^1.9.1, @noble/curves@npm:^1.9.2, @noble/curves@npm:^1.9.7, @noble/curves@npm:~1.9.0":
   version: 1.9.7
   resolution: "@noble/curves@npm:1.9.7"
   dependencies:
