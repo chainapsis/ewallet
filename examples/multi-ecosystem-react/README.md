@@ -1,6 +1,8 @@
 # Keplr Embedded Multi‑Ecosystem (React + Vite)
 
-React + Vite example that connects to both Cosmos (Osmosis testnet) and EVM (Ethereum Sepolia) using Keplr Embedded. Shows social sign‑in, account display, and simple transfers for each ecosystem.
+React + Vite example that connects to both Cosmos (Osmosis testnet) and EVM
+(Ethereum Sepolia) using Keplr Embedded. Shows social sign‑in, account display,
+and simple transfers for each ecosystem.
 
 ### Requirements
 
@@ -9,32 +11,24 @@ React + Vite example that connects to both Cosmos (Osmosis testnet) and EVM (Eth
 
 ### Environment Variables
 
-Create a `.env` file in this package (`packages/multi-ecosystem`) and set your Keplr Embedded API key:
+Create a `.env` file in this directory and set your Keplr Embedded API key:
 
 ```bash
-# packages/multi-ecosystem/.env
+cp .env.example .env
+```
+
+```bash
+# .env
 VITE_KEPLR_EMBEDDED_API_KEY=YOUR_ISSUED_API_KEY
 ```
 
-Get your API key from the [Keplr Embedded Dashboard](https://dapp.embed.keplr.app).
+Get your API key from the
+[Keplr Embedded Dashboard](https://dapp.embed.keplr.app).
 
 ### How to Run
 
-1. From the repository root (recommended)
-
-```bash
-# Install dependencies at the root
-yarn install
-
-# Start the multi-ecosystem example dev server
-yarn dev:multi-ecosystem
-```
-
-2. From this package directly
-
 ```bash
 yarn install
-cd packages/multi-ecosystem
 yarn dev
 ```
 

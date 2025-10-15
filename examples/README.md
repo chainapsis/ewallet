@@ -1,8 +1,12 @@
 # Keplr Embedded Examples
 
-Starter examples for building dApps with Keplr Embedded. Each example is a
-standalone project. You can run each example locally by following the
-instructions in the README.
+Starter examples for building dApps with Keplr Embedded. You can run each
+example locally by following the instructions in the README.
+
+## Requirements
+
+- Node.js 22+
+- Yarn (workspaces)
 
 ## Examples
 
