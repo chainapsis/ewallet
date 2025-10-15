@@ -35,13 +35,13 @@ export type MakeEthereumSigResult = EthereumTxSignResult;
 
 export type EthereumTxSignResult =
   | {
-    type: "signed_transaction";
-    signedTransaction: Hex;
-  }
+      type: "signed_transaction";
+      signedTransaction: Hex;
+    }
   | {
-    type: "signature";
-    signature: Hex;
-  };
+      type: "signature";
+      signature: Hex;
+    };
 
 export type EthereumTxSignPayload = {
   origin: string;
@@ -73,10 +73,10 @@ export type EthereumEip712SignPayload = {
 
 export type MakeEthSigError =
   | {
-    type: "unknown_error";
-    error: any;
-  }
+      type: "unknown_error";
+      error: any;
+    }
   | {
-    type: "not_signable_tx";
-  }
+      type: "not_signable_tx";
+    }
   | MakeSigError;

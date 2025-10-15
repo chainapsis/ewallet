@@ -46,6 +46,20 @@ Any contributions you make are **greatly appreciated**.
 If you have a suggestion that would make this better, please fork the repo and
 create a pull request. You can also simply open an issue.
 
+### Code Formatting
+
+This project uses _Biome_ for code formatting.
+
+For installtion, you can refer to the following documentations
+
+- VSCode, IntelliJ: https://biomejs.dev/guides/editors/first-party-extensions/
+- Other IDEs: https://biomejs.dev/guides/editors/third-party-extensions/
+
+Biome provides two major operations: format and check
+
+- The difference between `format` and `check` is that `check` also runs lint
+  with format.
+
 ## Security
 
 TBD

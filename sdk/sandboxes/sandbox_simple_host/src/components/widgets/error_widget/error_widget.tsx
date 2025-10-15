@@ -44,4 +44,4 @@ export const ErrorWidget: FC<LoginWidgetProps> = () => {
   );
 };
 
-export interface LoginWidgetProps { }
+export interface LoginWidgetProps {}

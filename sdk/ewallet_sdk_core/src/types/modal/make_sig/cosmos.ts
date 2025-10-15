@@ -59,15 +59,15 @@ export type MakeCosmosSigResult = {
 
 export type MakeCosmosSigError =
   | {
-    type: "unknown_error";
-    error: any;
-  }
+      type: "unknown_error";
+      error: any;
+    }
   | {
-    type: "sign_doc_parse_fail";
-    error: any;
-  }
+      type: "sign_doc_parse_fail";
+      error: any;
+    }
   | {
-    type: "sign_doc_extract_fail";
-    error: any;
-  }
+      type: "sign_doc_extract_fail";
+      error: any;
+    }
   | MakeSigError;

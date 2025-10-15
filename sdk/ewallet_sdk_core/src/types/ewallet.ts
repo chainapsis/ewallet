@@ -13,7 +13,7 @@ import type {
 } from "@keplr-ewallet-sdk-core/errors";
 
 export interface KeplrEWalletStaticInterface {
-  new(apiKey: string, iframe: HTMLIFrameElement, sdkEndpoint: string): void;
+  new (apiKey: string, iframe: HTMLIFrameElement, sdkEndpoint: string): void;
   init: (
     args: KeplrEwalletInitArgs,
   ) => Result<KeplrEWalletInterface, KeplrEwalletInitError>;

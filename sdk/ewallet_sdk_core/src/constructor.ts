@@ -7,7 +7,7 @@ import type {
 } from "./types";
 import { EventEmitter3 } from "./event";
 
-export const KeplrEWallet = function(
+export const KeplrEWallet = function (
   this: KeplrEWalletInterface,
   apiKey: string,
   iframe: HTMLIFrameElement,

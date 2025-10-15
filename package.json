@@ -26,7 +26,10 @@
     "node": ">=22"
   },
   "scripts": {
-    "ci": "yarn --cwd ./internals/ci run start"
+    "ci": "yarn --cwd ./internals/ci run start",
+    "format": "yarn exec biome format --write",
+    "lint": "yarn exec biome lint --write",
+    "check": "yarn exec biome check --write"
   },
   "dependencies": {
     "chalk": "^5.5.0",
@@ -38,6 +41,7 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.6",
     "@jest/globals": "^30.0.4",
     "@rollup/plugin-commonjs": "^25.0.0",
     "@rollup/plugin-node-resolve": "^15.0.0",

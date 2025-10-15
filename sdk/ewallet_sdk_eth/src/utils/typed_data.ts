@@ -10,7 +10,7 @@ export function parseTypedData<T>(
   text: string,
   reviver?: (this: any, key: string, value: any) => any,
 ): T {
-  return JSON.parse(text, function(key, val) {
+  return JSON.parse(text, function (key, val) {
     // First apply user-provided reviver, if any
     const revived =
       typeof reviver === "function" ? reviver.call(this, key, val) : val;

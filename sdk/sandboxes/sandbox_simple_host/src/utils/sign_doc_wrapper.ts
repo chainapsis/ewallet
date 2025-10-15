@@ -25,7 +25,7 @@ export class SignDocWrapper {
   private _aminoSignDoc?: StdSignDoc;
   private _protoSignDoc?: ProtoSignDoc;
 
-  private constructor(private readonly signDoc: SupportedSignDoc) { }
+  private constructor(private readonly signDoc: SupportedSignDoc) {}
 
   static fromAminoSignDoc(signDoc: StdSignDoc): SignDocWrapper {
     const wrapper = new SignDocWrapper(signDoc);
