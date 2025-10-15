@@ -1,131 +1,79 @@
-import { defineChain } from "viem";
-import {
-  arbitrum,
-  avalanche,
-  base,
-  berachain,
-  blast,
-  forma,
-  mainnet,
-  optimism,
-  polygon,
-  unichain,
-  story,
-} from "viem/chains";
-
-// TODO: remove chains
-const bnbSmartChain = defineChain({
-  id: 56,
-  name: "BNB Smart Chain",
-  nativeCurrency: {
-    name: "BNB",
-    symbol: "BNB",
-    decimals: 18,
-  },
-  rpcUrls: {
-    default: { http: ["https://evm-56.keplr.app"] },
-  },
-  blockExplorers: {
-    default: {
-      name: "BSCScan",
-      url: "https://bscscan.com",
-      apiUrl: "https://api.bscscan.com/api",
-    },
-  },
-});
+import type {
+  EWalletMsgGetEthChainInfo,
+  KeplrEWalletInterface,
+} from "@keplr-ewallet/ewallet-sdk-core";
+import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { ChainInfo } from "@keplr-wallet/types";
+import type { EWalletRpcChain } from "@keplr-ewallet-sdk-eth/provider";
+import { toHex } from "viem";
 
 export const DEFAULT_CHAIN_ID = 1;
 
-export const SUPPORTED_CHAINS = [
-  {
-    ...mainnet,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-1.keplr.app"],
-      },
+export function parseChainId(chainId: string | number): number {
+  if (typeof chainId === "string") {
+    const [chainNamespace, chainIdStr] = chainId.split(":");
+    if (chainNamespace === "eip155") {
+      return parseInt(chainIdStr, 10);
+    } else {
+      return parseInt(chainId, 10);
+    }
+  } else {
+    return chainId;
+  }
+}
+
+export function convertChainInfoToRpcChain(
+  chainInfo: ChainInfo,
+): EWalletRpcChain | null {
+  if (chainInfo.currencies.length === 0) {
+    return null;
+  }
+
+  return {
+    chainId: toHex(parseChainId(chainInfo.chainId)),
+    chainName: chainInfo.chainName,
+    rpcUrls: [chainInfo.rpc],
+    nativeCurrency: {
+      name: chainInfo.currencies[0].coinMinimalDenom,
+      symbol: chainInfo.currencies[0].coinDenom,
+      decimals: chainInfo.currencies[0].coinDecimals,
     },
-  },
-  {
-    ...base,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-8453.keplr.app"],
-      },
+    chainSymbolImageUrl: chainInfo.chainSymbolImageUrl,
+    currencies: chainInfo.currencies,
+    bip44: chainInfo.bip44,
+    features: chainInfo.features,
+    evm: chainInfo.evm,
+  };
+}
+
+type SendGetEthChainInfoError =
+  | { type: "wrong_ack_message_type" }
+  | { type: "payload_contains_err"; err: any };
+
+export async function sendGetEthChainInfo(
+  ewallet: KeplrEWalletInterface,
+  chainId?: string,
+): Promise<Result<ChainInfo[], SendGetEthChainInfoError>> {
+  const msg: EWalletMsgGetEthChainInfo = {
+    target: "keplr_ewallet_attached",
+    msg_type: "get_eth_chain_info",
+    payload: {
+      chain_id: chainId ?? null,
     },
-  },
-  {
-    ...optimism,
-    name: "Optimism",
-    rpcUrls: {
-      default: {
-        http: ["https://evm-10.keplr.app"],
-      },
-    },
-  },
-  {
-    ...arbitrum,
-    name: "Arbitrum",
-    rpcUrls: {
-      default: {
-        http: ["https://evm-42161.keplr.app"],
-      },
-    },
-  },
-  bnbSmartChain,
-  {
-    ...blast,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-81457.keplr.app"],
-      },
-    },
-  },
-  {
-    ...avalanche,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-43114.keplr.app"],
-      },
-    },
-  },
-  {
-    ...unichain,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-130.keplr.app"],
-      },
-    },
-  },
-  {
-    ...polygon,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-137.keplr.app"],
-      },
-    },
-  },
-  {
-    ...forma,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-984122.keplr.app"],
-      },
-    },
-  },
-  {
-    ...berachain,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-80094.keplr.app"],
-      },
-    },
-  },
-  {
-    ...story,
-    rpcUrls: {
-      default: {
-        http: ["https://evm-1514.keplr.app"],
-      },
-    },
-  },
-];
+  };
+
+  const res = await ewallet.sendMsgToIframe(msg);
+
+  if (res.msg_type !== "get_eth_chain_info_ack") {
+    return { success: false, err: { type: "wrong_ack_message_type" } };
+  }
+
+  if (!res.payload.success) {
+    return {
+      success: false,
+      err: { type: "payload_contains_err", err: res.payload.err },
+    };
+  }
+
+  return { success: true, data: res.payload.data };
+}
