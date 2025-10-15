@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Hex } from "viem";
-import { isAddress, toHex } from "viem";
+import { isAddress, toHex, type Hex } from "viem";
+import { useQueryClient } from "@tanstack/react-query";
 
 import useEvm from "@/keplr/useEvm";
 import TxTracking from "./TxTracking";
@@ -26,6 +26,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function EvmTransactionForm() {
   const { address, provider, publicClient } = useEvm();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -87,6 +88,11 @@ export default function EvmTransactionForm() {
         hash: txHashForTracking,
       });
       setTxStatus(receipt.status === "success" ? "confirmed" : "failed");
+
+      await queryClient.invalidateQueries({
+        queryKey: ["evm-balance", address],
+        exact: true,
+      });
     } catch (error) {
       console.error(error);
     }

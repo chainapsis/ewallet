@@ -6,6 +6,7 @@ import { Hex, isAddress, toHex } from "viem";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 
 import Button from "./Button";
 import useKeplrEmbedded from "@/hooks/useKeplrEmbedded";
@@ -42,6 +43,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function TransactionForm({ className }: TransactionFormProps) {
   const { address, provider } = useKeplrEmbedded();
   const publicClient = usePublicClient();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -110,6 +112,11 @@ export default function TransactionForm({ className }: TransactionFormProps) {
       });
 
       setTxStatus(receipt.status === "success" ? "confirmed" : "failed");
+
+      await queryClient.invalidateQueries({
+        queryKey: ["balance", address],
+        exact: true,
+      });
     } catch (error) {
       console.error(error);
     }

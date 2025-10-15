@@ -7,6 +7,7 @@ import { fromBech32 } from "@cosmjs/encoding";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 
 import Button from "./Button";
 import useKeplrEmbedded from "@/hooks/useKeplrEmbedded";
@@ -15,14 +16,14 @@ interface TransactionFormProps {
   className?: string;
 }
 
-const bech32Basic = (addr: string) => {
+function bech32Basic(addr: string) {
   try {
     fromBech32(addr);
     return true;
   } catch {
     return false;
   }
-};
+}
 
 const formSchema = z.object({
   recipientAddress: z
@@ -50,6 +51,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function TransactionForm({ className }: TransactionFormProps) {
   const { bech32Address, offlineSigner, chainInfo } = useKeplrEmbedded();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -72,84 +74,76 @@ export default function TransactionForm({ className }: TransactionFormProps) {
     return txHash ? `https://www.mintscan.io/osmosis-testnet/tx/${txHash}` : "";
   }, [txHash]);
 
-  function isValidBech32(address: string, expectedPrefix?: string): boolean {
-    try {
-      const { prefix } = fromBech32(address);
-      if (expectedPrefix && prefix !== expectedPrefix) return false;
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   async function handleSendTransaction(values: FormValues) {
-    if (!bech32Address || isTxSending || !offlineSigner) {
+    if (!bech32Address || !offlineSigner || isTxSending) {
+      return;
+    }
+
+    const { recipientAddress, amount } = values;
+
+    try {
+      const { prefix } = fromBech32(recipientAddress);
+      if (
+        chainInfo.bech32Config?.bech32PrefixAccAddr &&
+        prefix !== chainInfo.bech32Config?.bech32PrefixAccAddr
+      ) {
+        return;
+      }
+    } catch {
       return;
     }
 
     setIsTxSending(true);
+    let txHashForTracking: string | null = null;
+
     try {
-      const { recipientAddress, amount } = values;
-
-      if (
-        !isValidBech32(
-          recipientAddress,
-          chainInfo.bech32Config?.bech32PrefixAccAddr,
-        )
-      ) {
-        throw new Error("Invalid recipient address");
-      }
-
       const client = await SigningStargateClient.connectWithSigner(
         chainInfo.rpc,
         offlineSigner,
       );
 
-      const response = await client.sendTokens(
+      const fee = {
+        amount: [{ denom: "uosmo", amount: "1000" }],
+        gas: "200000",
+      };
+
+      const result = await client.sendTokens(
         bech32Address,
         recipientAddress,
-        [
-          {
-            amount: amount,
-            denom: "uosmo",
-          },
-        ],
-        {
-          amount: [{ denom: "uosmo", amount: "1000" }],
-          gas: "200000",
-        },
+        [{ denom: "uosmo", amount }],
+        fee,
       );
 
-      setTxHash(response.transactionHash);
+      txHashForTracking = result.transactionHash;
+      setTxHash(txHashForTracking);
+      setTxStatus("pending");
     } catch (error) {
       console.error(error);
     } finally {
       setIsTxSending(false);
     }
-  }
 
-  // Poll for transaction receipt while pending
-  useEffect(() => {
-    if (!txHash) return;
-    let cancelled = false;
+    if (!txHashForTracking) {
+      return;
+    }
 
-    const intervalId = setInterval(async () => {
+    const clientQuery = await StargateClient.connect(chainInfo.rpc);
+    const interval = setInterval(async () => {
       try {
-        const client = await StargateClient.connect(chainInfo.rpc);
-        const receipt = await client.getTx(txHash);
-        if (!receipt) return;
-        if (cancelled) return;
-        setTxStatus(receipt.code === 0 ? "confirmed" : "failed");
-        clearInterval(intervalId);
-      } catch {
-        // keep polling until receipt is available
+        const receipt = await clientQuery.getTx(txHashForTracking!);
+        if (receipt) {
+          clearInterval(interval);
+          setTxStatus(receipt.code === 0 ? "confirmed" : "failed");
+          await queryClient.invalidateQueries({
+            queryKey: ["balance", bech32Address],
+            exact: true,
+          });
+        }
+      } catch (err) {
+        // keep polling
       }
-    }, 3000);
-    return () => {
-      cancelled = true;
-      clearInterval(intervalId);
-    };
-  }, [txHash, chainInfo.rpc]);
+    }, 2000);
+  }
 
   function resetForm() {
     reset();
