@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import type { Pool, PoolClient } from "pg";
 import { v4 as uuidv4 } from "uuid";
 import type {
   CreateKeyShareRequest,
@@ -7,7 +7,7 @@ import type {
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function createKeyShare(
-  db: Pool,
+  db: Pool | PoolClient,
   keyShareData: CreateKeyShareRequest,
 ): Promise<Result<KeyShare, string>> {
   try {
@@ -37,7 +37,7 @@ RETURNING *
 }
 
 export async function getKeyShareByShareId(
-  db: Pool,
+  db: Pool | PoolClient,
   shareId: string,
 ): Promise<Result<KeyShare | null, string>> {
   try {
@@ -60,7 +60,7 @@ LIMIT 1
 }
 
 export async function getKeyShareByWalletId(
-  db: Pool,
+  db: Pool | PoolClient,
   walletId: string,
 ): Promise<Result<KeyShare | null, string>> {
   try {
@@ -83,7 +83,7 @@ LIMIT 1
 }
 
 export async function updateKeyShare(
-  db: Pool,
+  db: Pool | PoolClient,
   keyShareData: CreateKeyShareRequest,
 ): Promise<Result<KeyShare, string>> {
   try {

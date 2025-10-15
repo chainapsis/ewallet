@@ -1,9 +1,9 @@
-import { Pool } from "pg";
+import type { Pool, PoolClient } from "pg";
 import type { KSNodeUser } from "@keplr-ewallet/ksn-interface/user";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function createUser(
-  db: Pool,
+  db: Pool | PoolClient,
   email: string,
 ): Promise<Result<KSNodeUser, string>> {
   try {
@@ -33,7 +33,7 @@ RETURNING *
 }
 
 export async function getUserByEmail(
-  db: Pool,
+  db: Pool | PoolClient,
   email: string,
 ): Promise<Result<KSNodeUser | null, string>> {
   try {
@@ -56,7 +56,7 @@ LIMIT 1
 }
 
 export async function getUserFromUserId(
-  db: Pool,
+  db: Pool | PoolClient,
   user_id: string,
 ): Promise<Result<KSNodeUser, string>> {
   try {
