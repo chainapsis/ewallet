@@ -1,15 +1,15 @@
-import {
-  KeplrEWallet,
-  type KeplrEwalletInitArgs,
-} from "@keplr-ewallet/ewallet-sdk-core";
+import { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
-import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
+import type {
+  EthEWalletInterface,
+  EthEWalletInitArgs,
+} from "@keplr-ewallet-sdk-eth/types";
 import type { EthEwalletInitError } from "@keplr-ewallet-sdk-eth/errors";
 import { EthEWallet } from "@keplr-ewallet-sdk-eth/constructor";
 
 export function init(
-  args: KeplrEwalletInitArgs,
+  args: EthEWalletInitArgs,
 ): Result<EthEWalletInterface, EthEwalletInitError> {
   const eWalletRes = KeplrEWallet.init(args);
 

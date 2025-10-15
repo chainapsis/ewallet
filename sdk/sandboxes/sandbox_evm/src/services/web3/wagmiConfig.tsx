@@ -7,8 +7,6 @@ import {
   WalletDetailsParams,
   Wallet,
 } from "@rainbow-me/rainbowkit";
-import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
-import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
 import type {
   EthEWalletInitArgs,
   EthEWalletInterface,
@@ -28,13 +26,6 @@ export const defaultWallets = [
   toKeplrEWallet({
     api_key: "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
     sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
-    use_testnet: true,
-  }),
-  coinbaseWallet,
-  toPrivyWallet({
-    id: "cm04asygd041fmry9zmcyn5o5",
-    name: "Abstract",
-    iconUrl: "https://example.com/image.png",
   }),
 ];
 
@@ -190,7 +181,7 @@ function keplrEWalletConnector(
 
         const ethEWallet = await initEthEWalletOnce();
 
-        cachedProvider = ethEWallet.getEthereumProvider();
+        cachedProvider = await ethEWallet.getEthereumProvider();
 
         cachedProvider.on("chainChanged", (chainId) => {
           wallet.onChainChanged(chainId);

@@ -19,10 +19,12 @@ export interface EthEWalletState {
   publicKeyRaw: string | null;
 }
 
+export type EthEWalletInitArgs = KeplrEwalletInitArgs;
+
 export interface EthEWalletStaticInterface {
   new (eWallet: KeplrEWalletInterface): void;
   init: (
-    args: KeplrEwalletInitArgs,
+    args: EthEWalletInitArgs,
   ) => Result<EthEWalletInterface, EthEwalletInitError>;
 }
 

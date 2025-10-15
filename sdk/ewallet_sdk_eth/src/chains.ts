@@ -13,6 +13,7 @@ import {
   story,
 } from "viem/chains";
 
+// TODO: remove chains
 const bnbSmartChain = defineChain({
   id: 56,
   name: "BNB Smart Chain",
