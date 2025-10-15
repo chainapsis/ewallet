@@ -129,7 +129,7 @@ export function makeKeyshareRouter() {
       // Start transaction
       const client = await state.db.connect();
       try {
-        await client.query('BEGIN');
+        await client.query("BEGIN");
 
         const registerKeyShareRes = await registerKeyShare(
           client,
@@ -143,7 +143,7 @@ export function makeKeyshareRouter() {
         );
 
         if (registerKeyShareRes.success === false) {
-          await client.query('ROLLBACK');
+          await client.query("ROLLBACK");
           return res.status(ErrorCodeMap[registerKeyShareRes.code]).json({
             success: false,
             code: registerKeyShareRes.code,
@@ -151,13 +151,13 @@ export function makeKeyshareRouter() {
           });
         }
 
-        await client.query('COMMIT');
+        await client.query("COMMIT");
         return res.status(200).json({
           success: true,
           data: void 0,
         });
       } catch (error) {
-        await client.query('ROLLBACK');
+        await client.query("ROLLBACK");
         return res.status(500).json({
           success: false,
           code: "UNKNOWN_ERROR",
@@ -488,7 +488,7 @@ export function makeKeyshareRouter() {
       // Start transaction
       const client = await state.db.connect();
       try {
-        await client.query('BEGIN');
+        await client.query("BEGIN");
 
         const reshareKeyShareRes = await reshareKeyShare(
           client,
@@ -502,7 +502,7 @@ export function makeKeyshareRouter() {
         );
 
         if (reshareKeyShareRes.success === false) {
-          await client.query('ROLLBACK');
+          await client.query("ROLLBACK");
           return res.status(ErrorCodeMap[reshareKeyShareRes.code]).json({
             success: false,
             code: reshareKeyShareRes.code,
@@ -510,13 +510,13 @@ export function makeKeyshareRouter() {
           });
         }
 
-        await client.query('COMMIT');
+        await client.query("COMMIT");
         return res.status(200).json({
           success: true,
           data: void 0,
         });
       } catch (error) {
-        await client.query('ROLLBACK');
+        await client.query("ROLLBACK");
         return res.status(500).json({
           success: false,
           code: "UNKNOWN_ERROR",
