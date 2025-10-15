@@ -95,9 +95,9 @@ SET aux = jsonb_set(
         '{enc_share_history}',
         COALESCE(ks.aux->'enc_share_history', '[]'::jsonb)
           || jsonb_build_object(
-               'enc_share', ks.enc_share,
-               'updated_at', ks.updated_at
-             ),
+              'enc_share', ks.enc_share,
+              'updated_at', ks.updated_at
+            ),
         true
     ),
     enc_share = $2,
@@ -112,7 +112,7 @@ RETURNING ks.*
 
     const row = result.rows[0];
     if (!row) {
-      return { success: false, err: "Failed to update key share" };
+      return { success: false, err: "Failed to update key share: not found for wallet" };
     }
 
     return { success: true, data: row as KeyShare };
