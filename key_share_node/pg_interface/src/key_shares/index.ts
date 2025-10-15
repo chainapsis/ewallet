@@ -81,3 +81,42 @@ LIMIT 1
     return { success: false, err: String(error) };
   }
 }
+
+
+export async function updateKeyShare(
+  db: Pool,
+  keyShareData: CreateKeyShareRequest,
+): Promise<Result<KeyShare, string>> {
+  try {
+    const query = `
+UPDATE key_shares AS ks
+SET aux = jsonb_set(
+        COALESCE(ks.aux, '{}'::jsonb),
+        '{enc_share_history}',
+        COALESCE(ks.aux->'enc_share_history', '[]'::jsonb)
+          || jsonb_build_object(
+               'enc_share', ks.enc_share,
+               'updated_at', ks.updated_at
+             ),
+        true
+    ),
+    enc_share = $2,
+    updated_at = now()
+WHERE ks.wallet_id = $1
+RETURNING ks.*
+    `;
+
+    const values = [keyShareData.wallet_id, keyShareData.enc_share];
+
+    const result = await db.query(query, values);
+
+    const row = result.rows[0];
+    if (!row) {
+      return { success: false, err: "Failed to update key share" };
+    }
+
+    return { success: true, data: row as KeyShare };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}
