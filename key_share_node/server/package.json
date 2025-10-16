@@ -2,7 +2,7 @@
   "name": "@keplr-ewallet/key-share-node-server",
   "packageManager": "yarn@4.7.0",
   "private": true,
-  "version": "0.0.3-alpha.3",
+  "version": "0.0.3-alpha.4",
   "type": "module",
   "scripts": {
     "typecheck": "tsc --noEmit",
