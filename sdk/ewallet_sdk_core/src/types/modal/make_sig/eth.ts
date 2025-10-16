@@ -79,4 +79,12 @@ export type MakeEthSigError =
   | {
       type: "not_signable_tx";
     }
+  | {
+      type: "chain_not_supported";
+      data: {
+        chain_id: string;
+        chain_name: string;
+        chain_symbol_image_url?: string;
+      };
+    }
   | MakeSigError;
