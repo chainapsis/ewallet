@@ -1,6 +1,14 @@
 "use client";
 
-import { createClient, fallback, getAddress, http, toHex } from "viem";
+import {
+  AddEthereumChainParameter,
+  createClient,
+  ExactPartial,
+  fallback,
+  getAddress,
+  http,
+  toHex,
+} from "viem";
 import { createConfig, CreateConnectorFn, createConnector } from "wagmi";
 import {
   connectorsForWallets,
@@ -198,7 +206,13 @@ function keplrEWalletConnector(
         const accounts = await wallet.getAccounts();
         return accounts.length > 0;
       },
-      switchChain: async ({ chainId }: { chainId: number }) => {
+      switchChain: async (parameters: {
+        addEthereumChainParameter?:
+          | ExactPartial<Omit<AddEthereumChainParameter, "chainId">>
+          | undefined;
+        chainId: number;
+      }) => {
+        const { chainId, addEthereumChainParameter } = parameters;
         console.log("[sandbox-evm] handle `switchChain`", chainId);
         const chain = config.chains.find((network) => network.id === chainId);
         if (!chain) {
@@ -206,10 +220,59 @@ function keplrEWalletConnector(
         }
 
         const provider = await wallet.getProvider();
-        await provider.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: toHex(chainId) }],
-        });
+
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: toHex(chainId) }],
+          });
+        } catch {
+          if (addEthereumChainParameter) {
+            console.log(
+              "[sandbox-evm] add ethereum chain",
+              addEthereumChainParameter,
+            );
+
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  ...addEthereumChainParameter,
+                  chainId: toHex(chainId),
+                  chainName: addEthereumChainParameter.chainName ?? "",
+                  rpcUrls: addEthereumChainParameter.rpcUrls ?? [],
+                },
+              ],
+            });
+
+            // switch to the new chain
+            await provider.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: toHex(chainId) }],
+            });
+          } else {
+            console.log("[sandbox-evm] add ethereum chain", chain);
+            const rpcChain: AddEthereumChainParameter = {
+              chainId: toHex(chainId),
+              chainName: chain.name,
+              rpcUrls: chain.rpcUrls.default.http,
+              blockExplorerUrls: chain.blockExplorers?.default.url
+                ? [chain.blockExplorers.default.url]
+                : [],
+              nativeCurrency: chain.nativeCurrency,
+            };
+
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [rpcChain],
+            });
+
+            await provider.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: toHex(chainId) }],
+            });
+          }
+        }
 
         return chain;
       },
