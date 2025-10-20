@@ -1,4 +1,4 @@
-# Cait-Sith [![](https://img.shields.io/crates/v/cait-sith.svg)](https://crates.io/crates/cait-sith) [![](https://docs.rs/cait-sith/badge.svg)](https://docs.rs/cait-sith)
+# Cait-Sith [![](https://img.shields.io/crates/v/cait-sith-keplr.svg)](https://crates.io/crates/cait-sith-keplr) [![](https://docs.rs/cait-sith-keplr/badge.svg)](https://docs.rs/cait-sith-keplr)
 
 Cait-Sith is a novel threshold ECDSA protocol (and implementation),
 which is both simpler and substantially more performant than
@@ -35,7 +35,7 @@ end up being used more often.
 A detailed specification is available [in this repo](./docs),
 but we'll also give a bit of detail here.
 
-The core of Cait-Sith's design involves a *committed* Beaver triple.
+The core of Cait-Sith's design involves a _committed_ Beaver triple.
 These are of the form:
 
 $$
@@ -55,20 +55,20 @@ The flow of the protocol is first that the parties need a way to generate triple
 Then, the parties need to generate a key pair so that they can sign messages:
 
 - The parties run a distributed key generation protocol to setup a new key pair,
-which can be used for many signatures.
+  which can be used for many signatures.
 
 When the parties want to sign using a given key:
 
-- Using their shares of a private key, the parties can create a *presignature*,
-before knowing the message to sign.
+- Using their shares of a private key, the parties can create a _presignature_,
+  before knowing the message to sign.
 - Once they know this message, they can use the presignature to create a complete signature.
 
 It's important that presignatures and triples are **never** reused.
 
 ### Refresh and Resharing
 
-In addition to key generation, cait-sith also supports key *refresh*,
-and key *resharing*.
+In addition to key generation, cait-sith also supports key _refresh_,
+and key _resharing_.
 
 Key refresh generates new shares for each party, while keeping the same list
 of participants and threshold.
@@ -83,6 +83,7 @@ Internally, the API tries to be as simple as possible abstracting away
 as many details as possible into a simple interface.
 
 This interface just has two methods:
+
 ```rust
 pub trait Protocol {
     type Output;
@@ -91,15 +92,18 @@ pub trait Protocol {
     fn message(&mut self, from: Participant, data: MessageData);
 }
 ```
+
 Given an instance of this trait, which represents a single party
 participating in a protocol, you can do two things:
+
 - You can provide a new message received from some other party.
 - You can "poke" the protocol to see if it has some kind of action it wants you to perform, or if an error happened.
 
 This action is either:
+
 - The protocol telling you it has finished, with a return value of type `Output`.
 - The protocol asking you to send a message to all other parties.
-- The protocol asking you to *privately* send a message to one party.
+- The protocol asking you to _privately_ send a message to one party.
 - The protocol informing you that no more progress can be made until it receives new messages.
 
 In particular, details about rounds and message serialization are abstracted
@@ -133,7 +137,7 @@ time:   [446.79 µs 447.89 µs 449.02 µs]
 These were performed with 3 parties running on the same machine,
 with no communication cost.
 
-Note that triple generation needs to be performed *twice* for each signature.
+Note that triple generation needs to be performed _twice_ for each signature.
 Also, triple generation is relatively bandwidth intensive compared to other
 protocols, which isn't reflected in these benchmarks, since network speed
 isn't constrained.
@@ -156,7 +160,7 @@ Here's an example with 3 parties, with 100ms latency between them,
 and a 10 MB/s outgoing link each.
 
 ```
-> cargo run --release -F k256 --example network-benches -- 3 100 10000000  
+> cargo run --release -F k256 --example network-benches -- 3 100 10000000
 
 Triple Setup 3 [100 ms, 10000000 B/S]
 time:   304.884093ms
@@ -228,9 +232,9 @@ suite of libraries.
 This crate also provides implementations of some existing curves behind features,
 as per the following table:
 
-| Curve | Feature |
-|-------|---------|
-|Secp256k1|`k256`|
+| Curve     | Feature |
+| --------- | ------- |
+| Secp256k1 | `k256`  |
 
 For supporting any message hash, the API requires the user to supply
 the hash of a message when signing as a scalar directly.
