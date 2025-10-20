@@ -131,6 +131,20 @@ export type EWalletMsgGetCosmosChainInfoAck = {
   payload: Result<ChainInfo[], string>;
 };
 
+export type EWalletMsgGetEthChainInfo = {
+  target: "keplr_ewallet_attached";
+  msg_type: "get_eth_chain_info";
+  payload: {
+    chain_id: string | null;
+  };
+};
+
+export type EWalletMsgGetEthChainInfoAck = {
+  target: "keplr_ewallet_sdk";
+  msg_type: "get_eth_chain_info_ack";
+  payload: Result<ChainInfo[], string>;
+};
+
 export type EWalletMsg =
   | EWalletMsgInit
   | EWalletMsgInitAck
@@ -152,8 +166,10 @@ export type EWalletMsg =
   | EWalletMsgGetEmailAck
   | EWalletMsgGetCosmosChainInfo
   | EWalletMsgGetCosmosChainInfoAck
+  | EWalletMsgGetEthChainInfo
+  | EWalletMsgGetEthChainInfoAck
   | {
-    target: "keplr_ewallet_sdk";
-    msg_type: "unknown_msg_type";
-    payload: string | null;
-  };
+      target: "keplr_ewallet_sdk";
+      msg_type: "unknown_msg_type";
+      payload: string | null;
+    };

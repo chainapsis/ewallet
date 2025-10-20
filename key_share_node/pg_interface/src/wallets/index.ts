@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import type { Pool, PoolClient } from "pg";
 import { v4 as uuidv4 } from "uuid";
 import type {
   KSNodeWallet,
@@ -8,7 +8,7 @@ import type { Result } from "@keplr-ewallet/stdlib-js";
 import type { Bytes33 } from "@keplr-ewallet/bytes";
 
 export async function createWallet(
-  db: Pool,
+  db: Pool | PoolClient,
   createKSNodeWalletRequest: CreateKSNodeWalletRequest,
 ): Promise<Result<KSNodeWallet, string>> {
   try {
@@ -54,7 +54,7 @@ RETURNING *
 }
 
 export async function getWalletById(
-  db: Pool,
+  db: Pool | PoolClient,
   walletId: string,
 ): Promise<Result<KSNodeWallet | null, string>> {
   try {
@@ -84,7 +84,7 @@ LIMIT 1
 }
 
 export async function getWalletByPublicKey(
-  db: Pool,
+  db: Pool | PoolClient,
   publicKey: Bytes33,
 ): Promise<Result<KSNodeWallet | null, string>> {
   try {

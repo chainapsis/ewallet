@@ -10,4 +10,4 @@ export interface ErrorResult<E> {
   err: E;
 }
 
-export { };
+export {};

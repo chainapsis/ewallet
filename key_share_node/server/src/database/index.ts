@@ -19,8 +19,8 @@ export async function connectPG(
     ...config,
     ssl: config.ssl
       ? {
-        rejectUnauthorized: false,
-      }
+          rejectUnauthorized: false,
+        }
       : undefined,
   };
 
@@ -44,8 +44,9 @@ export async function connectPG(
 
     return {
       success: false,
-      err: `Failed to connect to PostgreSQL: ${error instanceof Error ? error.message : String(error)
-        }`,
+      err: `Failed to connect to PostgreSQL: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
     };
   }
 }

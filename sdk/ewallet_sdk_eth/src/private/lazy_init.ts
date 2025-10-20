@@ -68,29 +68,29 @@ function handleAccountsChanged(
       publicKeyNormalized,
     );
 
-    const provider = this.getEthereumProvider();
+    this.getEthereumProvider().then((provider) => {
+      if (publicKeyNormalized === null) {
+        this.state = {
+          publicKey: null,
+          publicKeyRaw: null,
+          address: null,
+        };
 
-    if (publicKeyNormalized === null) {
-      this.state = {
-        publicKey: null,
-        publicKeyRaw: null,
-        address: null,
-      };
+        provider.emit("accountsChanged", []);
+        return;
+      } else {
+        const publicKeyHex: Hex = `0x${publicKeyNormalized}`;
+        const nextAddress = publicKeyToEthereumAddress(publicKeyHex);
 
-      provider.emit("accountsChanged", []);
-      return;
-    } else {
-      const publicKeyHex: Hex = `0x${publicKeyNormalized}`;
-      const nextAddress = publicKeyToEthereumAddress(publicKeyHex);
+        this.state = {
+          publicKeyRaw: publicKey,
+          publicKey: publicKeyHex,
+          address: nextAddress,
+        };
 
-      this.state = {
-        publicKeyRaw: publicKey,
-        publicKey: publicKeyHex,
-        address: nextAddress,
-      };
-
-      provider.emit("accountsChanged", [nextAddress]);
-    }
+        provider.emit("accountsChanged", [nextAddress]);
+      }
+    });
   }
 }
 

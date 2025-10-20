@@ -1,14 +1,20 @@
 "use client";
 
-import { createClient, fallback, getAddress, http, toHex } from "viem";
+import {
+  AddEthereumChainParameter,
+  createClient,
+  ExactPartial,
+  fallback,
+  getAddress,
+  http,
+  toHex,
+} from "viem";
 import { createConfig, CreateConnectorFn, createConnector } from "wagmi";
 import {
   connectorsForWallets,
   WalletDetailsParams,
   Wallet,
 } from "@rainbow-me/rainbowkit";
-import { coinbaseWallet } from "@rainbow-me/rainbowkit/wallets";
-import { toPrivyWallet } from "@privy-io/cross-app-connect/rainbow-kit";
 import type {
   EthEWalletInitArgs,
   EthEWalletInterface,
@@ -28,13 +34,6 @@ export const defaultWallets = [
   toKeplrEWallet({
     api_key: "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
     sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
-    use_testnet: true,
-  }),
-  coinbaseWallet,
-  toPrivyWallet({
-    id: "cm04asygd041fmry9zmcyn5o5",
-    name: "Abstract",
-    iconUrl: "https://example.com/image.png",
   }),
 ];
 
@@ -190,7 +189,7 @@ function keplrEWalletConnector(
 
         const ethEWallet = await initEthEWalletOnce();
 
-        cachedProvider = ethEWallet.getEthereumProvider();
+        cachedProvider = await ethEWallet.getEthereumProvider();
 
         cachedProvider.on("chainChanged", (chainId) => {
           wallet.onChainChanged(chainId);
@@ -207,7 +206,13 @@ function keplrEWalletConnector(
         const accounts = await wallet.getAccounts();
         return accounts.length > 0;
       },
-      switchChain: async ({ chainId }: { chainId: number }) => {
+      switchChain: async (parameters: {
+        addEthereumChainParameter?:
+          | ExactPartial<Omit<AddEthereumChainParameter, "chainId">>
+          | undefined;
+        chainId: number;
+      }) => {
+        const { chainId, addEthereumChainParameter } = parameters;
         console.log("[sandbox-evm] handle `switchChain`", chainId);
         const chain = config.chains.find((network) => network.id === chainId);
         if (!chain) {
@@ -215,10 +220,59 @@ function keplrEWalletConnector(
         }
 
         const provider = await wallet.getProvider();
-        await provider.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: toHex(chainId) }],
-        });
+
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: toHex(chainId) }],
+          });
+        } catch {
+          if (addEthereumChainParameter) {
+            console.log(
+              "[sandbox-evm] add ethereum chain",
+              addEthereumChainParameter,
+            );
+
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  ...addEthereumChainParameter,
+                  chainId: toHex(chainId),
+                  chainName: addEthereumChainParameter.chainName ?? "",
+                  rpcUrls: addEthereumChainParameter.rpcUrls ?? [],
+                },
+              ],
+            });
+
+            // switch to the new chain
+            await provider.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: toHex(chainId) }],
+            });
+          } else {
+            console.log("[sandbox-evm] add ethereum chain", chain);
+            const rpcChain: AddEthereumChainParameter = {
+              chainId: toHex(chainId),
+              chainName: chain.name,
+              rpcUrls: chain.rpcUrls.default.http,
+              blockExplorerUrls: chain.blockExplorers?.default.url
+                ? [chain.blockExplorers.default.url]
+                : [],
+              nativeCurrency: chain.nativeCurrency,
+            };
+
+            await provider.request({
+              method: "wallet_addEthereumChain",
+              params: [rpcChain],
+            });
+
+            await provider.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: toHex(chainId) }],
+            });
+          }
+        }
 
         return chain;
       },

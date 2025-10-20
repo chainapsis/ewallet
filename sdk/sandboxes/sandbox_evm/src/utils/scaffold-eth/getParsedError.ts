@@ -1,4 +1,7 @@
-import { BaseError as BaseViemError, ContractFunctionRevertedError } from "viem";
+import {
+  BaseError as BaseViemError,
+  ContractFunctionRevertedError,
+} from "viem";
 
 /**
  * Parses an viem/wagmi error to get a displayable string
@@ -28,7 +31,9 @@ export const getParsedError = (error: any): string => {
       return parsedError.shortMessage;
     }
 
-    return parsedError.message ?? parsedError.name ?? "An unknown error occurred";
+    return (
+      parsedError.message ?? parsedError.name ?? "An unknown error occurred"
+    );
   }
 
   return parsedError?.message ?? "An unknown error occurred";

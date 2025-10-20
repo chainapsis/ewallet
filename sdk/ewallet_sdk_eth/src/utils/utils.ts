@@ -1,11 +1,8 @@
-import type {
-  Hex,
-  Address,
-  ByteArray,
-  AddEthereumChainParameter as RpcChain,
-} from "viem";
+import type { Hex, Address, ByteArray } from "viem";
 import { publicKeyToAddress } from "viem/accounts";
 import { secp256k1 } from "@noble/curves/secp256k1";
+
+import type { RpcChain } from "@keplr-ewallet-sdk-eth/provider/types";
 
 export function publicKeyToEthereumAddress(
   publicKey: Hex | ByteArray,
@@ -137,10 +134,10 @@ export function validateNativeCurrencySymbol(symbol: string): {
   isValid: boolean;
   error?: string;
 } {
-  if (symbol.length < 2 || symbol.length > 6) {
+  if (symbol.length < 1 || symbol.length > 8) {
     return {
       isValid: false,
-      error: "Native currency symbol must be between 2-6 characters",
+      error: "Native currency symbol must be between 1-8 characters",
     };
   }
 

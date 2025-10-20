@@ -10,10 +10,10 @@ export type EventHandlerType = {
 
 export type EventEmitError =
   | {
-    type: "handle_error";
-    error: string;
-  }
+      type: "handle_error";
+      error: string;
+    }
   | {
-    type: "handler_not_found";
-    event_type: string;
-  };
+      type: "handler_not_found";
+      event_type: string;
+    };

@@ -56,3 +56,16 @@ export interface CheckKeyShareRequestBody {
   email: string;
   public_key: string; // hex string
 }
+
+export interface ReshareKeyShareRequest {
+  email: string;
+  curve_type: CurveType;
+  public_key: Bytes33;
+  share: Bytes64;
+}
+
+export type ReshareKeyShareBody = {
+  curve_type: CurveType;
+  public_key: string; // hex string
+  share: string; // hex string
+};

@@ -4,7 +4,6 @@ import type {
   ChainInfoForAttachedModal,
 } from "@keplr-ewallet/ewallet-sdk-core";
 import { v4 as uuidv4 } from "uuid";
-import type { Chain } from "viem";
 
 import type {
   EthEWalletInterface,
@@ -12,11 +11,6 @@ import type {
   EthSignResult,
   MakeSignatureBasePayload,
 } from "@keplr-ewallet-sdk-eth/types";
-import {
-  getChainIconUrl,
-  SUPPORTED_CHAINS,
-  TESTNET_CHAINS,
-} from "@keplr-ewallet-sdk-eth/chains";
 import {
   EthereumRpcError,
   ProviderRpcErrorCode,
@@ -32,29 +26,21 @@ export async function makeSignature(
 
   const origin = this.eWallet.origin;
 
-  const provider = this.getEthereumProvider();
-  const chainId = provider.chainId;
-  const chainIdNumber = parseInt(chainId, 16);
+  const provider = await this.getEthereumProvider();
 
-  let chains: Chain[] = SUPPORTED_CHAINS;
-  if (this.useTestnet) {
-    chains = [...chains, ...TESTNET_CHAINS];
-  }
-
-  const activeChain = chains.find((chain) => chain.id === chainIdNumber);
-  if (!activeChain) {
-    throw new EthereumRpcError(
-      ProviderRpcErrorCode.UnsupportedChain,
-      `Chain ${chainIdNumber} not found in the supported chains`,
-    );
-  }
+  const activeChain = provider.activeChain;
+  const chainIdNumber = parseInt(activeChain.chainId, 16);
 
   const chainInfo: ChainInfoForAttachedModal = {
-    chain_id: `eip155:${activeChain.id}`,
-    chain_name: activeChain.name,
-    chain_symbol_image_url: getChainIconUrl(activeChain.id),
-    rpc_url: activeChain.rpcUrls.default.http[0],
-    block_explorer_url: activeChain.blockExplorers?.default.url,
+    chain_id: `eip155:${chainIdNumber}`,
+    chain_name: activeChain.chainName,
+    chain_symbol_image_url: activeChain.chainSymbolImageUrl,
+    rpc_url: activeChain.rpcUrls[0],
+    block_explorer_url: activeChain.blockExplorerUrls?.[0],
+    currencies: activeChain.currencies,
+    bip44: activeChain.bip44,
+    features: activeChain.features,
+    evm: activeChain.evm,
   };
 
   const basePayload = {

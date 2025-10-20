@@ -90,14 +90,14 @@ async function migrateOne(useEnv: boolean) {
   const pgConfig: PgDatabaseConfig = useEnv
     ? loadEnvs(NODE_ID)
     : {
-      database:
-        NODE_ID === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${NODE_ID}`,
-      user: "postgres",
-      password: "postgres",
-      host: "localhost",
-      port: 5432,
-      ssl: false,
-    };
+        database:
+          NODE_ID === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${NODE_ID}`,
+        user: "postgres",
+        password: "postgres",
+        host: "localhost",
+        port: 5432,
+        ssl: false,
+      };
 
   await createDBIfNotExists(
     { ...pgConfig, database: "postgres" },

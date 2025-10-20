@@ -41,10 +41,24 @@ Please refer to the
 
 ## Contributing
 
-Any contributions you make are **greatly appreciated**.
+Any contributions you make are greatly appreciated.
 
 If you have a suggestion that would make this better, please fork the repo and
 create a pull request. You can also simply open an issue.
+
+### Code Formatting
+
+This project uses _Biome_ for code formatting.
+
+For installtion, you can refer to the following documentations
+
+- VSCode, IntelliJ: https://biomejs.dev/guides/editors/first-party-extensions/
+- Other IDEs: https://biomejs.dev/guides/editors/third-party-extensions/
+
+Biome provides two major operations: format and check
+
+- The difference between `format` and `check` is that `check` also runs lint
+  with format.
 
 ## Security
 
@@ -55,6 +69,20 @@ TBD
 Distributed under the GPL v3 License. See
 [GPL V3 License](https://opensource.org/license/gpl-3-0) for more information.
 
-## Get involved
+## Development
 
-TBD
+### Prerequisites
+
+- Postgres 17+
+
+#### pg_dump
+
+During development, key share node assumes the system has "pg_dump" executable.
+pg_dump should be installed while installing Postgres. One way to install on
+MacOS is as follows.
+
+```sh
+brew install postgresql@18
+echo 'export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```

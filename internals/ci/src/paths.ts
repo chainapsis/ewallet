@@ -1,6 +1,6 @@
 import path from "node:path";
 
-export const paths = (function() {
+export const paths = (function () {
   const root = path.join(__dirname, "../../../");
 
   const ksn_interface = path.join(

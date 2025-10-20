@@ -406,3 +406,6 @@ $RECYCLE.BIN/
 .env
 .env.local
 .vercel
+
+# AI Agent plan
+.plan

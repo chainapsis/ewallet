@@ -11,7 +11,7 @@ import { logger } from "@keplr-ewallet-ksn-server/logger";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const apis = (function() {
+const apis = (function () {
   const ksNodeApi = path.resolve(__dirname, "../routes/**/*.ts");
 
   const paths = [ksNodeApi];

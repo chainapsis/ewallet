@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import type { Pool, PoolClient } from "pg";
 import { v4 as uuidv4 } from "uuid";
 import type {
   CreateKeyShareRequest,
@@ -7,7 +7,7 @@ import type {
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
 export async function createKeyShare(
-  db: Pool,
+  db: Pool | PoolClient,
   keyShareData: CreateKeyShareRequest,
 ): Promise<Result<KeyShare, string>> {
   try {
@@ -37,7 +37,7 @@ RETURNING *
 }
 
 export async function getKeyShareByShareId(
-  db: Pool,
+  db: Pool | PoolClient,
   shareId: string,
 ): Promise<Result<KeyShare | null, string>> {
   try {
@@ -60,7 +60,7 @@ LIMIT 1
 }
 
 export async function getKeyShareByWalletId(
-  db: Pool,
+  db: Pool | PoolClient,
   walletId: string,
 ): Promise<Result<KeyShare | null, string>> {
   try {
@@ -74,6 +74,47 @@ LIMIT 1
     const row = result.rows[0];
     if (!row) {
       return { success: true, data: null };
+    }
+
+    return { success: true, data: row as KeyShare };
+  } catch (error) {
+    return { success: false, err: String(error) };
+  }
+}
+
+export async function updateKeyShare(
+  db: Pool | PoolClient,
+  keyShareData: CreateKeyShareRequest,
+): Promise<Result<KeyShare, string>> {
+  try {
+    const query = `
+UPDATE key_shares AS ks
+SET aux = jsonb_set(
+        COALESCE(ks.aux, '{}'::jsonb),
+        '{enc_share_history}',
+        COALESCE(ks.aux->'enc_share_history', '[]'::jsonb)
+          || jsonb_build_object(
+              'enc_share', ks.enc_share,
+              'updated_at', ks.updated_at
+            ),
+        true
+    ),
+    enc_share = $2,
+    updated_at = now()
+WHERE ks.wallet_id = $1
+RETURNING ks.*
+    `;
+
+    const values = [keyShareData.wallet_id, keyShareData.enc_share];
+
+    const result = await db.query(query, values);
+
+    const row = result.rows[0];
+    if (!row) {
+      return {
+        success: false,
+        err: "Failed to update key share: not found for wallet",
+      };
     }
 
     return { success: true, data: row as KeyShare };
