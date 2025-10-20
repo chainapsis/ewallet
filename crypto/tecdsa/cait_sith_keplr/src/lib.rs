@@ -132,6 +132,7 @@ pub mod sign;
 pub mod sss;
 pub mod tecdsa;
 pub mod tecdsa_cli_srv;
+mod version;
 
 #[cfg(test)]
 mod tests;
@@ -141,3 +142,5 @@ pub use k256::Secp256k1;
 pub use keyshare::KeygenOutput;
 pub use presign::PresignOutput;
 pub use sign::FullSignature;
+pub use version::*;
+
