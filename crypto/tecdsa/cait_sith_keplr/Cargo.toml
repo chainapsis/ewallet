@@ -5,7 +5,7 @@ authors = [
     "Elden Park <eldeniyenden@gmail.com>"
 ]
 repository = "https://github.com/cronokirby/cait-sith"
-version = "0.0.1"
+version = "0.0.2-rc.1"
 edition = "2021"
 license = "MIT"
 
