@@ -3,16 +3,16 @@ import { spawnSync } from "node:child_process";
 import { paths } from "../paths";
 import { expectSuccess } from "../expect";
 
-export async function dbMigrate(options: { useEnv: boolean }) {
+export async function dbMigrate(options: { useEnvFile: boolean }) {
   console.log(
-    "db_migrate, useEnv: %j, ksn pg interface path: %s",
-    options.useEnv,
+    "db_migrate, useEnvFile: %j, ksn pg interface path: %s",
+    options.useEnvFile,
     paths.ksn_pg_interface,
   );
 
   const env = {
     ...process.env,
-    USE_ENV: options.useEnv ? "true" : "false",
+    USE_ENV_FILE: options.useEnvFile ? "true" : "false",
   };
 
   const dbMigrateRet = spawnSync("yarn", ["run", "migrate"], {

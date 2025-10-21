@@ -19,7 +19,11 @@ async function main() {
 
   command
     .command("db_migrate")
-    .option("--use-env", "use env file config instead of test config", false)
+    .option(
+      "--use-env-file",
+      "use env file config instead of test config",
+      false,
+    )
     .action(dbMigrate);
 
   program.parse(process.argv);
