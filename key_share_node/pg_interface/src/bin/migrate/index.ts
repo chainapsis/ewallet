@@ -1,8 +1,13 @@
 import { Pool } from "pg";
-import { dropAllTablesIfExist } from "@keplr-ewallet-ksn-pg-interface/postgres";
 
-import { createDBConn, readMigrateSql, type PgDatabaseConfig } from "./utils";
-import { loadEnvs } from "./envs";
+import { dropAllTablesIfExist } from "@keplr-ewallet-ksn-pg-interface/postgres";
+import {
+  createDBConn,
+  readMigrateSql,
+  type PgDatabaseConfig,
+} from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/utils";
+import { loadEnvs } from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/envs";
+import { devEnvSchema } from "./dev_envs";
 
 const DEFAULT_DB_NAME = "key_share_node_dev";
 
@@ -38,10 +43,12 @@ async function createTables(pool: Pool): Promise<void> {
   console.log("Created tables, query count: %s", (results as any).length);
 }
 
-async function migrateAll(useEnvFile: boolean, nodeCount: number) {
+async function migrateAll(
+  useEnvFile: boolean,
+  nodeCount: number,
+  dbName: string,
+) {
   console.log("connecting pg...");
-
-  const dbName = process.env.DB_NAME || DEFAULT_DB_NAME;
 
   const pgConfigs: PgDatabaseConfig[] = [];
   for (let i = 1; i <= nodeCount; i++) {
@@ -115,15 +122,26 @@ async function migrateOne(useEnv: boolean, nodeId: number) {
 }
 
 async function main() {
-  const migrateMode = process.env.MIGRATE_MODE || "all"; // "all" or "one"
-  const useEnvFile = process.env.USE_ENV_FILE === "true";
+  const devEnvs = {
+    MIGRATE_MODE: process.env.MIGRATE_MODE,
+    USE_ENV_FILE: process.env.USE_ENV_FILE,
+    NODE_ID: process.env.NODE_ID,
+    NODE_COUNT: process.env.NODE_COUNT,
+    DB_NAME: process.env.DB_NAME,
+  };
 
-  const nodeId = parseInt(process.env.NODE_ID || "1", 10);
-  const nodeCount = parseInt(process.env.NODE_COUNT || "2", 10);
+  const envs = devEnvSchema.parse(devEnvs);
+
+  const migrateMode = envs.MIGRATE_MODE;
+  const useEnvFile = envs.USE_ENV_FILE === "true";
+  const dbName = devEnvs.DB_NAME || DEFAULT_DB_NAME;
+
+  const nodeId = parseInt(envs.NODE_ID || "1", 10);
+  const nodeCount = parseInt(envs.NODE_COUNT || "2", 10);
 
   switch (migrateMode) {
     case "all": {
-      await migrateAll(useEnvFile, nodeCount);
+      await migrateAll(useEnvFile, nodeCount, dbName);
       break;
     }
     case "one": {

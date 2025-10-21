@@ -1,4 +1,4 @@
-import { loadEnvs } from "./migrate/envs";
+import { loadEnvs } from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/envs";
 import { restore } from "@keplr-ewallet-ksn-pg-interface/dump";
 
 const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);

@@ -4,7 +4,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "migrate": "MIGRATE_MODE=all NODE_COUNT=2 tsx ./src/bin/migrate/index.ts",
+    "migrate": "MIGRATE_MODE=all NODE_COUNT=3 tsx ./src/bin/migrate/index.ts",
     "migrate_1": "MIGRATE_MODE=one NODE_ID=1 tsx ./src/bin/migrate/index.ts",
     "migrate_2": "MIGRATE_MODE=one NODE_ID=2 tsx ./src/bin/migrate/index.ts",
     "db_backup": "tsx ./src/bin/db_backup.ts",
