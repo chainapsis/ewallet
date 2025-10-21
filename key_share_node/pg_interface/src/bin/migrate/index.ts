@@ -6,11 +6,6 @@ import { loadEnvs } from "./envs";
 
 const DEFAULT_DB_NAME = process.env.DB_NAME || "key_share_node_dev";
 
-const USE_ENV = process.env.USE_ENV === "true";
-const MIGRATE_MODE = process.env.MIGRATE_MODE || "all"; // "all" or "one"
-const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);
-const NODE_COUNT = parseInt(process.env.NODE_COUNT || "2", 10);
-
 async function createDBIfNotExists(pgConfig: PgDatabaseConfig, dbName: string) {
   console.log(`Creating database ${dbName} if not exists...`);
 
@@ -43,11 +38,11 @@ async function createTables(pool: Pool): Promise<void> {
   console.log("Created tables, query count: %s", (results as any).length);
 }
 
-async function migrateAll(useEnv: boolean) {
+async function migrateAll(useEnv: boolean, nodeCount: number) {
   console.log("connecting pg...");
 
   const pgConfigs: PgDatabaseConfig[] = [];
-  for (let i = 1; i <= NODE_COUNT; i++) {
+  for (let i = 1; i <= nodeCount; i++) {
     if (useEnv) {
       pgConfigs.push(loadEnvs(i));
     } else {
@@ -86,12 +81,12 @@ async function migrateAll(useEnv: boolean) {
   }
 }
 
-async function migrateOne(useEnv: boolean) {
+async function migrateOne(useEnv: boolean, nodeId: number) {
   const pgConfig: PgDatabaseConfig = useEnv
-    ? loadEnvs(NODE_ID)
+    ? loadEnvs(nodeId)
     : {
         database:
-          NODE_ID === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${NODE_ID}`,
+          nodeId === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${nodeId}`,
         user: "postgres",
         password: "postgres",
         host: "localhost",
@@ -116,14 +111,20 @@ async function migrateOne(useEnv: boolean) {
   }
 }
 
-async function migrate() {
+async function main() {
+  const MIGRATE_MODE = process.env.MIGRATE_MODE || "all"; // "all" or "one"
+  const USE_ENV = process.env.USE_ENV === "true";
+
+  const nodeId = parseInt(process.env.NODE_ID || "1", 10);
+  const nodeCount = parseInt(process.env.NODE_COUNT || "2", 10);
+
   if (MIGRATE_MODE === "all") {
-    await migrateAll(USE_ENV);
+    await migrateAll(USE_ENV, nodeCount);
   } else if (MIGRATE_MODE === "one") {
-    await migrateOne(USE_ENV);
+    await migrateOne(USE_ENV, nodeId);
   } else {
     throw new Error(`Invalid migrate mode: ${MIGRATE_MODE}`);
   }
 }
 
-migrate().then();
+main().then();
