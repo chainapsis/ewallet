@@ -1,10 +1,11 @@
 [package]
+authors = [
+    "Elden Park <eldeniyenden@gmail.com>",
+    "Jinwoo Lee <jinwoo0454@gmail.com>",
+]
 name = "cait_sith_keplr"
 description = "Threshold ECDSA via Triples"
-authors = [
-    "Elden Park <eldeniyenden@gmail.com>"
-]
-repository = "https://github.com/cronokirby/cait-sith"
+repository = "https://github.com/chainapsis/ewallet"
 version = "0.0.2-rc.1"
 edition = "2021"
 license = "MIT"
