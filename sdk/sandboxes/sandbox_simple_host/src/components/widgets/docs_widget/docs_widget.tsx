@@ -11,7 +11,7 @@ export const DocsWidget: React.FC = () => {
   return (
     <Widget>
       <div className={styles.container}>
-        <p>Build with Keplr Embedded</p>
+        <p>Build with Oko</p>
         <p>Explore the SDK, APIs, and integration guides to start building.</p>
         <button onClick={handleOpenDocs}>Open Docs</button>
       </div>

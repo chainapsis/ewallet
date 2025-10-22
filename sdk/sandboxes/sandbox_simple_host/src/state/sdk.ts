@@ -10,34 +10,34 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 interface SDKState {
-  keplr_sdk_eth: EthEWalletInterface | null;
-  keplr_sdk_cosmos: CosmosEWalletInterface | null;
+  oko_eth: EthEWalletInterface | null;
+  oko_cosmos: CosmosEWalletInterface | null;
   isEthInitializing: boolean;
   isCosmosInitializing: boolean;
 }
 
 interface SDKActions {
-  initKeplrSdkEth: () => EthEWalletInterface | null;
-  initKeplrSdkCosmos: () => CosmosEWalletInterface | null;
+  initOkoEth: () => EthEWalletInterface | null;
+  initOkoCosmos: () => CosmosEWalletInterface | null;
 }
 
 export const useSDKState = create(
   combine<SDKState, SDKActions>(
     {
-      keplr_sdk_eth: null,
-      keplr_sdk_cosmos: null,
+      oko_eth: null,
+      oko_cosmos: null,
       isEthInitializing: false,
       isCosmosInitializing: false,
     },
     (set, get) => ({
-      initKeplrSdkEth: () => {
+      initOkoEth: () => {
         const state = get();
 
-        if (state.keplr_sdk_eth || state.isEthInitializing) {
+        if (state.oko_eth || state.isEthInitializing) {
           console.log(
             "ETH SDK already initialized or initializing, skipping...",
           );
-          return state.keplr_sdk_eth;
+          return state.oko_eth;
         }
 
         console.log("Initializing ETH SDK...");
@@ -53,7 +53,7 @@ export const useSDKState = create(
           console.log("Eth sdk initialized");
 
           set({
-            keplr_sdk_eth: initRes.data,
+            oko_eth: initRes.data,
             isEthInitializing: false,
           });
 
@@ -65,14 +65,14 @@ export const useSDKState = create(
           return null;
         }
       },
-      initKeplrSdkCosmos: () => {
+      initOkoCosmos: () => {
         const state = get();
 
-        if (state.keplr_sdk_cosmos || state.isCosmosInitializing) {
+        if (state.oko_cosmos || state.isCosmosInitializing) {
           console.log(
             "Cosmos SDK already initialized or initializing, skipping...",
           );
-          return state.keplr_sdk_cosmos;
+          return state.oko_cosmos;
         }
 
         console.log("Initializing Cosmos SDK...");
@@ -90,7 +90,7 @@ export const useSDKState = create(
           const cosmosSDK = initRes.data;
 
           set({
-            keplr_sdk_cosmos: cosmosSDK,
+            oko_cosmos: cosmosSDK,
             isCosmosInitializing: false,
           });
 

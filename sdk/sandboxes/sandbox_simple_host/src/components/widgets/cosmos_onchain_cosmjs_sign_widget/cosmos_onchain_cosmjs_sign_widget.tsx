@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { GasPrice, SigningStargateClient } from "@cosmjs/stargate";
 import { makeMockSendTokenAminoSignDoc } from "@/utils/cosmos";
 import styles from "./cosmos_onchain_cosmjs_sign_widget.module.scss";
-import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
+import { useOko } from "@/hooks/use_oko";
 // import { useAuthState } from "@/state/auth";
 import { TEST_COSMOS_CHAIN_ID, TEST_COSMOS_CHAIN_RPC } from "@/constants";
 import { useUserInfoState } from "@/state/user_info";
@@ -17,30 +17,25 @@ interface AccountInfo {
 }
 
 const useGetCosmosAccountInfo = () => {
-  const { cosmosEWallet } = useKeplrEwallet();
+  const { okoCosmos } = useOko();
   const publicKey = useUserInfoState((state) => state.publicKey);
-  const signer = cosmosEWallet?.getOfflineSigner(TEST_COSMOS_CHAIN_ID);
+  const signer = okoCosmos?.getOfflineSigner(TEST_COSMOS_CHAIN_ID);
   const aminoSigner =
-    cosmosEWallet?.getOfflineSignerOnlyAmino(TEST_COSMOS_CHAIN_ID);
+    okoCosmos?.getOfflineSignerOnlyAmino(TEST_COSMOS_CHAIN_ID);
 
   const {
     data: accountInfo,
     isLoading,
     error,
   } = useQuery<AccountInfo | null>({
-    queryKey: [
-      "cosmosAccountInfo",
-      TEST_COSMOS_CHAIN_ID,
-      cosmosEWallet,
-      publicKey,
-    ],
+    queryKey: ["cosmosAccountInfo", TEST_COSMOS_CHAIN_ID, okoCosmos, publicKey],
     queryFn: async (): Promise<AccountInfo | null> => {
       console.log("cosmosAddress !!!", publicKey);
-      if (!cosmosEWallet || !signer) {
+      if (!okoCosmos || !signer) {
         return null;
       }
 
-      const key = await cosmosEWallet.getKey(TEST_COSMOS_CHAIN_ID);
+      const key = await okoCosmos.getKey(TEST_COSMOS_CHAIN_ID);
       const address = key?.bech32Address;
 
       if (!address || !key) {
@@ -58,7 +53,7 @@ const useGetCosmosAccountInfo = () => {
         accountNumber: account?.accountNumber,
       };
     },
-    enabled: !!cosmosEWallet && !!signer && !!publicKey,
+    enabled: !!okoCosmos && !!signer && !!publicKey,
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
@@ -66,7 +61,7 @@ const useGetCosmosAccountInfo = () => {
 };
 
 export const CosmosOnchainCosmJsSignWidget = () => {
-  const { cosmosEWallet } = useKeplrEwallet();
+  const { okoCosmos } = useOko();
   const { accountInfo, isLoading, signer, aminoSigner } =
     useGetCosmosAccountInfo();
 
@@ -100,12 +95,11 @@ export const CosmosOnchainCosmJsSignWidget = () => {
 
   const sendTokenAminoMutation = useMutation({
     mutationFn: async (): Promise<string> => {
-      if (!cosmosEWallet || !aminoSigner) {
+      if (!okoCosmos || !aminoSigner) {
         throw new Error("CosmosEWallet or aminoSigner is not found");
       }
 
-      const { address, msgs } =
-        await makeMockSendTokenAminoSignDoc(cosmosEWallet);
+      const { address, msgs } = await makeMockSendTokenAminoSignDoc(okoCosmos);
       const testGasPrice = GasPrice.fromString("0.0025uosmo");
       const clientWithSigner = await SigningStargateClient.connectWithSigner(
         TEST_COSMOS_CHAIN_RPC,
@@ -130,11 +124,11 @@ export const CosmosOnchainCosmJsSignWidget = () => {
 
   const sendTokenDirectMutation = useMutation({
     mutationFn: async (): Promise<string> => {
-      if (!cosmosEWallet || !signer) {
+      if (!okoCosmos || !signer) {
         throw new Error("CosmosEWallet or signer is not found");
       }
 
-      const account = await cosmosEWallet.getKey(TEST_COSMOS_CHAIN_ID);
+      const account = await okoCosmos.getKey(TEST_COSMOS_CHAIN_ID);
       const address = account?.bech32Address;
 
       const testGasPrice = GasPrice.fromString("0.0025uosmo");

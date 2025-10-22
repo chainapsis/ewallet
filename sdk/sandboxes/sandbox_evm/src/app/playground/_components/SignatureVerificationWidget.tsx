@@ -67,7 +67,7 @@ function PersonalSignVerifier() {
       />
       <p className="text-xs text-base-content/60 -mt-2">
         The exact message that was signed (will be converted to hex). Example:
-        "Hello, Keplr E-Wallet!"
+        "Hello, Oko!"
       </p>
 
       <label className="label">

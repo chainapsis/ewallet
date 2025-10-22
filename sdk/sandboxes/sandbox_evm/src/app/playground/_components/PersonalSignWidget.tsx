@@ -10,9 +10,7 @@ export function PersonalSignWidget() {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
 
-  const [personalMessage, setPersonalMessage] = useState(
-    "Hello, Keplr E-Wallet!",
-  );
+  const [personalMessage, setPersonalMessage] = useState("Hello, Oko!");
 
   const {
     signMessage,

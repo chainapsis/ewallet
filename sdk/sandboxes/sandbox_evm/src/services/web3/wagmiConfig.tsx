@@ -31,23 +31,22 @@ import scaffoldConfig, {
 const { targetNetworks } = scaffoldConfig;
 
 export const defaultWallets = [
-  toKeplrEWallet({
+  toOko({
     api_key: "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-    sdk_endpoint: process.env.NEXT_PUBLIC_KEPLR_EWALLET_SDK_ENDPOINT,
+    sdk_endpoint: process.env.NEXT_PUBLIC_OKO_SDK_ENDPOINT,
   }),
 ];
 
-function toKeplrEWallet(args: EthEWalletInitArgs): () => Wallet {
+function toOko(args: EthEWalletInitArgs): () => Wallet {
   return () => ({
-    id: "keplr-ewallet",
-    name: "Keplr Embedded",
+    id: "oko",
+    name: "Oko",
     iconUrl: keplrIcon,
-    shortName: "Keplr",
-    rdns: "embed.keplr.app",
+    shortName: "Oko",
+    rdns: "oko.app",
     iconBackground: "#0c2f78",
     installed: true,
-    createConnector: (walletDetails) =>
-      keplrEWalletConnector(walletDetails, args),
+    createConnector: (walletDetails) => okoConnector(walletDetails, args),
   });
 }
 
@@ -55,8 +54,8 @@ export interface WalletConnectOptions {
   projectId: string;
 }
 
-// wagmi compatible connector for keplr e-wallet
-function keplrEWalletConnector(
+// wagmi compatible connector for oko
+function okoConnector(
   walletDetails: WalletDetailsParams,
   args: EthEWalletInitArgs,
 ): CreateConnectorFn {
@@ -84,34 +83,32 @@ function keplrEWalletConnector(
 
   return createConnector<EWalletEIP1193Provider>((config) => {
     const wallet = {
-      id: "keplr-ewallet",
-      name: "Keplr Embedded",
-      type: "keplr-ewallet" as const,
+      id: "oko",
+      name: "Oko",
+      type: "oko" as const,
       icon: keplrIcon,
       setup: async () => {
-        console.log("[sandbox-evm] setup keplr e-wallet");
+        console.log("[sandbox-evm] setup oko");
         // Only setup in browser environment
         if (typeof window !== "undefined") {
-          console.log("[sandbox-evm] setup keplr e-wallet in browser");
+          console.log("[sandbox-evm] setup oko in browser");
           await initEthEWalletOnce();
         } else {
-          console.log(
-            "[sandbox-evm] keplr e-wallet can only be initialized in browser",
-          );
+          console.log("[sandbox-evm] oko can only be initialized in browser");
         }
       },
       connect: async (parameters?: {
         chainId?: number | undefined;
         isReconnecting?: boolean | undefined;
       }) => {
-        console.log("[sandbox-evm] try to connect keplr e-wallet!");
+        console.log("[sandbox-evm] try to connect oko!");
 
         if (!ethEWallet) {
           await initEthEWalletOnce();
 
           // DO NOT fallthrough here to manually retry connect
           // as popup on safari will be blocked by async initialization
-          throw new Error("keplr e-wallet just initialized");
+          throw new Error("oko just initialized");
         }
 
         // cached accounts retrieved from provider
@@ -123,7 +120,7 @@ function keplrEWalletConnector(
           // only trigger by user manually interact with the connector
           if (parameters?.isReconnecting) {
             console.log(
-              "[sandbox-evm] reconnecting ewallet, skip sign in with google",
+              "[sandbox-evm] reconnecting oko, skip sign in with google",
             );
             return {
               accounts,
@@ -159,10 +156,13 @@ function keplrEWalletConnector(
         };
       },
       disconnect: async () => {
-        console.log("[sandbox-evm] disconnect keplr e-wallet");
+        console.log("[sandbox-evm] disconnect oko");
         const provider = await wallet.getProvider();
         provider.removeListener("accountsChanged", wallet.onAccountsChanged);
         provider.removeListener("chainChanged", wallet.onChainChanged);
+        if (ethEWallet) {
+          await ethEWallet.eWallet.signOut();
+        }
       },
       getAccounts: async () => {
         console.log("[sandbox-evm] handle `getAccounts`");
@@ -302,7 +302,7 @@ function keplrEWalletConnector(
 export const wagmiConfigWithKeplr = () => {
   return createConfig({
     chains: [targetNetworks[0], ...targetNetworks.slice(1)],
-    ssr: true, // in server side, it won't be able to initialize keplr e-wallet
+    ssr: true, // in server side, it won't be able to initialize oko
     connectors: connectorsForWallets(
       [
         {

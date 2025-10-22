@@ -11,7 +11,7 @@ import {
   makeMockSendTokenAminoSignDoc,
   makeMockSendTokenProtoSignDoc,
 } from "@/utils/cosmos";
-import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
+import { useOko } from "@/hooks/use_oko";
 import {
   TEST_COSMOS_CHAIN_ID,
   TEST_COSMOS_CHAIN_REST,
@@ -19,21 +19,21 @@ import {
 } from "@/constants";
 
 export const CosmosOnchainSignWidget = () => {
-  const { cosmosEWallet } = useKeplrEwallet();
+  const { okoCosmos } = useOko();
   const [signType, setSignType] = useState<"animo" | "direct">("direct");
 
   const directSignMutation = useMutation({
     mutationFn: async () => {
       console.log("handleClickCosmosSignDirect()");
 
-      if (cosmosEWallet === null) {
+      if (okoCosmos === null) {
         throw new Error("CosmosEWallet is not initialized");
       }
 
       const { mockSignDoc, address } =
-        await makeMockSendTokenProtoSignDoc(cosmosEWallet);
+        await makeMockSendTokenProtoSignDoc(okoCosmos);
 
-      const result = await cosmosEWallet.signDirect(
+      const result = await okoCosmos.signDirect(
         TEST_COSMOS_CHAIN_ID,
         address,
         mockSignDoc,
@@ -51,14 +51,14 @@ export const CosmosOnchainSignWidget = () => {
     mutationFn: async () => {
       console.log("handleClickCosmosSignAnimo()");
 
-      if (cosmosEWallet === null) {
+      if (okoCosmos === null) {
         throw new Error("CosmosEWallet is not initialized");
       }
 
       const { mockSignDoc, address } =
-        await makeMockSendTokenAminoSignDoc(cosmosEWallet);
+        await makeMockSendTokenAminoSignDoc(okoCosmos);
 
-      const result = await cosmosEWallet.signAmino(
+      const result = await okoCosmos.signAmino(
         TEST_COSMOS_CHAIN_ID,
         address,
         mockSignDoc,
@@ -151,9 +151,9 @@ const SendTxButton = ({
   result: DirectSignResponse | AminoSignResponse;
   className?: string;
 }) => {
-  const { cosmosEWallet } = useKeplrEwallet();
+  const { okoCosmos } = useOko();
 
-  const signer = cosmosEWallet?.getOfflineSigner(TEST_COSMOS_CHAIN_ID);
+  const signer = okoCosmos?.getOfflineSigner(TEST_COSMOS_CHAIN_ID);
   if (!signer) {
     throw new Error("Signer is not found");
   }

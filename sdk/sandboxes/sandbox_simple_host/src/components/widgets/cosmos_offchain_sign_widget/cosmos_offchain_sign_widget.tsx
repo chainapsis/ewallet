@@ -1,23 +1,23 @@
 import React, { useCallback, useState } from "react";
 
 import { SignWidget } from "../sign_widget/sign_widget";
-import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
+import { useOko } from "@/hooks/use_oko";
 
 const COSMOS_CHAIN_ID = "cosmoshub-4";
 
 export const CosmosOffChainSignWidget = () => {
-  const { cosmosEWallet } = useKeplrEwallet();
+  const { okoCosmos } = useOko();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClickCosmosArbitrarySign = useCallback(async () => {
     console.log("handleClickCosmosArbitrarySign()");
 
-    if (cosmosEWallet === null) {
+    if (okoCosmos === null) {
       throw new Error("CosmosEWallet is not initialized");
     }
     try {
       setIsLoading(true);
-      const account = await cosmosEWallet.getKey(COSMOS_CHAIN_ID);
+      const account = await okoCosmos.getKey(COSMOS_CHAIN_ID);
       const address = account?.bech32Address;
       console.log("account", account);
 
@@ -25,10 +25,10 @@ export const CosmosOffChainSignWidget = () => {
         throw new Error("Address is not found");
       }
 
-      const result = await cosmosEWallet.signArbitrary(
+      const result = await okoCosmos.signArbitrary(
         COSMOS_CHAIN_ID,
         address,
-        "Welcome to Keplr Embedded! 🚀 Try generating an MPC signature.",
+        "Welcome to Oko! 🚀 Try generating an MPC signature.",
       );
 
       console.log("SignDirect result:", result);
@@ -37,7 +37,7 @@ export const CosmosOffChainSignWidget = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [cosmosEWallet]);
+  }, [okoCosmos]);
 
   return (
     <SignWidget

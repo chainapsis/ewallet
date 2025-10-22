@@ -1,8 +1,9 @@
-# Ewallet Attached
+# Oko Sandbox Simple Host
 
-## Deploy in production
+This is a simple sandbox that allows you to test the Oko SDK in a simple host environment.
 
-`vercel.json` is important to see. It has the rerouting mapping
-for the incoming traffic to get served the single-page application.
+## How to run
 
-https://medium.com/@emmanuelomemgboji/handling-404-errors-on-vercel-deployments-a-step-by-step-guide-with-react-vite-and-31fc4d865dc9
+```bash
+yarn dev
+```

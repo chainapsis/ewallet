@@ -1,22 +1,8 @@
-# sandbox_evm
+# Oko Sandbox EVM
+
+This is a simple sandbox that allows you to test the Oko SDK in a EVM environment using Next.js and Wagmi.
 
 ## How to run
-
-### 1. Run hardhat node
-
-```bash
-yarn chain
-```
-
-### 2. Deploy contract
-
-```bash
-yarn deploy
-```
-
-- NOTE: Make sure to run hardhat node before deploying contract.
-
-### 3. Run sandbox evm
 
 ```bash
 yarn dev
