@@ -5,7 +5,7 @@ use rand_core::RngCore;
 
 use crate::sss::keyshares::KeysharePoints;
 use crate::sss::{
-    combine::combine, lagrange::lagrange_coefficient, point::Point256, reshare, split,
+    combine::combine, lagrange::lagrange_coefficient_at_zero, point::Point256, reshare, split,
 };
 
 #[test]
@@ -80,7 +80,7 @@ fn test_simple_lagrange_coeffs() {
     };
 
     let lagrange_p1 =
-        lagrange_coefficient::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p1)
+        lagrange_coefficient_at_zero::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p1)
             .unwrap();
     // 2 * inverse of (2 - 1) = 1
     assert_eq!(
@@ -89,7 +89,7 @@ fn test_simple_lagrange_coeffs() {
     );
 
     let lagrange_p2 =
-        lagrange_coefficient::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p2)
+        lagrange_coefficient_at_zero::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p2)
             .unwrap();
     // 1 * inverse of (1 - 2) = neg_one
     println!("lagrange_p2: {:?}", lagrange_p2);

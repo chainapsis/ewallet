@@ -4,7 +4,7 @@ use crate::compat::CSCurve;
 use crate::sss::keyshares::KeysharePoints;
 use crate::sss::point::Point256;
 
-pub fn lagrange_coefficient<C: CSCurve>(
+pub fn lagrange_coefficient_at_zero<C: CSCurve>(
     ksp: &KeysharePoints,
     p: &Point256,
 ) -> Result<C::Scalar, String> {

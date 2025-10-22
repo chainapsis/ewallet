@@ -3,7 +3,7 @@ use elliptic_curve::Field;
 
 use crate::compat::CSCurve;
 use crate::sss::keyshares::KeysharePoints;
-use crate::sss::lagrange_coefficient;
+use crate::sss::lagrange_coefficient_at_zero;
 use crate::sss::point::Point256;
 
 pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<[u8; 32], String> {
@@ -26,7 +26,7 @@ pub fn combine<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<[u8; 3
     };
 
     for (_, point) in keyshare_points.to_point_vec().iter().enumerate() {
-        let lagrange_coefficient = lagrange_coefficient::<C>(&keyshare_points, point);
+        let lagrange_coefficient = lagrange_coefficient_at_zero::<C>(&keyshare_points, point);
         if lagrange_coefficient.is_err() {
             return Err(lagrange_coefficient.err().unwrap());
         }
