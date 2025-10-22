@@ -1,3 +1,4 @@
+<!-- TODO: update logo and link -->
 <a href="https://demo.embed.keplr.app/">
   <picture>
     <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.svg">
@@ -9,7 +10,7 @@
 
 Crypto wallet seamlessly built in your apps.
 
-Using the latest advances in cryptography, Keplr Embedded delivers a seamless
+Using the latest advances in cryptography, Oko delivers a seamless
 experience by integrating the security of blockchain wallets directly into web
 or mobile apps.
 
@@ -17,6 +18,8 @@ or mobile apps.
 - 🚀 **Better User Experience**: No browser extension, no secret phrases, sign
   in with a social account.
 - ⚡**Developer Friendly**: Simple integration, wallet programmability
+
+<!-- TODO: update docs and demo links -->
 
 [Explore the docs »](https://docs.embed.keplr.app)
 
