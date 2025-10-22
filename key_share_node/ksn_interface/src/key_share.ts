@@ -18,10 +18,13 @@ export interface KeyShare {
 export type CreateKeyShareRequest = {
   wallet_id: string;
   enc_share: Buffer;
-  status: KeyShareStatus;
 };
 
-export type UpdateKeyShareRequest = CreateKeyShareRequest;
+export type UpdateKeyShareRequest = {
+  wallet_id: string;
+  enc_share: Buffer;
+  status: KeyShareStatus;
+};
 
 export interface RegisterKeyShareRequest {
   email: string;
