@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   CreateKeyShareRequest,
   KeyShare,
+  KeyShareStatus,
+  UpdateKeyShareRequest,
 } from "@keplr-ewallet/ksn-interface/key_share";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
@@ -13,24 +15,29 @@ export async function createKeyShare(
   try {
     const query = `
 INSERT INTO key_shares (
-  share_id, wallet_id, enc_share
+  share_id, wallet_id, enc_share, status
 )
 VALUES (
-  $1, $2, $3
+  $1, $2, $3, $4
 )
 RETURNING *
     `;
 
-    const values = [uuidv4(), keyShareData.wallet_id, keyShareData.enc_share];
+    const values = [
+      uuidv4(),
+      keyShareData.wallet_id,
+      keyShareData.enc_share,
+      "active" as KeyShareStatus,
+    ];
 
-    const result = await db.query(query, values);
+    const result = await db.query<KeyShare>(query, values);
 
-    const row = result.rows[0];
-    if (!row) {
+    const row = result.rows.length !== 1 ? undefined : result.rows[0];
+    if (row === undefined) {
       return { success: false, err: "Failed to create key share" };
     }
 
-    return { success: true, data: row as KeyShare };
+    return { success: true, data: row };
   } catch (error) {
     return { success: false, err: String(error) };
   }
@@ -82,42 +89,46 @@ LIMIT 1
   }
 }
 
-export async function updateKeyShare(
+export async function updateReshare(
   db: Pool | PoolClient,
-  keyShareData: CreateKeyShareRequest,
+  keyShareData: UpdateKeyShareRequest,
 ): Promise<Result<KeyShare, string>> {
   try {
-    const query = `
+    const selectQuery = `
+SELECT enc_share FROM key_shares WHERE wallet_id = $1
+    `;
+    const selectResult = await db.query<{ enc_share: Buffer }>(selectQuery, [
+      keyShareData.wallet_id,
+    ]);
+
+    if (selectResult.rows.length !== 1) {
+      return { success: false, err: "Failed to update key share" };
+    }
+
+    // TODO: verify encrypted share @jinwoo
+
+    const updateQuery = `
 UPDATE key_shares AS ks
-SET aux = jsonb_set(
-        COALESCE(ks.aux, '{}'::jsonb),
-        '{enc_share_history}',
-        COALESCE(ks.aux->'enc_share_history', '[]'::jsonb)
-          || jsonb_build_object(
-              'enc_share', ks.enc_share,
-              'updated_at', ks.updated_at
-            ),
-        true
-    ),
-    enc_share = $2,
-    updated_at = now()
-WHERE ks.wallet_id = $1
-RETURNING ks.*
+SET 
+  status = $1,
+  reshared_at = NOW()
+WHERE ks.wallet_id = $2
+RETURNING *
     `;
 
-    const values = [keyShareData.wallet_id, keyShareData.enc_share];
+    const values = [keyShareData.status, keyShareData.wallet_id];
 
-    const result = await db.query(query, values);
+    const result = await db.query<KeyShare>(updateQuery, values);
 
-    const row = result.rows[0];
-    if (!row) {
+    const row = result.rows.length !== 1 ? undefined : result.rows[0];
+    if (row === undefined) {
       return {
         success: false,
-        err: "Failed to update key share: not found for wallet",
+        err: "Failed to update key share",
       };
     }
 
-    return { success: true, data: row as KeyShare };
+    return { success: true, data: row };
   } catch (error) {
     return { success: false, err: String(error) };
   }

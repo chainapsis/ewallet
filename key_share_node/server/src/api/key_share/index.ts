@@ -6,13 +6,14 @@ import {
   getKeyShareByWalletId,
   getUserByEmail,
   getWalletByPublicKey,
-  updateKeyShare,
+  updateReshare,
 } from "@keplr-ewallet/ksn-pg-interface";
 import type {
   CheckKeyShareRequest,
   CheckKeyShareResponse,
   GetKeyShareRequest,
   GetKeyShareResponse,
+  KeyShareStatus,
   RegisterKeyShareRequest,
   ReshareKeyShareRequest,
 } from "@keplr-ewallet/ksn-interface/key_share";
@@ -207,6 +208,14 @@ export async function reshareKeyShare(
   try {
     const { email, curve_type, public_key, share } = reshareKeyShareRequest;
 
+    if (curve_type !== "secp256k1") {
+      return {
+        success: false,
+        code: "CURVE_TYPE_NOT_SUPPORTED",
+        msg: "Curve type not supported",
+      };
+    }
+
     const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
       return {
@@ -215,112 +224,58 @@ export async function reshareKeyShare(
         msg: getWalletRes.err,
       };
     }
-
-    let user_id: string;
-    let wallet_id: string;
-
     if (getWalletRes.data === null) {
-      // No wallet exists, so create user/wallet/keyshare
-      const getUserRes = await getUserByEmail(db, email);
-      if (getUserRes.success === false) {
-        return {
-          success: false,
-          code: "UNKNOWN_ERROR",
-          msg: getUserRes.err,
-        };
-      }
+      return {
+        success: false,
+        code: "WALLET_NOT_FOUND",
+        msg: "Wallet not found",
+      };
+    }
 
-      // Create user if doesn't exist
-      if (getUserRes.data === null) {
-        const createUserRes = await createUser(db, email);
-        if (createUserRes.success === false) {
-          return {
-            success: false,
-            code: "UNKNOWN_ERROR",
-            msg: createUserRes.err,
-          };
-        }
-        user_id = createUserRes.data.user_id;
-      } else {
-        user_id = getUserRes.data.user_id;
-      }
+    let wallet_id = getWalletRes.data.wallet_id;
 
-      // Create wallet
-      const createWalletRes = await createWallet(db, {
-        user_id,
-        curve_type,
-        public_key: public_key.toUint8Array(),
-      });
-      if (createWalletRes.success === false) {
-        return {
-          success: false,
-          code: "UNKNOWN_ERROR",
-          msg: createWalletRes.err,
-        };
-      }
-      wallet_id = createWalletRes.data.wallet_id;
+    // Get user to verify ownership
+    const getUserRes = await getUserByEmail(db, email);
+    if (getUserRes.success === false) {
+      return {
+        success: false,
+        code: "UNKNOWN_ERROR",
+        msg: getUserRes.err,
+      };
+    }
 
-      // Create new key share
-      const encryptedShare = encryptData(share.toHex(), encryptionSecret);
-      const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
+    if (getUserRes.data === null) {
+      return {
+        success: false,
+        code: "USER_NOT_FOUND",
+        msg: "User not found",
+      };
+    }
 
-      const createKeyShareRes = await createKeyShare(db, {
-        wallet_id,
-        enc_share: encryptedShareBuffer,
-      });
-      if (createKeyShareRes.success === false) {
-        return {
-          success: false,
-          code: "UNKNOWN_ERROR",
-          msg: createKeyShareRes.err,
-        };
-      }
-    } else {
-      // Wallet exists - verify ownership and update key share
-      wallet_id = getWalletRes.data.wallet_id;
+    // Verify wallet belongs to user
+    if (getWalletRes.data.user_id !== getUserRes.data.user_id) {
+      return {
+        success: false,
+        code: "UNAUTHORIZED",
+        msg: "Unauthorized - wallet belongs to different user",
+      };
+    }
 
-      // Get user to verify ownership
-      const getUserRes = await getUserByEmail(db, email);
-      if (getUserRes.success === false) {
-        return {
-          success: false,
-          code: "UNKNOWN_ERROR",
-          msg: getUserRes.err,
-        };
-      }
+    // Update existing key share
+    const encryptedShare = encryptData(share.toHex(), encryptionSecret);
+    const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
 
-      if (getUserRes.data === null) {
-        return {
-          success: false,
-          code: "USER_NOT_FOUND",
-          msg: "User not found",
-        };
-      }
-
-      // Verify wallet belongs to user
-      if (getWalletRes.data.user_id !== getUserRes.data.user_id) {
-        return {
-          success: false,
-          code: "UNAUTHORIZED",
-          msg: "Unauthorized - wallet belongs to different user",
-        };
-      }
-
-      // Update existing key share
-      const encryptedShare = encryptData(share.toHex(), encryptionSecret);
-      const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
-
-      const updateKeyShareRes = await updateKeyShare(db, {
-        wallet_id,
-        enc_share: encryptedShareBuffer,
-      });
-      if (updateKeyShareRes.success === false) {
-        return {
-          success: false,
-          code: "UNKNOWN_ERROR",
-          msg: updateKeyShareRes.err,
-        };
-      }
+    const updateKeyShareRes = await updateReshare(db, {
+      wallet_id,
+      enc_share: encryptedShareBuffer,
+      status: "active" as KeyShareStatus,
+    });
+    if (updateKeyShareRes.success === false) {
+      return {
+        success: false,
+        code: "RESHARE_FAILED",
+        msg: updateKeyShareRes.err,
+      };
     }
 
     return { success: true, data: void 0 };
