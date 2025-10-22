@@ -9,7 +9,11 @@ use crate::sss::keyshares::KeysharePoints;
 use crate::sss::lagrange_coefficient;
 use crate::sss::point::Point256;
 
-pub fn reshare<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<Vec<Point256>, String> {
+pub fn reshare<C: CSCurve>(
+    split_points: Vec<Point256>,
+    new_ks_node_hashes: Vec<[u8; 32]>,
+    t: u32,
+) -> Result<Vec<Point256>, String> {
     let mut secret_scalar: C::Scalar = C::Scalar::ZERO;
 
     if split_points.len() < t as usize {
@@ -54,13 +58,21 @@ pub fn reshare<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<Vec<Po
 
     let polynomial = Polynomial::<C>::extend_random(&mut rng, t as usize, &constant);
 
-    let points = split_points
+    let new_ks_node_hash_scalars = new_ks_node_hashes
         .iter()
-        .map(|point| {
-            let x_scalar = point.x_scalar::<C>();
-            let x_bytes = Into::<C::Uint>::into(x_scalar).to_be_bytes();
+        .map(|&hash| {
+            let sp = ScalarPrimitive::<C>::from_slice(hash.as_slice())
+                .map_err(|err| format!("Failed to convert hash to scalar, err: {}", err))?;
+            Ok(C::Scalar::from(sp))
+        })
+        .collect::<Result<Vec<C::Scalar>, String>>()?;
 
-            let y_scalar = polynomial.evaluate(&x_scalar);
+    let new_points = new_ks_node_hash_scalars
+        .iter()
+        .map(|x_scalar| {
+            let x_bytes = Into::<C::Uint>::into(*x_scalar).to_be_bytes();
+
+            let y_scalar = polynomial.evaluate(x_scalar);
             {}
             let y_bytes = Into::<C::Uint>::into(y_scalar).to_be_bytes();
 
@@ -88,5 +100,5 @@ pub fn reshare<C: CSCurve>(split_points: Vec<Point256>, t: u32) -> Result<Vec<Po
         })
         .collect::<Result<Vec<Point256>, String>>()?;
 
-    Ok(points)
+    Ok(new_points)
 }
