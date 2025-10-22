@@ -1,4 +1,4 @@
-import useCosmos from "@/keplr/useCosmos";
+import useCosmos from "@/oko/useCosmos";
 
 function Header() {
   const { isReady, isSigningIn, isSignedIn, signIn, signOut } = useCosmos();
@@ -6,8 +6,8 @@ function Header() {
   return (
     <div className="flex items-center justify-between gap-3 mb-5">
       <div className="flex items-center gap-3">
-        <img src="/icon.png" alt="Keplr Embedded" className="w-10 h-10" />
-        <h1 className="text-3xl font-bold">Keplr Embedded Multi‑Ecosystem</h1>
+        <img src="/icon.png" alt="Oko" className="w-10 h-10" />
+        <h1 className="text-3xl font-bold">Oko Multi‑Ecosystem</h1>
       </div>
       <div className="flex gap-2">
         <button

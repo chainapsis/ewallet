@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Keplr Embedded Cosmos Template",
-  description:
-    "This is a template for building Cosmos dApps with Keplr Embedded.",
+  title: "Oko Cosmos Template",
+  description: "This is a template for building Cosmos dApps with Oko.",
   icons: {
     icon: "/icon.png",
   },

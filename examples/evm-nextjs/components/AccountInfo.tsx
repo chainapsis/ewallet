@@ -6,7 +6,7 @@ import Link from "next/link";
 import { formatEther } from "viem";
 
 import Button from "./Button";
-import useKeplrEmbedded from "@/hooks/useKeplrEmbedded";
+import useOkoEvm from "@/hooks/useOkoEvm";
 import usePublicClient from "@/hooks/usePublicClient";
 
 interface AccountInfoProps {
@@ -14,7 +14,7 @@ interface AccountInfoProps {
 }
 
 export default function AccountInfo({ className }: AccountInfoProps) {
-  const { address, signOut } = useKeplrEmbedded();
+  const { address, signOut } = useOkoEvm();
   const publicClient = usePublicClient();
 
   const { data: balance } = useQuery({

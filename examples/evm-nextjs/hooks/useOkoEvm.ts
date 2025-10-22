@@ -1,8 +1,8 @@
 import { useContext } from "react";
 
-import { KeplrEmbeddedContext } from "@/components/KeplrEmbeddedProvider";
+import { OkoEvmContext } from "@/components/OkoEvmProvider";
 
-export default function useKeplrEmbedded() {
+export default function useOkoEvm() {
   const {
     isReady,
     isSignedIn,
@@ -11,7 +11,7 @@ export default function useKeplrEmbedded() {
     provider,
     signIn,
     signOut,
-  } = useContext(KeplrEmbeddedContext);
+  } = useContext(OkoEvmContext);
 
   return {
     isReady,
