@@ -8,21 +8,9 @@ import { toHex } from "viem";
 
 import type { EWalletRpcChain } from "@keplr-ewallet-sdk-eth/provider";
 import type { SendGetEthChainInfoError } from "@keplr-ewallet-sdk-eth/errors";
+import { parseChainId } from "@keplr-ewallet-sdk-eth/utils";
 
 export const DEFAULT_CHAIN_ID = 1;
-
-export function parseChainId(chainId: string | number): number {
-  if (typeof chainId === "string") {
-    const [chainNamespace, chainIdStr] = chainId.split(":");
-    if (chainNamespace === "eip155") {
-      return parseInt(chainIdStr, 10);
-    } else {
-      return parseInt(chainId, 10);
-    }
-  } else {
-    return chainId;
-  }
-}
 
 export function convertChainInfoToRpcChain(
   chainInfo: ChainInfo,

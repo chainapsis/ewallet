@@ -1,6 +1,8 @@
 import type { RpcTransactionRequest, TransactionSerializable } from "viem";
 import { toHex } from "viem";
 
+import { parseChainId } from "./utils";
+
 export function toSignableTransaction(
   tx: RpcTransactionRequest,
 ): RpcTransactionRequest {
@@ -48,9 +50,13 @@ export function toSignableTransaction(
 }
 
 export function isSignableTransaction(tx: RpcTransactionRequest): boolean {
-  if (!tx || typeof tx !== "object") return false;
+  if (!tx || typeof tx !== "object") {
+    return false;
+  }
 
-  if (tx.from != null) return false;
+  if (tx.from != null) {
+    return false;
+  }
 
   const txType = tx.type || "0x2";
 
@@ -96,15 +102,7 @@ export function toTransactionSerializable({
   const { from, ...transaction } = tx;
   const txType = transaction.type || "0x2"; // Default to EIP-1559
 
-  let chainIdNumber: number;
-  // chainId can be in CAIP-2, hex, or decimal format
-  if (chainId.startsWith("eip155:")) {
-    chainIdNumber = parseInt(chainId.split(":")[1], 10);
-  } else if (chainId.startsWith("0x")) {
-    chainIdNumber = parseInt(chainId, 16);
-  } else {
-    chainIdNumber = parseInt(chainId, 10);
-  }
+  const chainIdNumber = parseChainId(chainId);
 
   const baseFields = {
     chainId: chainIdNumber,
@@ -166,7 +164,9 @@ export function toRpcTransactionRequest(
   const convertToHexValue = (
     value: bigint | number | undefined,
   ): `0x${string}` | undefined => {
-    if (value === undefined) return undefined;
+    if (value === undefined) {
+      return undefined;
+    }
     return toHex(value);
   };
 

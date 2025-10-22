@@ -5,9 +5,9 @@ import {
 import {
   DEFAULT_CHAIN_ID,
   sendGetEthChainInfo,
-  parseChainId,
   convertChainInfoToRpcChain,
 } from "@keplr-ewallet-sdk-eth/chains";
+import { parseChainId } from "@keplr-ewallet-sdk-eth/utils";
 import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
 
 export async function getEthereumProvider(
