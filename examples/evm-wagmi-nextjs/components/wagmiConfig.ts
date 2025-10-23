@@ -27,7 +27,7 @@ function toOko(args: EthEWalletInitArgs): () => Wallet {
     name: "Oko",
     iconUrl: okoIcon.src,
     shortName: "Oko",
-    rdns: "embed.keplr.app", // TODO: update rdns
+    rdns: "oko.app",
     iconBackground: "#0c2f78",
     installed: true,
     createConnector: (walletDetails) => okoConnector(walletDetails, args),

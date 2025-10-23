@@ -8,7 +8,7 @@ import type {
 import { KeplrEWallet } from "@keplr-ewallet-sdk-core/constructor";
 import type { KeplrEwalletInitError } from "@keplr-ewallet-sdk-core/errors";
 
-const SDK_ENDPOINT = `https://attached.embed.keplr.app`;
+const SDK_ENDPOINT = `https://attached.oko.app`;
 
 export function init(
   args: KeplrEwalletInitArgs,

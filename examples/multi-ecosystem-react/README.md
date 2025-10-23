@@ -22,10 +22,8 @@ cp .env.example .env
 VITE_OKO_API_KEY=YOUR_ISSUED_API_KEY
 ```
 
-<!-- TODO: update Oko dashboard link -->
-
 Get your API key from the
-[Oko Dashboard](https://dapp.embed.keplr.app).
+[Oko Dashboard](https://dapp.oko.app).
 
 ### How to Run
 

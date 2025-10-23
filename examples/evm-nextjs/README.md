@@ -23,10 +23,8 @@ cp .env.example .env.local
 NEXT_PUBLIC_OKO_API_KEY=YOUR_ISSUED_API_KEY
 ```
 
-<!-- TODO: update Oko dashboard link -->
-
 Note: Use the API key issued from the
-[Oko Dashboard](https://dapp.embed.keplr.app).
+[Oko Dashboard](https://dapp.oko.app).
 
 ### How to Run
 

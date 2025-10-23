@@ -24,10 +24,8 @@ NEXT_PUBLIC_OKO_API_KEY=YOUR_ISSUED_API_KEY
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=YOUR_WALLETCONNECT_PROJECT_ID
 ```
 
-<!-- TODO: update Oko dashboard link -->
-
 - Oko API key: get it from the
-  [Oko Dashboard](https://dapp.embed.keplr.app)
+  [Oko Dashboard](https://dapp.oko.app)
 - WalletConnect projectId: create one in the
   [WalletConnect Cloud](https://cloud.walletconnect.com)
 
