@@ -63,7 +63,7 @@ CREATE TABLE public.wallets (
 	wallet_id uuid DEFAULT gen_random_uuid() NOT NULL,
 	user_id uuid NOT NULL,
 	curve_type varchar(16) NOT NULL,
-	public_key varchar NOT NULL,
+	public_key bytea NOT NULL,
 	aux jsonb NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
