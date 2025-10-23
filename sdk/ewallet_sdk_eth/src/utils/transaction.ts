@@ -1,7 +1,63 @@
-import type { RpcTransactionRequest, TransactionSerializable } from "viem";
-import { toHex } from "viem";
+import type { Hex, RpcTransactionRequest, TransactionSerializable } from "viem";
+import { isHex, toHex } from "viem";
 
 import { parseChainId } from "./utils";
+
+/**
+ * Normalize Ethereum JSON-RPC QUANTITY values to 0x-prefixed hex without leading zeros
+ * @param input - The input to normalize
+ * @returns The normalized value
+ * @dev
+ */
+function normalizeQuantity(
+  input: string | number | bigint | null | undefined,
+): Hex | undefined {
+  if (input === undefined || input === null) {
+    return undefined;
+  }
+
+  if (typeof input === "bigint") {
+    return toHex(input);
+  }
+
+  if (typeof input === "number") {
+    const n = Number.isFinite(input) ? Math.max(0, Math.floor(input)) : 0;
+    return toHex(n);
+  }
+
+  let s = input.trim();
+  if (s.length === 0 || s === "0x") {
+    return undefined;
+  }
+
+  let q: bigint;
+  try {
+    q = BigInt(s);
+  } catch {
+    try {
+      const hexCandidate = isHex(s) ? s : `0x${s}`;
+      q = BigInt(hexCandidate);
+    } catch {
+      return undefined;
+    }
+  }
+
+  return toHex(q);
+}
+
+function normalizeDataHex(input: string | undefined | null): Hex | undefined {
+  if (input === null || input === undefined) {
+    return undefined;
+  }
+  let s = input.trim();
+  if (s.length === 0) {
+    return undefined;
+  }
+  if (!isHex(s)) {
+    s = `0x${s}`;
+  }
+  return s as `0x${string}`;
+}
 
 export function toSignableTransaction(
   tx: RpcTransactionRequest,
@@ -10,11 +66,11 @@ export function toSignableTransaction(
   const txType = transaction.type || "0x2"; // Default to EIP-1559
 
   const baseFields = {
-    to: transaction.to || null,
-    data: transaction.data,
-    gas: transaction.gas,
-    nonce: transaction.nonce,
-    value: transaction.value,
+    to: transaction.to,
+    data: normalizeDataHex(transaction.data),
+    gas: normalizeQuantity(transaction.gas),
+    nonce: normalizeQuantity(transaction.nonce),
+    value: normalizeQuantity(transaction.value),
   };
 
   let signableTransaction: RpcTransactionRequest;
@@ -24,14 +80,14 @@ export function toSignableTransaction(
       signableTransaction = {
         ...baseFields,
         type: "0x0",
-        gasPrice: transaction.gasPrice,
+        gasPrice: normalizeQuantity(transaction.gasPrice),
       };
       break;
     case "0x1":
       signableTransaction = {
         ...baseFields,
         type: "0x1",
-        gasPrice: transaction.gasPrice,
+        gasPrice: normalizeQuantity(transaction.gasPrice),
         accessList: transaction.accessList || [],
       };
       break;
@@ -40,8 +96,10 @@ export function toSignableTransaction(
       signableTransaction = {
         ...baseFields,
         type: "0x2",
-        maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-        maxFeePerGas: transaction.maxFeePerGas,
+        maxPriorityFeePerGas: normalizeQuantity(
+          transaction.maxPriorityFeePerGas,
+        ),
+        maxFeePerGas: normalizeQuantity(transaction.maxFeePerGas),
       };
       break;
   }
