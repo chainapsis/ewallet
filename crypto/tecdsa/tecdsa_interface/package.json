@@ -1,6 +1,6 @@
 {
   "name": "@keplr-ewallet/tecdsa-interface",
-  "version": "0.0.2-alpha.13",
+  "version": "0.0.2-alpha.14",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "main": "./dist/index.js",
