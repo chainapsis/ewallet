@@ -7,7 +7,6 @@ import { parseChainId } from "./utils";
  * Normalize Ethereum JSON-RPC QUANTITY values to 0x-prefixed hex without leading zeros
  * @param input - The input to normalize
  * @returns The normalized value
- * @dev
  */
 function normalizeQuantity(
   input: string | number | bigint | null | undefined,
@@ -59,89 +58,67 @@ function normalizeDataHex(input: string | undefined | null): Hex | undefined {
   return s as `0x${string}`;
 }
 
+/**
+ * Normalize a transaction to be signable
+ * @param tx - The transaction to normalize
+ * @returns The normalized transaction
+ * @dev Currently, we do not support blob and EIP-7702, so we ignore related fields
+ */
 export function toSignableTransaction(
   tx: RpcTransactionRequest,
 ): RpcTransactionRequest {
-  const { from, ...transaction } = tx;
-  const txType = transaction.type || "0x2"; // Default to EIP-1559
+  const copy = tx;
 
-  const baseFields = {
-    to: transaction.to,
-    data: normalizeDataHex(transaction.data),
-    gas: normalizeQuantity(transaction.gas),
-    nonce: normalizeQuantity(transaction.nonce),
-    value: normalizeQuantity(transaction.value),
+  const signable: RpcTransactionRequest = {
+    to: copy.to,
+    data: normalizeDataHex(copy.data),
+    value: normalizeQuantity(copy.value),
+    nonce: normalizeQuantity(copy.nonce),
+    gas: normalizeQuantity(copy.gas),
+    accessList: copy.accessList,
+    // ignore other fields as we do not support blob and EIP-7702 yet
   };
 
-  let signableTransaction: RpcTransactionRequest;
+  const gasPrice = normalizeQuantity(copy.gasPrice);
+  const maxFeePerGas = normalizeQuantity(copy.maxFeePerGas);
+  const maxPriorityFeePerGas = normalizeQuantity(copy.maxPriorityFeePerGas);
 
-  switch (txType) {
-    case "0x0":
-      signableTransaction = {
-        ...baseFields,
-        type: "0x0",
-        gasPrice: normalizeQuantity(transaction.gasPrice),
-      };
-      break;
-    case "0x1":
-      signableTransaction = {
-        ...baseFields,
-        type: "0x1",
-        gasPrice: normalizeQuantity(transaction.gasPrice),
-        accessList: transaction.accessList || [],
-      };
-      break;
-    case "0x2":
-    default:
-      signableTransaction = {
-        ...baseFields,
-        type: "0x2",
-        maxPriorityFeePerGas: normalizeQuantity(
-          transaction.maxPriorityFeePerGas,
-        ),
-        maxFeePerGas: normalizeQuantity(transaction.maxFeePerGas),
-      };
-      break;
+  const isLegacy = gasPrice !== undefined && isHex(gasPrice);
+  const isEIP1559 =
+    maxFeePerGas !== undefined &&
+    maxPriorityFeePerGas !== undefined &&
+    isHex(maxFeePerGas) &&
+    isHex(maxPriorityFeePerGas);
+
+  if (isEIP1559) {
+    signable.maxFeePerGas = maxFeePerGas;
+    signable.maxPriorityFeePerGas = maxPriorityFeePerGas;
+  } else if (isLegacy) {
+    signable.gasPrice = gasPrice;
   }
 
-  return signableTransaction;
+  return signable;
 }
 
+/**
+ * Check if a transaction is properly simulated by the client
+ * @param tx - The transaction to check
+ * @returns True if the transaction is signable, false otherwise
+ */
 export function isSignableTransaction(tx: RpcTransactionRequest): boolean {
   if (!tx || typeof tx !== "object") {
     return false;
   }
 
-  if (tx.from != null) {
-    return false;
-  }
+  const hasGas = tx.gas != null && isHex(tx.gas);
+  const isLegacy = tx.gasPrice != null && isHex(tx.gasPrice);
+  const isEIP1559 =
+    tx.maxFeePerGas != null &&
+    tx.maxPriorityFeePerGas != null &&
+    isHex(tx.maxFeePerGas) &&
+    isHex(tx.maxPriorityFeePerGas);
 
-  const txType = tx.type || "0x2";
-
-  const has = (key: keyof RpcTransactionRequest) =>
-    tx[key] !== undefined && tx[key] !== null;
-
-  switch (txType) {
-    case "0x0":
-      // Legacy: requires gasPrice; must not include EIP-1559 fee fields
-      return (
-        has("gasPrice") && !has("maxFeePerGas") && !has("maxPriorityFeePerGas")
-      );
-    case "0x1":
-      // EIP-2930: requires gasPrice and accessList array; no EIP-1559 fee fields
-      return (
-        has("gasPrice") &&
-        Array.isArray(tx.accessList ?? []) &&
-        !has("maxFeePerGas") &&
-        !has("maxPriorityFeePerGas")
-      );
-    case "0x2":
-    default:
-      // EIP-1559: requires both fee fields; must not include legacy gasPrice
-      return (
-        has("maxFeePerGas") && has("maxPriorityFeePerGas") && !has("gasPrice")
-      );
-  }
+  return hasGas && (isEIP1559 || isLegacy);
 }
 
 export function toTransactionSerializable({
