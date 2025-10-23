@@ -134,63 +134,42 @@ export function toTransactionSerializable({
     defaultValue?: T,
   ): T | undefined => (value !== undefined ? converter(value) : defaultValue);
 
-  const { from, ...transaction } = tx;
-  const txType = transaction.type || "0x2"; // Default to EIP-1559
+  const copy = tx;
 
   const chainIdNumber = parseChainId(chainId);
 
-  const baseFields = {
+  const serializable: TransactionSerializable = {
     chainId: chainIdNumber,
-    to: transaction.to || null,
-    data: transaction.data,
-    gas: convertValue(transaction.gas, BigInt),
-    nonce: convertValue(transaction.nonce, (value) =>
-      parseInt(value.toString(), 16),
-    ),
-    value: convertValue(transaction.value, BigInt) || BigInt(0),
+    to: copy.to || null,
+    data: copy.data,
+    gas: convertValue(copy.gas, BigInt),
+    nonce: convertValue(copy.nonce, (value) => parseInt(value.toString(), 16)),
+    value: convertValue(copy.value, BigInt),
   };
 
-  const typeMapping: { [key: string]: "legacy" | "eip2930" | "eip1559" } = {
-    "0x0": "legacy",
-    "0x1": "eip2930",
-    "0x2": "eip1559",
-  };
+  const gasPrice = convertValue(copy.gasPrice, BigInt);
+  const maxFeePerGas = convertValue(copy.maxFeePerGas, BigInt);
+  const maxPriorityFeePerGas = convertValue(copy.maxPriorityFeePerGas, BigInt);
 
-  const mappedType = typeMapping[txType] || "eip1559";
+  const isLegacy = gasPrice !== undefined;
+  const isEIP1559 =
+    maxFeePerGas !== undefined && maxPriorityFeePerGas !== undefined;
 
-  let transactionSerializable: TransactionSerializable;
-
-  switch (mappedType) {
-    case "legacy":
-      transactionSerializable = {
-        ...baseFields,
-        type: "legacy",
-        gasPrice: convertValue(transaction.gasPrice, BigInt),
-      };
-      break;
-    case "eip2930":
-      transactionSerializable = {
-        ...baseFields,
-        type: "eip2930",
-        gasPrice: convertValue(transaction.gasPrice, BigInt),
-        accessList: transaction.accessList || [],
-      };
-      break;
-    case "eip1559":
-    default:
-      transactionSerializable = {
-        ...baseFields,
-        type: "eip1559",
-        maxPriorityFeePerGas: convertValue(
-          transaction.maxPriorityFeePerGas,
-          BigInt,
-        ),
-        maxFeePerGas: convertValue(transaction.maxFeePerGas, BigInt),
-      };
-      break;
+  if (isEIP1559) {
+    serializable.type = "eip1559";
+    serializable.maxFeePerGas = maxFeePerGas;
+    serializable.maxPriorityFeePerGas = maxPriorityFeePerGas;
+  } else if (isLegacy) {
+    if (copy.accessList != null && copy.accessList.length > 0) {
+      serializable.type = "eip2930";
+      serializable.accessList = copy.accessList;
+    } else {
+      serializable.type = "legacy";
+      serializable.gasPrice = gasPrice;
+    }
   }
 
-  return transactionSerializable;
+  return serializable;
 }
 
 export function toRpcTransactionRequest(

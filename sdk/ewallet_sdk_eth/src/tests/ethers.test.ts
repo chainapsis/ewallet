@@ -453,7 +453,10 @@ describe("EWallet Provider - Ethers.js Integration", () => {
           signer,
         );
         await expect(
-          counterContract.increment({ gasLimit: 21_000 }),
+          counterContract.increment({
+            gasLimit: 21_00,
+            gasPrice: parseUnits("10000", "gwei"),
+          }),
         ).rejects.toThrow(/Transaction requires at least \d+ gas but got \d+/);
       });
     });

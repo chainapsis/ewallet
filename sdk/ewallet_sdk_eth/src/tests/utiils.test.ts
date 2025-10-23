@@ -1,11 +1,18 @@
 import { serializeSignature } from "viem/accounts";
-import { type RpcTransactionRequest, recoverPublicKey } from "viem";
+import {
+  InvalidSerializableTransactionError,
+  type RpcTransactionRequest,
+  getTransactionType,
+  recoverPublicKey,
+  serializeTransaction,
+} from "viem";
 
 import {
   publicKeyToEthereumAddress,
   encodeEthereumSignature,
   toSignableTransaction,
   isSignableTransaction,
+  toTransactionSerializable,
 } from "@keplr-ewallet-sdk-eth/utils";
 
 describe("publicKeyToEthereumAddress", () => {
@@ -305,5 +312,92 @@ describe("isSignableTransaction", () => {
     expect(isSignableTransaction(invalidLegacy)).toBe(false);
     expect(isSignableTransaction(invalid1559_a)).toBe(false);
     expect(isSignableTransaction(invalid1559_b)).toBe(false);
+  });
+});
+
+describe("toTransactionSerializable", () => {
+  it("maps EIP-1559 fee fields and type correctly", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      maxFeePerGas: "0x59682f00",
+      maxPriorityFeePerGas: "0x3b9aca00",
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBe("eip1559");
+    expect(s.chainId).toBe(1);
+    expect(s.maxFeePerGas).toBe(BigInt("0x59682f00"));
+    expect(s.maxPriorityFeePerGas).toBe(BigInt("0x3b9aca00"));
+    expect(s.gas).toBe(BigInt("0x5208"));
+    expect(s.nonce).toBe(1);
+    expect(s.value).toBe(BigInt(0));
+    expect(getTransactionType(s)).toBe("eip1559");
+    expect(serializeTransaction(s)).toBeDefined();
+  });
+
+  it("maps legacy fee field and type correctly", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      gasPrice: "0x3b9aca00",
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBe("legacy");
+    expect(s.gasPrice).toBe(BigInt("0x3b9aca00"));
+    expect(s.accessList).toBeUndefined();
+    expect(getTransactionType(s)).toBe("legacy");
+    expect(serializeTransaction(s)).toBeDefined();
+  });
+
+  it("maps EIP-2930 when accessList present with gasPrice", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      gasPrice: "0x3b9aca00",
+      accessList: [
+        {
+          address: "0x0000000000000000000000000000000000000001",
+          storageKeys: [],
+        },
+      ],
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBe("eip2930");
+    expect(Array.isArray(s.accessList)).toBe(true);
+    expect(getTransactionType(s)).toBe("eip2930");
+    expect(serializeTransaction(s)).toBeDefined();
+  });
+
+  it("ignores fee fields when none set (no type)", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBeUndefined();
+    expect(s.gasPrice).toBeUndefined();
+    expect(s.maxFeePerGas).toBeUndefined();
+    expect(s.maxPriorityFeePerGas).toBeUndefined();
+
+    const error = new InvalidSerializableTransactionError({ transaction: s });
+
+    expect(() => getTransactionType(s)).toThrow(error);
+    expect(() => serializeTransaction(s)).toThrow(error);
   });
 });
