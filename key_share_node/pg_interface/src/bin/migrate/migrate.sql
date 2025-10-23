@@ -44,7 +44,7 @@ CREATE TABLE public.pg_dumps (
 CREATE TABLE public.users (
 	user_id uuid DEFAULT gen_random_uuid() NOT NULL,
 	email varchar(255) NOT NULL,
-	status varchar(16) DEFAULT 'active'::character varying NULL,
+	status varchar(16) DEFAULT 'active'::character varying NOT NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
 	aux jsonb NULL,
@@ -62,8 +62,8 @@ CREATE TABLE public.users (
 CREATE TABLE public.wallets (
 	wallet_id uuid DEFAULT gen_random_uuid() NOT NULL,
 	user_id uuid NOT NULL,
-	curve_type varchar(16) NULL,
-	public_key bytea NULL,
+	curve_type varchar(16) NOT NULL,
+	public_key varchar NOT NULL,
 	aux jsonb NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
