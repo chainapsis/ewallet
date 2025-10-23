@@ -1,9 +1,9 @@
 <a href="https://demo.oko.app/">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.svg">
-    <source media="(prefers-color-scheme: dark)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo_dark.svg">
-    <img src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.svg" alt="Logo"
-    style="width: 361px; height: auto;">
+    <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_dark.svg">
+    <img src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo.svg" alt="Logo"
+    style="width: 240px; height: auto;">
   </picture>
 </a>
 
@@ -22,7 +22,9 @@ or mobile apps.
 
 [View Demo](https://demo.oko.app)
 
-## Ewallet SDK
+## Oko SDK
+
+<!-- TODO: update sdk names and links -->
 
 | Packages                                                    | Latest                                                                                                                                                |
 | ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -50,7 +52,7 @@ create a pull request. You can also simply open an issue.
 
 This project uses _Biome_ for code formatting.
 
-For installtion, you can refer to the following documentations
+For installation, you can refer to the following documentations
 
 - VSCode, IntelliJ: https://biomejs.dev/guides/editors/first-party-extensions/
 - Other IDEs: https://biomejs.dev/guides/editors/third-party-extensions/
