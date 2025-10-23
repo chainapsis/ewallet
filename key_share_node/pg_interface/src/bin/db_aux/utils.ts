@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { readFileSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Pool } from "pg";
 
 export type PgDatabaseConfig = {
@@ -13,8 +13,10 @@ export type PgDatabaseConfig = {
 };
 
 export function readMigrateSql() {
-  const currentDir = dirname(fileURLToPath(import.meta.url));
-  const sql = readFileSync(join(currentDir, "./migrate.sql"), "utf-8");
+  const currDir = dirname(fileURLToPath(import.meta.url));
+  const migrateSqlPath = join(currDir, "../migrate/migrate.sql");
+
+  const sql = readFileSync(migrateSqlPath, "utf-8");
   return sql;
 }
 

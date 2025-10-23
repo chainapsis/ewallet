@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-use crate::sss::point::Point256;
+use crate::{sss::point::Point256, CSCurve};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 
@@ -26,6 +26,12 @@ impl KeysharePoints {
 
     pub fn contain_point(&self, point: &Point256) -> bool {
         self.keyshare_points.contains(point)
+    }
+
+    pub fn contain_x_scalar<C: CSCurve>(&self, x_scalar: &C::Scalar) -> bool {
+        self.keyshare_points
+            .iter()
+            .any(|point| point.x_scalar::<C>() == *x_scalar)
     }
 
     pub fn to_point_vec(&self) -> Vec<Point256> {

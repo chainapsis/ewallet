@@ -1,15 +1,15 @@
 import { Pool } from "pg";
+
 import { dropAllTablesIfExist } from "@keplr-ewallet-ksn-pg-interface/postgres";
+import {
+  createDBConn,
+  readMigrateSql,
+  type PgDatabaseConfig,
+} from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/utils";
+import { loadEnvs } from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/envs";
+import { devEnvSchema } from "./dev_envs";
 
-import { createDBConn, readMigrateSql, type PgDatabaseConfig } from "./utils";
-import { loadEnvs } from "./envs";
-
-const DEFAULT_DB_NAME = process.env.DB_NAME || "key_share_node_dev";
-
-const USE_ENV = process.env.USE_ENV === "true";
-const MIGRATE_MODE = process.env.MIGRATE_MODE || "all"; // "all" or "one"
-const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);
-const NODE_COUNT = parseInt(process.env.NODE_COUNT || "2", 10);
+const DEFAULT_DB_NAME = "key_share_node_dev";
 
 async function createDBIfNotExists(pgConfig: PgDatabaseConfig, dbName: string) {
   console.log(`Creating database ${dbName} if not exists...`);
@@ -43,16 +43,20 @@ async function createTables(pool: Pool): Promise<void> {
   console.log("Created tables, query count: %s", (results as any).length);
 }
 
-async function migrateAll(useEnv: boolean) {
+async function migrateAll(
+  useEnvFile: boolean,
+  nodeCount: number,
+  dbName: string,
+) {
   console.log("connecting pg...");
 
   const pgConfigs: PgDatabaseConfig[] = [];
-  for (let i = 1; i <= NODE_COUNT; i++) {
-    if (useEnv) {
+  for (let i = 1; i <= nodeCount; i++) {
+    if (useEnvFile) {
       pgConfigs.push(loadEnvs(i));
     } else {
       pgConfigs.push({
-        database: i === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${i}`,
+        database: i === 1 ? dbName : `${dbName}${i}`,
         user: "postgres",
         password: "postgres",
         host: "localhost",
@@ -86,12 +90,13 @@ async function migrateAll(useEnv: boolean) {
   }
 }
 
-async function migrateOne(useEnv: boolean) {
+async function migrateOne(useEnv: boolean, nodeId: number) {
+  const dbName = process.env.DB_NAME || DEFAULT_DB_NAME;
+
   const pgConfig: PgDatabaseConfig = useEnv
-    ? loadEnvs(NODE_ID)
+    ? loadEnvs(nodeId)
     : {
-        database:
-          NODE_ID === 1 ? DEFAULT_DB_NAME : `${DEFAULT_DB_NAME}${NODE_ID}`,
+        database: nodeId === 1 ? dbName : `${dbName}${nodeId}`,
         user: "postgres",
         password: "postgres",
         host: "localhost",
@@ -116,14 +121,37 @@ async function migrateOne(useEnv: boolean) {
   }
 }
 
-async function migrate() {
-  if (MIGRATE_MODE === "all") {
-    await migrateAll(USE_ENV);
-  } else if (MIGRATE_MODE === "one") {
-    await migrateOne(USE_ENV);
-  } else {
-    throw new Error(`Invalid migrate mode: ${MIGRATE_MODE}`);
+async function main() {
+  const devEnvs = {
+    MIGRATE_MODE: process.env.MIGRATE_MODE,
+    USE_ENV_FILE: process.env.USE_ENV_FILE,
+    NODE_ID: process.env.NODE_ID,
+    NODE_COUNT: process.env.NODE_COUNT,
+    DB_NAME: process.env.DB_NAME,
+  };
+
+  const envs = devEnvSchema.parse(devEnvs);
+
+  const migrateMode = envs.MIGRATE_MODE;
+  const useEnvFile = envs.USE_ENV_FILE === "true";
+  const dbName = devEnvs.DB_NAME || DEFAULT_DB_NAME;
+
+  const nodeId = parseInt(envs.NODE_ID || "1", 10);
+  const nodeCount = parseInt(envs.NODE_COUNT || "2", 10);
+
+  switch (migrateMode) {
+    case "all": {
+      await migrateAll(useEnvFile, nodeCount, dbName);
+      break;
+    }
+    case "one": {
+      await migrateOne(useEnvFile, nodeId);
+      break;
+    }
+    default: {
+      throw new Error(`Invalid migrate mode: ${migrateMode}`);
+    }
   }
 }
 
-migrate().then();
+main().then();

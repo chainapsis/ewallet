@@ -1,11 +1,18 @@
 import { serializeSignature } from "viem/accounts";
-import { type RpcTransactionRequest, recoverPublicKey } from "viem";
+import {
+  InvalidSerializableTransactionError,
+  type RpcTransactionRequest,
+  getTransactionType,
+  recoverPublicKey,
+  serializeTransaction,
+} from "viem";
 
 import {
   publicKeyToEthereumAddress,
   encodeEthereumSignature,
   toSignableTransaction,
   isSignableTransaction,
+  toTransactionSerializable,
 } from "@keplr-ewallet-sdk-eth/utils";
 
 describe("publicKeyToEthereumAddress", () => {
@@ -128,55 +135,10 @@ describe("encodeEthereumSignature", () => {
 });
 
 describe("toSignableTransaction", () => {
-  it("produces legacy (0x0) signable tx with gasPrice", () => {
+  it("produces signable tx with fee fields and no gasPrice", () => {
     const tx: RpcTransactionRequest = {
       from: "0x0000000000000000000000000000000000000001",
       to: "0x0000000000000000000000000000000000000002",
-      type: "0x0",
-      gas: "0x5208",
-      gasPrice: "0x3b9aca00",
-      nonce: "0x1",
-      value: "0x0",
-      data: "0x",
-    };
-
-    const signable = toSignableTransaction(tx);
-
-    expect(signable.type).toBe("0x0");
-    expect(signable.from).toBeUndefined();
-    expect(signable.gasPrice).toBe("0x3b9aca00");
-    expect(signable.maxFeePerGas).toBeUndefined();
-    expect(signable.maxPriorityFeePerGas).toBeUndefined();
-  });
-
-  it("produces EIP-2930 (0x1) signable tx with gasPrice & accessList", () => {
-    const tx: RpcTransactionRequest = {
-      from: "0x0000000000000000000000000000000000000001",
-      to: "0x0000000000000000000000000000000000000002",
-      type: "0x1",
-      gas: "0x5208",
-      gasPrice: "0x3b9aca00",
-      accessList: [],
-      nonce: "0x1",
-      value: "0x0",
-      data: "0x",
-    };
-
-    const signable = toSignableTransaction(tx);
-
-    expect(signable.type).toBe("0x1");
-    expect(signable.from).toBeUndefined();
-    expect(signable.gasPrice).toBe("0x3b9aca00");
-    expect(signable.accessList).toEqual([]);
-    expect(signable.maxFeePerGas).toBeUndefined();
-    expect(signable.maxPriorityFeePerGas).toBeUndefined();
-  });
-
-  it("produces EIP-1559 (0x2) signable tx with fee fields and no gasPrice", () => {
-    const tx: RpcTransactionRequest = {
-      from: "0x0000000000000000000000000000000000000001",
-      to: "0x0000000000000000000000000000000000000002",
-      type: "0x2",
       gas: "0x5208",
       maxFeePerGas: "0x59682f00",
       maxPriorityFeePerGas: "0x3b9aca00",
@@ -187,27 +149,105 @@ describe("toSignableTransaction", () => {
 
     const signable = toSignableTransaction(tx);
 
-    expect(signable.type).toBe("0x2");
     expect(signable.from).toBeUndefined();
     expect(signable.maxFeePerGas).toBe("0x59682f00");
     expect(signable.maxPriorityFeePerGas).toBe("0x3b9aca00");
     expect(signable.gasPrice).toBeUndefined();
   });
 
-  it("defaults to EIP-1559 (0x2) when type is missing", () => {
+  it("normalizes decimal and bare-hex quantities, and 0x-prefixes data", () => {
     const tx: RpcTransactionRequest = {
       from: "0x0000000000000000000000000000000000000001",
       to: "0x0000000000000000000000000000000000000002",
-      gas: "0x5208",
-      maxFeePerGas: "0x59682f00",
-      maxPriorityFeePerGas: "0x3b9aca00",
+      type: "0x2",
+      gas: "21000" as any,
+      maxFeePerGas: "2000000000" as any,
+      maxPriorityFeePerGas: "1500000000" as any,
+      nonce: "1" as any,
+      value: "0" as any,
+      data: "abcd" as any,
+    };
+
+    const signable = toSignableTransaction(tx);
+
+    expect(signable.gas).toBe("0x5208");
+    expect(signable.maxFeePerGas).toBe("0x77359400");
+    expect(signable.maxPriorityFeePerGas).toBe("0x59682f00");
+    expect(signable.nonce).toBe("0x1");
+    expect(signable.value).toBe("0x0");
+    expect(signable.data).toBe("0xabcd");
+  });
+
+  it("treats bare hex quantity as hex by prefixing 0x", () => {
+    const tx: RpcTransactionRequest = {
+      from: "0x0000000000000000000000000000000000000001",
+      to: "0x0000000000000000000000000000000000000002",
+      type: "0x2",
+      gas: "ab" as any,
+      maxFeePerGas: "0x1",
+      maxPriorityFeePerGas: "0x1",
       nonce: "0x1",
       value: "0x0",
       data: "0x",
     };
 
     const signable = toSignableTransaction(tx);
-    expect(signable.type).toBe("0x2");
+    expect(signable.gas).toBe("0xab");
+  });
+
+  it("strips leading zeros in hex quantities", () => {
+    const tx: RpcTransactionRequest = {
+      from: "0x0000000000000000000000000000000000000001",
+      to: "0x0000000000000000000000000000000000000002",
+      type: "0x0",
+      gas: "0x0005208" as any, // 0x5208 with leading zeros -> 0x5208
+      gasPrice: "0x00000000",
+      nonce: "0x0001" as any,
+      value: "0x0000" as any,
+      data: "0x",
+    };
+
+    const signable = toSignableTransaction(tx);
+    expect(signable.gas).toBe("0x5208");
+    expect(signable.gasPrice).toBe("0x0");
+    expect(signable.nonce).toBe("0x1");
+    expect(signable.value).toBe("0x0");
+  });
+
+  it("sets undefined for truly invalid quantity and fails signable check", () => {
+    const tx: RpcTransactionRequest = {
+      from: "0x0000000000000000000000000000000000000001",
+      to: "0x0000000000000000000000000000000000000002",
+      type: "0x0",
+      gas: "0x5208",
+      gasPrice: "0xZZ" as any, // invalid hex
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    } as any;
+
+    const signable = toSignableTransaction(tx);
+    expect(signable.gasPrice).toBeUndefined();
+    expect(isSignableTransaction(signable)).toBe(false);
+  });
+
+  it("returns undefined for empty string quantities", () => {
+    const tx: RpcTransactionRequest = {
+      from: "0x0000000000000000000000000000000000000001",
+      to: "0x0000000000000000000000000000000000000002",
+      type: "0x2",
+      gas: "" as any,
+      maxFeePerGas: "0x1",
+      maxPriorityFeePerGas: "0x1",
+      nonce: "" as any,
+      value: "" as any,
+      data: "0x",
+    } as any;
+
+    const signable = toSignableTransaction(tx);
+    expect(signable.gas).toBeUndefined();
+    expect(signable.nonce).toBeUndefined();
+    expect(signable.value).toBeUndefined();
   });
 });
 
@@ -215,7 +255,6 @@ describe("isSignableTransaction", () => {
   it("returns true for legacy signable tx", () => {
     const tx: RpcTransactionRequest = {
       to: "0x0000000000000000000000000000000000000002",
-      type: "0x0",
       gas: "0x5208",
       gasPrice: "0x3b9aca00",
       nonce: "0x1",
@@ -253,37 +292,14 @@ describe("isSignableTransaction", () => {
     expect(isSignableTransaction(tx)).toBe(true);
   });
 
-  it("rejects tx that includes from", () => {
-    const tx: RpcTransactionRequest = {
-      from: "0x0000000000000000000000000000000000000001",
-      to: "0x0000000000000000000000000000000000000002",
-      type: "0x2",
-      gas: "0x5208",
-      maxFeePerGas: "0x59682f00",
-      maxPriorityFeePerGas: "0x3b9aca00",
-      nonce: "0x1",
-      value: "0x0",
-      data: "0x",
-    };
-    expect(isSignableTransaction(tx)).toBe(false);
-  });
-
   it("rejects invalid fee field combinations", () => {
     const invalidLegacy: RpcTransactionRequest = {
       type: "0x0",
       gas: "0x5208",
       maxFeePerGas: "0x59682f00",
     } as any;
-    const invalid2930: RpcTransactionRequest = {
-      type: "0x1",
-      gas: "0x5208",
-      gasPrice: "0x3b9aca00",
-      accessList: [],
-      maxPriorityFeePerGas: "0x3b9aca00",
-    } as any;
     const invalid1559_a: RpcTransactionRequest = {
       type: "0x2",
-      gas: "0x5208",
       maxFeePerGas: "0x59682f00",
       gasPrice: "0x3b9aca00",
     } as any;
@@ -294,8 +310,94 @@ describe("isSignableTransaction", () => {
     } as any;
 
     expect(isSignableTransaction(invalidLegacy)).toBe(false);
-    expect(isSignableTransaction(invalid2930)).toBe(false);
     expect(isSignableTransaction(invalid1559_a)).toBe(false);
     expect(isSignableTransaction(invalid1559_b)).toBe(false);
+  });
+});
+
+describe("toTransactionSerializable", () => {
+  it("maps EIP-1559 fee fields and type correctly", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      maxFeePerGas: "0x59682f00",
+      maxPriorityFeePerGas: "0x3b9aca00",
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBe("eip1559");
+    expect(s.chainId).toBe(1);
+    expect(s.maxFeePerGas).toBe(BigInt("0x59682f00"));
+    expect(s.maxPriorityFeePerGas).toBe(BigInt("0x3b9aca00"));
+    expect(s.gas).toBe(BigInt("0x5208"));
+    expect(s.nonce).toBe(1);
+    expect(s.value).toBe(BigInt(0));
+    expect(getTransactionType(s)).toBe("eip1559");
+    expect(serializeTransaction(s)).toBeDefined();
+  });
+
+  it("maps legacy fee field and type correctly", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      gasPrice: "0x3b9aca00",
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBe("legacy");
+    expect(s.gasPrice).toBe(BigInt("0x3b9aca00"));
+    expect(s.accessList).toBeUndefined();
+    expect(getTransactionType(s)).toBe("legacy");
+    expect(serializeTransaction(s)).toBeDefined();
+  });
+
+  it("maps EIP-2930 when accessList present with gasPrice", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      gasPrice: "0x3b9aca00",
+      accessList: [
+        {
+          address: "0x0000000000000000000000000000000000000001",
+          storageKeys: [],
+        },
+      ],
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBe("eip2930");
+    expect(Array.isArray(s.accessList)).toBe(true);
+    expect(getTransactionType(s)).toBe("eip2930");
+    expect(serializeTransaction(s)).toBeDefined();
+  });
+
+  it("ignores fee fields when none set (no type)", () => {
+    const tx: RpcTransactionRequest = {
+      to: "0x0000000000000000000000000000000000000002",
+      gas: "0x5208",
+      nonce: "0x1",
+      value: "0x0",
+      data: "0x",
+    };
+
+    const s = toTransactionSerializable({ chainId: "0x1", tx });
+    expect(s.type).toBeUndefined();
+    expect(s.gasPrice).toBeUndefined();
+    expect(s.maxFeePerGas).toBeUndefined();
+    expect(s.maxPriorityFeePerGas).toBeUndefined();
+
+    const error = new InvalidSerializableTransactionError({ transaction: s });
+
+    expect(() => getTransactionType(s)).toThrow(error);
+    expect(() => serializeTransaction(s)).toThrow(error);
   });
 });

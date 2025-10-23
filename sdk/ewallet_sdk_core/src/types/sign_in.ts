@@ -30,6 +30,10 @@ export type OAuthSignInError =
       // Reshare is needed but not allowed because all KS nodes are not ACTIVE
       type: "reshare_not_ready";
     }
+  | {
+      type: "reshare_fail";
+      error: string;
+    }
   | { type: "invalid_msg_type"; msg_type: string }
   | { type: "vendor_token_verification_failed" }
   | { type: "api_key_missing" }

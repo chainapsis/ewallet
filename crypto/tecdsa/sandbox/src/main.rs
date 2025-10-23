@@ -1,6 +1,6 @@
 use cait_sith_keplr::sss::split;
 use cait_sith_keplr::sss::KeysharePoints;
-use cait_sith_keplr::sss::{combine, lagrange_coefficient, Point256};
+use cait_sith_keplr::sss::{combine, lagrange_coefficient_at_zero, Point256};
 use elliptic_curve::{Curve, CurveArithmetic, ScalarPrimitive};
 use k256::Secp256k1;
 use rand_core::OsRng;

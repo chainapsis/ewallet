@@ -1,83 +1,124 @@
-import type { RpcTransactionRequest, TransactionSerializable } from "viem";
-import { toHex } from "viem";
+import type { Hex, RpcTransactionRequest, TransactionSerializable } from "viem";
+import { isHex, toHex } from "viem";
 
+import { parseChainId } from "./utils";
+
+/**
+ * Normalize Ethereum JSON-RPC QUANTITY values to 0x-prefixed hex without leading zeros
+ * @param input - The input to normalize
+ * @returns The normalized value
+ */
+function normalizeQuantity(
+  input: string | number | bigint | null | undefined,
+): Hex | undefined {
+  if (input === undefined || input === null) {
+    return undefined;
+  }
+
+  if (typeof input === "bigint") {
+    return toHex(input);
+  }
+
+  if (typeof input === "number") {
+    const n = Number.isFinite(input) ? Math.max(0, Math.floor(input)) : 0;
+    return toHex(n);
+  }
+
+  let s = input.trim();
+  if (s.length === 0 || s === "0x") {
+    return undefined;
+  }
+
+  let q: bigint;
+  try {
+    q = BigInt(s);
+  } catch {
+    try {
+      const hexCandidate = isHex(s) ? s : `0x${s}`;
+      q = BigInt(hexCandidate);
+    } catch {
+      return undefined;
+    }
+  }
+
+  return toHex(q);
+}
+
+function normalizeDataHex(input: string | undefined | null): Hex | undefined {
+  if (input === null || input === undefined) {
+    return undefined;
+  }
+  let s = input.trim();
+  if (s.length === 0) {
+    return undefined;
+  }
+  if (!isHex(s)) {
+    s = `0x${s}`;
+  }
+  return s as `0x${string}`;
+}
+
+/**
+ * Normalize a transaction to be signable
+ * @param tx - The transaction to normalize
+ * @returns The normalized transaction
+ * @dev Currently, we do not support blob and EIP-7702, so we ignore related fields
+ */
 export function toSignableTransaction(
   tx: RpcTransactionRequest,
 ): RpcTransactionRequest {
-  const { from, ...transaction } = tx;
-  const txType = transaction.type || "0x2"; // Default to EIP-1559
+  const copy = tx;
 
-  const baseFields = {
-    to: transaction.to || null,
-    data: transaction.data,
-    gas: transaction.gas,
-    nonce: transaction.nonce,
-    value: transaction.value,
+  const signable: RpcTransactionRequest = {
+    to: copy.to,
+    data: normalizeDataHex(copy.data),
+    value: normalizeQuantity(copy.value),
+    nonce: normalizeQuantity(copy.nonce),
+    gas: normalizeQuantity(copy.gas),
+    accessList: copy.accessList,
+    // ignore other fields as we do not support blob and EIP-7702 yet
   };
 
-  let signableTransaction: RpcTransactionRequest;
+  const gasPrice = normalizeQuantity(copy.gasPrice);
+  const maxFeePerGas = normalizeQuantity(copy.maxFeePerGas);
+  const maxPriorityFeePerGas = normalizeQuantity(copy.maxPriorityFeePerGas);
 
-  switch (txType) {
-    case "0x0":
-      signableTransaction = {
-        ...baseFields,
-        type: "0x0",
-        gasPrice: transaction.gasPrice,
-      };
-      break;
-    case "0x1":
-      signableTransaction = {
-        ...baseFields,
-        type: "0x1",
-        gasPrice: transaction.gasPrice,
-        accessList: transaction.accessList || [],
-      };
-      break;
-    case "0x2":
-    default:
-      signableTransaction = {
-        ...baseFields,
-        type: "0x2",
-        maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-        maxFeePerGas: transaction.maxFeePerGas,
-      };
-      break;
+  const isLegacy = gasPrice !== undefined && isHex(gasPrice);
+  const isEIP1559 =
+    maxFeePerGas !== undefined &&
+    maxPriorityFeePerGas !== undefined &&
+    isHex(maxFeePerGas) &&
+    isHex(maxPriorityFeePerGas);
+
+  if (isEIP1559) {
+    signable.maxFeePerGas = maxFeePerGas;
+    signable.maxPriorityFeePerGas = maxPriorityFeePerGas;
+  } else if (isLegacy) {
+    signable.gasPrice = gasPrice;
   }
 
-  return signableTransaction;
+  return signable;
 }
 
+/**
+ * Check if a transaction is properly simulated by the client
+ * @param tx - The transaction to check
+ * @returns True if the transaction is signable, false otherwise
+ */
 export function isSignableTransaction(tx: RpcTransactionRequest): boolean {
-  if (!tx || typeof tx !== "object") return false;
-
-  if (tx.from != null) return false;
-
-  const txType = tx.type || "0x2";
-
-  const has = (key: keyof RpcTransactionRequest) =>
-    tx[key] !== undefined && tx[key] !== null;
-
-  switch (txType) {
-    case "0x0":
-      // Legacy: requires gasPrice; must not include EIP-1559 fee fields
-      return (
-        has("gasPrice") && !has("maxFeePerGas") && !has("maxPriorityFeePerGas")
-      );
-    case "0x1":
-      // EIP-2930: requires gasPrice and accessList array; no EIP-1559 fee fields
-      return (
-        has("gasPrice") &&
-        Array.isArray(tx.accessList ?? []) &&
-        !has("maxFeePerGas") &&
-        !has("maxPriorityFeePerGas")
-      );
-    case "0x2":
-    default:
-      // EIP-1559: requires both fee fields; must not include legacy gasPrice
-      return (
-        has("maxFeePerGas") && has("maxPriorityFeePerGas") && !has("gasPrice")
-      );
+  if (!tx || typeof tx !== "object") {
+    return false;
   }
+
+  const hasGas = tx.gas != null && isHex(tx.gas);
+  const isLegacy = tx.gasPrice != null && isHex(tx.gasPrice);
+  const isEIP1559 =
+    tx.maxFeePerGas != null &&
+    tx.maxPriorityFeePerGas != null &&
+    isHex(tx.maxFeePerGas) &&
+    isHex(tx.maxPriorityFeePerGas);
+
+  return hasGas && (isEIP1559 || isLegacy);
 }
 
 export function toTransactionSerializable({
@@ -93,71 +134,42 @@ export function toTransactionSerializable({
     defaultValue?: T,
   ): T | undefined => (value !== undefined ? converter(value) : defaultValue);
 
-  const { from, ...transaction } = tx;
-  const txType = transaction.type || "0x2"; // Default to EIP-1559
+  const copy = tx;
 
-  let chainIdNumber: number;
-  // chainId can be in CAIP-2, hex, or decimal format
-  if (chainId.startsWith("eip155:")) {
-    chainIdNumber = parseInt(chainId.split(":")[1], 10);
-  } else if (chainId.startsWith("0x")) {
-    chainIdNumber = parseInt(chainId, 16);
-  } else {
-    chainIdNumber = parseInt(chainId, 10);
-  }
+  const chainIdNumber = parseChainId(chainId);
 
-  const baseFields = {
+  const serializable: TransactionSerializable = {
     chainId: chainIdNumber,
-    to: transaction.to || null,
-    data: transaction.data,
-    gas: convertValue(transaction.gas, BigInt),
-    nonce: convertValue(transaction.nonce, (value) =>
-      parseInt(value.toString(), 16),
-    ),
-    value: convertValue(transaction.value, BigInt) || BigInt(0),
+    to: copy.to || null,
+    data: copy.data,
+    gas: convertValue(copy.gas, BigInt),
+    nonce: convertValue(copy.nonce, (value) => parseInt(value.toString(), 16)),
+    value: convertValue(copy.value, BigInt),
   };
 
-  const typeMapping: { [key: string]: "legacy" | "eip2930" | "eip1559" } = {
-    "0x0": "legacy",
-    "0x1": "eip2930",
-    "0x2": "eip1559",
-  };
+  const gasPrice = convertValue(copy.gasPrice, BigInt);
+  const maxFeePerGas = convertValue(copy.maxFeePerGas, BigInt);
+  const maxPriorityFeePerGas = convertValue(copy.maxPriorityFeePerGas, BigInt);
 
-  const mappedType = typeMapping[txType] || "eip1559";
+  const isLegacy = gasPrice !== undefined;
+  const isEIP1559 =
+    maxFeePerGas !== undefined && maxPriorityFeePerGas !== undefined;
 
-  let transactionSerializable: TransactionSerializable;
-
-  switch (mappedType) {
-    case "legacy":
-      transactionSerializable = {
-        ...baseFields,
-        type: "legacy",
-        gasPrice: convertValue(transaction.gasPrice, BigInt),
-      };
-      break;
-    case "eip2930":
-      transactionSerializable = {
-        ...baseFields,
-        type: "eip2930",
-        gasPrice: convertValue(transaction.gasPrice, BigInt),
-        accessList: transaction.accessList || [],
-      };
-      break;
-    case "eip1559":
-    default:
-      transactionSerializable = {
-        ...baseFields,
-        type: "eip1559",
-        maxPriorityFeePerGas: convertValue(
-          transaction.maxPriorityFeePerGas,
-          BigInt,
-        ),
-        maxFeePerGas: convertValue(transaction.maxFeePerGas, BigInt),
-      };
-      break;
+  if (isEIP1559) {
+    serializable.type = "eip1559";
+    serializable.maxFeePerGas = maxFeePerGas;
+    serializable.maxPriorityFeePerGas = maxPriorityFeePerGas;
+  } else if (isLegacy) {
+    if (copy.accessList != null && copy.accessList.length > 0) {
+      serializable.type = "eip2930";
+      serializable.accessList = copy.accessList;
+    } else {
+      serializable.type = "legacy";
+      serializable.gasPrice = gasPrice;
+    }
   }
 
-  return transactionSerializable;
+  return serializable;
 }
 
 export function toRpcTransactionRequest(
@@ -166,7 +178,9 @@ export function toRpcTransactionRequest(
   const convertToHexValue = (
     value: bigint | number | undefined,
   ): `0x${string}` | undefined => {
-    if (value === undefined) return undefined;
+    if (value === undefined) {
+      return undefined;
+    }
     return toHex(value);
   };
 

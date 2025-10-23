@@ -2,6 +2,8 @@ import type { Bytes33, Bytes64 } from "@keplr-ewallet/bytes";
 
 import type { CurveType } from "./curve_type";
 
+export type KeyShareStatus = "active" | "inactive";
+
 export interface KeyShare {
   share_id: string;
   wallet_id: string;
@@ -9,11 +11,19 @@ export interface KeyShare {
   created_at: Date;
   updated_at: Date;
   aux?: Record<string, any>;
+  status: KeyShareStatus;
+  reshared_at?: Date;
 }
 
 export type CreateKeyShareRequest = {
   wallet_id: string;
   enc_share: Buffer;
+};
+
+export type UpdateKeyShareRequest = {
+  wallet_id: string;
+  enc_share: Buffer;
+  status: KeyShareStatus;
 };
 
 export interface RegisterKeyShareRequest {

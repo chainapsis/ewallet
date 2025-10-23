@@ -17,4 +17,6 @@ export const ErrorCodeMap: Record<KSNodeApiErrorCode, number> = {
   PG_RESTORE_FAILED: 500,
   DUMP_FILE_NOT_FOUND: 400,
   RATE_LIMIT_EXCEEDED: 429,
+  CURVE_TYPE_NOT_SUPPORTED: 400,
+  RESHARE_FAILED: 500,
 };

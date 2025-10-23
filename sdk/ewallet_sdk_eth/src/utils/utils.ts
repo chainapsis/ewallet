@@ -22,12 +22,6 @@ export function publicKeyToEthereumAddress(
   return publicKeyToAddress(uncompressedPublicKey);
 }
 
-export function isValidChainId(chainId: unknown): chainId is string {
-  return (
-    Boolean(chainId) && typeof chainId === "string" && chainId.startsWith("0x")
-  );
-}
-
 /**
  * Check if a URL string is valid
  */
@@ -41,11 +35,11 @@ export function isValidUrl(url: string): boolean {
 }
 
 /**
- * Validate chain ID format and value
+ * Validate hex chain ID format and value
  * @param chainId - The chain ID to validate
  * @returns Object with validation result and decimal value
  */
-export function validateChainIdFormat(chainId: string): {
+export function validateHexChainId(chainId: string): {
   isValid: boolean;
   decimalValue?: number;
   error?: string;
@@ -156,7 +150,7 @@ export function validateChain(chain: RpcChain): {
   const { rpcUrls, blockExplorerUrls, chainId, nativeCurrency } = chain;
 
   // Validate chain ID format and value
-  const chainIdResult = validateChainIdFormat(chainId);
+  const chainIdResult = validateHexChainId(chainId);
   if (!chainIdResult.isValid) {
     return {
       isValid: false,
@@ -194,4 +188,27 @@ export function validateChain(chain: RpcChain): {
   }
 
   return { isValid: true };
+}
+
+/**
+ * Parse chain ID from CAIP-2, hex, or decimal format
+ * @param chainId - The chain ID to parse
+ * @returns The parsed chain ID in decimal format
+ */
+export function parseChainId(chainId: string | number): number {
+  if (typeof chainId === "number") {
+    return chainId;
+  }
+
+  // CAIP-2 format
+  if (chainId.startsWith("eip155:")) {
+    return parseInt(chainId.split(":")[1], 10);
+  }
+
+  // Hex format
+  if (chainId.startsWith("0x")) {
+    return parseInt(chainId, 16);
+  }
+
+  return parseInt(chainId, 10);
 }

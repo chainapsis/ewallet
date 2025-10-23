@@ -262,7 +262,7 @@ describe("EWallet Provider - Viem Integration", () => {
           account: alice.getAddress()!,
         });
 
-        const request = client.prepareTransactionRequest({
+        const request = await client.prepareTransactionRequest({
           to: bob.getAddress()!,
           value: parseEther("0.001"),
           gas: BigInt(21000),
@@ -274,7 +274,6 @@ describe("EWallet Provider - Viem Integration", () => {
         });
 
         const signedTransaction = await client.signTransaction({
-          account: alice.getAddress()!,
           ...request,
         });
 

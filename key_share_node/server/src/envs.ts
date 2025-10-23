@@ -15,6 +15,9 @@ export const EXAMPLE_ENV_FILE = "key_share_node.env.example";
 export const ENV_FILE_NAME_2 = "key_share_node_2.env";
 export const EXAMPLE_ENV_FILE_2 = "key_share_node_2.env.example";
 
+export const ENV_FILE_NAME_3 = "key_share_node_3.env";
+export const EXAMPLE_ENV_FILE_3 = "key_share_node_3.env.example";
+
 interface Env {
   PORT: string;
   DB_HOST: string;

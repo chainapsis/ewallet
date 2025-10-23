@@ -19,7 +19,7 @@ import type {
 import { PUBLIC_RPC_METHODS } from "@keplr-ewallet-sdk-eth/rpc";
 import {
   parseTypedData,
-  isValidChainId,
+  validateHexChainId,
   validateChain,
 } from "@keplr-ewallet-sdk-eth/utils";
 import { ProviderEventEmitter } from "./emitter";
@@ -515,7 +515,8 @@ export class EWalletEIP1193Provider
    * @dev Only emit the event, don't modify state in this method
    */
   protected _handleChainChanged(chainId: string) {
-    if (!isValidChainId(chainId)) {
+    const result = validateHexChainId(chainId);
+    if (!result.isValid) {
       return;
     }
 

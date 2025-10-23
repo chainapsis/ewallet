@@ -5,7 +5,7 @@ use rand_core::RngCore;
 
 use crate::sss::keyshares::KeysharePoints;
 use crate::sss::{
-    combine::combine, lagrange::lagrange_coefficient, point::Point256, reshare, split,
+    combine::combine, lagrange::lagrange_coefficient_at_zero, point::Point256, reshare, split,
 };
 
 #[test]
@@ -80,7 +80,7 @@ fn test_simple_lagrange_coeffs() {
     };
 
     let lagrange_p1 =
-        lagrange_coefficient::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p1)
+        lagrange_coefficient_at_zero::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p1)
             .unwrap();
     // 2 * inverse of (2 - 1) = 1
     assert_eq!(
@@ -89,7 +89,7 @@ fn test_simple_lagrange_coeffs() {
     );
 
     let lagrange_p2 =
-        lagrange_coefficient::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p2)
+        lagrange_coefficient_at_zero::<Secp256k1>(&KeysharePoints::new(vec![p1, p2]).unwrap(), &p2)
             .unwrap();
     // 1 * inverse of (1 - 2) = neg_one
     println!("lagrange_p2: {:?}", lagrange_p2);
@@ -340,13 +340,14 @@ fn test_reshare_basic() {
     let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
     let t = 2;
 
-    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes.clone(), t).unwrap();
 
     // Reshare the split points
-    let reshared_points = reshare::reshare::<Secp256k1>(split_points.clone(), t).unwrap();
+    let reshared =
+        reshare::reshare::<Secp256k1>(split_points.clone(), ks_node_hashes.clone(), t).unwrap();
 
     // Verify reshared points can recover the same secret
-    let recovered_secret = combine::<Secp256k1>(reshared_points, t).unwrap();
+    let recovered_secret = combine::<Secp256k1>(reshared.reshared_points.clone(), t).unwrap();
     assert_eq!(secret, recovered_secret);
 }
 
@@ -364,7 +365,7 @@ fn test_reshare_insufficient_points() {
     };
 
     // Only 1 point but t=2
-    let ret = reshare::reshare::<Secp256k1>(vec![p1], 2);
+    let ret = reshare::reshare::<Secp256k1>(vec![p1.clone()], vec![p1.x.clone()], 2);
     assert_eq!(
         ret.err(),
         Some("Split points must be greater than t".to_string())
@@ -387,25 +388,35 @@ fn test_reshare_n3_t2() {
     let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
     let t = 2;
 
-    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
-    let reshared_points = reshare::reshare::<Secp256k1>(split_points, t).unwrap();
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes.clone(), t).unwrap();
+    let reshared =
+        reshare::reshare::<Secp256k1>(split_points.clone(), ks_node_hashes.clone(), t).unwrap();
 
     // Test any 2 points can recover the secret
-    let points_1_2 = vec![reshared_points[0].clone(), reshared_points[1].clone()];
+    let points_1_2 = vec![
+        reshared.reshared_points[0].clone(),
+        reshared.reshared_points[1].clone(),
+    ];
     let recovered_1_2 = combine::<Secp256k1>(points_1_2, t).unwrap();
     assert_eq!(secret, recovered_1_2);
 
-    let points_1_3 = vec![reshared_points[0].clone(), reshared_points[2].clone()];
+    let points_1_3 = vec![
+        reshared.reshared_points[0].clone(),
+        reshared.reshared_points[2].clone(),
+    ];
     let recovered_1_3 = combine::<Secp256k1>(points_1_3, t).unwrap();
     assert_eq!(secret, recovered_1_3);
 
-    let points_2_3 = vec![reshared_points[1].clone(), reshared_points[2].clone()];
+    let points_2_3 = vec![
+        reshared.reshared_points[1].clone(),
+        reshared.reshared_points[2].clone(),
+    ];
     let recovered_2_3 = combine::<Secp256k1>(points_2_3, t).unwrap();
     assert_eq!(secret, recovered_2_3);
 }
 
 #[test]
-fn test_reshare_preserves_x_coordinates() {
+fn test_reshare_preserves_x_coordinates_for_the_same_ks_node() {
     let mut rng = OsRng;
     let mut secret = [0u8; 32];
     let _ = rng.try_fill_bytes(&mut secret);
@@ -420,14 +431,20 @@ fn test_reshare_preserves_x_coordinates() {
     let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
     let t = 2;
 
-    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
-    let reshared_points = reshare::reshare::<Secp256k1>(split_points.clone(), t).unwrap();
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes.clone(), t).unwrap();
+    let new_ks_node_hashes = vec![
+        random_bytes_1.clone(),
+        random_bytes_2.clone(),
+        random_bytes_3.clone(),
+    ];
+    let reshared =
+        reshare::reshare::<Secp256k1>(split_points.clone(), new_ks_node_hashes, t).unwrap();
 
     // Verify that x coordinates are preserved and y coordinates are different
-    assert_eq!(split_points.len(), reshared_points.len());
+    assert_eq!(split_points.len(), reshared.reshared_points.len());
     for i in 0..split_points.len() {
-        assert_eq!(split_points[i].x, reshared_points[i].x);
-        assert_ne!(split_points[i].y, reshared_points[i].y);
+        assert_eq!(split_points[i].x, reshared.reshared_points[i].x);
+        assert_ne!(split_points[i].y, reshared.reshared_points[i].y);
     }
 }
 
@@ -447,20 +464,110 @@ fn test_reshare_multiple_rounds() {
     let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
     let t = 2;
 
-    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes, t).unwrap();
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes.clone(), t).unwrap();
 
     // First reshare
-    let reshared_1 = reshare::reshare::<Secp256k1>(split_points, t).unwrap();
-    let recovered_1 = combine::<Secp256k1>(reshared_1.clone(), t).unwrap();
+    let reshared_1 =
+        reshare::reshare::<Secp256k1>(split_points.clone(), ks_node_hashes.clone(), t).unwrap();
+    let recovered_1 = combine::<Secp256k1>(reshared_1.reshared_points.clone(), t).unwrap();
     assert_eq!(secret, recovered_1);
 
     // Second reshare
-    let reshared_2 = reshare::reshare::<Secp256k1>(reshared_1, t).unwrap();
-    let recovered_2 = combine::<Secp256k1>(reshared_2.clone(), t).unwrap();
+    let reshared_2 = reshare::reshare::<Secp256k1>(
+        reshared_1.reshared_points.clone(),
+        ks_node_hashes.clone(),
+        t,
+    )
+    .unwrap();
+    let recovered_2 = combine::<Secp256k1>(reshared_2.reshared_points.clone(), t).unwrap();
     assert_eq!(secret, recovered_2);
 
     // Third reshare
-    let reshared_3 = reshare::reshare::<Secp256k1>(reshared_2, t).unwrap();
-    let recovered_3 = combine::<Secp256k1>(reshared_3, t).unwrap();
+    let reshared_3 = reshare::reshare::<Secp256k1>(
+        reshared_2.reshared_points.clone(),
+        ks_node_hashes.clone(),
+        t,
+    )
+    .unwrap();
+    let recovered_3 = combine::<Secp256k1>(reshared_3.reshared_points.clone(), t).unwrap();
+    assert_eq!(secret, recovered_3);
+}
+
+#[test]
+fn test_reshare_with_additional_nodes() {
+    let mut rng = OsRng;
+    let mut secret = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut secret);
+
+    // initial KS nodes
+    let mut random_bytes_1 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_1);
+    let mut random_bytes_2 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_2);
+    let mut random_bytes_3 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_3);
+
+    let ks_node_hashes = vec![random_bytes_1, random_bytes_2, random_bytes_3];
+    let t = 2;
+
+    let split_points = split::split::<Secp256k1>(secret, ks_node_hashes.clone(), t).unwrap();
+
+    // additional KS nodes
+    let mut random_bytes_4 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_4);
+    let mut random_bytes_5 = [0u8; 32];
+    let _ = rng.try_fill_bytes(&mut random_bytes_5);
+    let additional_ks_node_hashes = vec![random_bytes_4, random_bytes_5];
+
+    // First reshare
+    let reshared = reshare::expand_shares::<Secp256k1>(
+        split_points.clone(),
+        additional_ks_node_hashes.clone(),
+        t,
+    )
+    .unwrap();
+
+    let reshared_points = reshared.reshared_points.clone();
+    let recovered_1 = combine::<Secp256k1>(reshared.reshared_points.clone(), t).unwrap();
+
+    for (i, point) in reshared_points.iter().take(t as usize).enumerate() {
+        assert_eq!(*point, split_points[i]);
+    }
+    for (i, point) in reshared_points
+        .iter()
+        .skip(ks_node_hashes.len())
+        .enumerate()
+    {
+        assert_eq!(point.x, additional_ks_node_hashes[i]);
+    }
+
+    assert_eq!(secret, recovered_1);
+
+    let recovered_2 = combine::<Secp256k1>(
+        reshared
+            .reshared_points
+            .iter()
+            .rev()
+            .take(t as usize)
+            .cloned()
+            .collect(),
+        t,
+    )
+    .unwrap();
+
+    assert_eq!(secret, recovered_2);
+
+    let recovered_3 = combine::<Secp256k1>(
+        reshared
+            .reshared_points
+            .iter()
+            .rev()
+            .skip(1)
+            .take(t as usize)
+            .cloned()
+            .collect(),
+        t,
+    )
+    .unwrap();
     assert_eq!(secret, recovered_3);
 }
