@@ -116,7 +116,7 @@ export default function TransactionForm({ className }: TransactionFormProps) {
     if (isWalletClientError && walletClientError) {
       console.error(walletClientError);
 
-      // NOTE: keplr embedded provider chain id is initially set to 1,
+      // NOTE: oko eip1193 provider chain id is initially set to 0x1(1),
       // so we need to switch to the correct chain
       if (walletClientError instanceof ConnectorChainMismatchError) {
         switchChain({ chainId: sepolia.id });

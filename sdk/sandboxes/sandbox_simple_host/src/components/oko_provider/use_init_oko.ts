@@ -4,11 +4,11 @@ import { useSDKState } from "@/state/sdk";
 import { useUserInfoState } from "@/state/user_info";
 
 function setupCosmosListener() {
-  const cosmosSDK = useSDKState.getState().keplr_sdk_cosmos;
+  const okoCosmos = useSDKState.getState().oko_cosmos;
   const setUserInfo = useUserInfoState.getState().setUserInfo;
 
-  if (cosmosSDK) {
-    cosmosSDK.on({
+  if (okoCosmos) {
+    okoCosmos.on({
       type: "accountsChanged",
       handler: ({ email, publicKey }) => {
         setUserInfo({
@@ -20,17 +20,17 @@ function setupCosmosListener() {
   }
 }
 
-export function useInitKeplrEWallet() {
-  const initKeplrSdkCosmos = useSDKState((state) => state.initKeplrSdkCosmos);
-  const initKeplrSdkEth = useSDKState((state) => state.initKeplrSdkEth);
+export function useInitOko() {
+  const initOkoCosmos = useSDKState((state) => state.initOkoCosmos);
+  const initOkoEth = useSDKState((state) => state.initOkoEth);
 
   const isInitialized = useSDKState(
-    (state) => state.keplr_sdk_cosmos !== null && state.keplr_sdk_eth !== null,
+    (state) => state.oko_cosmos !== null && state.oko_eth !== null,
   );
 
   useEffect(() => {
-    initKeplrSdkCosmos();
-    initKeplrSdkEth();
+    initOkoCosmos();
+    initOkoEth();
   }, []);
 
   useEffect(() => {

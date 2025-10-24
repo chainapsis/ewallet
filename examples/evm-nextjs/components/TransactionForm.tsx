@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Hex, isAddress, toHex } from "viem";
 import { useForm } from "react-hook-form";
@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 
 import Button from "./Button";
-import useKeplrEmbedded from "@/hooks/useKeplrEmbedded";
+import useOkoEvm from "@/hooks/useOkoEvm";
 import usePublicClient from "@/hooks/usePublicClient";
 
 interface TransactionFormProps {
@@ -41,7 +41,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function TransactionForm({ className }: TransactionFormProps) {
-  const { address, provider } = useKeplrEmbedded();
+  const { address, provider } = useOkoEvm();
   const publicClient = usePublicClient();
   const queryClient = useQueryClient();
 

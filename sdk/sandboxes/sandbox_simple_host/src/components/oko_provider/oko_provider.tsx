@@ -2,11 +2,11 @@
 
 import { type FC, type PropsWithChildren } from "react";
 
-import { useInitKeplrEWallet } from "./use_init_keplr_ewallet";
+import { useInitOko } from "./use_init_oko";
 import { Skeleton } from "@/components/skeleton/skeleton";
 
-export const KeplrEWalletProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { isInitialized } = useInitKeplrEWallet();
+export const OkoProvider: FC<PropsWithChildren> = ({ children }) => {
+  const { isInitialized } = useInitOko();
 
   return (
     <div>

@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Keplr Embedded EVM Wagmi Template",
-  description:
-    "This is a template for building EVM dApps with Keplr Embedded and Wagmi.",
+  title: "Oko EVM Wagmi Template",
+  description: "This is a template for building EVM dApps with Oko and Wagmi.",
   icons: {
     icon: "/icon.png",
   },

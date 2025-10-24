@@ -7,14 +7,14 @@ import { CoinPretty } from "@keplr-wallet/unit";
 import { StargateClient } from "@cosmjs/stargate";
 
 import Button from "./Button";
-import useKeplrEmbedded from "@/hooks/useKeplrEmbedded";
+import useOkoCosmos from "@/hooks/useOkoCosmos";
 
 interface AccountInfoProps {
   className?: string;
 }
 
 export default function AccountInfo({ className }: AccountInfoProps) {
-  const { bech32Address, chainInfo, signOut } = useKeplrEmbedded();
+  const { bech32Address, chainInfo, signOut } = useOkoCosmos();
 
   const { data: balance } = useQuery({
     queryKey: ["balance", bech32Address],

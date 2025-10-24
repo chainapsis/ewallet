@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { formatEther } from "viem";
 
-import useEvm from "@/keplr/useEvm";
+import useEvm from "@/oko/useEvm";
 
 export default function EvmBalance() {
   const { address, publicClient } = useEvm();

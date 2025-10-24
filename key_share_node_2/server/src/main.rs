@@ -12,7 +12,7 @@ async fn main() {
     let app = create_app();
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     println!(
-        "Keplr Embedded Key Share Node Server running on http://0.0.0.0:{}",
+        "Oko Key Share Node Server running on http://0.0.0.0:{}",
         port
     );
 

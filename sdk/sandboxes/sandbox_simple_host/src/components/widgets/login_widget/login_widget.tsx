@@ -2,13 +2,13 @@ import { useState, type FC } from "react";
 
 import { Widget } from "../widget_components";
 import styles from "./login_widget.module.scss";
-import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
+import { useOko } from "@/hooks/use_oko";
 import { useUserInfoState } from "@/state/user_info";
-import { useAddresses } from "@/hooks/ewallet";
+import { useAddresses } from "@/hooks/use_addresses";
 import { CosmosAccountsModal } from "@/components/cosmos_accounts_modal/cosmos_accounts_modal";
 
 export const LoginWidget: FC<LoginWidgetProps> = () => {
-  const { cosmosEWallet } = useKeplrEwallet();
+  const { okoCosmos } = useOko();
   const [isSigningIn, setIsSigningIn] = useState(false);
   const { isSignedIn, email, publicKey } = useUserInfoState();
   const { cosmosAddress, ethAddress } = useAddresses();
@@ -16,10 +16,10 @@ export const LoginWidget: FC<LoginWidgetProps> = () => {
 
   const handleSignIn = async () => {
     try {
-      if (cosmosEWallet) {
+      if (okoCosmos) {
         setIsSigningIn(true);
 
-        const eWallet = cosmosEWallet.eWallet;
+        const eWallet = okoCosmos.eWallet;
         // await eWallet.signIn("google");
         eWallet.signIn("google");
       }
@@ -31,8 +31,8 @@ export const LoginWidget: FC<LoginWidgetProps> = () => {
   };
 
   const handleSignOut = async () => {
-    if (cosmosEWallet) {
-      await cosmosEWallet.eWallet.signOut();
+    if (okoCosmos) {
+      await okoCosmos.eWallet.signOut();
     }
   };
 

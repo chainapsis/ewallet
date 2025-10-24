@@ -1,4 +1,4 @@
-import { KeplrEmbeddedProvider } from "@/keplr/KeplrEmbeddedProvider";
+import { OkoProvider } from "@/oko/OkoProvider";
 import Header from "@/components/Header";
 import StatusBar from "@/components/StatusBar";
 import CosmosTransactionForm from "@/components/CosmosTransactionForm";
@@ -6,7 +6,7 @@ import EvmTransactionForm from "./components/EvmTransactionForm";
 
 function App() {
   return (
-    <KeplrEmbeddedProvider>
+    <OkoProvider>
       <div className="max-w-[920px] mx-auto my-10 p-5">
         <Header />
         <StatusBar />
@@ -15,7 +15,7 @@ function App() {
           <EvmTransactionForm />
         </div>
       </div>
-    </KeplrEmbeddedProvider>
+    </OkoProvider>
   );
 }
 

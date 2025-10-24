@@ -6,7 +6,7 @@ import { fromBech32 } from "@cosmjs/encoding";
 import { SigningStargateClient, StargateClient } from "@cosmjs/stargate";
 import { useQueryClient } from "@tanstack/react-query";
 
-import useCosmos from "@/keplr/useCosmos";
+import useCosmos from "@/oko/useCosmos";
 import TxTracking from "./TxTracking";
 import TxResult from "./TxResult";
 import TxForm from "./TxForm";

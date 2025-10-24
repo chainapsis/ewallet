@@ -12,26 +12,25 @@ import {
 } from "@keplr-ewallet/ewallet-sdk-eth";
 import { sepolia } from "viem/chains";
 
-import keplrIcon from "@/public/icon.png";
+import okoIcon from "@/public/icon.png";
 
 export const defaultWallets = [
-  toKeplrEmbedded({
-    api_key: process.env.NEXT_PUBLIC_KEPLR_EMBEDDED_API_KEY ?? "",
+  toOko({
+    api_key: process.env.NEXT_PUBLIC_OKO_API_KEY ?? "",
     use_testnet: true,
   }),
 ];
 
-function toKeplrEmbedded(args: EthEWalletInitArgs): () => Wallet {
+function toOko(args: EthEWalletInitArgs): () => Wallet {
   return () => ({
-    id: "keplr-embedded",
-    name: "Keplr Embedded",
-    iconUrl: keplrIcon.src,
-    shortName: "Keplr",
+    id: "oko",
+    name: "Oko",
+    iconUrl: okoIcon.src,
+    shortName: "Oko",
     rdns: "oko.app",
     iconBackground: "#0c2f78",
     installed: true,
-    createConnector: (walletDetails) =>
-      keplrEmbeddedConnector(walletDetails, args),
+    createConnector: (walletDetails) => okoConnector(walletDetails, args),
   });
 }
 
@@ -39,7 +38,7 @@ export interface WalletConnectOptions {
   projectId: string;
 }
 
-function keplrEmbeddedConnector(
+function okoConnector(
   walletDetails: WalletDetailsParams,
   args: EthEWalletInitArgs,
 ): CreateConnectorFn {
@@ -68,16 +67,16 @@ function keplrEmbeddedConnector(
 
   return createConnector<EWalletEIP1193Provider>((config) => {
     const wallet = {
-      id: "keplr-embedded",
-      name: "Keplr Embedded",
-      type: "keplr-embedded" as const,
-      icon: keplrIcon.src,
+      id: "oko",
+      name: "Oko",
+      type: "oko" as const,
+      icon: okoIcon.src,
       setup: async () => {
         // Only setup in browser environment
         if (typeof window !== "undefined") {
           await initEthEWalletOnce();
         } else {
-          console.log("keplr embedded can only be initialized in browser");
+          console.log("oko can only be initialized in browser");
         }
       },
       connect: async <WithCapabilities extends boolean = false>(parameters?: {
@@ -90,7 +89,7 @@ function keplrEmbeddedConnector(
 
           // DO NOT fallthrough here to manually retry connect
           // as popup on safari will be blocked by async initialization
-          throw new Error("keplr e-wallet just initialized");
+          throw new Error("oko just initialized");
         }
 
         let accounts = await wallet.getAccounts();
@@ -218,7 +217,7 @@ export const wagmiConfig = createConfig({
       },
     ],
     {
-      appName: "Keplr Embedded EVM Wagmi Template",
+      appName: "Oko EVM Wagmi Template",
       projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ?? "",
     },
   ),

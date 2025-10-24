@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isAddress, toHex, type Hex } from "viem";
 import { useQueryClient } from "@tanstack/react-query";
 
-import useEvm from "@/keplr/useEvm";
+import useEvm from "@/oko/useEvm";
 import TxTracking from "./TxTracking";
 import TxResult from "./TxResult";
 import TxForm from "./TxForm";

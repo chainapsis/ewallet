@@ -11,7 +11,7 @@ export interface CosmosChainAccount {
 }
 
 export function useCosmosAccounts() {
-  const cosmosSDK = useSDKState((state) => state.keplr_sdk_cosmos);
+  const okoCosmos = useSDKState((state) => state.oko_cosmos);
   const { isSignedIn } = useUserInfoState();
 
   const [accounts, setAccounts] = useState<CosmosChainAccount[]>([]);
@@ -20,7 +20,7 @@ export function useCosmosAccounts() {
 
   useEffect(() => {
     async function load() {
-      if (!isSignedIn || !cosmosSDK) {
+      if (!isSignedIn || !okoCosmos) {
         setAccounts([]);
         return;
       }
@@ -30,8 +30,8 @@ export function useCosmosAccounts() {
         setError(null);
 
         const [chainInfos, accountList] = await Promise.all([
-          cosmosSDK.getCosmosChainInfo(),
-          cosmosSDK.getAccounts(),
+          okoCosmos.getCosmosChainInfo(),
+          okoCosmos.getAccounts(),
         ]);
 
         const byPrefix = new Map<string, (typeof chainInfos)[number]>();
@@ -88,7 +88,7 @@ export function useCosmosAccounts() {
     }
 
     load().then();
-  }, [isSignedIn, cosmosSDK]);
+  }, [isSignedIn, okoCosmos]);
 
   return { accounts, isLoading, error };
 }

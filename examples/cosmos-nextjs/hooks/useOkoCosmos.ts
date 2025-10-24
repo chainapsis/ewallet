@@ -1,8 +1,8 @@
 import { useContext } from "react";
 
-import { KeplrEmbeddedContext } from "@/components/KeplrEmbeddedProvider";
+import { OkoCosmosContext } from "@/components/OkoCosmosProvider";
 
-export default function useKeplrEmbedded() {
+export default function useOkoCosmos() {
   const {
     isReady,
     isSignedIn,
@@ -13,7 +13,7 @@ export default function useKeplrEmbedded() {
     bech32Address,
     signIn,
     signOut,
-  } = useContext(KeplrEmbeddedContext);
+  } = useContext(OkoCosmosContext);
 
   return {
     isReady,

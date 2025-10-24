@@ -1,5 +1,5 @@
-import useCosmos from "@/keplr/useCosmos";
-import useEvm from "@/keplr/useEvm";
+import useCosmos from "@/oko/useCosmos";
+import useEvm from "@/oko/useEvm";
 import CopyableAddress from "./CopyableAddress";
 import CosmosBalance from "./CosmosBalance";
 import EvmBalance from "./EvmBalance";

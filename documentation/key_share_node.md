@@ -3,7 +3,7 @@
 ## Before you begin
 
 The key share node is a crucial component of the distributed signature
-generation scheme. Please read the Keplr Embedded Ewallet documentation first to
+generation scheme. Please read the Oko documentation first to
 learn how the system works.
 
 ## [1/3] System Requirements

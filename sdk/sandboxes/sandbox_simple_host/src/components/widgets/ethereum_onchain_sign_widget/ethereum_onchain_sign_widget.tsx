@@ -13,18 +13,18 @@ import {
 import { publicKeyToEthereumAddress } from "@keplr-ewallet/ewallet-sdk-eth";
 
 import { SignWidget } from "@/components/widgets/sign_widget/sign_widget";
-import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
+import { useOko } from "@/hooks/use_oko";
 
 export const EthereumOnchainSignWidget = () => {
-  const { ethEWallet } = useKeplrEwallet();
+  const { okoEth } = useOko();
 
   const handleClickEthOnchainSign = async () => {
-    if (ethEWallet === null) {
+    if (okoEth === null) {
       throw new Error("EthEWallet is not initialized");
     }
 
-    const provider = await ethEWallet.getEthereumProvider();
-    const address = await ethEWallet.getAddress();
+    const provider = await okoEth.getEthereumProvider();
+    const address = await okoEth.getAddress();
 
     const toAddress = "0xbb6B34131210C091cb2890b81fCe7103816324a5"; // dogemos.eth
     const usdcAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";

@@ -6,7 +6,7 @@ import {
 } from "@keplr-ewallet/ewallet-sdk-eth";
 import { Address } from "viem";
 
-interface KeplrEmbeddedProviderProps {
+interface OkoEvmProviderValues {
   isReady: boolean;
   isSignedIn: boolean;
   isSigningIn: boolean;
@@ -16,7 +16,7 @@ interface KeplrEmbeddedProviderProps {
   signOut: () => Promise<void>;
 }
 
-const KeplrEmbeddedContext = createContext<KeplrEmbeddedProviderProps>({
+const OkoEvmContext = createContext<OkoEvmProviderValues>({
   isReady: false,
   isSignedIn: false,
   isSigningIn: false,
@@ -26,7 +26,7 @@ const KeplrEmbeddedContext = createContext<KeplrEmbeddedProviderProps>({
   signOut: async () => {},
 });
 
-function KeplrEmbeddedProvider({ children }: { children: React.ReactNode }) {
+function OkoEvmProvider({ children }: { children: React.ReactNode }) {
   const [ethEWallet, setEthEWallet] = useState<EthEWalletInterface | null>(
     null,
   );
@@ -35,18 +35,18 @@ function KeplrEmbeddedProvider({ children }: { children: React.ReactNode }) {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [address, setAddress] = useState<Address | null>(null);
 
-  async function initKeplrEmbedded() {
-    const keplrEmbedded = EthEWallet.init({
-      api_key: process.env.NEXT_PUBLIC_KEPLR_EMBEDDED_API_KEY ?? "",
+  async function initOkoEvm() {
+    const okoEvm = EthEWallet.init({
+      api_key: process.env.NEXT_PUBLIC_OKO_API_KEY ?? "",
       use_testnet: true,
     });
 
-    if (!keplrEmbedded.success) {
-      console.error(keplrEmbedded.err);
+    if (!okoEvm.success) {
+      console.error(okoEvm.err);
       return;
     }
 
-    const ethEWallet = keplrEmbedded.data;
+    const ethEWallet = okoEvm.data;
     const provider = ethEWallet.getEthereumProvider();
 
     try {
@@ -101,11 +101,11 @@ function KeplrEmbeddedProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    initKeplrEmbedded().catch(console.error);
+    initOkoEvm().catch(console.error);
   }, []);
 
   return (
-    <KeplrEmbeddedContext.Provider
+    <OkoEvmContext.Provider
       value={{
         isReady: !!ethEWallet,
         isSignedIn,
@@ -117,8 +117,8 @@ function KeplrEmbeddedProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-    </KeplrEmbeddedContext.Provider>
+    </OkoEvmContext.Provider>
   );
 }
 
-export { KeplrEmbeddedProvider, KeplrEmbeddedContext };
+export { OkoEvmProvider, OkoEvmContext };

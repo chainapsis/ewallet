@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { StargateClient } from "@cosmjs/stargate";
 import { CoinPretty } from "@keplr-wallet/unit";
 
-import useCosmos from "@/keplr/useCosmos";
+import useCosmos from "@/oko/useCosmos";
 
 export default function CosmosBalance() {
   const { bech32Address, chainInfo } = useCosmos();

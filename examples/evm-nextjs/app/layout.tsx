@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Keplr Embedded EVM Template",
-  description: "This is a template for building EVM dApps with Keplr Embedded.",
+  title: "Oko EVM Template",
+  description: "This is a template for building EVM dApps with Oko.",
   icons: {
     icon: "/icon.png",
   },

@@ -1,6 +1,6 @@
-## Keplr Embedded Ethereum SDK + Next.js Example
+## Oko Ethereum SDK + Next.js Example
 
-A minimal example that integrates Keplr Embedded Ethereum SDK with Next.js. It
+A minimal example that integrates Oko Ethereum SDK with Next.js. It
 connects to the Ethereum Sepolia testnet by default and demonstrates social
 sign-in, account info, and a simple transfer transaction.
 
@@ -11,7 +11,7 @@ sign-in, account info, and a simple transfer transaction.
 
 ### Environment Variables
 
-Create a `.env.local` file in this directory and set your Keplr Embedded API
+Create a `.env.local` file in this directory and set your Oko API
 key.
 
 ```bash
@@ -20,11 +20,11 @@ cp .env.example .env.local
 
 ```bash
 # .env.local
-NEXT_PUBLIC_KEPLR_EMBEDDED_API_KEY=YOUR_ISSUED_API_KEY
+NEXT_PUBLIC_OKO_API_KEY=YOUR_ISSUED_API_KEY
 ```
 
 Note: Use the API key issued from the
-[Keplr Embedded Dashboard](https://dapp.oko.app).
+[Oko Dashboard](https://dapp.oko.app).
 
 ### How to Run
 
