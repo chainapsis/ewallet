@@ -14,7 +14,7 @@ export default {
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
   moduleNameMapper: {
     "^@oko-wallet-sdk-cosmos/(.*)$": "<rootDir>/src/$1",
-    "^@oko-wallet-sdk-core/(.*)$": "<rootDir>/../ewallet_sdk_core/src/$1",
+    "^@oko-wallet-sdk-core/(.*)$": "<rootDir>/../oko_sdk_core/src/$1",
   },
   setupFilesAfterEnv: [],
 };

@@ -1,4 +1,4 @@
-# ewallet_sdk_eth
+# oko_sdk_eth
 
 - This package is a variant of `@oko-wallet/oko-sdk-core` for Ethereum.
 - It provides a way to interact with Ethereum wallets using `@oko-wallet/oko-sdk-core`.

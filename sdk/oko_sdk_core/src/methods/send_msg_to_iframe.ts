@@ -27,7 +27,7 @@ export async function sendMsgToIframe(
       } else {
         console.error("[keplr] unknown msg type");
         resolve({
-          target: "keplr_ewallet_sdk",
+          target: "keplr_oko_sdk",
           msg_type: "unknown_msg_type",
           payload: JSON.stringify(data),
         });

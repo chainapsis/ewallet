@@ -24,7 +24,7 @@
     "rootDir": "./src",
     "paths": {
       "@oko-wallet-sdk-eth/*": ["./src/*"],
-      "@oko-wallet-sdk-core/*": ["../ewallet_sdk_core/src/*"]
+      "@oko-wallet-sdk-core/*": ["../oko_sdk_core/src/*"]
     }
   },
   "include": ["src/**/*"],

@@ -16,9 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@oko-wallet-sdk-core/*": ["../ewallet_sdk_core/src/*"],
-      "@oko-wallet-sdk-eth/*": ["../ewallet_sdk_variants/eth/src/*"],
-      "@oko-wallet-sdk-cosmos/*": ["../ewallet_sdk_variants/cosmos/src/*"]
+      "@oko-wallet-sdk-core/*": ["../oko_sdk_core/src/*"],
+      "@oko-wallet-sdk-eth/*": ["../oko_sdk_variants/eth/src/*"],
+      "@oko-wallet-sdk-cosmos/*": ["../oko_sdk_variants/cosmos/src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
