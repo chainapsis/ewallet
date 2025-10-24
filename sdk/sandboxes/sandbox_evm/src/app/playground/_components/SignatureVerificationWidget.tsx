@@ -185,7 +185,7 @@ function SiweVerifier() {
       />
       <p className="text-xs text-base-content/60 -mt-2">
         The exact SIWE message that was signed. Example:
-        "keplr-ewallet-sandbox.vercel.app wants you to sign in..."
+        "oko-wallet-sandbox.vercel.app wants you to sign in..."
       </p>
 
       <label className="label">
@@ -270,7 +270,7 @@ function TypedDataVerifier() {
     try {
       const t = JSON.parse(typedDataTypes);
       if (t && typeof t === "object") return t as Record<string, any>;
-    } catch {}
+    } catch { }
     return {} as Record<string, any>;
   })();
 

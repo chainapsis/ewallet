@@ -12,7 +12,7 @@ import { initKeplrEwallet } from "@oko-wallet/ewallet-sdk-core";
 import { initEthEWallet } from "@oko-wallet/ewallet-sdk-eth";
 
 const eWallet = await initKeplrEwallet({
-  element_id: "keplr-ewallet",
+  element_id: "oko-wallet",
 });
 
 const ethEWallet = await initEthEWallet({
@@ -80,7 +80,7 @@ const signature = await signer.signMessage("Hello, world!");
 import { initEWalletEIP1193Provider } from "@oko-wallet/ewallet-sdk-eth";
 
 const provider = await initEWalletEIP1193Provider({
-  id: "keplr-ewallet",
+  id: "oko-wallet",
 });
 ```
 
