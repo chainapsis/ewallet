@@ -3,7 +3,7 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { KeplrEmbeddedProvider } from "./KeplrEmbeddedProvider";
+import { OkoEvmProvider } from "./OkoEvmProvider";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -13,8 +13,8 @@ const queryClient = new QueryClient();
 
 export default function Providers({ children }: ProvidersProps) {
   return (
-    <KeplrEmbeddedProvider>
+    <OkoEvmProvider>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </KeplrEmbeddedProvider>
+    </OkoEvmProvider>
   );
 }

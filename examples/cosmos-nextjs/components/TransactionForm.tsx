@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 
 import Button from "./Button";
-import useKeplrEmbedded from "@/hooks/useKeplrEmbedded";
+import useOkoCosmos from "@/hooks/useOkoCosmos";
 
 interface TransactionFormProps {
   className?: string;
@@ -50,7 +50,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function TransactionForm({ className }: TransactionFormProps) {
-  const { bech32Address, offlineSigner, chainInfo } = useKeplrEmbedded();
+  const { bech32Address, offlineSigner, chainInfo } = useOkoCosmos();
   const queryClient = useQueryClient();
 
   const {

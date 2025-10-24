@@ -1,9 +1,9 @@
 import { useContext } from "react";
 
-import { KeplrEmbeddedContext } from "./KeplrEmbeddedProvider";
+import { OkoContext } from "./OkoProvider";
 
 export default function useCosmos() {
-  const ctx = useContext(KeplrEmbeddedContext);
+  const ctx = useContext(OkoContext);
   return {
     isReady: ctx.isReady,
     isSignedIn: ctx.isSignedIn,

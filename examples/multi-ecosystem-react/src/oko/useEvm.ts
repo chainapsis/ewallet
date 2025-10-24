@@ -2,10 +2,10 @@ import { useContext } from "react";
 import { createPublicClient, http } from "viem";
 import { sepolia } from "viem/chains";
 
-import { KeplrEmbeddedContext } from "./KeplrEmbeddedProvider";
+import { OkoContext } from "./OkoProvider";
 
 export default function useEvm() {
-  const ctx = useContext(KeplrEmbeddedContext);
+  const ctx = useContext(OkoContext);
   const publicClient = createPublicClient({
     chain: sepolia,
     transport: http(),

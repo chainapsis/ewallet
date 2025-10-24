@@ -5,28 +5,17 @@ import {
   getCosmosAddress,
   type CosmosEWalletInterface,
 } from "@keplr-ewallet/ewallet-sdk-cosmos";
-import {
-  EthEWallet,
-  type EthEWalletInterface,
-  type EIP1193Provider,
-} from "@keplr-ewallet/ewallet-sdk-eth";
-import type { ChainInfo } from "@keplr-wallet/types";
-import type { OfflineDirectSigner } from "@cosmjs/proto-signing";
-import type { Address } from "viem";
+import { ChainInfo } from "@keplr-wallet/types";
+import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 
-interface KeplrEmbeddedContextProps {
+interface OkoCosmosProviderValues {
   isReady: boolean;
   isSignedIn: boolean;
   isSigningIn: boolean;
-  // cosmos
   publicKey: Uint8Array | null;
   bech32Address: string | null;
   offlineSigner: OfflineDirectSigner | null;
   chainInfo: ChainInfo;
-  // evm
-  address: Address | null;
-  provider: EIP1193Provider | null;
-  // auth
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -38,7 +27,9 @@ const chainInfo: ChainInfo = {
   chainName: "Osmosis Testnet",
   chainSymbolImageUrl:
     "https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/osmosis/chain.png",
-  bip44: { coinType: 118 },
+  bip44: {
+    coinType: 118,
+  },
   bech32Config: {
     bech32PrefixAccAddr: "osmo",
     bech32PrefixAccPub: "osmopub",
@@ -77,14 +68,18 @@ const chainInfo: ChainInfo = {
       coinDecimals: 6,
       coinImageUrl:
         "https://raw.githubusercontent.com/chainapsis/keplr-chain-registry/main/images/osmosis/uosmo.png",
-      gasPriceStep: { low: 0.0025, average: 0.025, high: 0.04 },
+      gasPriceStep: {
+        low: 0.0025,
+        average: 0.025,
+        high: 0.04,
+      },
     },
   ],
   features: [],
   isTestnet: true,
 };
 
-const KeplrEmbeddedContext = createContext<KeplrEmbeddedContextProps>({
+const OkoCosmosContext = createContext<OkoCosmosProviderValues>({
   isReady: false,
   isSignedIn: false,
   isSigningIn: false,
@@ -92,26 +87,18 @@ const KeplrEmbeddedContext = createContext<KeplrEmbeddedContextProps>({
   bech32Address: null,
   offlineSigner: null,
   chainInfo,
-  address: null,
-  provider: null,
   signIn: async () => {},
   signOut: async () => {},
 });
 
-function KeplrEmbeddedProvider({ children }: { children: React.ReactNode }) {
-  const [cosmosWallet, setCosmosWallet] =
+function OkoCosmosProvider({ children }: { children: React.ReactNode }) {
+  const [cosmosEWallet, setCosmosEWallet] =
     useState<CosmosEWalletInterface | null>(null);
-  const [ethWallet, setEthWallet] = useState<EthEWalletInterface | null>(null);
-  const [provider, setProvider] = useState<EIP1193Provider | null>(null);
-
   const [offlineSigner, setOfflineSigner] =
     useState<OfflineDirectSigner | null>(null);
-
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
-
   const [publicKey, setPublicKey] = useState<Uint8Array | null>(null);
-  const [address, setAddress] = useState<Address | null>(null);
 
   const bech32Address = publicKey
     ? getBech32Address(
@@ -120,85 +107,49 @@ function KeplrEmbeddedProvider({ children }: { children: React.ReactNode }) {
       )
     : null;
 
-  async function init() {
-    const apiKey = (import.meta as any).env.VITE_KEPLR_EMBEDDED_API_KEY ?? "";
+  async function initOkoCosmos() {
+    const okoCosmos = CosmosEWallet.init({
+      api_key: process.env.NEXT_PUBLIC_OKO_API_KEY ?? "",
+    });
 
-    const cosmosInit = CosmosEWallet.init({ api_key: apiKey });
-    const ethInit = EthEWallet.init({ api_key: apiKey, use_testnet: true });
-
-    if (!cosmosInit.success) {
-      console.error(cosmosInit.err);
-      return;
-    }
-    if (!ethInit.success) {
-      console.error(ethInit.err);
+    if (!okoCosmos.success) {
+      console.error(okoCosmos.err);
       return;
     }
 
-    const c = cosmosInit.data;
-    const e = ethInit.data;
-    const p = e.getEthereumProvider();
-    const signer = c.getOfflineSigner("osmo-test-5");
+    const cosmosEWallet = okoCosmos.data;
+    const offlineSigner = cosmosEWallet.getOfflineSigner("osmo-test-5");
 
     try {
-      const [pk, addr] = await Promise.all([
-        c.getPublicKey().catch(() => null),
-        e.getAddress().catch(() => null),
-      ]);
+      const publicKey = await cosmosEWallet.getPublicKey();
 
-      if (pk) {
-        setPublicKey(pk);
-      }
-      if (addr) {
-        setAddress(addr);
-      }
-      setIsSignedIn(!!pk || !!addr);
-    } catch (err) {
-      console.error(err);
+      setPublicKey(publicKey);
+      setIsSignedIn(true);
+    } catch (error) {
+      // sign in required
+      console.error(error);
       setIsSignedIn(false);
       setPublicKey(null);
-      setAddress(null);
     } finally {
-      setCosmosWallet(c);
-      setEthWallet(e);
-      setProvider(p);
-      setOfflineSigner(signer);
-
-      p.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0xaa36a7" }],
-      }).catch(console.error);
+      setCosmosEWallet(cosmosEWallet);
+      setOfflineSigner(offlineSigner);
     }
   }
 
   async function signIn() {
-    if (!cosmosWallet && !ethWallet) {
-      return;
-    }
-
-    // sign-in via core eWallet (available from either instance)
-    const eWallet = cosmosWallet?.eWallet ?? ethWallet?.eWallet;
-    if (!eWallet) {
+    if (!cosmosEWallet) {
       return;
     }
 
     setIsSigningIn(true);
 
     try {
-      await eWallet?.signIn("google");
+      await cosmosEWallet.eWallet.signIn("google");
 
-      const [pk, addr] = await Promise.all([
-        cosmosWallet?.getPublicKey().catch(() => null),
-        ethWallet?.getAddress().catch(() => null),
-      ]);
+      const publicKey = await cosmosEWallet.getPublicKey();
 
-      if (pk) {
-        setPublicKey(pk);
-      }
-      if (addr) {
-        setAddress(addr);
-      }
       setIsSignedIn(true);
+      setPublicKey(publicKey);
     } catch (error) {
       console.error(error);
     } finally {
@@ -207,38 +158,32 @@ function KeplrEmbeddedProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function signOut() {
-    try {
-      await (cosmosWallet?.eWallet ?? ethWallet?.eWallet)?.signOut();
-    } finally {
-      setIsSignedIn(false);
-      setPublicKey(null);
-      setAddress(null);
-    }
+    await cosmosEWallet?.eWallet.signOut();
+    setIsSignedIn(false);
+    setPublicKey(null);
   }
 
   useEffect(() => {
-    init().catch(console.error);
+    initOkoCosmos().catch(console.error);
   }, []);
 
   return (
-    <KeplrEmbeddedContext.Provider
+    <OkoCosmosContext.Provider
       value={{
-        isReady: !!cosmosWallet && !!ethWallet,
+        isReady: !!cosmosEWallet,
         isSignedIn,
         isSigningIn,
         publicKey,
         bech32Address,
         offlineSigner,
         chainInfo,
-        address,
-        provider,
         signIn,
         signOut,
       }}
     >
       {children}
-    </KeplrEmbeddedContext.Provider>
+    </OkoCosmosContext.Provider>
   );
 }
 
-export { KeplrEmbeddedProvider, KeplrEmbeddedContext };
+export { OkoCosmosProvider, OkoCosmosContext };

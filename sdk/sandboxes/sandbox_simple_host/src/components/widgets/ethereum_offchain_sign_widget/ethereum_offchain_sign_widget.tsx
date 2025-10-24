@@ -4,17 +4,17 @@ import { publicKeyToEthereumAddress } from "@keplr-ewallet/ewallet-sdk-eth";
 
 import styles from "./ethereum_offchain_sign_widget.module.scss";
 import { SignWidget } from "@/components/widgets/sign_widget/sign_widget";
-import { useKeplrEwallet } from "@/hooks/use_keplr_ewallet";
+import { useOko } from "@/hooks/use_oko";
 
 export const EthereumOffchainSignWidget = () => {
-  const { ethEWallet } = useKeplrEwallet();
+  const { okoEth } = useOko();
   const [isLoading, setIsLoading] = useState(false);
   const [signType, setSignType] = useState<"personal_sign" | "typed_data_v4">(
     "personal_sign",
   );
 
   const handleClickEthOffchainSign = async () => {
-    if (ethEWallet === null) {
+    if (okoEth === null) {
       console.error("EthEWallet is not initialized");
       return;
     }
@@ -23,10 +23,9 @@ export const EthereumOffchainSignWidget = () => {
       setIsLoading(true);
 
       if (signType === "personal_sign") {
-        const message =
-          "Welcome to Keplr Embedded! 🚀 Try generating an MPC signature.";
+        const message = "Welcome to Oko! 🚀 Try generating an MPC signature.";
 
-        const signature = await ethEWallet.sign(message);
+        const signature = await okoEth.sign(message);
         console.log("signature", signature);
 
         const hash = hashMessage(message);
@@ -81,7 +80,7 @@ export const EthereumOffchainSignWidget = () => {
           message,
         } as const;
 
-        const provider = await ethEWallet.getEthereumProvider();
+        const provider = await okoEth.getEthereumProvider();
         const signers = await provider.request({
           method: "eth_requestAccounts",
         });

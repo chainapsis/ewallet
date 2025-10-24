@@ -1,12 +1,12 @@
 import React from "react";
 
-import { KeplrEWalletProvider } from "@/components/keplr_ewallet_provider/keplr_ewallet_provider";
+import { OkoProvider } from "@/components/oko_provider/oko_provider";
 import { PreviewPanel } from "@/components/preview_panel/preview_panel";
 
 export const Home = () => {
   return (
-    <KeplrEWalletProvider>
+    <OkoProvider>
       <PreviewPanel />
-    </KeplrEWalletProvider>
+    </OkoProvider>
   );
 };

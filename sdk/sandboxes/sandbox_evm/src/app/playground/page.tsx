@@ -5,8 +5,7 @@ import { SigningPlayground } from "@keplr-ewallet-sandbox-evm/app/playground/_co
 
 export const metadata = getMetadata({
   title: "Signing Playground",
-  description:
-    "Test personal signing and EIP-712 permit signing with Keplr E-Wallet",
+  description: "Test personal signing and EIP-712 permit signing with Oko",
 });
 
 const Playground: NextPage = () => {

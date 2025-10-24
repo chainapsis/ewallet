@@ -1,7 +1,7 @@
-# Keplr Embedded Multi‑Ecosystem (React + Vite)
+# Oko Multi‑Ecosystem (React + Vite)
 
 React + Vite example that connects to both Cosmos (Osmosis testnet) and EVM
-(Ethereum Sepolia) using Keplr Embedded. Shows social sign‑in, account display,
+(Ethereum Sepolia) using Oko. Shows social sign‑in, account display,
 and simple transfers for each ecosystem.
 
 ### Requirements
@@ -11,7 +11,7 @@ and simple transfers for each ecosystem.
 
 ### Environment Variables
 
-Create a `.env` file in this directory and set your Keplr Embedded API key:
+Create a `.env` file in this directory and set your Oko API key:
 
 ```bash
 cp .env.example .env
@@ -19,11 +19,11 @@ cp .env.example .env
 
 ```bash
 # .env
-VITE_KEPLR_EMBEDDED_API_KEY=YOUR_ISSUED_API_KEY
+VITE_OKO_API_KEY=YOUR_ISSUED_API_KEY
 ```
 
 Get your API key from the
-[Keplr Embedded Dashboard](https://dapp.embed.keplr.app).
+[Oko Dashboard](https://dapp.oko.app).
 
 ### How to Run
 
