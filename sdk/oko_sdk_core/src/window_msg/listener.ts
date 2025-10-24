@@ -10,7 +10,7 @@ import type { InitPayload } from "@oko-wallet-sdk-core/types/init";
 export function registerMsgListener(
   _eWallet: KeplrEWalletInterface,
 ): Promise<Result<InitPayload, string>> {
-  if (window.__keplr_ewallet_ev) {
+  if (window.__oko_ev) {
     // TODO: theoretically unreachable but this can happen
     // Later we will report to centralized logging system
     console.error("[keplr] isn't it already initailized?");
@@ -44,7 +44,7 @@ export function registerMsgListener(
     }
 
     window.addEventListener("message", handler);
-    window.__keplr_ewallet_ev = handler;
+    window.__oko_ev = handler;
     console.log("[keplr] msg listener registered");
   });
 }

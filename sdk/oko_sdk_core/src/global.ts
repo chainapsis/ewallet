@@ -2,9 +2,9 @@ import type { KeplrEWalletInterface } from "./types";
 
 declare global {
   interface Window {
-    __keplr_ewallet: KeplrEWalletInterface | null | undefined;
-    __keplr_ewallet_locked: boolean;
-    __keplr_ewallet_ev: ((ev: MessageEvent) => void) | null | undefined;
+    __oko: KeplrEWalletInterface | null | undefined;
+    __oko_locked: boolean;
+    __oko_ev: ((ev: MessageEvent) => void) | null | undefined;
   }
 }
 

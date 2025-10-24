@@ -25,21 +25,21 @@ export function init(
       };
     }
 
-    if (window.__keplr_ewallet_locked === true) {
+    if (window.__oko_locked === true) {
       console.warn(
         "keplr ewallet init is locked. Is init being exeucted concurrently?",
       );
       return { success: false, err: { type: "is_locked" } };
     } else {
-      window.__keplr_ewallet_locked = true;
+      window.__oko_locked = true;
     }
 
     console.log("[keplr] sdk endpoint: %s", args.sdk_endpoint);
 
-    if (window.__keplr_ewallet) {
+    if (window.__oko) {
       console.warn("[keplr] already initialized");
 
-      return { success: true, data: window.__keplr_ewallet };
+      return { success: true, data: window.__oko };
     }
 
     const hostOrigin = new URL(window.location.toString()).origin;
@@ -83,12 +83,12 @@ export function init(
       sdkEndpoint,
     );
 
-    if (window.__keplr_ewallet) {
+    if (window.__oko) {
       console.warn("[keplr] ewallet has been initialized by another process");
 
-      return { success: true, data: window.__keplr_ewallet };
+      return { success: true, data: window.__oko };
     } else {
-      window.__keplr_ewallet = ewalletCore;
+      window.__oko = ewalletCore;
       return { success: true, data: ewalletCore };
     }
   } catch (err: any) {
@@ -96,8 +96,8 @@ export function init(
 
     throw new Error("[keplr] sdk init fail, unreachable");
   } finally {
-    if (window.__keplr_ewallet_locked === true) {
-      window.__keplr_ewallet_locked = false;
+    if (window.__oko_locked === true) {
+      window.__oko_locked = false;
     }
   }
 }

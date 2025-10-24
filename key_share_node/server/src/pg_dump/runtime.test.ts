@@ -10,7 +10,7 @@ import { startPgDumpRuntime } from "@oko-wallet-ksn-server/pg_dump/runtime";
 import { processPgDump } from "@oko-wallet-ksn-server/pg_dump/dump";
 
 describe("pg_dump_runtime_test", () => {
-  const dumpDir = join(os.homedir(), "keplr_ewallet_data");
+  const dumpDir = join(os.homedir(), "oko_data");
 
   let pool: Pool;
 
