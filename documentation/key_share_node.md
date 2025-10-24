@@ -499,7 +499,7 @@ curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/restore \
 
 ## Upgrade
 
-[/documentation/node_upgrade.md]
+See [Node Upgrade Guide](./node_upgrade.md) for detailed upgrade instructions.
 
 ## Security
 
