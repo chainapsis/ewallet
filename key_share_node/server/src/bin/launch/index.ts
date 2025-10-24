@@ -12,6 +12,7 @@ import type { ServerState } from "@keplr-ewallet-ksn-server/state";
 import { getGitCommitHash } from "./git";
 import pJson from "@keplr-ewallet-ksn-server/../package.json";
 import { logger } from "@keplr-ewallet-ksn-server/logger";
+import { resetDB } from "./reset_db";
 
 const ONE_DAY_MS = 1 * 86400;
 
@@ -38,7 +39,24 @@ async function main() {
 
   if (opts.resetDb) {
     logger.info("DB reset flag detected, running migration...");
-    // @TODO
+
+    const resetDBRes = await resetDB({
+      database: process.env.DB_NAME,
+      host: process.env.DB_HOST,
+      password: process.env.DB_PASSWORD,
+      user: process.env.DB_USER,
+      port: Number(process.env.DB_PORT),
+      ssl: process.env.DB_SSL === "true" ? true : false,
+    });
+    if (!resetDBRes.success) {
+      logger.error(
+        "%s: DB reset failed, exiting process, err: %s",
+        chalk.bold.red("Error"),
+        resetDBRes.err,
+      );
+
+      process.exit(1);
+    }
 
     logger.info("DB reset completed");
   }
@@ -72,6 +90,14 @@ async function main() {
     logger.info("Bypass DB backup checking, nodeId: %s", opts.nodeId);
   }
 
+  const app = makeApp();
+
+  const git_hash = getGitCommitHash();
+  const version = pJson.version;
+
+  const now = dayjs();
+  const launch_time = now.toISOString();
+
   const createPostgresRes = await connectPG({
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
@@ -80,20 +106,11 @@ async function main() {
     port: Number(process.env.DB_PORT),
     ssl: process.env.DB_SSL === "true" ? true : false,
   });
-
-  if (createPostgresRes.success === false) {
+  if (!createPostgresRes.success) {
     logger.error(createPostgresRes.err);
 
-    return createPostgresRes;
+    process.exit(1);
   }
-
-  const app = makeApp();
-
-  const git_hash = getGitCommitHash();
-  const version = pJson.version;
-
-  const now = dayjs();
-  const launch_time = now.toISOString();
 
   const state: ServerState = {
     db: createPostgresRes.data,
