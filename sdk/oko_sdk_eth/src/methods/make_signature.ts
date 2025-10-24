@@ -120,7 +120,7 @@ async function handleSigningFlow(
     const modal_id = uuidv4();
 
     const openModalMsg: EWalletMsgOpenModal = {
-      target: "keplr_ewallet_attached",
+      target: "oko_attached",
       msg_type: "open_modal",
       payload: {
         modal_type: "eth/make_signature",

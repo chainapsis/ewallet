@@ -29,7 +29,7 @@ export function registerMsgListener(
 
       if (msg.msg_type === "init") {
         const ack: EWalletMsgInitAck = {
-          target: "keplr_ewallet_attached",
+          target: "oko_attached",
           msg_type: "init_ack",
           payload: { success: true, data: null },
         };

@@ -1,1 +1,1 @@
-export const EWALLET_ATTACHED_TARGET = "keplr_ewallet_attached";
+export const EWALLET_ATTACHED_TARGET = "oko_attached";

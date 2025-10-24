@@ -19,7 +19,7 @@ export const ErrorWidget: FC<LoginWidgetProps> = () => {
         const eWallet = okoCosmos.eWallet;
 
         const invalidMsg = {
-          target: "keplr_ewallet_attached",
+          target: "oko_attached",
           msg_type: "open_modal",
           payload: {
             modal_type: "eth/make_signature",
