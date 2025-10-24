@@ -4,11 +4,12 @@ This guide explains how to upgrade your Key Share Node to the latest version.
 
 ## Upgrade Process
 
-### 1. Pull Latest Changes
+### 1. Pull Latest Changes & Checkout the version
 
 ```bash
 cd /path/to/ewallet
 git pull origin main
+git checkout <version>
 ```
 
 ### 2. Navigate to Docker Directory
