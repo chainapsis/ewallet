@@ -294,11 +294,7 @@ export async function reshareKeyShare(
     }
 
     // Update existing key share
-    const updateKeyShareRes = await updateReshare(db, {
-      wallet_id,
-      enc_share: newEncryptedShareBuffer,
-      status: "active" as KeyShareStatus,
-    });
+    const updateKeyShareRes = await updateReshare(db, wallet_id);
     if (updateKeyShareRes.success === false) {
       return {
         success: false,

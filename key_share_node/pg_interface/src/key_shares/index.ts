@@ -91,21 +91,20 @@ LIMIT 1
 
 export async function updateReshare(
   db: Pool | PoolClient,
-  keyShareData: UpdateKeyShareRequest,
+  walletId: string,
 ): Promise<Result<KeyShare, string>> {
   try {
-    // TODO: verify encrypted share @jinwoo
-
     const query = `
 UPDATE key_shares AS ks
 SET 
   status = $1,
   reshared_at = NOW()
+  updated_at = NOW()
 WHERE ks.wallet_id = $2
 RETURNING *
 `;
 
-    const values = [keyShareData.status, keyShareData.wallet_id];
+    const values = ["active" as KeyShareStatus, walletId];
 
     const result = await db.query<KeyShare>(query, values);
 
