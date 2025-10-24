@@ -43,6 +43,7 @@ services:
       - encryption_secret
     depends_on:
       - key_share_node_pg
+    command: "yarn start ${DB_RESET:+--reset-db}"
 
 secrets:
   encryption_secret:

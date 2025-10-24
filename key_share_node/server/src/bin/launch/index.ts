@@ -36,6 +36,13 @@ async function main() {
     process.exit(1);
   }
 
+  if (opts.resetDb) {
+    logger.info("DB reset flag detected, running migration...");
+    // @TODO
+
+    logger.info("DB reset completed");
+  }
+
   if (opts.nodeId === "1") {
     logger.debug("Checking DB backup, nodeId: %s", opts.nodeId);
 
