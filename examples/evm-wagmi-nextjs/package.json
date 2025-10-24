@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet-examples/evm-wagmi-nextjs",
+  "name": "@oko-wallet-examples/evm-wagmi-nextjs",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "5.2.2",
-    "@keplr-ewallet/ewallet-sdk-eth": "0.0.6-rc.110",
+    "@oko-wallet/ewallet-sdk-eth": "0.0.6-rc.110",
     "@rainbow-me/rainbowkit": "2.2.8",
     "@tanstack/react-query": "5.90.2",
     "next": "15.5.4",

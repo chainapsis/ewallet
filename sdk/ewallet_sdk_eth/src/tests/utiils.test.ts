@@ -13,7 +13,7 @@ import {
   toSignableTransaction,
   isSignableTransaction,
   toTransactionSerializable,
-} from "@keplr-ewallet-sdk-eth/utils";
+} from "@oko-wallet-sdk-eth/utils";
 
 describe("publicKeyToEthereumAddress", () => {
   it("should convert compressed public key string to Ethereum address", () => {

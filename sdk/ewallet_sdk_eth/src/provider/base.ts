@@ -7,7 +7,7 @@ import {
 } from "viem";
 import { v4 as uuidv4 } from "uuid";
 
-import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
+import type { EthSigner } from "@oko-wallet-sdk-eth/types";
 import type {
   RpcMethod,
   RpcResponse,
@@ -15,13 +15,13 @@ import type {
   RpcResponseData,
   PublicRpcMethod,
   WalletRpcMethod,
-} from "@keplr-ewallet-sdk-eth/rpc";
-import { PUBLIC_RPC_METHODS } from "@keplr-ewallet-sdk-eth/rpc";
+} from "@oko-wallet-sdk-eth/rpc";
+import { PUBLIC_RPC_METHODS } from "@oko-wallet-sdk-eth/rpc";
 import {
   parseTypedData,
   validateHexChainId,
   validateChain,
-} from "@keplr-ewallet-sdk-eth/utils";
+} from "@oko-wallet-sdk-eth/utils";
 import { ProviderEventEmitter } from "./emitter";
 import type {
   EIP1193Provider,

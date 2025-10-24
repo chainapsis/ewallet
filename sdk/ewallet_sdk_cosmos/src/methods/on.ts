@@ -1,7 +1,7 @@
 import type {
   CosmosEWalletInterface,
   KeplrEWalletCosmosEventHandler2,
-} from "@keplr-ewallet-sdk-cosmos/types";
+} from "@oko-wallet-sdk-cosmos/types";
 
 export async function on(
   this: CosmosEWalletInterface,

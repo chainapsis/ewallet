@@ -1,12 +1,12 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 import type { Hex } from "viem";
 
-import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
+import { publicKeyToEthereumAddress } from "@oko-wallet-sdk-eth/utils";
 import type {
   EthEWalletInterface,
   EthEWalletState,
-} from "@keplr-ewallet-sdk-eth/types";
-import type { LazyInitError } from "@keplr-ewallet-sdk-eth/errors";
+} from "@oko-wallet-sdk-eth/types";
+import type { LazyInitError } from "@oko-wallet-sdk-eth/errors";
 
 export async function lazyInit(
   ethEwallet: EthEWalletInterface,

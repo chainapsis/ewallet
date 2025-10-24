@@ -1,11 +1,11 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
-import { KEPLR_IFRAME_ID } from "@keplr-ewallet-sdk-core/iframe";
-import { registerMsgListener } from "@keplr-ewallet-sdk-core/window_msg/listener";
+import { KEPLR_IFRAME_ID } from "@oko-wallet-sdk-core/iframe";
+import { registerMsgListener } from "@oko-wallet-sdk-core/window_msg/listener";
 import type {
   KeplrEWalletInterface,
   KeplrEWalletState,
-} from "@keplr-ewallet-sdk-core/types";
+} from "@oko-wallet-sdk-core/types";
 
 export async function lazyInit(
   eWallet: KeplrEWalletInterface,

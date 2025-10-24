@@ -6,20 +6,17 @@ import {
   getKeyShareByWalletId,
   getUserByEmail,
   getWalletByPublicKey,
-} from "@keplr-ewallet/ksn-pg-interface";
-import { Bytes, type Bytes33, type Bytes64 } from "@keplr-ewallet/bytes";
+} from "@oko-wallet/ksn-pg-interface";
+import { Bytes, type Bytes33, type Bytes64 } from "@oko-wallet/bytes";
 
-import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
-import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
+import { connectPG, resetPgDatabase } from "@oko-wallet-ksn-server/database";
+import { testPgConfig } from "@oko-wallet-ksn-server/database/test_config";
 import {
   checkKeyShare,
   getKeyShare,
   registerKeyShare,
-} from "@keplr-ewallet-ksn-server/api/key_share";
-import {
-  decryptData,
-  TEMP_ENC_SECRET,
-} from "@keplr-ewallet-ksn-server/encrypt";
+} from "@oko-wallet-ksn-server/api/key_share";
+import { decryptData, TEMP_ENC_SECRET } from "@oko-wallet-ksn-server/encrypt";
 
 describe("key_share_test", () => {
   let pool: Pool;

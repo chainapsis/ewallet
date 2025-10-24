@@ -1,12 +1,12 @@
-import { KeplrEWallet } from "@keplr-ewallet/ewallet-sdk-core";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import { KeplrEWallet } from "@oko-wallet/ewallet-sdk-core";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import type {
   EthEWalletInterface,
   EthEWalletInitArgs,
-} from "@keplr-ewallet-sdk-eth/types";
-import type { EthEwalletInitError } from "@keplr-ewallet-sdk-eth/errors";
-import { EthEWallet } from "@keplr-ewallet-sdk-eth/constructor";
+} from "@oko-wallet-sdk-eth/types";
+import type { EthEwalletInitError } from "@oko-wallet-sdk-eth/errors";
+import { EthEWallet } from "@oko-wallet-sdk-eth/constructor";
 
 export function init(
   args: EthEWalletInitArgs,

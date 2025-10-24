@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/key-share-node-server",
+  "name": "@oko-wallet/key-share-node-server",
   "packageManager": "yarn@4.7.0",
   "private": true,
   "version": "0.0.3-alpha.5",
@@ -13,10 +13,10 @@
     "jest": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "workspace:*",
-    "@keplr-ewallet/ksn-interface": "workspace:*",
-    "@keplr-ewallet/ksn-pg-interface": "workspace:*",
-    "@keplr-ewallet/stdlib-js": "workspace:*",
+    "@oko-wallet/bytes": "workspace:*",
+    "@oko-wallet/ksn-interface": "workspace:*",
+    "@oko-wallet/ksn-pg-interface": "workspace:*",
+    "@oko-wallet/stdlib-js": "workspace:*",
     "chalk": "*",
     "commander": "*",
     "cors": "^2.8.5",

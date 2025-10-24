@@ -1,14 +1,14 @@
 import {
   EventEmitter3,
   type KeplrEWalletInterface,
-} from "@keplr-ewallet/ewallet-sdk-core";
+} from "@oko-wallet/ewallet-sdk-core";
 
 import type {
   CosmosEWalletInterface,
   CosmosEWalletStaticInterface,
   KeplrEWalletCosmosEvent2,
   KeplrEWalletCosmosEventHandler2,
-} from "@keplr-ewallet-sdk-cosmos/types";
+} from "@oko-wallet-sdk-cosmos/types";
 import { lazyInit } from "./private/lazy_init";
 
 export const CosmosEWallet = function (

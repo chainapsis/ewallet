@@ -1,11 +1,11 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 import {
   createTables,
   dropAllTablesIfExist,
-} from "@keplr-ewallet/ksn-pg-interface";
+} from "@oko-wallet/ksn-pg-interface";
 
-import type { PgDatabaseConfig } from "@keplr-ewallet-ksn-server/database";
-import { connectPG } from "@keplr-ewallet-ksn-server/database";
+import type { PgDatabaseConfig } from "@oko-wallet-ksn-server/database";
+import { connectPG } from "@oko-wallet-ksn-server/database";
 
 export async function resetDB(
   pgConfig: PgDatabaseConfig,

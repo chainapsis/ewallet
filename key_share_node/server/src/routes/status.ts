@@ -1,9 +1,9 @@
 import type { Express, Response } from "express";
-import type { ServerStatus } from "@keplr-ewallet/ksn-interface/status";
-import { getLatestCompletedPgDump } from "@keplr-ewallet/ksn-pg-interface";
+import type { ServerStatus } from "@oko-wallet/ksn-interface/status";
+import { getLatestCompletedPgDump } from "@oko-wallet/ksn-pg-interface";
 import dayjs from "dayjs";
 
-import { logger } from "@keplr-ewallet-ksn-server/logger";
+import { logger } from "@oko-wallet-ksn-server/logger";
 
 export function addStatusRoutes(app: Express) {
   app.get("/status", async (req, res: Response<ServerStatus>) => {

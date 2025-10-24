@@ -1,7 +1,7 @@
-import type { KSNodeApiErrorResponse } from "@keplr-ewallet/ksn-interface/response";
+import type { KSNodeApiErrorResponse } from "@oko-wallet/ksn-interface/response";
 import type { Request, Response, NextFunction } from "express";
 
-import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
+import { ErrorCodeMap } from "@oko-wallet-ksn-server/error";
 
 export interface AdminAuthenticatedRequest<T = any> extends Request {
   body: T;

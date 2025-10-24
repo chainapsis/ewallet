@@ -23,8 +23,8 @@
     "baseUrl": ".",
     "rootDir": "./src",
     "paths": {
-      "@keplr-ewallet-sdk-eth/*": ["./src/*"],
-      "@keplr-ewallet-sdk-core/*": ["../ewallet_sdk_core/src/*"]
+      "@oko-wallet-sdk-eth/*": ["./src/*"],
+      "@oko-wallet-sdk-core/*": ["../ewallet_sdk_core/src/*"]
     }
   },
   "include": ["src/**/*"],

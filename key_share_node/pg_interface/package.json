@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/ksn-pg-interface",
+  "name": "@oko-wallet/ksn-pg-interface",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "main": "./src/index.ts",
@@ -12,9 +12,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "workspace:*",
-    "@keplr-ewallet/ksn-interface": "workspace:*",
-    "@keplr-ewallet/stdlib-js": "workspace:*",
+    "@oko-wallet/bytes": "workspace:*",
+    "@oko-wallet/ksn-interface": "workspace:*",
+    "@oko-wallet/stdlib-js": "workspace:*",
     "pg": "*",
     "pgsql-parser": "^17.7.8",
     "uuid": "*"

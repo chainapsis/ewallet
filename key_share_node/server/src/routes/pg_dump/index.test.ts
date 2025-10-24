@@ -4,14 +4,14 @@ import request from "supertest";
 import express from "express";
 import { Pool } from "pg";
 import fs from "node:fs/promises";
-import { getPgDumpById, getAllPgDumps } from "@keplr-ewallet/ksn-pg-interface";
-import { createUser, getUserByEmail } from "@keplr-ewallet/ksn-pg-interface";
+import { getPgDumpById, getAllPgDumps } from "@oko-wallet/ksn-pg-interface";
+import { createUser, getUserByEmail } from "@oko-wallet/ksn-pg-interface";
 import dayjs from "dayjs";
 
-import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
-import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
+import { connectPG, resetPgDatabase } from "@oko-wallet-ksn-server/database";
+import { testPgConfig } from "@oko-wallet-ksn-server/database/test_config";
 import { makePgDumpRouter } from ".";
-import type { ServerState } from "@keplr-ewallet-ksn-server/state";
+import type { ServerState } from "@oko-wallet-ksn-server/state";
 
 function makeUnsuccessfulAppStatus(pool: Pool): ServerState {
   return {

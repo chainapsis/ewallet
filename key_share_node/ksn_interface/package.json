@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/ksn-interface",
+  "name": "@oko-wallet/ksn-interface",
   "packageManager": "yarn@4.7.0",
   "version": "0.0.2-alpha.39",
   "type": "module",
@@ -48,7 +48,7 @@
     "directory": "key_share_node/ksn_interface"
   },
   "dependencies": {
-    "@keplr-ewallet/bytes": "^0.0.3-alpha.42"
+    "@oko-wallet/bytes": "^0.0.3-alpha.42"
   },
   "devDependencies": {
     "@types/jest": "*",

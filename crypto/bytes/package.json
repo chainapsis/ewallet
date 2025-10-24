@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/bytes",
+  "name": "@oko-wallet/bytes",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -20,7 +20,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.24"
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.24"
   },
   "devDependencies": {
     "@jest/globals": "*",

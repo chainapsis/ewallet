@@ -4,8 +4,8 @@ import type {
   CreateKeyShareRequest,
   KeyShare,
   KeyShareStatus,
-} from "@keplr-ewallet/ksn-interface/key_share";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+} from "@oko-wallet/ksn-interface/key_share";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 export async function createKeyShare(
   db: Pool | PoolClient,

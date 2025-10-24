@@ -6,23 +6,23 @@ import type {
   GetKeyShareResponse,
   RegisterKeyShareBody,
   ReshareKeyShareBody,
-} from "@keplr-ewallet/ksn-interface/key_share";
-import { Bytes, type Bytes64 } from "@keplr-ewallet/bytes";
-import type { KSNodeApiResponse } from "@keplr-ewallet/ksn-interface/response";
+} from "@oko-wallet/ksn-interface/key_share";
+import { Bytes, type Bytes64 } from "@oko-wallet/bytes";
+import type { KSNodeApiResponse } from "@oko-wallet/ksn-interface/response";
 
 import {
   checkKeyShare,
   getKeyShare,
   registerKeyShare,
   reshareKeyShare,
-} from "@keplr-ewallet-ksn-server/api/key_share";
+} from "@oko-wallet-ksn-server/api/key_share";
 import {
   bearerTokenMiddleware,
   type AuthenticatedRequest,
-} from "@keplr-ewallet-ksn-server/middlewares";
-import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
-import type { ResponseLocal } from "@keplr-ewallet-ksn-server/routes/io";
-import type { KSNodeRequest } from "@keplr-ewallet-ksn-server/routes/io";
+} from "@oko-wallet-ksn-server/middlewares";
+import { ErrorCodeMap } from "@oko-wallet-ksn-server/error";
+import type { ResponseLocal } from "@oko-wallet-ksn-server/routes/io";
+import type { KSNodeRequest } from "@oko-wallet-ksn-server/routes/io";
 
 export function makeKeyshareRouter() {
   const router = Router();

@@ -7,7 +7,7 @@ import {
   getUserByEmail,
   getWalletByPublicKey,
   updateReshare,
-} from "@keplr-ewallet/ksn-pg-interface";
+} from "@oko-wallet/ksn-pg-interface";
 import type {
   CheckKeyShareRequest,
   CheckKeyShareResponse,
@@ -15,10 +15,10 @@ import type {
   GetKeyShareResponse,
   RegisterKeyShareRequest,
   ReshareKeyShareRequest,
-} from "@keplr-ewallet/ksn-interface/key_share";
-import type { KSNodeApiResponse } from "@keplr-ewallet/ksn-interface/response";
+} from "@oko-wallet/ksn-interface/key_share";
+import type { KSNodeApiResponse } from "@oko-wallet/ksn-interface/response";
 
-import { decryptData, encryptData } from "@keplr-ewallet-ksn-server/encrypt";
+import { decryptData, encryptData } from "@oko-wallet-ksn-server/encrypt";
 
 export async function registerKeyShare(
   db: Pool | PoolClient,

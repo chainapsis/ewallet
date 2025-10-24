@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/ewallet-sdk-common",
+  "name": "@oko-wallet/ewallet-sdk-common",
   "version": "0.0.2-alpha.0",
   "type": "module",
   "main": "./dist/index.js",

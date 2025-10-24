@@ -1,17 +1,17 @@
 import type {
   KeplrEwalletInitArgs,
   KeplrEWalletInterface,
-} from "@keplr-ewallet/ewallet-sdk-core";
+} from "@oko-wallet/ewallet-sdk-core";
 import type { Address, Hex } from "viem";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
-import type { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
+import type { EWalletEIP1193Provider } from "@oko-wallet-sdk-eth/provider";
 import type { EWalletAccount } from "./account";
 import type { EthSignParams, EthSignResult } from "./sign";
 import type {
   EthEwalletInitError,
   LazyInitError,
-} from "@keplr-ewallet-sdk-eth/errors";
+} from "@oko-wallet-sdk-eth/errors";
 
 export interface EthEWalletState {
   publicKey: Hex | null;

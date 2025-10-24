@@ -15,9 +15,9 @@ export default [
       sourcemap: true,
     },
     external: [
-      "@keplr-ewallet/stdlib-js",
+      "@oko-wallet/stdlib-js",
       "@keplr-wallet/types",
-      "@keplr-ewallet/ewallet-sdk-core",
+      "@oko-wallet/ewallet-sdk-core",
       "eventemitter3",
       "viem",
       "uuid",

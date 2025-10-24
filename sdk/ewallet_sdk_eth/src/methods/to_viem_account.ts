@@ -4,8 +4,8 @@ import type {
   EthEWalletInterface,
   EthSignParams,
   EWalletAccount,
-} from "@keplr-ewallet-sdk-eth/types";
-import { toRpcTransactionRequest } from "@keplr-ewallet-sdk-eth/utils";
+} from "@oko-wallet-sdk-eth/types";
+import { toRpcTransactionRequest } from "@oko-wallet-sdk-eth/utils";
 
 export async function toViemAccount(
   this: EthEWalletInterface,

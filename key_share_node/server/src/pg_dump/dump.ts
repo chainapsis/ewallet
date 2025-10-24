@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import type { Pool } from "pg";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 import {
   dump,
   createPgDump,
@@ -8,9 +8,9 @@ import {
   getOldCompletedPgDumps,
   type PgDumpConfig,
   updatePgDumpStatus,
-} from "@keplr-ewallet/ksn-pg-interface";
+} from "@oko-wallet/ksn-pg-interface";
 
-import { getSecondsFromNow } from "@keplr-ewallet-ksn-server/utils/time";
+import { getSecondsFromNow } from "@oko-wallet-ksn-server/utils/time";
 
 export interface PgDumpResult {
   dumpId: string;

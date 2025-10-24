@@ -1,13 +1,13 @@
 import type { AccountData } from "@cosmjs/amino";
 
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 import {
   isEthereumCompatible,
   getEthAddress,
   getCosmosAddress,
   getBech32Address,
-} from "@keplr-ewallet-sdk-cosmos/utils/address";
-import { sendGetCosmosChainInfo } from "@keplr-ewallet-sdk-cosmos/utils/chain";
+} from "@oko-wallet-sdk-cosmos/utils/address";
+import { sendGetCosmosChainInfo } from "@oko-wallet-sdk-cosmos/utils/chain";
 
 export async function getAccounts(
   this: CosmosEWalletInterface,

@@ -1,5 +1,5 @@
 {
-  "name": "@keplr-ewallet/dotenv",
+  "name": "@oko-wallet/dotenv",
   "version": "0.0.2-alpha.9",
   "packageManager": "yarn@4.7.0",
   "type": "module",
@@ -17,7 +17,7 @@
     "directory": "stdlib_js"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.24"
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.24"
   },
   "devDependencies": {
     "@types/jest": "*",

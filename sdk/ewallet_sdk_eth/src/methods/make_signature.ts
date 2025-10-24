@@ -2,7 +2,7 @@ import type {
   EWalletMsgOpenModal,
   MakeEthereumSigData,
   ChainInfoForAttachedModal,
-} from "@keplr-ewallet/ewallet-sdk-core";
+} from "@oko-wallet/ewallet-sdk-core";
 import { v4 as uuidv4 } from "uuid";
 
 import type {
@@ -10,13 +10,13 @@ import type {
   EthSignParams,
   EthSignResult,
   MakeSignatureBasePayload,
-} from "@keplr-ewallet-sdk-eth/types";
+} from "@oko-wallet-sdk-eth/types";
 import {
   EthereumRpcError,
   ProviderRpcErrorCode,
   RpcErrorCode,
-} from "@keplr-ewallet-sdk-eth/provider";
-import { toSignableTransaction } from "@keplr-ewallet-sdk-eth/utils";
+} from "@oko-wallet-sdk-eth/provider";
+import { toSignableTransaction } from "@oko-wallet-sdk-eth/utils";
 
 export async function makeSignature(
   this: EthEWalletInterface,

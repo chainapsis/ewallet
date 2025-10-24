@@ -6,6 +6,6 @@ export default {
   testEnvironment: "node",
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
   moduleNameMapper: {
-    "^@keplr-ewallet-ksn-server/(.*)$": "<rootDir>/src/$1",
+    "^@oko-wallet-ksn-server/(.*)$": "<rootDir>/src/$1",
   },
 };

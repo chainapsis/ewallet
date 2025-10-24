@@ -3371,7 +3371,7 @@ __metadata:
     "@cosmjs/stargate": "npm:0.36.1"
     "@eslint/eslintrc": "npm:3.1.0"
     "@hookform/resolvers": "npm:5.2.2"
-    "@keplr-ewallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.120"
+    "@oko-wallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.120"
     "@keplr-wallet/types": "npm:0.12.280"
     "@keplr-wallet/unit": "npm:0.12.280"
     "@tailwindcss/postcss": "npm:^4"
@@ -3390,13 +3390,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet-examples/evm-nextjs@workspace:examples/evm-nextjs":
+"@oko-wallet-examples/evm-nextjs@workspace:examples/evm-nextjs":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet-examples/evm-nextjs@workspace:examples/evm-nextjs"
+  resolution: "@oko-wallet-examples/evm-nextjs@workspace:examples/evm-nextjs"
   dependencies:
     "@eslint/eslintrc": "npm:3.1.0"
     "@hookform/resolvers": "npm:5.2.2"
-    "@keplr-ewallet/ewallet-sdk-eth": "npm:0.0.6-rc.110"
+    "@oko-wallet/ewallet-sdk-eth": "npm:0.0.6-rc.110"
     "@tailwindcss/postcss": "npm:^4"
     "@tanstack/react-query": "npm:5.90.2"
     "@types/node": "npm:20.14.12"
@@ -3415,13 +3415,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet-examples/evm-wagmi-nextjs@workspace:examples/evm-wagmi-nextjs":
+"@oko-wallet-examples/evm-wagmi-nextjs@workspace:examples/evm-wagmi-nextjs":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet-examples/evm-wagmi-nextjs@workspace:examples/evm-wagmi-nextjs"
+  resolution: "@oko-wallet-examples/evm-wagmi-nextjs@workspace:examples/evm-wagmi-nextjs"
   dependencies:
     "@eslint/eslintrc": "npm:3.1.0"
     "@hookform/resolvers": "npm:5.2.2"
-    "@keplr-ewallet/ewallet-sdk-eth": "npm:0.0.6-rc.110"
+    "@oko-wallet/ewallet-sdk-eth": "npm:0.0.6-rc.110"
     "@rainbow-me/rainbowkit": "npm:2.2.8"
     "@tailwindcss/postcss": "npm:^4"
     "@tanstack/react-query": "npm:5.90.2"
@@ -3442,16 +3442,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet-examples/multi-ecosystem-react@workspace:examples/multi-ecosystem-react":
+"@oko-wallet-examples/multi-ecosystem-react@workspace:examples/multi-ecosystem-react":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet-examples/multi-ecosystem-react@workspace:examples/multi-ecosystem-react"
+  resolution: "@oko-wallet-examples/multi-ecosystem-react@workspace:examples/multi-ecosystem-react"
   dependencies:
     "@cosmjs/encoding": "npm:0.34.0"
     "@cosmjs/stargate": "npm:0.34.0"
     "@eslint/js": "npm:9.36.0"
     "@hookform/resolvers": "npm:5.2.2"
-    "@keplr-ewallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.120"
-    "@keplr-ewallet/ewallet-sdk-eth": "npm:0.0.6-rc.110"
+    "@oko-wallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.120"
+    "@oko-wallet/ewallet-sdk-eth": "npm:0.0.6-rc.110"
     "@keplr-wallet/types": "npm:0.12.257"
     "@keplr-wallet/unit": "npm:0.12.257"
     "@tailwindcss/postcss": "npm:^4"
@@ -3477,12 +3477,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/bytes@npm:^0.0.3-alpha.42, @keplr-ewallet/bytes@workspace:*, @keplr-ewallet/bytes@workspace:crypto/bytes":
+"@oko-wallet/bytes@npm:^0.0.3-alpha.42, @oko-wallet/bytes@workspace:*, @oko-wallet/bytes@workspace:crypto/bytes":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/bytes@workspace:crypto/bytes"
+  resolution: "@oko-wallet/bytes@workspace:crypto/bytes"
   dependencies:
     "@jest/globals": "npm:*"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.24"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.24"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
@@ -3492,9 +3492,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ci@workspace:internals/ci":
+"@oko-wallet/ci@workspace:internals/ci":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/ci@workspace:internals/ci"
+  resolution: "@oko-wallet/ci@workspace:internals/ci"
   dependencies:
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
@@ -3509,11 +3509,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/dotenv@workspace:lib/dotenv":
+"@oko-wallet/dotenv@workspace:lib/dotenv":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/dotenv@workspace:lib/dotenv"
+  resolution: "@oko-wallet/dotenv@workspace:lib/dotenv"
   dependencies:
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.24"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.24"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
@@ -3525,9 +3525,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-common@workspace:sdk/ewallet_sdk_common":
+"@oko-wallet/ewallet-sdk-common@workspace:sdk/ewallet_sdk_common":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/ewallet-sdk-common@workspace:sdk/ewallet_sdk_common"
+  resolution: "@oko-wallet/ewallet-sdk-common@workspace:sdk/ewallet_sdk_common"
   dependencies:
     "@jest/globals": "npm:*"
     "@types/jest": "npm:*"
@@ -3539,11 +3539,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.102, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @keplr-ewallet/ewallet-sdk-core@npm:^0.0.6-rc.98, @keplr-ewallet/ewallet-sdk-core@workspace:*, @keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
+"@oko-wallet/ewallet-sdk-core@npm:^0.0.6-rc.102, @oko-wallet/ewallet-sdk-core@npm:^0.0.6-rc.38, @oko-wallet/ewallet-sdk-core@npm:^0.0.6-rc.98, @oko-wallet/ewallet-sdk-core@workspace:*, @oko-wallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core"
+  resolution: "@oko-wallet/ewallet-sdk-core@workspace:sdk/ewallet_sdk_core"
   dependencies:
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.24"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.24"
     "@keplr-wallet/types": "npm:^0.12.257"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
@@ -3564,14 +3564,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.120":
+"@oko-wallet/ewallet-sdk-cosmos@npm:0.0.6-rc.120":
   version: 0.0.6-rc.120
-  resolution: "@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.120"
+  resolution: "@oko-wallet/ewallet-sdk-cosmos@npm:0.0.6-rc.120"
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.98"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.21"
+    "@oko-wallet/ewallet-sdk-core": "npm:^0.0.6-rc.98"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.21"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
     "@noble/curves": "npm:^2.0.0"
@@ -3583,14 +3583,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49":
+"@oko-wallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49":
   version: 0.0.6-rc.49
-  resolution: "@keplr-ewallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49"
+  resolution: "@oko-wallet/ewallet-sdk-cosmos@npm:0.0.6-rc.49"
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.38"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.6"
+    "@oko-wallet/ewallet-sdk-core": "npm:^0.0.6-rc.38"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.6"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
     "@noble/curves": "npm:^1.9.2"
@@ -3601,14 +3601,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/ewallet-sdk-cosmos@workspace:*, @keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos":
+"@oko-wallet/ewallet-sdk-cosmos@workspace:*, @oko-wallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos"
+  resolution: "@oko-wallet/ewallet-sdk-cosmos@workspace:sdk/ewallet_sdk_cosmos"
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.102"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.24"
+    "@oko-wallet/ewallet-sdk-core": "npm:^0.0.6-rc.102"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.24"
     "@keplr-wallet/proto-types": "npm:^0.12.253"
     "@keplr-wallet/types": "npm:^0.12.253"
     "@noble/curves": "npm:1.9.7"
@@ -3635,12 +3635,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ewallet-sdk-eth@npm:0.0.6-rc.110":
+"@oko-wallet/ewallet-sdk-eth@npm:0.0.6-rc.110":
   version: 0.0.6-rc.110
-  resolution: "@keplr-ewallet/ewallet-sdk-eth@npm:0.0.6-rc.110"
+  resolution: "@oko-wallet/ewallet-sdk-eth@npm:0.0.6-rc.110"
   dependencies:
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.98"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.21"
+    "@oko-wallet/ewallet-sdk-core": "npm:^0.0.6-rc.98"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.21"
     eventemitter3: "npm:^5.0.1"
     uuid: "npm:*"
     viem: "npm:*"
@@ -3648,12 +3648,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@keplr-ewallet/ewallet-sdk-eth@workspace:*, @keplr-ewallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth":
+"@oko-wallet/ewallet-sdk-eth@workspace:*, @oko-wallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth"
+  resolution: "@oko-wallet/ewallet-sdk-eth@workspace:sdk/ewallet_sdk_eth"
   dependencies:
-    "@keplr-ewallet/ewallet-sdk-core": "npm:^0.0.6-rc.102"
-    "@keplr-ewallet/stdlib-js": "npm:^0.0.2-rc.24"
+    "@oko-wallet/ewallet-sdk-core": "npm:^0.0.6-rc.102"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.24"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
     "@rollup/plugin-terser": "npm:*"
@@ -3678,14 +3678,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/key-share-node-server@workspace:key_share_node/server":
+"@oko-wallet/key-share-node-server@workspace:key_share_node/server":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/key-share-node-server@workspace:key_share_node/server"
+  resolution: "@oko-wallet/key-share-node-server@workspace:key_share_node/server"
   dependencies:
-    "@keplr-ewallet/bytes": "workspace:*"
-    "@keplr-ewallet/ksn-interface": "workspace:*"
-    "@keplr-ewallet/ksn-pg-interface": "workspace:*"
-    "@keplr-ewallet/stdlib-js": "workspace:*"
+    "@oko-wallet/bytes": "workspace:*"
+    "@oko-wallet/ksn-interface": "workspace:*"
+    "@oko-wallet/ksn-pg-interface": "workspace:*"
+    "@oko-wallet/stdlib-js": "workspace:*"
     "@types/cors": "npm:^2.8.17"
     "@types/express": "npm:^4.17.20"
     "@types/express-rate-limit": "npm:^6.0.2"
@@ -3721,11 +3721,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ksn-interface@workspace:*, @keplr-ewallet/ksn-interface@workspace:key_share_node/ksn_interface":
+"@oko-wallet/ksn-interface@workspace:*, @oko-wallet/ksn-interface@workspace:key_share_node/ksn_interface":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/ksn-interface@workspace:key_share_node/ksn_interface"
+  resolution: "@oko-wallet/ksn-interface@workspace:key_share_node/ksn_interface"
   dependencies:
-    "@keplr-ewallet/bytes": "npm:^0.0.3-alpha.42"
+    "@oko-wallet/bytes": "npm:^0.0.3-alpha.42"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3739,13 +3739,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/ksn-pg-interface@workspace:*, @keplr-ewallet/ksn-pg-interface@workspace:key_share_node/pg_interface":
+"@oko-wallet/ksn-pg-interface@workspace:*, @oko-wallet/ksn-pg-interface@workspace:key_share_node/pg_interface":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/ksn-pg-interface@workspace:key_share_node/pg_interface"
+  resolution: "@oko-wallet/ksn-pg-interface@workspace:key_share_node/pg_interface"
   dependencies:
-    "@keplr-ewallet/bytes": "workspace:*"
-    "@keplr-ewallet/ksn-interface": "workspace:*"
-    "@keplr-ewallet/stdlib-js": "workspace:*"
+    "@oko-wallet/bytes": "workspace:*"
+    "@oko-wallet/ksn-interface": "workspace:*"
+    "@oko-wallet/stdlib-js": "workspace:*"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -3760,9 +3760,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/stdlib-js@npm:^0.0.2-rc.21, @keplr-ewallet/stdlib-js@npm:^0.0.2-rc.24, @keplr-ewallet/stdlib-js@npm:^0.0.2-rc.6, @keplr-ewallet/stdlib-js@workspace:*, @keplr-ewallet/stdlib-js@workspace:lib/stdlib_js":
+"@oko-wallet/stdlib-js@npm:^0.0.2-rc.21, @oko-wallet/stdlib-js@npm:^0.0.2-rc.24, @oko-wallet/stdlib-js@npm:^0.0.2-rc.6, @oko-wallet/stdlib-js@workspace:*, @oko-wallet/stdlib-js@workspace:lib/stdlib_js":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/stdlib-js@workspace:lib/stdlib_js"
+  resolution: "@oko-wallet/stdlib-js@workspace:lib/stdlib_js"
   dependencies:
     "@jest/globals": "npm:*"
     "@types/jest": "npm:*"
@@ -3774,9 +3774,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@keplr-ewallet/tecdsa-interface@workspace:crypto/tecdsa/tecdsa_interface":
+"@oko-wallet/tecdsa-interface@workspace:crypto/tecdsa/tecdsa_interface":
   version: 0.0.0-use.local
-  resolution: "@keplr-ewallet/tecdsa-interface@workspace:crypto/tecdsa/tecdsa_interface"
+  resolution: "@oko-wallet/tecdsa-interface@workspace:crypto/tecdsa/tecdsa_interface"
   dependencies:
     "@jest/globals": "npm:*"
     "@types/jest": "npm:*"
@@ -13821,7 +13821,7 @@ __metadata:
     "@cosmjs/amino": "npm:^0.36.0"
     "@cosmjs/proto-signing": "npm:^0.36.0"
     "@cosmos-kit/core": "npm:^2.16.3"
-    "@keplr-ewallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.49"
+    "@oko-wallet/ewallet-sdk-cosmos": "npm:0.0.6-rc.49"
     "@keplr-wallet/types": "npm:^0.12.263"
   languageName: unknown
   linkType: soft
@@ -21350,8 +21350,8 @@ __metadata:
   resolution: "sandbox-evm@workspace:sdk/sandboxes/sandbox_evm"
   dependencies:
     "@heroicons/react": "npm:~2.1.5"
-    "@keplr-ewallet/ewallet-sdk-core": "workspace:*"
-    "@keplr-ewallet/ewallet-sdk-eth": "workspace:*"
+    "@oko-wallet/ewallet-sdk-core": "workspace:*"
+    "@oko-wallet/ewallet-sdk-eth": "workspace:*"
     "@keplr-wallet/proto-types": "npm:^0.12.250"
     "@nomicfoundation/hardhat-ethers": "npm:^3.0.9"
     "@nomicfoundation/hardhat-ignition": "npm:^0.15.12"
@@ -21393,9 +21393,9 @@ __metadata:
   dependencies:
     "@cosmjs/stargate": "npm:^0.34.0"
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
-    "@keplr-ewallet/ewallet-sdk-core": "workspace:*"
-    "@keplr-ewallet/ewallet-sdk-cosmos": "workspace:*"
-    "@keplr-ewallet/ewallet-sdk-eth": "workspace:*"
+    "@oko-wallet/ewallet-sdk-core": "workspace:*"
+    "@oko-wallet/ewallet-sdk-cosmos": "workspace:*"
+    "@oko-wallet/ewallet-sdk-eth": "workspace:*"
     "@react-router/dev": "npm:^7.4.0"
     "@tanstack/react-query": "npm:~5.59.15"
     "@types/node": "npm:*"

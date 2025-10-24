@@ -2,7 +2,7 @@ import type { Address, SignableMessage, RpcTransactionRequest } from "viem";
 import type {
   MakeEthereumSigResult,
   ChainInfoForAttachedModal,
-} from "@keplr-ewallet/ewallet-sdk-core";
+} from "@oko-wallet/ewallet-sdk-core";
 
 export interface MakeSignatureBasePayload {
   chain_info: ChainInfoForAttachedModal;

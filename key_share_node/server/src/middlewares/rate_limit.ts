@@ -1,7 +1,7 @@
-import type { KSNodeApiErrorResponse } from "@keplr-ewallet/ksn-interface/response";
+import type { KSNodeApiErrorResponse } from "@oko-wallet/ksn-interface/response";
 import rateLimit from "express-rate-limit";
 
-import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
+import { ErrorCodeMap } from "@oko-wallet-ksn-server/error";
 
 export interface RateLimitMiddlewareOption {
   windowSeconds: number;

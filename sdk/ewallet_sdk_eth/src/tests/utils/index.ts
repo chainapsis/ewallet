@@ -11,16 +11,16 @@ import { mainnet } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
 import { hardhat } from "../hardhat";
-import { VERSION } from "@keplr-ewallet-sdk-eth/provider";
+import { VERSION } from "@oko-wallet-sdk-eth/provider";
 import type {
   EthSigner,
   EthSignParams,
   EthSignResult,
-} from "@keplr-ewallet-sdk-eth/types";
+} from "@oko-wallet-sdk-eth/types";
 import {
   parseTypedDataDefinition,
   toTransactionSerializable,
-} from "@keplr-ewallet-sdk-eth/utils";
+} from "@oko-wallet-sdk-eth/utils";
 
 export * from "./viemHelpers";
 export * from "./ethersHelpers";

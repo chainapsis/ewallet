@@ -1,5 +1,5 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { GoogleTokenInfo } from "@keplr-ewallet/ksn-interface/auth";
+import type { Result } from "@oko-wallet/stdlib-js";
+import type { GoogleTokenInfo } from "@oko-wallet/ksn-interface/auth";
 
 import { GOOGLE_CLIENT_ID } from "./client_id";
 import type { OAuthValidationFail } from "./types";

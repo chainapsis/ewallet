@@ -26,11 +26,11 @@ or mobile apps.
 
 <!-- TODO: update sdk names and links -->
 
-| Packages                                                    | Latest                                                                                                                                                |
-| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [@keplr-ewallet/ewallet-sdk-core](sdk/ewallet_sdk_core)     | [![npm version](https://img.shields.io/npm/v/@keplr-ewallet/ewallet-sdk-core.svg)](https://www.npmjs.com/package/@keplr-ewallet/ewallet-sdk-core)     |
-| [@keplr-ewallet/ewallet-sdk-cosmos](sdk/ewallet_sdk_cosmos) | [![npm version](https://img.shields.io/npm/v/@keplr-ewallet/ewallet-sdk-cosmos.svg)](https://www.npmjs.com/package/@keplr-ewallet/ewallet-sdk-cosmos) |
-| [@keplr-ewallet/ewallet-sdk-eth](sdk/ewallet_sdk_eth)       | [![npm version](https://img.shields.io/npm/v/@keplr-ewallet/ewallet-sdk-eth.svg)](https://www.npmjs.com/package/@keplr-ewallet/ewallet-sdk-eth)       |
+| Packages                                                 | Latest                                                                                                                                          |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [@oko-wallet/ewallet-sdk-core](sdk/ewallet_sdk_core)     | [![npm version](https://img.shields.io/npm/v/@oko-wallet/ewallet-sdk-core.svg)](https://www.npmjs.com/package/@oko-wallet/ewallet-sdk-core)     |
+| [@oko-wallet/ewallet-sdk-cosmos](sdk/ewallet_sdk_cosmos) | [![npm version](https://img.shields.io/npm/v/@oko-wallet/ewallet-sdk-cosmos.svg)](https://www.npmjs.com/package/@oko-wallet/ewallet-sdk-cosmos) |
+| [@oko-wallet/ewallet-sdk-eth](sdk/ewallet_sdk_eth)       | [![npm version](https://img.shields.io/npm/v/@oko-wallet/ewallet-sdk-eth.svg)](https://www.npmjs.com/package/@oko-wallet/ewallet-sdk-eth)       |
 
 ## How it works
 

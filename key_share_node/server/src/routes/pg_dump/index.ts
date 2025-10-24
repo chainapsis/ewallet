@@ -3,27 +3,27 @@ import fs from "node:fs/promises";
 import type {
   KSNodeApiErrorResponse,
   KSNodeApiResponse,
-} from "@keplr-ewallet/ksn-interface/response";
+} from "@oko-wallet/ksn-interface/response";
 import {
   getAllPgDumps,
   restore,
   type PgDump,
-} from "@keplr-ewallet/ksn-pg-interface";
+} from "@oko-wallet/ksn-pg-interface";
 import type {
   GetBackupHistoryRequest,
   DBRestoreRequest,
   DBRestoreResponse,
-} from "@keplr-ewallet/ksn-interface/db_backup";
+} from "@oko-wallet/ksn-interface/db_backup";
 
 import {
   processPgDump,
   type PgDumpResult,
-} from "@keplr-ewallet-ksn-server/pg_dump/dump";
+} from "@oko-wallet-ksn-server/pg_dump/dump";
 import {
   adminAuthMiddleware,
   type AdminAuthenticatedRequest,
-} from "@keplr-ewallet-ksn-server/middlewares";
-import { ErrorCodeMap } from "@keplr-ewallet-ksn-server/error";
+} from "@oko-wallet-ksn-server/middlewares";
+import { ErrorCodeMap } from "@oko-wallet-ksn-server/error";
 import type { KSNodeRequest } from "../io";
 
 export function makePgDumpRouter() {

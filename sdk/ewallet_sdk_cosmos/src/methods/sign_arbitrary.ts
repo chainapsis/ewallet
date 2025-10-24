@@ -1,8 +1,8 @@
 import type { StdSignature } from "@cosmjs/amino";
-import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
+import type { MakeCosmosSigData } from "@oko-wallet/ewallet-sdk-core";
 
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
-import { makeADR36AminoSignDoc } from "@keplr-ewallet-sdk-cosmos/utils/arbitrary";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
+import { makeADR36AminoSignDoc } from "@oko-wallet-sdk-cosmos/utils/arbitrary";
 
 export async function signArbitrary(
   this: CosmosEWalletInterface,

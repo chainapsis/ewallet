@@ -1,13 +1,13 @@
 import {
   KeplrEWallet,
   type KeplrEwalletInitArgs,
-} from "@keplr-ewallet/ewallet-sdk-core";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+} from "@oko-wallet/ewallet-sdk-core";
+import type { Result } from "@oko-wallet/stdlib-js";
 
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
-// import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/cosmos_ewallet";
-import type { CosmosEwalletInitError } from "@keplr-ewallet-sdk-cosmos/errors";
-import { CosmosEWallet } from "@keplr-ewallet-sdk-cosmos/constructor";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
+// import { CosmosEWallet } from "@oko-wallet-sdk-cosmos/cosmos_ewallet";
+import type { CosmosEwalletInitError } from "@oko-wallet-sdk-cosmos/errors";
+import { CosmosEWallet } from "@oko-wallet-sdk-cosmos/constructor";
 
 export function init(
   args: KeplrEwalletInitArgs,

@@ -5,7 +5,7 @@ import type {
   KeplrEWalletInterface,
   MakeCosmosSigData,
   OpenModalAckPayload,
-} from "@keplr-ewallet/ewallet-sdk-core";
+} from "@oko-wallet/ewallet-sdk-core";
 import type {
   ChainInfo,
   KeplrSignOptions,
@@ -23,18 +23,18 @@ import type {
   DirectSignResponse,
   OfflineDirectSigner,
 } from "@cosmjs/proto-signing";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import type {
   KeplrEWalletCosmosEvent2,
   KeplrEWalletCosmosEventHandler2,
 } from "./event";
-import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
+import type { SignDoc } from "@oko-wallet-sdk-cosmos/types/sign";
 import type {
   CosmosEwalletInitError,
   LazyInitError,
-} from "@keplr-ewallet-sdk-cosmos/errors";
-import type { ArbitrarySigVerificationResult } from "@keplr-ewallet-sdk-cosmos/methods/verify_arbitrary";
+} from "@oko-wallet-sdk-cosmos/errors";
+import type { ArbitrarySigVerificationResult } from "@oko-wallet-sdk-cosmos/methods/verify_arbitrary";
 
 export interface CosmosEWalletState {
   publicKey: Uint8Array | null;

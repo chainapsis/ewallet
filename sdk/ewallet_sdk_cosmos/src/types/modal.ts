@@ -1,4 +1,4 @@
-import type { MakeCosmosSigResult } from "@keplr-ewallet/ewallet-sdk-core";
+import type { MakeCosmosSigResult } from "@oko-wallet/ewallet-sdk-core";
 
 export type OpenModalResult =
   | {

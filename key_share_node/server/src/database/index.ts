@@ -1,7 +1,7 @@
 import { Pool, type PoolClient } from "pg";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
-import { logger } from "@keplr-ewallet-ksn-server/logger";
+import { logger } from "@oko-wallet-ksn-server/logger";
 
 export type PgDatabaseConfig = {
   database: string;

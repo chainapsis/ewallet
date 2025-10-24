@@ -5,8 +5,8 @@ import type {
   RpcMethod,
   RpcRequestArgs,
   RpcResponseData,
-} from "@keplr-ewallet-sdk-eth/rpc";
-import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
+} from "@oko-wallet-sdk-eth/rpc";
+import type { EthSigner } from "@oko-wallet-sdk-eth/types";
 import type { ProviderEventEmitter } from "./emitter";
 
 export interface ProviderConnectInfo {
