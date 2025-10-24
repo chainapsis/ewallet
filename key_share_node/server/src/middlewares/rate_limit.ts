@@ -22,5 +22,6 @@ export function rateLimitMiddleware(option: RateLimitMiddlewareOption) {
     statusCode: ErrorCodeMap[message.code],
     standardHeaders: true,
     legacyHeaders: false,
+    validate: { xForwardedForHeader: false },
   });
 }
