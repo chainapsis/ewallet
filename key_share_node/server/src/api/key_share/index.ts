@@ -289,10 +289,11 @@ export async function reshareKeyShare(
     }
 
     // Validate that the new share matches the existing share
-    const newEncryptedShare = encryptData(share.toHex(), encryptionSecret);
-    const newEncryptedShareBuffer = Buffer.from(newEncryptedShare, "utf-8");
-
-    if (!getKeyShareRes.data.enc_share.equals(newEncryptedShareBuffer)) {
+    const existingDecryptedShare = decryptData(
+      getKeyShareRes.data.enc_share.toString("utf-8"),
+      encryptionSecret,
+    );
+    if (existingDecryptedShare.toLowerCase() !== share.toHex().toLowerCase()) {
       return {
         success: false,
         code: "RESHARE_FAILED",
@@ -300,7 +301,6 @@ export async function reshareKeyShare(
       };
     }
 
-    // Update existing key share
     const updateKeyShareRes = await updateReshare(db, wallet_id);
     if (updateKeyShareRes.success === false) {
       return {
