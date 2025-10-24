@@ -13,7 +13,6 @@ import type {
   CheckKeyShareResponse,
   GetKeyShareRequest,
   GetKeyShareResponse,
-  KeyShareStatus,
   RegisterKeyShareRequest,
   ReshareKeyShareRequest,
 } from "@keplr-ewallet/ksn-interface/key_share";
@@ -28,6 +27,14 @@ export async function registerKeyShare(
 ): Promise<KSNodeApiResponse<void>> {
   try {
     const { email, curve_type, public_key, share } = registerKeyShareRequest;
+
+    if (curve_type !== "secp256k1") {
+      return {
+        success: false,
+        code: "CURVE_TYPE_NOT_SUPPORTED",
+        msg: "Curve type not supported",
+      };
+    }
 
     const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
