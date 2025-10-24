@@ -520,46 +520,29 @@ export function makeKeyshareRouter() {
 
       const shareBytes: Bytes64 = shareBytesRes.data;
 
-      // Start transaction
-      const client = await state.db.connect();
-      try {
-        await client.query("BEGIN");
+      const reshareKeyShareRes = await reshareKeyShare(
+        state.db,
+        {
+          email: googleUser.email,
+          curve_type: body.curve_type,
+          public_key: publicKeyBytesRes.data,
+          share: shareBytes,
+        },
+        state.encryptionSecret,
+      );
 
-        const reshareKeyShareRes = await reshareKeyShare(
-          client,
-          {
-            email: googleUser.email,
-            curve_type: body.curve_type,
-            public_key: publicKeyBytesRes.data,
-            share: shareBytes,
-          },
-          state.encryptionSecret,
-        );
-
-        if (reshareKeyShareRes.success === false) {
-          await client.query("ROLLBACK");
-          return res.status(ErrorCodeMap[reshareKeyShareRes.code]).json({
-            success: false,
-            code: reshareKeyShareRes.code,
-            msg: reshareKeyShareRes.msg,
-          });
-        }
-
-        await client.query("COMMIT");
-        return res.status(200).json({
-          success: true,
-          data: void 0,
-        });
-      } catch (error) {
-        await client.query("ROLLBACK");
-        return res.status(500).json({
+      if (reshareKeyShareRes.success === false) {
+        return res.status(ErrorCodeMap[reshareKeyShareRes.code]).json({
           success: false,
-          code: "UNKNOWN_ERROR",
-          msg: String(error),
+          code: reshareKeyShareRes.code,
+          msg: reshareKeyShareRes.msg,
         });
-      } finally {
-        client.release();
       }
+
+      return res.status(200).json({
+        success: true,
+        data: void 0,
+      });
     },
   );
 
