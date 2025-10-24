@@ -34,8 +34,8 @@
     "directory": "sdk/ewallet_sdk_core"
   },
   "dependencies": {
-    "@oko-wallet/stdlib-js": "^0.0.2-rc.24",
-    "@keplr-wallet/types": "^0.12.257"
+    "@keplr-wallet/types": "^0.12.257",
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.24"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "*",

@@ -31,12 +31,12 @@
   "dependencies": {
     "@cosmjs/amino": "^0.33.1",
     "@cosmjs/proto-signing": "^0.33.1",
-    "@oko-wallet/ewallet-sdk-core": "^0.0.6-rc.102",
-    "@oko-wallet/stdlib-js": "^0.0.2-rc.24",
     "@keplr-wallet/proto-types": "^0.12.253",
     "@keplr-wallet/types": "^0.12.253",
     "@noble/curves": "1.9.7",
     "@noble/hashes": "^1.8.0",
+    "@oko-wallet/ewallet-sdk-core": "^0.0.6-rc.102",
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.24",
     "bech32": "^2.0.0",
     "buffer": "^6.0.3",
     "uuid": "*"
