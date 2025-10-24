@@ -4,7 +4,6 @@ import type {
   CreateKeyShareRequest,
   KeyShare,
   KeyShareStatus,
-  UpdateKeyShareRequest,
 } from "@keplr-ewallet/ksn-interface/key_share";
 import type { Result } from "@keplr-ewallet/stdlib-js";
 
