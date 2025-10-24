@@ -25,7 +25,7 @@ NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=YOUR_WALLETCONNECT_PROJECT_ID
 ```
 
 - Keplr key: get it from the
-  [Keplr Embedded Dashboard](https://dapp.embed.keplr.app)
+  [Keplr Embedded Dashboard](https://dapp.oko.app)
 - WalletConnect projectId: create one in the
   [WalletConnect Cloud](https://cloud.walletconnect.com)
 

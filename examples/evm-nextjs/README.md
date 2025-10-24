@@ -24,7 +24,7 @@ NEXT_PUBLIC_KEPLR_EMBEDDED_API_KEY=YOUR_ISSUED_API_KEY
 ```
 
 Note: Use the API key issued from the
-[Keplr Embedded Dashboard](https://dapp.embed.keplr.app).
+[Keplr Embedded Dashboard](https://dapp.oko.app).
 
 ### How to Run
 

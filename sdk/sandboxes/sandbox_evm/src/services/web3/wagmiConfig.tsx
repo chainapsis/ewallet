@@ -43,7 +43,7 @@ function toKeplrEWallet(args: EthEWalletInitArgs): () => Wallet {
     name: "Keplr Embedded",
     iconUrl: keplrIcon,
     shortName: "Keplr",
-    rdns: "embed.keplr.app",
+    rdns: "oko.app",
     iconBackground: "#0c2f78",
     installed: true,
     createConnector: (walletDetails) =>

@@ -1,4 +1,4 @@
-<a href="https://demo.embed.keplr.app/">
+<a href="https://demo.oko.app/">
   <picture>
     <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo.svg">
     <source media="(prefers-color-scheme: dark)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/product_logo_dark.svg">
@@ -18,9 +18,9 @@ or mobile apps.
   in with a social account.
 - ⚡**Developer Friendly**: Simple integration, wallet programmability
 
-[Explore the docs »](https://docs.embed.keplr.app)
+[Explore the docs »](https://docs.oko.app)
 
-[View Demo](https://demo.embed.keplr.app)
+[View Demo](https://demo.oko.app)
 
 ## Ewallet SDK
 

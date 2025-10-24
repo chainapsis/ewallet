@@ -23,7 +23,7 @@ VITE_KEPLR_EMBEDDED_API_KEY=YOUR_ISSUED_API_KEY
 ```
 
 Get your API key from the
-[Keplr Embedded Dashboard](https://dapp.embed.keplr.app).
+[Keplr Embedded Dashboard](https://dapp.oko.app).
 
 ### How to Run
 
