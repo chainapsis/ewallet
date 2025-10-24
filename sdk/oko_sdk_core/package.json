@@ -1,6 +1,6 @@
 {
   "name": "@oko-wallet/oko-sdk-core",
-  "version": "0.0.6-rc.105",
+  "version": "0.0.6-rc.106",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "scripts": {
