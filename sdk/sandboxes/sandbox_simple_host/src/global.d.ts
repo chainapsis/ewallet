@@ -1,4 +1,4 @@
-import { KeplrEWallet } from "@oko-wallet/ewallet-sdk-core";
+import { KeplrEWallet } from "@oko-wallet/oko-sdk-core";
 
 // declare global {
 //   interface Window {

@@ -4,12 +4,12 @@ import {
   getBech32Address,
   getCosmosAddress,
   type CosmosEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-cosmos";
+} from "@oko-wallet/oko-sdk-cosmos";
 import {
   EthEWallet,
   type EthEWalletInterface,
   type EIP1193Provider,
-} from "@oko-wallet/ewallet-sdk-eth";
+} from "@oko-wallet/oko-sdk-eth";
 import type { ChainInfo } from "@keplr-wallet/types";
 import type { OfflineDirectSigner } from "@cosmjs/proto-signing";
 import type { Address } from "viem";

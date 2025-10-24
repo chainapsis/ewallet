@@ -3,7 +3,7 @@ import {
   EIP1193Provider,
   EthEWallet,
   type EthEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-eth";
+} from "@oko-wallet/oko-sdk-eth";
 import { Address } from "viem";
 
 interface OkoEvmProviderValues {

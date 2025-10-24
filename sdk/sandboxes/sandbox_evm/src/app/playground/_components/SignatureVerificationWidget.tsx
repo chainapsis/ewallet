@@ -61,7 +61,7 @@ function PersonalSignVerifier() {
       <TextAreaInput
         name="personal-original-message"
         value={personalMessage}
-        onChange={(v) => setPersonalMessage(v)}
+        onChange={(v: any) => setPersonalMessage(v)}
         rows={4}
         placeholder="Enter the original message that was signed..."
       />
@@ -179,7 +179,7 @@ function SiweVerifier() {
       <TextAreaInput
         name="siwe-original-message"
         value={siweMessage}
-        onChange={(v) => setSiweMessage(v)}
+        onChange={(v: any) => setSiweMessage(v)}
         rows={8}
         placeholder="Enter the original SIWE message that was signed..."
       />
@@ -380,7 +380,7 @@ function TypedDataVerifier() {
           <TextAreaInput
             name="typed-data-json"
             value={typedDataBlob}
-            onChange={(v) => setTypedDataBlob(v)}
+            onChange={(v: any) => setTypedDataBlob(v)}
             rows={8}
             placeholder='{"domain": {"name": "Token", "version": "1", "chainId": 1, "verifyingContract": "0x..."}, "types": {"Permit": [...]}, "primaryType": "Permit", "message": { ... }}'
           />
@@ -393,7 +393,7 @@ function TypedDataVerifier() {
           <TextAreaInput
             name="typed-data-domain"
             value={typedDataDomain}
-            onChange={(v) => setTypedDataDomain(v)}
+            onChange={(v: any) => setTypedDataDomain(v)}
             rows={4}
             placeholder='{"name": "Token", "version": "1", "chainId": 1, "verifyingContract": "0x..."}'
           />
@@ -404,7 +404,7 @@ function TypedDataVerifier() {
           <TextAreaInput
             name="typed-data-types"
             value={typedDataTypes}
-            onChange={(v) => setTypedDataTypes(v)}
+            onChange={(v: any) => setTypedDataTypes(v)}
             rows={4}
             placeholder='{"Permit": [{"name": "owner", "type": "address"}, ...]}'
           />
@@ -456,7 +456,7 @@ function TypedDataVerifier() {
           <TextAreaInput
             name="typed-data-message"
             value={typedDataMessage}
-            onChange={(v) => setTypedDataMessage(v)}
+            onChange={(v: any) => setTypedDataMessage(v)}
             rows={4}
             placeholder='{"owner": "0x...", "spender": "0x...", "value": "1000000000000000000", "nonce": "0", "deadline": "1234567890"}'
           />

@@ -1,0 +1,59 @@
+{
+  "name": "@oko-wallet/oko-sdk-core",
+  "version": "0.0.6-rc.103",
+  "packageManager": "yarn@4.7.0",
+  "type": "module",
+  "scripts": {
+    "clean": "del-cli dist",
+    "typecheck": "tsc --noEmit",
+    "build-type-legacy": "tsc --build --force --emitDeclarationOnly && tsc-alias",
+    "build": "yarn rollup-build",
+    "rollup-build": "yarn clean && rollup --c",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "keywords": [
+    "keplr",
+    "ewallet",
+    "cosmos",
+    "blockchain",
+    "wallet"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chainapsis/oko.git",
+    "directory": "sdk/ewallet_sdk_core"
+  },
+  "dependencies": {
+    "@keplr-wallet/types": "^0.12.257",
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.25"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "*",
+    "@rollup/plugin-node-resolve": "*",
+    "@rollup/plugin-replace": "*",
+    "@rollup/plugin-terser": "*",
+    "@rollup/plugin-typescript": "*",
+    "@types/jest": "*",
+    "@types/node": "*",
+    "del-cli": "*",
+    "jest": "*",
+    "rollup": "*",
+    "rollup-plugin-dts": "*",
+    "rollup-plugin-tsconfig-paths": "*",
+    "ts-jest": "*",
+    "tsc-alias": "*",
+    "tsx": "*",
+    "typescript": "*"
+  },
+  "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"
+}

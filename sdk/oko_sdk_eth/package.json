@@ -1,0 +1,66 @@
+{
+  "name": "@oko-wallet/oko-sdk-eth",
+  "version": "0.0.6-rc.116",
+  "packageManager": "yarn@4.7.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "keplr",
+    "oko",
+    "ewallet",
+    "ethereum",
+    "blockchain",
+    "wallet",
+    "evm",
+    "viem"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chainapsis/oko.git",
+    "directory": "sdk/oko_sdk_eth"
+  },
+  "scripts": {
+    "clean": "del-cli dist",
+    "generate-version": "node scripts/generate-version.cjs",
+    "build": "yarn clean && rollup -c && tsc-alias",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "hardhat": "npx hardhat node",
+    "version": "yarn generate-version && git add src/provider/version.ts",
+    "prepublishOnly": "yarn build"
+  },
+  "dependencies": {
+    "@oko-wallet/oko-sdk-core": "^0.0.6-rc.103",
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.25",
+    "eventemitter3": "^5.0.1",
+    "uuid": "*",
+    "viem": "*"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "*",
+    "@rollup/plugin-node-resolve": "*",
+    "@rollup/plugin-terser": "*",
+    "@rollup/plugin-typescript": "*",
+    "@types/jest": "*",
+    "@types/node": "*",
+    "@typescript-eslint/eslint-plugin": "*",
+    "@typescript-eslint/parser": "*",
+    "del-cli": "*",
+    "ethers": "^6.14.4",
+    "hardhat": "^2.25.0",
+    "jest": "*",
+    "rollup": "*",
+    "rollup-plugin-dts": "*",
+    "rollup-plugin-tsconfig-paths": "*",
+    "ts-jest": "*",
+    "tsc-alias": "*",
+    "typescript": "*"
+  },
+  "gitHead": "0960908938cd494a3b11af557553dba8fb53b674"
+}

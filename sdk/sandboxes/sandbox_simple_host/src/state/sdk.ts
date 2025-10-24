@@ -1,11 +1,8 @@
 import {
   CosmosEWallet,
   type CosmosEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-cosmos";
-import {
-  EthEWallet,
-  type EthEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-eth";
+} from "@oko-wallet/oko-sdk-cosmos";
+import { EthEWallet, type EthEWalletInterface } from "@oko-wallet/oko-sdk-eth";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
