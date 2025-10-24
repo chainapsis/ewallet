@@ -1,8 +1,8 @@
 <a href="https://demo.oko.app/">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light.svg">
-    <source media="(prefers-color-scheme: dark)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_dark.svg">
-    <img src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light.svg" alt="Logo"
+    <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light2.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_dark2.svg">
+    <img src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light2.svg" alt="Logo"
     style="width: 240px; height: auto;">
   </picture>
 </a>
