@@ -3,8 +3,8 @@ import {
   createTables,
   dropAllTablesIfExist,
 } from "@keplr-ewallet/ksn-pg-interface";
-import type { PgDatabaseConfig } from "@keplr-ewallet-ksn-server/database";
 
+import type { PgDatabaseConfig } from "@keplr-ewallet-ksn-server/database";
 import { connectPG } from "@keplr-ewallet-ksn-server/database";
 
 export async function resetDB(
