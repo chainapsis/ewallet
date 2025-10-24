@@ -497,6 +497,10 @@ curl -X POST http://localhost:${SERVER_PORT}/pg_dump/v1/restore \
 > **Note**: Use the container path (`/home/node/key_share_node/dump/`) when
 > specifying the dump file path, not the host path.
 
+## Upgrade
+
+[/documentation/node_upgrade.md]
+
 ## Security
 
 TBD
