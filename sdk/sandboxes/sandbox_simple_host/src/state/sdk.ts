@@ -1,11 +1,8 @@
 import {
   CosmosEWallet,
   type CosmosEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-cosmos";
-import {
-  EthEWallet,
-  type EthEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-eth";
+} from "@oko-wallet/oko-sdk-cosmos";
+import { EthEWallet, type EthEWalletInterface } from "@oko-wallet/oko-sdk-eth";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
@@ -46,7 +43,7 @@ export const useSDKState = create(
         const initRes = EthEWallet.init({
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-          sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
+          sdk_endpoint: import.meta.env.VITE_KEPLR_oko_sdk_ENDPOINT,
         });
 
         if (initRes.success) {
@@ -81,7 +78,7 @@ export const useSDKState = create(
         const initRes = CosmosEWallet.init({
           api_key:
             "72bd2afd04374f86d563a40b814b7098e5ad6c7f52d3b8f84ab0c3d05f73ac6c",
-          sdk_endpoint: import.meta.env.VITE_KEPLR_EWALLET_SDK_ENDPOINT,
+          sdk_endpoint: import.meta.env.VITE_KEPLR_oko_sdk_ENDPOINT,
         });
 
         if (initRes.success) {

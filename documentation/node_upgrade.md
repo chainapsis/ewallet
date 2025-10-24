@@ -7,7 +7,7 @@ This guide explains how to upgrade your Key Share Node to the latest version.
 ### 1. Pull Latest Changes & Checkout the version
 
 ```bash
-cd /path/to/ewallet
+cd /path/to/oko
 git pull origin main
 git checkout <version>
 ```
@@ -15,7 +15,7 @@ git checkout <version>
 ### 2. Navigate to Docker Directory
 
 ```bash
-cd ewallet/key_share_node/docker
+cd oko/key_share_node/docker
 ```
 
 ### 3. Upgrade the Key Share Node

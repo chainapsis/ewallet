@@ -12,7 +12,7 @@ import type { Coin } from "@keplr-wallet/proto-types/cosmos/base/v1beta1/coin";
 import type {
   CosmosEWallet,
   CosmosEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-cosmos";
+} from "@oko-wallet/oko-sdk-cosmos";
 import { makeSignDoc as makeAminoSignDoc } from "@cosmjs/amino";
 
 import { TEST_COSMOS_CHAIN_ID, TEST_COSMOS_CHAIN_RPC } from "@/constants";

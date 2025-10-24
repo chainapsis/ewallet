@@ -2,9 +2,9 @@
   "packages": [
     "lib/stdlib_js",
     "lib/dotenv",
-    "sdk/ewallet_sdk_core",
-    "sdk/ewallet_sdk_cosmos",
-    "sdk/ewallet_sdk_eth",
+    "sdk/oko_sdk_core",
+    "sdk/oko_sdk_cosmos",
+    "sdk/oko_sdk_eth",
     "crypto/bytes",
     "crypto/sss",
     "crypto/tecdsa/tecdsa_interface",

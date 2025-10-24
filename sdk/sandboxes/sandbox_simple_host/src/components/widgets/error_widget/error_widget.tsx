@@ -5,7 +5,7 @@ import styles from "./error_widget.module.scss";
 import { useOko } from "@/hooks/use_oko";
 import { useUserInfoState } from "@/state/user_info";
 import { useAddresses } from "@/hooks/use_addresses";
-import type { EWalletMsgOpenModal } from "@oko-wallet/ewallet-sdk-core";
+import type { EWalletMsgOpenModal } from "@oko-wallet/oko-sdk-core";
 
 export const ErrorWidget: FC<LoginWidgetProps> = () => {
   const { okoCosmos } = useOko();

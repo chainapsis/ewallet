@@ -5,7 +5,7 @@ import os from "node:os";
 import fs from "node:fs";
 import { type Result } from "@oko-wallet/stdlib-js";
 
-const CONFIG_DIR_NAME = ".keplr_ewallet";
+const CONFIG_DIR_NAME = ".oko";
 
 export function createConfigDir() {
   const configPath = path.join(os.homedir(), CONFIG_DIR_NAME);

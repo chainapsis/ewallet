@@ -28,9 +28,9 @@ or mobile apps.
 
 | Packages                                                 | Latest                                                                                                                                          |
 | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| [@oko-wallet/ewallet-sdk-core](sdk/ewallet_sdk_core)     | [![npm version](https://img.shields.io/npm/v/@oko-wallet/ewallet-sdk-core.svg)](https://www.npmjs.com/package/@oko-wallet/ewallet-sdk-core)     |
-| [@oko-wallet/ewallet-sdk-cosmos](sdk/ewallet_sdk_cosmos) | [![npm version](https://img.shields.io/npm/v/@oko-wallet/ewallet-sdk-cosmos.svg)](https://www.npmjs.com/package/@oko-wallet/ewallet-sdk-cosmos) |
-| [@oko-wallet/ewallet-sdk-eth](sdk/ewallet_sdk_eth)       | [![npm version](https://img.shields.io/npm/v/@oko-wallet/ewallet-sdk-eth.svg)](https://www.npmjs.com/package/@oko-wallet/ewallet-sdk-eth)       |
+| [@oko-wallet/oko-sdk-core](sdk/oko_sdk_core)     | [![npm version](https://img.shields.io/npm/v/@oko-wallet/oko-sdk-core.svg)](https://www.npmjs.com/package/@oko-wallet/oko-sdk-core)     |
+| [@oko-wallet/oko-sdk-cosmos](sdk/oko_sdk_cosmos) | [![npm version](https://img.shields.io/npm/v/@oko-wallet/oko-sdk-cosmos.svg)](https://www.npmjs.com/package/@oko-wallet/oko-sdk-cosmos) |
+| [@oko-wallet/oko-sdk-eth](sdk/oko_sdk_eth)       | [![npm version](https://img.shields.io/npm/v/@oko-wallet/oko-sdk-eth.svg)](https://www.npmjs.com/package/@oko-wallet/oko-sdk-eth)       |
 
 ## How it works
 

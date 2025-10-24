@@ -19,13 +19,13 @@ export const paths = (function () {
 
   const stdlib = path.join(__dirname, "../../../lib/stdlib_js");
 
-  const sdk_common = path.join(__dirname, "../../../sdk/ewallet_sdk_common/");
+  const sdk_common = path.join(__dirname, "../../../sdk/oko_sdk_common/");
 
-  const sdk_core = path.join(__dirname, "../../../sdk/ewallet_sdk_core/");
+  const sdk_core = path.join(__dirname, "../../../sdk/oko_sdk_core/");
 
-  const sdk_eth = path.join(__dirname, "../../../sdk/ewallet_sdk_eth/");
+  const sdk_eth = path.join(__dirname, "../../../sdk/oko_sdk_eth/");
 
-  const sdk_cosmos = path.join(__dirname, "../../../sdk/ewallet_sdk_cosmos/");
+  const sdk_cosmos = path.join(__dirname, "../../../sdk/oko_sdk_cosmos/");
 
   const sandbox_simple_host = path.join(
     __dirname,

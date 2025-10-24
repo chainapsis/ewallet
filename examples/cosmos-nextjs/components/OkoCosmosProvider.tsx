@@ -4,7 +4,7 @@ import {
   getBech32Address,
   getCosmosAddress,
   type CosmosEWalletInterface,
-} from "@oko-wallet/ewallet-sdk-cosmos";
+} from "@oko-wallet/oko-sdk-cosmos";
 import { ChainInfo } from "@keplr-wallet/types";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 
