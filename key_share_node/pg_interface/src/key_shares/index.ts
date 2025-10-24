@@ -97,7 +97,7 @@ export async function updateReshare(
 UPDATE key_shares AS ks
 SET 
   status = $1,
-  reshared_at = NOW()
+  reshared_at = NOW(),
   updated_at = NOW()
 WHERE ks.wallet_id = $2
 RETURNING *
