@@ -34,9 +34,9 @@ import {
 } from "wagmi/actions";
 import { WriteContractVariables } from "wagmi/query";
 
-import deployedContractsData from "@keplr-ewallet-sandbox-evm/contracts/deployedContracts";
-import externalContractsData from "@keplr-ewallet-sandbox-evm/contracts/externalContracts";
-import scaffoldConfig from "@keplr-ewallet-sandbox-evm/../scaffold.config";
+import deployedContractsData from "@oko-wallet-sandbox-evm/contracts/deployedContracts";
+import externalContractsData from "@oko-wallet-sandbox-evm/contracts/externalContracts";
+import scaffoldConfig from "@oko-wallet-sandbox-evm/../scaffold.config";
 import { getParsedError } from "./getParsedError";
 import { AllowedChainIds } from "./networks";
 import { notification } from "./notification";

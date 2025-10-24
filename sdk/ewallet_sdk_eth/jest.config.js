@@ -15,6 +15,6 @@ export default {
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
   testTimeout: 30000,
   moduleNameMapper: {
-    "^@keplr-ewallet-sdk-eth/(.*)$": "<rootDir>/src/$1",
+    "^@oko-wallet-sdk-eth/(.*)$": "<rootDir>/src/$1",
   },
 };

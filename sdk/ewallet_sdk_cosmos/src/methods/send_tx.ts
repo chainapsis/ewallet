@@ -4,8 +4,8 @@ import {
   retry,
   simpleFetch,
   TendermintTxTracer,
-} from "@keplr-ewallet-sdk-cosmos/utils";
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+} from "@oko-wallet-sdk-cosmos/utils";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 
 export async function sendTx(
   this: CosmosEWalletInterface,

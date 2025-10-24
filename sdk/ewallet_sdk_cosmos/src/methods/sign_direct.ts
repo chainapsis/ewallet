@@ -1,9 +1,9 @@
 import type { KeplrSignOptions } from "@keplr-wallet/types";
 import { type DirectSignResponse } from "@cosmjs/proto-signing";
-import type { MakeCosmosSigData } from "@keplr-ewallet/ewallet-sdk-core";
+import type { MakeCosmosSigData } from "@oko-wallet/ewallet-sdk-core";
 
-import type { SignDoc } from "@keplr-ewallet-sdk-cosmos/types/sign";
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type { SignDoc } from "@oko-wallet-sdk-cosmos/types/sign";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 
 export async function signDirect(
   this: CosmosEWalletInterface,

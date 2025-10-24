@@ -6,14 +6,14 @@ import {
   getPgDumpById,
   getAllPgDumps,
   type PgDumpConfig,
-} from "@keplr-ewallet/ksn-pg-interface";
+} from "@oko-wallet/ksn-pg-interface";
 
-import { connectPG, resetPgDatabase } from "@keplr-ewallet-ksn-server/database";
-import { testPgConfig } from "@keplr-ewallet-ksn-server/database/test_config";
+import { connectPG, resetPgDatabase } from "@oko-wallet-ksn-server/database";
+import { testPgConfig } from "@oko-wallet-ksn-server/database/test_config";
 import {
   processPgDump,
   deleteOldPgDumps,
-} from "@keplr-ewallet-ksn-server/pg_dump/dump";
+} from "@oko-wallet-ksn-server/pg_dump/dump";
 
 describe("pg_dump_test", () => {
   const dumpDir = join(os.homedir(), "keplr_ewallet_data");

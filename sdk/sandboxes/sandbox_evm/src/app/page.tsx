@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, PlayIcon } from "@heroicons/react/24/outline";
 
-import { Address } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
+import { Address } from "@oko-wallet-sandbox-evm/components/scaffold-eth";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();

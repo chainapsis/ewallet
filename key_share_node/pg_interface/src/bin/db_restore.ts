@@ -1,5 +1,5 @@
-import { loadEnvs } from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/envs";
-import { restore } from "@keplr-ewallet-ksn-pg-interface/dump";
+import { loadEnvs } from "@oko-wallet-ksn-pg-interface/bin/db_aux/envs";
+import { restore } from "@oko-wallet-ksn-pg-interface/dump";
 
 const NODE_ID = parseInt(process.env.NODE_ID || "1", 10);
 const DUMP_PATH = process.env.DUMP_PATH;

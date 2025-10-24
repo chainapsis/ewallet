@@ -27,8 +27,8 @@ import {
 import {
   EWalletEIP1193Provider,
   RpcErrorCode,
-} from "@keplr-ewallet-sdk-eth/provider";
-import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
+} from "@oko-wallet-sdk-eth/provider";
+import type { EthSigner } from "@oko-wallet-sdk-eth/types";
 
 describe("EWallet Provider - Viem Integration", () => {
   describe("Public Client - Live RPC", () => {

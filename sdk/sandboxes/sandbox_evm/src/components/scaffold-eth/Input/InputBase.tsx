@@ -7,7 +7,7 @@ import {
   useRef,
 } from "react";
 
-import { CommonInputProps } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
+import { CommonInputProps } from "@oko-wallet-sandbox-evm/components/scaffold-eth";
 
 type InputBaseProps<T> = CommonInputProps<T> & {
   error?: boolean;

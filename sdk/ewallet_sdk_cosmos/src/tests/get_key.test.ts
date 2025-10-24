@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import type { ChainInfo } from "@keplr-wallet/types";
 
-import { getKey } from "@keplr-ewallet-sdk-cosmos/methods/get_key";
+import { getKey } from "@oko-wallet-sdk-cosmos/methods/get_key";
 import {
   cosmosPublicKey,
   initiaPublicKey,
@@ -11,8 +11,8 @@ import {
   initiaChainInfo,
   cosmosAddress,
   initiaAddress,
-} from "@keplr-ewallet-sdk-cosmos/tests/test-data";
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+} from "@oko-wallet-sdk-cosmos/tests/test-data";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 
 describe("getKey", () => {
   let mockCosmosEWallet: CosmosEWalletInterface;

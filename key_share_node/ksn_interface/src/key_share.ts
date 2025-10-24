@@ -1,4 +1,4 @@
-import type { Bytes33, Bytes64 } from "@keplr-ewallet/bytes";
+import type { Bytes33, Bytes64 } from "@oko-wallet/bytes";
 
 import type { CurveType } from "./curve_type";
 

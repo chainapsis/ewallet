@@ -19,7 +19,7 @@ import type {
   WalletClient,
 } from "@cosmos-kit/core";
 import { BroadcastMode } from "@keplr-wallet/types";
-import { CosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
+import { CosmosEWallet } from "@oko-wallet/ewallet-sdk-cosmos";
 
 export class EWalletClient implements WalletClient {
   readonly client: CosmosEWallet;

@@ -1,17 +1,17 @@
 import chalk from "chalk";
 import dayjs from "dayjs";
 
-import { connectPG } from "@keplr-ewallet-ksn-server/database";
-import { makeApp } from "@keplr-ewallet-ksn-server/app";
-import { loadEnv, verifyEnv } from "@keplr-ewallet-ksn-server/envs";
-import { startPgDumpRuntime } from "@keplr-ewallet-ksn-server/pg_dump/runtime";
+import { connectPG } from "@oko-wallet-ksn-server/database";
+import { makeApp } from "@oko-wallet-ksn-server/app";
+import { loadEnv, verifyEnv } from "@oko-wallet-ksn-server/envs";
+import { startPgDumpRuntime } from "@oko-wallet-ksn-server/pg_dump/runtime";
 import { loadEncSecret } from "./load_enc_secret";
 import { checkDBBackup } from "./check_db_backup";
 import { parseCLIArgs } from "./cli_args";
-import type { ServerState } from "@keplr-ewallet-ksn-server/state";
+import type { ServerState } from "@oko-wallet-ksn-server/state";
 import { getGitCommitHash } from "./git";
-import pJson from "@keplr-ewallet-ksn-server/../package.json";
-import { logger } from "@keplr-ewallet-ksn-server/logger";
+import pJson from "@oko-wallet-ksn-server/../package.json";
+import { logger } from "@oko-wallet-ksn-server/logger";
 import { resetDB } from "./reset_db";
 
 const ONE_DAY_MS = 1 * 86400;

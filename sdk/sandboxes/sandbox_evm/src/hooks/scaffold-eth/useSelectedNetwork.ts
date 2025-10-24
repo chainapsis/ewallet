@@ -1,10 +1,10 @@
-import scaffoldConfig from "@keplr-ewallet-sandbox-evm/../scaffold.config";
-import { useGlobalState } from "@keplr-ewallet-sandbox-evm/services/store/store";
-import { AllowedChainIds } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+import scaffoldConfig from "@oko-wallet-sandbox-evm/../scaffold.config";
+import { useGlobalState } from "@oko-wallet-sandbox-evm/services/store/store";
+import { AllowedChainIds } from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 import {
   ChainWithAttributes,
   NETWORKS_EXTRA_DATA,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/networks";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth/networks";
 
 /**
  * Given a chainId, retrives the network object from `scaffold.config`,

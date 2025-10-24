@@ -1,11 +1,11 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
-import { dump, restore } from "@keplr-ewallet/ksn-pg-interface";
+import type { Result } from "@oko-wallet/stdlib-js";
+import { dump, restore } from "@oko-wallet/ksn-pg-interface";
 import type { Pool } from "pg";
 
 import {
   connectPG,
   type PgDatabaseConfig,
-} from "@keplr-ewallet-ksn-server/database";
+} from "@oko-wallet-ksn-server/database";
 
 const DUMP_TEST_DB = "dump_test_db";
 const RESTORE_TEST_DB = "restore_test_db";

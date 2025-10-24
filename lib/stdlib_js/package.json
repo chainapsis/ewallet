@@ -1,6 +1,6 @@
 {
-  "name": "@keplr-ewallet/stdlib-js",
-  "version": "0.0.2-rc.24",
+  "name": "@oko-wallet/stdlib-js",
+  "version": "0.0.2-rc.25",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet.git",
+    "url": "https://github.com/chainapsis/oko.git",
     "directory": "stdlib_js"
   },
   "devDependencies": {

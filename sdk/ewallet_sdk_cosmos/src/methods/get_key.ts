@@ -5,8 +5,8 @@ import {
   getCosmosAddress,
   getEthAddress,
   isEthereumCompatible,
-} from "@keplr-ewallet-sdk-cosmos/utils/address";
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+} from "@oko-wallet-sdk-cosmos/utils/address";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 
 export async function getKey(
   this: CosmosEWalletInterface,

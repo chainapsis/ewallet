@@ -1,16 +1,16 @@
 {
-  "name": "@keplr-ewallet/bytes",
+  "name": "@oko-wallet/bytes",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "version": "0.0.3-alpha.42",
+  "version": "0.0.3-alpha.43",
   "packageManager": "yarn@4.7.0",
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet.git",
+    "url": "https://github.com/chainapsis/oko.git",
     "directory": "crypto/bytes"
   },
   "scripts": {
@@ -20,7 +20,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.24"
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.25"
   },
   "devDependencies": {
     "@jest/globals": "*",

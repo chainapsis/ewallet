@@ -1,8 +1,8 @@
 import type {
   EWalletMsgGetCosmosChainInfo,
   KeplrEWalletInterface,
-} from "@keplr-ewallet/ewallet-sdk-core";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+} from "@oko-wallet/ewallet-sdk-core";
+import type { Result } from "@oko-wallet/stdlib-js";
 import type { ChainInfo } from "@keplr-wallet/types";
 
 type SendGetCosmosChainInfoError =

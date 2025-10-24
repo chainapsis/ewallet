@@ -1,6 +1,6 @@
-import { type Result } from "@keplr-ewallet/stdlib-js";
+import { type Result } from "@oko-wallet/stdlib-js";
 
-export const KEPLR_IFRAME_ID = "keplr-ewallet-attached";
+export const KEPLR_IFRAME_ID = "oko-attached";
 
 export function setUpIframeElement(
   url: URL,

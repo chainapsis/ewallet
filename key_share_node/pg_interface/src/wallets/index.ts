@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 import type {
   KSNodeWallet,
   CreateKSNodeWalletRequest,
-} from "@keplr-ewallet/ksn-interface/wallet";
-import type { Result } from "@keplr-ewallet/stdlib-js";
-import type { Bytes33 } from "@keplr-ewallet/bytes";
+} from "@oko-wallet/ksn-interface/wallet";
+import type { Result } from "@oko-wallet/stdlib-js";
+import type { Bytes33 } from "@oko-wallet/bytes";
 
 export async function createWallet(
   db: Pool | PoolClient,

@@ -1,4 +1,4 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import type { EventEmitError, EventHandlerType, EventType } from "./types";
 

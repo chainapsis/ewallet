@@ -1,7 +1,7 @@
 import { isAddress, type Hex } from "viem";
 
-import { publicKeyToEthereumAddress } from "@keplr-ewallet-sdk-eth/utils";
-import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
+import { publicKeyToEthereumAddress } from "@oko-wallet-sdk-eth/utils";
+import type { EthEWalletInterface } from "@oko-wallet-sdk-eth/types";
 
 export async function getAddress(this: EthEWalletInterface): Promise<Hex> {
   if (this.state.address !== null) {

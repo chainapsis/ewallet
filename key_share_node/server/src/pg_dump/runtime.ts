@@ -1,9 +1,9 @@
 import type { Pool } from "pg";
-import { type PgDumpConfig } from "@keplr-ewallet/ksn-pg-interface";
+import { type PgDumpConfig } from "@oko-wallet/ksn-pg-interface";
 
-import { sleep } from "@keplr-ewallet-ksn-server/utils/time";
+import { sleep } from "@oko-wallet-ksn-server/utils/time";
 import { deleteOldPgDumps, processPgDump } from "./dump";
-import { logger } from "@keplr-ewallet-ksn-server/logger";
+import { logger } from "@oko-wallet-ksn-server/logger";
 
 export interface PgDumpRuntimeOptions {
   dumpDir: string;

@@ -14,8 +14,8 @@ import {
   getBlockExplorerTxLink,
   getParsedError,
   notification,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
-import { TransactorFuncOptions } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
+import { TransactorFuncOptions } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 
 type TransactionFunc = (
   tx:

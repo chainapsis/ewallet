@@ -1,7 +1,7 @@
 import type { OfflineAminoSigner } from "@cosmjs/amino";
 import type { KeplrSignOptions } from "@keplr-wallet/types";
 
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 
 export function getOfflineSignerOnlyAmino(
   this: CosmosEWalletInterface,

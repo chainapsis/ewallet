@@ -30,8 +30,8 @@ import {
   createEthersTransactionHelper,
   createEthersContractHelper,
 } from "./utils/ethersHelpers";
-import { EWalletEIP1193Provider } from "@keplr-ewallet-sdk-eth/provider";
-import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
+import { EWalletEIP1193Provider } from "@oko-wallet-sdk-eth/provider";
+import type { EthSigner } from "@oko-wallet-sdk-eth/types";
 
 describe("EWallet Provider - Ethers.js Integration", () => {
   describe("BrowserProvider - Live RPC", () => {

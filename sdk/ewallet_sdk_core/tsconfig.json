@@ -26,7 +26,7 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "paths": {
-      "@keplr-ewallet-sdk-core/*": ["./src/*"]
+      "@oko-wallet-sdk-core/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

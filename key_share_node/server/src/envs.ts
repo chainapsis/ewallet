@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "path";
 import { z } from "zod";
 import os from "node:os";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import { logger } from "./logger";
 

@@ -1,6 +1,6 @@
 {
-  "name": "@keplr-ewallet/dotenv",
-  "version": "0.0.2-alpha.9",
+  "name": "@oko-wallet/dotenv",
+  "version": "0.0.2-alpha.10",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -13,11 +13,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet.git",
+    "url": "https://github.com/chainapsis/oko.git",
     "directory": "stdlib_js"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.24"
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.25"
   },
   "devDependencies": {
     "@types/jest": "*",

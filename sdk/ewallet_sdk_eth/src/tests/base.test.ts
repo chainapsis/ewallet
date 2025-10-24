@@ -20,8 +20,8 @@ import {
   EWalletEIP1193Provider,
   ProviderRpcErrorCode,
   RpcErrorCode,
-} from "@keplr-ewallet-sdk-eth/provider";
-import { ProviderEventEmitter } from "@keplr-ewallet-sdk-eth/provider/emitter";
+} from "@oko-wallet-sdk-eth/provider";
+import { ProviderEventEmitter } from "@oko-wallet-sdk-eth/provider/emitter";
 
 describe("EWallet Provider - Base", () => {
   describe("Basic Properties", () => {

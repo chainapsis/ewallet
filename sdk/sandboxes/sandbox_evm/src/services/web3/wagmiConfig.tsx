@@ -19,14 +19,14 @@ import type {
   EthEWalletInitArgs,
   EthEWalletInterface,
   EWalletEIP1193Provider,
-} from "@keplr-ewallet/ewallet-sdk-eth";
+} from "@oko-wallet/ewallet-sdk-eth";
 
-import { getAlchemyHttpUrl } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
-import { keplrIcon } from "@keplr-ewallet-sandbox-evm/assets/icon";
+import { getAlchemyHttpUrl } from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
+import { keplrIcon } from "@oko-wallet-sandbox-evm/assets/icon";
 import scaffoldConfig, {
   DEFAULT_ALCHEMY_API_KEY,
   ScaffoldConfig,
-} from "@keplr-ewallet-sandbox-evm/../scaffold.config";
+} from "@oko-wallet-sandbox-evm/../scaffold.config";
 
 const { targetNetworks } = scaffoldConfig;
 
@@ -68,7 +68,7 @@ function okoConnector(
     }
 
     // lazy import to avoid SSR issues and optimize bundle size
-    const { EthEWallet } = await import("@keplr-ewallet/ewallet-sdk-eth");
+    const { EthEWallet } = await import("@oko-wallet/ewallet-sdk-eth");
     const initRes = EthEWallet.init(args);
 
     if (!initRes.success) {

@@ -1,5 +1,5 @@
-import type { KeplrEWalletInterface } from "@keplr-ewallet-sdk-core/types";
-import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/target";
+import type { KeplrEWalletInterface } from "@oko-wallet-sdk-core/types";
+import { EWALLET_ATTACHED_TARGET } from "@oko-wallet-sdk-core/window_msg/target";
 
 export async function getPublicKey(
   this: KeplrEWalletInterface,

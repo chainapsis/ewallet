@@ -1,4 +1,4 @@
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 
 export async function getPublicKey(
   this: CosmosEWalletInterface,

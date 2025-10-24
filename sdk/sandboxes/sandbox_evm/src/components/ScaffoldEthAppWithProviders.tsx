@@ -5,11 +5,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { WagmiProvider } from "wagmi";
 
-import { Footer } from "@keplr-ewallet-sandbox-evm/components/Footer";
-import { Header } from "@keplr-ewallet-sandbox-evm/components/Header";
-import { BlockieAvatar } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
-import { useInitializeNativeCurrencyPrice } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
-import { wagmiConfigWithKeplr } from "@keplr-ewallet-sandbox-evm/services/web3/wagmiConfig";
+import { Footer } from "@oko-wallet-sandbox-evm/components/Footer";
+import { Header } from "@oko-wallet-sandbox-evm/components/Header";
+import { BlockieAvatar } from "@oko-wallet-sandbox-evm/components/scaffold-eth";
+import { useInitializeNativeCurrencyPrice } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
+import { wagmiConfigWithKeplr } from "@oko-wallet-sandbox-evm/services/web3/wagmiConfig";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   useInitializeNativeCurrencyPrice();

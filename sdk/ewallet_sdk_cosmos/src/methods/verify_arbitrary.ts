@@ -1,8 +1,8 @@
 import type { StdSignature } from "@cosmjs/amino";
 import { fromBase64 } from "@cosmjs/encoding";
 
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
-import { verifyADR36Amino } from "@keplr-ewallet-sdk-cosmos/utils/arbitrary";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
+import { verifyADR36Amino } from "@oko-wallet-sdk-cosmos/utils/arbitrary";
 
 export interface ArbitrarySigVerificationResult {
   isVerified: boolean;

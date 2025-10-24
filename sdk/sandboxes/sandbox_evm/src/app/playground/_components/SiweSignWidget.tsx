@@ -4,7 +4,7 @@ import { useAccount, useChainId, useWalletClient } from "wagmi";
 import { createSiweMessage, generateSiweNonce } from "viem/siwe";
 import { useState } from "react";
 
-import { useSignMessage } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { useSignMessage } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
 
 export function SiweSignWidget() {
   const { address } = useAccount();
@@ -20,8 +20,8 @@ export function SiweSignWidget() {
     }
 
     const siweMessage = createSiweMessage({
-      domain: "keplr-ewallet-sandbox.vercel.app",
-      uri: "https://keplr-ewallet-sandbox.vercel.app",
+      domain: "oko-wallet-sandbox.vercel.app",
+      uri: "https://oko-wallet-sandbox.vercel.app",
       address,
       chainId,
       nonce: generateSiweNonce(),
@@ -38,14 +38,14 @@ export function SiweSignWidget() {
     if (!signature) return;
     try {
       await navigator.clipboard.writeText(signature);
-    } catch {}
+    } catch { }
   };
 
   const copyMessage = async () => {
     if (!signedMessage) return;
     try {
       await navigator.clipboard.writeText(signedMessage);
-    } catch {}
+    } catch { }
   };
 
   const resetSiweSign = () => {

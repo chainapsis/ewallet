@@ -10,8 +10,8 @@ import {
   InputBase,
   IntegerInput,
   IntegerVariant,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
-import { AbiParameterTuple } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth";
+import { AbiParameterTuple } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 import { Tuple } from "./Tuple";
 import { TupleArray } from "./TupleArray";
 

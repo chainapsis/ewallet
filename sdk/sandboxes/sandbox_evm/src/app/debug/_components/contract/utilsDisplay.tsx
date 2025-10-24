@@ -8,8 +8,8 @@ import {
 } from "viem";
 import { ArrowsRightLeftIcon } from "@heroicons/react/24/solid";
 
-import { Address } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
-import { replacer } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/common";
+import { Address } from "@oko-wallet-sandbox-evm/components/scaffold-eth";
+import { replacer } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/common";
 
 type DisplayContent =
   | string

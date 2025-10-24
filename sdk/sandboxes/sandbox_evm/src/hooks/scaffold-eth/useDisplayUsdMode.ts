@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { useGlobalState } from "@keplr-ewallet-sandbox-evm/services/store/store";
+import { useGlobalState } from "@oko-wallet-sandbox-evm/services/store/store";
 
 export const useDisplayUsdMode = ({
   defaultUsdMode = false,

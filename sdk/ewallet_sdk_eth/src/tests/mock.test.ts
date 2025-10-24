@@ -23,12 +23,12 @@ import {
   mockMainnetRpc,
   createMockSigner,
 } from "./mock";
-import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
+import type { EthSigner } from "@oko-wallet-sdk-eth/types";
 import {
   EWalletEIP1193Provider,
   ProviderRpcErrorCode,
   RpcErrorCode,
-} from "@keplr-ewallet-sdk-eth/provider";
+} from "@oko-wallet-sdk-eth/provider";
 
 describe("EWallet Provider - Mock RPC Testing", () => {
   let mockServer: MockRpcServer;

@@ -1,4 +1,4 @@
-import type { KSNodeApiErrorCode } from "@keplr-ewallet/ksn-interface/response";
+import type { KSNodeApiErrorCode } from "@oko-wallet/ksn-interface/response";
 
 export const ErrorCodeMap: Record<KSNodeApiErrorCode, number> = {
   UNKNOWN_ERROR: 500,

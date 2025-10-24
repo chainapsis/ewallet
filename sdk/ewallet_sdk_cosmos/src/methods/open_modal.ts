@@ -2,10 +2,10 @@ import type {
   EWalletMsgOpenModal,
   MakeCosmosSigData,
   OpenModalAckPayload,
-} from "@keplr-ewallet/ewallet-sdk-core";
+} from "@oko-wallet/ewallet-sdk-core";
 import { v4 as uuidv4 } from "uuid";
 
-import type { CosmosEWalletInterface } from "@keplr-ewallet-sdk-cosmos/types";
+import type { CosmosEWalletInterface } from "@oko-wallet-sdk-cosmos/types";
 
 export async function openModal(
   this: CosmosEWalletInterface,

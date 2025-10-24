@@ -15,7 +15,7 @@ export default [
       format: "esm",
       sourcemap: true,
     },
-    external: ["@keplr-ewallet/stdlib-js", "@keplr-wallet/types"],
+    external: ["@oko-wallet/stdlib-js", "@keplr-wallet/types"],
     plugins: [
       nodeResolve(),
       // commonjs(),

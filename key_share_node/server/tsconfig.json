@@ -21,7 +21,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@keplr-ewallet-ksn-server/*": ["./src/*"]
+      "@oko-wallet-ksn-server/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],

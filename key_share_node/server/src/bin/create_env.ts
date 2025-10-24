@@ -10,7 +10,7 @@ import {
   EXAMPLE_ENV_FILE_2,
   ENV_FILE_NAME_3,
   EXAMPLE_ENV_FILE_3,
-} from "@keplr-ewallet-ksn-server/envs";
+} from "@oko-wallet-ksn-server/envs";
 
 const CONFIG_DIR_NAME = ".keplr_ewallet";
 

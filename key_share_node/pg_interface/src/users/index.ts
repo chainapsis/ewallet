@@ -1,6 +1,6 @@
 import type { Pool, PoolClient } from "pg";
-import type { KSNodeUser } from "@keplr-ewallet/ksn-interface/user";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { KSNodeUser } from "@oko-wallet/ksn-interface/user";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 export async function createUser(
   db: Pool | PoolClient,

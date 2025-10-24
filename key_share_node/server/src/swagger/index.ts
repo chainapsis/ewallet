@@ -6,7 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import { type Express } from "express";
 
 import { schemas } from "./schema";
-import { logger } from "@keplr-ewallet-ksn-server/logger";
+import { logger } from "@oko-wallet-ksn-server/logger";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

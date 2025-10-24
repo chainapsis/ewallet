@@ -79,7 +79,7 @@ const generateTsAbis = async () => {
   fs.writeFileSync(
     `${TARGET_DIR}deployedContracts.ts`,
     await prettier.format(
-      `${generatedContractComment} import { GenericContractsDeclaration } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract"; \n\n
+      `${generatedContractComment} import { GenericContractsDeclaration } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract"; \n\n
  const deployedContracts = {${fileContent}} as const; \n\n export default deployedContracts satisfies GenericContractsDeclaration`,
       {
         parser: "typescript",

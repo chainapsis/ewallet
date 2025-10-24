@@ -1,18 +1,18 @@
 # ewallet_sdk_eth
 
-- This package is a variant of `@keplr-ewallet/ewallet-sdk-core` for Ethereum.
-- It provides a way to interact with Ethereum wallets using `@keplr-ewallet/ewallet-sdk-core`.
+- This package is a variant of `@oko-wallet/ewallet-sdk-core` for Ethereum.
+- It provides a way to interact with Ethereum wallets using `@oko-wallet/ewallet-sdk-core`.
 
 ## Example
 
 ### Create Wallet
 
 ```ts
-import { initKeplrEwallet } from "@keplr-ewallet/ewallet-sdk-core";
-import { initEthEWallet } from "@keplr-ewallet/ewallet-sdk-eth";
+import { initKeplrEwallet } from "@oko-wallet/ewallet-sdk-core";
+import { initEthEWallet } from "@oko-wallet/ewallet-sdk-eth";
 
 const eWallet = await initKeplrEwallet({
-  element_id: "keplr-ewallet",
+  element_id: "oko-wallet",
 });
 
 const ethEWallet = await initEthEWallet({
@@ -77,17 +77,17 @@ const signature = await signer.signMessage("Hello, world!");
 ### Create Provider only
 
 ```ts
-import { initEWalletEIP1193Provider } from "@keplr-ewallet/ewallet-sdk-eth";
+import { initEWalletEIP1193Provider } from "@oko-wallet/ewallet-sdk-eth";
 
 const provider = await initEWalletEIP1193Provider({
-  id: "keplr-ewallet",
+  id: "oko-wallet",
 });
 ```
 
 or create a provider manually
 
 ```ts
-import { initEWalletEIP1193Provider } from "@keplr-ewallet/ewallet-sdk-eth";
+import { initEWalletEIP1193Provider } from "@oko-wallet/ewallet-sdk-eth";
 
 const provider = new EWalletEIP1193Provider({
   id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

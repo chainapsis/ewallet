@@ -1,7 +1,7 @@
 import React from "react";
 import { BanknotesIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
 
-import { useGlobalState } from "@keplr-ewallet-sandbox-evm/services/store/store";
+import { useGlobalState } from "@oko-wallet-sandbox-evm/services/store/store";
 
 /**
  * Site footer

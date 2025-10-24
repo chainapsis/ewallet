@@ -9,13 +9,13 @@ import { ContractWriteMethods } from "./ContractWriteMethods";
 import {
   Address,
   Balance,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth";
 import {
   useDeployedContractInfo,
   useNetworkColor,
-} from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
-import { ContractName } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+} from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
+import { ContractName } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 
 type ContractUIProps = {
   contractName: ContractName;

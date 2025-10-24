@@ -23,10 +23,10 @@ export default [
       // },
     ],
     external: [
-      "@keplr-ewallet/ewallet-sdk-core",
+      "@oko-wallet/ewallet-sdk-core",
       "@cosmjs/amino",
       "@cosmjs/proto-signing",
-      "@keplr-ewallet/stdlib-js",
+      "@oko-wallet/stdlib-js",
       "@keplr-wallet/proto-types",
       "@keplr-wallet/types",
       "@noble/curves",

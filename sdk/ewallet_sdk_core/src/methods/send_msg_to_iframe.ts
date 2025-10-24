@@ -1,7 +1,7 @@
 import type {
   EWalletMsg,
   KeplrEWalletInterface,
-} from "@keplr-ewallet-sdk-core/types";
+} from "@oko-wallet-sdk-core/types";
 
 export async function sendMsgToIframe(
   this: KeplrEWalletInterface,

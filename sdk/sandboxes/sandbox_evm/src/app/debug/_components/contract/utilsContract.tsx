@@ -1,6 +1,6 @@
 import { AbiFunction, AbiParameter } from "abitype";
 
-import { AbiParameterTuple } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+import { AbiParameterTuple } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 
 /**
  * Generates a key based on function metadata

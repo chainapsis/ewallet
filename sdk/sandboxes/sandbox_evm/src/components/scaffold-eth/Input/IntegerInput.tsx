@@ -6,7 +6,7 @@ import {
   InputBase,
   IntegerVariant,
   isValidInteger,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth";
 
 type IntegerInputProps = CommonInputProps<string> & {
   variant?: IntegerVariant;

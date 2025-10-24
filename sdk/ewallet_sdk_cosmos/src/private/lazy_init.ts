@@ -1,10 +1,10 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import type {
   CosmosEWalletInterface,
   CosmosEWalletState,
-} from "@keplr-ewallet-sdk-cosmos/types";
-import type { LazyInitError } from "@keplr-ewallet-sdk-cosmos/errors";
+} from "@oko-wallet-sdk-cosmos/types";
+import type { LazyInitError } from "@oko-wallet-sdk-cosmos/errors";
 
 export async function lazyInit(
   cosmosEWallet: CosmosEWalletInterface,

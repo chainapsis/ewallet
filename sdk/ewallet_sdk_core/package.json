@@ -1,6 +1,6 @@
 {
-  "name": "@keplr-ewallet/ewallet-sdk-core",
-  "version": "0.0.6-rc.102",
+  "name": "@oko-wallet/ewallet-sdk-core",
+  "version": "0.0.6-rc.103",
   "packageManager": "yarn@4.7.0",
   "type": "module",
   "scripts": {
@@ -30,12 +30,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet.git",
+    "url": "https://github.com/chainapsis/oko.git",
     "directory": "sdk/ewallet_sdk_core"
   },
   "dependencies": {
-    "@keplr-ewallet/stdlib-js": "^0.0.2-rc.24",
-    "@keplr-wallet/types": "^0.12.257"
+    "@keplr-wallet/types": "^0.12.257",
+    "@oko-wallet/stdlib-js": "^0.0.2-rc.25"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "*",

@@ -1,13 +1,13 @@
 import type { ChainInfo } from "@keplr-wallet/types";
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import type {
   OpenModalAckPayload,
   OpenModalPayload,
-} from "@keplr-ewallet-sdk-core/types/modal";
-import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
-import type { OAuthSignInError } from "@keplr-ewallet-sdk-core/types/sign_in";
-import type { OAuthPayload } from "@keplr-ewallet-sdk-core/types/oauth";
+} from "@oko-wallet-sdk-core/types/modal";
+import type { InitPayload } from "@oko-wallet-sdk-core/types/init";
+import type { OAuthSignInError } from "@oko-wallet-sdk-core/types/sign_in";
+import type { OAuthPayload } from "@oko-wallet-sdk-core/types/oauth";
 
 export type EWalletMsgGetPublicKey = {
   target: "keplr_ewallet_attached";

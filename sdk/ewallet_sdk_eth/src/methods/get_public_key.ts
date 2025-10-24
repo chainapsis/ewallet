@@ -1,6 +1,6 @@
 import { type Hex } from "viem";
 
-import type { EthEWalletInterface } from "@keplr-ewallet-sdk-eth/types";
+import type { EthEWalletInterface } from "@oko-wallet-sdk-eth/types";
 
 export async function getPublicKey(this: EthEWalletInterface): Promise<Hex> {
   console.log("[keplr-eth] getPublicKey: start");

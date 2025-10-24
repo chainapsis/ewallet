@@ -9,7 +9,7 @@ import {
   type EthEWalletInitArgs,
   EthEWalletInterface,
   EWalletEIP1193Provider,
-} from "@keplr-ewallet/ewallet-sdk-eth";
+} from "@oko-wallet/ewallet-sdk-eth";
 import { sepolia } from "viem/chains";
 
 import okoIcon from "@/public/icon.png";
@@ -25,7 +25,8 @@ function toOko(args: EthEWalletInitArgs): () => Wallet {
   return () => ({
     id: "oko",
     name: "Oko",
-    iconUrl: okoIcon.src,
+    // TODO:
+    iconUrl: (okoIcon as any).src,
     shortName: "Oko",
     rdns: "oko.app",
     iconBackground: "#0c2f78",
@@ -50,7 +51,7 @@ function okoConnector(
       return ethEWallet;
     }
 
-    const { EthEWallet } = await import("@keplr-ewallet/ewallet-sdk-eth");
+    const { EthEWallet } = await import("@oko-wallet/ewallet-sdk-eth");
     const initRes = EthEWallet.init(args);
 
     if (!initRes.success) {
@@ -70,7 +71,8 @@ function okoConnector(
       id: "oko",
       name: "Oko",
       type: "oko" as const,
-      icon: okoIcon.src,
+      // TODO:
+      icon: (okoIcon as any).src,
       setup: async () => {
         // Only setup in browser environment
         if (typeof window !== "undefined") {

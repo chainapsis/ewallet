@@ -1,11 +1,11 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import type {
   EWalletMsgOpenModal,
   KeplrEWalletInterface,
   OpenModalAckPayload,
-} from "@keplr-ewallet-sdk-core/types";
-import type { OpenModalError } from "@keplr-ewallet-sdk-core/errors";
+} from "@oko-wallet-sdk-core/types";
+import type { OpenModalError } from "@oko-wallet-sdk-core/errors";
 
 const FIVE_MINS = 60 * 5 * 1000;
 

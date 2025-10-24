@@ -1,4 +1,4 @@
-import type { KeplrEWalletInterface } from "@keplr-ewallet/ewallet-sdk-core";
+import type { KeplrEWalletInterface } from "@oko-wallet/ewallet-sdk-core";
 
 import type { EthEWalletInterface, EthEWalletStaticInterface } from "./types";
 import { lazyInit } from "./private/lazy_init";

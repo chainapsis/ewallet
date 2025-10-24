@@ -5,7 +5,7 @@
     "@cosmjs/amino": "^0.36.0",
     "@cosmjs/proto-signing": "^0.36.0",
     "@cosmos-kit/core": "^2.16.3",
-    "@keplr-ewallet/ewallet-sdk-cosmos": "0.0.6-rc.49",
-    "@keplr-wallet/types": "^0.12.263"
+    "@keplr-wallet/types": "^0.12.263",
+    "@oko-wallet/ewallet-sdk-cosmos": "workspace:*"
   }
 }

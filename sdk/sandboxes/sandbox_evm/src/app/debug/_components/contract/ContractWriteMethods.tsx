@@ -1,12 +1,12 @@
 import { Abi, AbiFunction } from "abitype";
 
-import { WriteOnlyFunctionForm } from "@keplr-ewallet-sandbox-evm/app/debug/_components/contract";
+import { WriteOnlyFunctionForm } from "@oko-wallet-sandbox-evm/app/debug/_components/contract";
 import {
   Contract,
   ContractName,
   GenericContract,
   InheritedFunctions,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 
 export const ContractWriteMethods = ({
   onChange,

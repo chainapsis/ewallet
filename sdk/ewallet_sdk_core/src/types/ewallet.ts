@@ -1,6 +1,6 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
-import type { EventEmitter3 } from "@keplr-ewallet-sdk-core/event";
+import type { EventEmitter3 } from "@oko-wallet-sdk-core/event";
 import type {
   KeplrEWalletCoreEvent2,
   KeplrEWalletCoreEventHandler2,
@@ -10,7 +10,7 @@ import type { OpenModalAckPayload } from "./modal";
 import type {
   KeplrEwalletInitError,
   OpenModalError,
-} from "@keplr-ewallet-sdk-core/errors";
+} from "@oko-wallet-sdk-core/errors";
 
 export interface KeplrEWalletStaticInterface {
   new (apiKey: string, iframe: HTMLIFrameElement, sdkEndpoint: string): void;

@@ -10,7 +10,7 @@ import {
   parseAbi,
   encodeFunctionData,
 } from "viem";
-import { publicKeyToEthereumAddress } from "@keplr-ewallet/ewallet-sdk-eth";
+import { publicKeyToEthereumAddress } from "@oko-wallet/ewallet-sdk-eth";
 
 import { SignWidget } from "@/components/widgets/sign_widget/sign_widget";
 import { useOko } from "@/hooks/use_oko";

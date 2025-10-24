@@ -1,6 +1,6 @@
 import { toHex } from "viem";
 
-import type { EthSigner } from "@keplr-ewallet-sdk-eth/types";
+import type { EthSigner } from "@oko-wallet-sdk-eth/types";
 
 export const MOCK_ADDRESS = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045";
 export const MOCK_SIGNATURE = "0x123456789abcdef";

@@ -22,7 +22,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@keplr-ewallet-ksn-pg-interface/*": ["./src/*"]
+      "@oko-wallet-ksn-pg-interface/*": ["./src/*"]
     }
   },
   "include": ["src/**/*", "scripts/**/*"],

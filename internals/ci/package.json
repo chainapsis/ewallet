@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@keplr-ewallet/ci",
+  "name": "@oko-wallet/ci",
   "packageManager": "yarn@4.7.0",
   "scripts": {
     "start": "tsx src/main.ts"
