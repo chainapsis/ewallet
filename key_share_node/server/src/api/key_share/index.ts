@@ -261,13 +261,42 @@ export async function reshareKeyShare(
       };
     }
 
-    // Update existing key share
-    const encryptedShare = encryptData(share.toHex(), encryptionSecret);
-    const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
+    const getKeyShareRes = await getKeyShareByWalletId(
+      db,
+      getWalletRes.data.wallet_id,
+    );
+    if (getKeyShareRes.success === false) {
+      return {
+        success: false,
+        code: "UNKNOWN_ERROR",
+        msg: getKeyShareRes.err,
+      };
+    }
 
+    if (getKeyShareRes.data === null) {
+      return {
+        success: false,
+        code: "KEY_SHARE_NOT_FOUND",
+        msg: "Key share not found",
+      };
+    }
+
+    // Validate that the new share matches the existing share
+    const newEncryptedShare = encryptData(share.toHex(), encryptionSecret);
+    const newEncryptedShareBuffer = Buffer.from(newEncryptedShare, "utf-8");
+
+    if (!getKeyShareRes.data.enc_share.equals(newEncryptedShareBuffer)) {
+      return {
+        success: false,
+        code: "RESHARE_FAILED",
+        msg: "New share does not match existing share",
+      };
+    }
+
+    // Update existing key share
     const updateKeyShareRes = await updateReshare(db, {
       wallet_id,
-      enc_share: encryptedShareBuffer,
+      enc_share: newEncryptedShareBuffer,
       status: "active" as KeyShareStatus,
     });
     if (updateKeyShareRes.success === false) {
