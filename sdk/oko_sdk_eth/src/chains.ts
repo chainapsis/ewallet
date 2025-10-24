@@ -41,7 +41,7 @@ export async function sendGetEthChainInfo(
   chainId?: string,
 ): Promise<Result<ChainInfo[], SendGetEthChainInfoError>> {
   const msg: EWalletMsgGetEthChainInfo = {
-    target: "keplr_ewallet_attached",
+    target: "oko_attached",
     msg_type: "get_eth_chain_info",
     payload: {
       chain_id: chainId ?? null,

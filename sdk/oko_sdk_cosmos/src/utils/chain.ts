@@ -14,7 +14,7 @@ export async function sendGetCosmosChainInfo(
   chainId?: string,
 ): Promise<Result<ChainInfo[], SendGetCosmosChainInfoError>> {
   const msg: EWalletMsgGetCosmosChainInfo = {
-    target: "keplr_ewallet_attached",
+    target: "oko_attached",
     msg_type: "get_cosmos_chain_info",
     payload: {
       chain_id: chainId ?? null,

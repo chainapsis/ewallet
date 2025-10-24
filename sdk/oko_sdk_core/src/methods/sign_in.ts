@@ -38,7 +38,7 @@ export async function signIn(this: KeplrEWalletInterface, type: "google") {
   }
 
   // const msg: EWalletMsg = {
-  //   target: "keplr_ewallet_attached",
+  //   target: "oko_attached",
   //   msg_type: "oauth_sign_in",
   //   payload: signInRes.payload.data,
   // };
@@ -155,7 +155,7 @@ async function tryGoogleSignIn(
         console.log("[keplr] oauth_sign_in_update recv, %o", data);
 
         const msg: EWalletMsgOAuthSignInUpdateAck = {
-          target: "keplr_ewallet_attached",
+          target: "oko_attached",
           msg_type: "oauth_sign_in_update_ack",
           payload: null,
         };

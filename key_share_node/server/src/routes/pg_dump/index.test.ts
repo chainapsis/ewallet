@@ -27,7 +27,7 @@ function makeUnsuccessfulAppStatus(pool: Pool): ServerState {
 
 describe("pg_dump_route_test", () => {
   const testAdminPassword = "test_admin_password";
-  const dumpDir = join(os.homedir(), "keplr_ewallet_data");
+  const dumpDir = join(os.homedir(), "oko_data");
 
   let pool: Pool;
   let app: express.Application;

@@ -12,7 +12,7 @@ import {
   EXAMPLE_ENV_FILE_3,
 } from "@oko-wallet-ksn-server/envs";
 
-const CONFIG_DIR_NAME = ".keplr_ewallet";
+const CONFIG_DIR_NAME = ".oko";
 
 function copyEnv(envFileName: string, exampleEnvFileName: string) {
   const cwd = process.cwd();

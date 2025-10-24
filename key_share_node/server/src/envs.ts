@@ -49,7 +49,7 @@ export function loadEnv(nodeId: string): Result<void, string> {
 
   const envFileName = `${ENV_FILE_NAME_STEM}${nodeIdSuffix}.env`;
 
-  const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
+  const envPath = path.join(os.homedir(), ".oko", envFileName);
 
   if (!fs.existsSync(envPath)) {
     return { success: false, err: `Env file does not exist, path: ${envPath}` };

@@ -20,7 +20,7 @@ export function loadEnvs(nodeId: number): PgDatabaseConfig {
   const nodeIdSuffix = nodeId === 1 ? "" : `_${nodeId}`;
   const envFileName = `${ENV_FILE_NAME_STEM}${nodeIdSuffix}.env`;
   console.log("Loading envs from: %s", envFileName);
-  const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
+  const envPath = path.join(os.homedir(), ".oko", envFileName);
 
   dotenv.config({
     path: envPath,
