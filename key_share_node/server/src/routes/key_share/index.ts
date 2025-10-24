@@ -65,7 +65,7 @@ export function makeKeyshareRouter() {
    *                     data:
    *                       type: "null"
    *       400:
-   *         description: Bad request - Curve type not supported
+   *         description: Bad request
    *         content:
    *           application/json:
    *             schema:
@@ -328,7 +328,7 @@ export function makeKeyshareRouter() {
    *                     data:
    *                       $ref: '#/components/schemas/CheckKeyShareResponse'
    *       400:
-   *         description: Bad request - Public key is not valid
+   *         description: Bad request
    *         content:
    *           application/json:
    *             schema:
@@ -432,35 +432,30 @@ export function makeKeyshareRouter() {
    *               code: UNAUTHORIZED
    *               msg: Unauthorized
    *       400:
-   *         description: Bad request - Public key is not valid
+   *         description: Bad request
    *         content:
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/ErrorResponse'
-   *             example:
-   *               success: false
-   *               code: PUBLIC_KEY_INVALID
-   *               msg: "Public key is not valid"
-   *       400:
-   *         description: Bad request - Share is not valid
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *             example:
-   *               success: false
-   *               code: SHARE_INVALID
-   *               msg: "Share is not valid"
-   *       400:
-   *         description: Bad request - Curve type not supported
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *             example:
-   *               success: false
-   *               code: CURVE_TYPE_NOT_SUPPORTED
-   *               msg: "Curve type not supported"
+   *             examples:
+   *               public_key_invalid:
+   *                 summary: Public key is not valid
+   *                 value:
+   *                   success: false
+   *                   code: PUBLIC_KEY_INVALID
+   *                   msg: "Public key is not valid"
+   *               share_invalid:
+   *                 summary: Share is not valid
+   *                 value:
+   *                   success: false
+   *                   code: SHARE_INVALID
+   *                   msg: "Share is not valid"
+   *               curve_type_not_supported:
+   *                 summary: Curve type not supported
+   *                 value:
+   *                   success: false
+   *                   code: CURVE_TYPE_NOT_SUPPORTED
+   *                   msg: "Curve type not supported"
    *       404:
    *         description: Not found - User, wallet or key share not found
    *         content:
