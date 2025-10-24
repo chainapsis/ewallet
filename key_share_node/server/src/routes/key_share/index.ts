@@ -64,6 +64,16 @@ export function makeKeyshareRouter() {
    *                   properties:
    *                     data:
    *                       type: "null"
+   *       400:
+   *         description: Bad request
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             example:
+   *               success: false
+   *               code: CURVE_TYPE_NOT_SUPPORTED
+   *               msg: "Curve type not supported"
    *       401:
    *         description: Unauthorized - Invalid or missing bearer token
    *         content:
@@ -318,7 +328,7 @@ export function makeKeyshareRouter() {
    *                     data:
    *                       $ref: '#/components/schemas/CheckKeyShareResponse'
    *       400:
-   *         description: Bad request - Public key is not valid
+   *         description: Bad request
    *         content:
    *           application/json:
    *             schema:
@@ -421,6 +431,31 @@ export function makeKeyshareRouter() {
    *               success: false
    *               code: UNAUTHORIZED
    *               msg: Unauthorized
+   *       400:
+   *         description: Bad request
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *             examples:
+   *               public_key_invalid:
+   *                 summary: Public key is not valid
+   *                 value:
+   *                   success: false
+   *                   code: PUBLIC_KEY_INVALID
+   *                   msg: "Public key is not valid"
+   *               share_invalid:
+   *                 summary: Share is not valid
+   *                 value:
+   *                   success: false
+   *                   code: SHARE_INVALID
+   *                   msg: "Share is not valid"
+   *               curve_type_not_supported:
+   *                 summary: Curve type not supported
+   *                 value:
+   *                   success: false
+   *                   code: CURVE_TYPE_NOT_SUPPORTED
+   *                   msg: "Curve type not supported"
    *       404:
    *         description: Not found - User, wallet or key share not found
    *         content:
@@ -485,46 +520,29 @@ export function makeKeyshareRouter() {
 
       const shareBytes: Bytes64 = shareBytesRes.data;
 
-      // Start transaction
-      const client = await state.db.connect();
-      try {
-        await client.query("BEGIN");
+      const reshareKeyShareRes = await reshareKeyShare(
+        state.db,
+        {
+          email: googleUser.email,
+          curve_type: body.curve_type,
+          public_key: publicKeyBytesRes.data,
+          share: shareBytes,
+        },
+        state.encryptionSecret,
+      );
 
-        const reshareKeyShareRes = await reshareKeyShare(
-          client,
-          {
-            email: googleUser.email,
-            curve_type: body.curve_type,
-            public_key: publicKeyBytesRes.data,
-            share: shareBytes,
-          },
-          state.encryptionSecret,
-        );
-
-        if (reshareKeyShareRes.success === false) {
-          await client.query("ROLLBACK");
-          return res.status(ErrorCodeMap[reshareKeyShareRes.code]).json({
-            success: false,
-            code: reshareKeyShareRes.code,
-            msg: reshareKeyShareRes.msg,
-          });
-        }
-
-        await client.query("COMMIT");
-        return res.status(200).json({
-          success: true,
-          data: void 0,
-        });
-      } catch (error) {
-        await client.query("ROLLBACK");
-        return res.status(500).json({
+      if (reshareKeyShareRes.success === false) {
+        return res.status(ErrorCodeMap[reshareKeyShareRes.code]).json({
           success: false,
-          code: "UNKNOWN_ERROR",
-          msg: String(error),
+          code: reshareKeyShareRes.code,
+          msg: reshareKeyShareRes.msg,
         });
-      } finally {
-        client.release();
       }
+
+      return res.status(200).json({
+        success: true,
+        data: void 0,
+      });
     },
   );
 

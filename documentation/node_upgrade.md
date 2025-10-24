@@ -1,0 +1,62 @@
+# Node Upgrade
+
+This guide explains how to upgrade your Key Share Node to the latest version.
+
+## Upgrade Process
+
+### 1. Pull Latest Changes
+
+```bash
+cd /path/to/ewallet
+git pull origin main
+```
+
+### 2. Navigate to Docker Directory
+
+```bash
+cd ewallet/key_share_node/docker
+```
+
+### 3. Upgrade the Key Share Node
+
+For most upgrades, use the standard upgrade process:
+
+```bash
+docker compose up -d --build key_share_node
+```
+
+This will rebuild the Key Share Node container with the latest code while preserving all existing data and database schema.
+
+#### Database Reset (Only when requested by Keplr team)
+
+**⚠️ WARNING: This will reset your database schema and may cause data loss.**
+
+If explicitly requested by the Keplr team to reset the database:
+
+```bash
+RESET_DB=true docker compose up -d --build key_share_node
+```
+
+### 4. Verify the Upgrade
+
+```bash
+# Check container status
+docker compose ps
+
+# Check logs
+docker compose logs key_share_node
+
+# Verify server health and version
+curl http://localhost:${SERVER_PORT}/status
+```
+
+Verify that the `version` field in the response matches the version announced in the upgrade request from the Keplr team.
+
+## Troubleshooting
+
+If the upgrade fails:
+
+1. Check the logs: `docker compose logs key_share_node`
+2. Verify database connectivity
+3. Ensure all environment variables are properly set
+4. Contact the Keplr team for assistance

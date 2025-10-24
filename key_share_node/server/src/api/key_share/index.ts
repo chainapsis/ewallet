@@ -13,7 +13,6 @@ import type {
   CheckKeyShareResponse,
   GetKeyShareRequest,
   GetKeyShareResponse,
-  KeyShareStatus,
   RegisterKeyShareRequest,
   ReshareKeyShareRequest,
 } from "@keplr-ewallet/ksn-interface/key_share";
@@ -28,6 +27,14 @@ export async function registerKeyShare(
 ): Promise<KSNodeApiResponse<void>> {
   try {
     const { email, curve_type, public_key, share } = registerKeyShareRequest;
+
+    if (curve_type !== "secp256k1") {
+      return {
+        success: false,
+        code: "CURVE_TYPE_NOT_SUPPORTED",
+        msg: "Curve type not supported",
+      };
+    }
 
     const getWalletRes = await getWalletByPublicKey(db, public_key);
     if (getWalletRes.success === false) {
@@ -261,15 +268,40 @@ export async function reshareKeyShare(
       };
     }
 
-    // Update existing key share
-    const encryptedShare = encryptData(share.toHex(), encryptionSecret);
-    const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
+    const getKeyShareRes = await getKeyShareByWalletId(
+      db,
+      getWalletRes.data.wallet_id,
+    );
+    if (getKeyShareRes.success === false) {
+      return {
+        success: false,
+        code: "UNKNOWN_ERROR",
+        msg: getKeyShareRes.err,
+      };
+    }
 
-    const updateKeyShareRes = await updateReshare(db, {
-      wallet_id,
-      enc_share: encryptedShareBuffer,
-      status: "active" as KeyShareStatus,
-    });
+    if (getKeyShareRes.data === null) {
+      return {
+        success: false,
+        code: "KEY_SHARE_NOT_FOUND",
+        msg: "Key share not found",
+      };
+    }
+
+    // Validate that the new share matches the existing share
+    const existingDecryptedShare = decryptData(
+      getKeyShareRes.data.enc_share.toString("utf-8"),
+      encryptionSecret,
+    );
+    if (existingDecryptedShare.toLowerCase() !== share.toHex().toLowerCase()) {
+      return {
+        success: false,
+        code: "RESHARE_FAILED",
+        msg: "New share does not match existing share",
+      };
+    }
+
+    const updateKeyShareRes = await updateReshare(db, wallet_id);
     if (updateKeyShareRes.success === false) {
       return {
         success: false,

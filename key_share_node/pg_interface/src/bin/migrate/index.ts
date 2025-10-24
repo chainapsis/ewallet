@@ -1,9 +1,9 @@
-import { Pool } from "pg";
-
-import { dropAllTablesIfExist } from "@keplr-ewallet-ksn-pg-interface/postgres";
+import {
+  dropAllTablesIfExist,
+  createTables,
+} from "@keplr-ewallet-ksn-pg-interface/postgres";
 import {
   createDBConn,
-  readMigrateSql,
   type PgDatabaseConfig,
 } from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/utils";
 import { loadEnvs } from "@keplr-ewallet-ksn-pg-interface/bin/db_aux/envs";
@@ -34,13 +34,6 @@ async function createDBIfNotExists(pgConfig: PgDatabaseConfig, dbName: string) {
   } else {
     throw new Error("Cannot connect to postgres");
   }
-}
-
-async function createTables(pool: Pool): Promise<void> {
-  const sql = readMigrateSql();
-  const results = await pool.query(sql);
-
-  console.log("Created tables, query count: %s", (results as any).length);
 }
 
 async function migrateAll(

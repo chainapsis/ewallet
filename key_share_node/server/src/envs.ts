@@ -52,8 +52,6 @@ export function loadEnv(nodeId: string): Result<void, string> {
   const envPath = path.join(os.homedir(), ".keplr_ewallet", envFileName);
 
   if (!fs.existsSync(envPath)) {
-    logger.debug("Env file does not exist, path: %s", envPath);
-
     return { success: false, err: `Env file does not exist, path: ${envPath}` };
   } else {
     logger.info("Env file found, loading, path: %s", envPath);

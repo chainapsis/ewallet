@@ -54,16 +54,19 @@ export class Bytes<N extends number> {
    * @returns A Bytes instance with the specified fixed length
    */
   static fromHexString<T extends number>(
-    hexString: string,
+    hex: string,
     bytesLength: T,
+    accept0x: boolean = false,
   ): Result<Bytes<T>, string> {
     // Enhanced input validation
-    if (typeof hexString !== "string") {
+    if (typeof hex !== "string") {
       return {
         success: false,
         err: "Input must be a string.",
       };
     }
+
+    let hexString = accept0x && hex.startsWith("0x") ? hex.slice(2) : hex;
 
     if (hexString.length <= 0 || bytesLength <= 0) {
       return {
@@ -201,10 +204,11 @@ export class Bytes<N extends number> {
    * Converts the Bytes instance to a hexadecimal string.
    * @returns Hexadecimal string
    */
-  toHex(): string {
-    return Array.from(this._bytes)
+  toHex(include0x: boolean = false): string {
+    let hex = Array.from(this._bytes)
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
+    return include0x ? "0x" + hex : hex;
   }
 
   /**
@@ -212,7 +216,7 @@ export class Bytes<N extends number> {
    * @returns A bigint
    */
   toBigInt(): bigint {
-    return BigInt("0x" + this.toHex());
+    return BigInt(this.toHex(true));
   }
 }
 

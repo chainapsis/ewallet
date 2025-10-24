@@ -8,11 +8,11 @@ CREATE TABLE public.key_shares (
 	share_id uuid DEFAULT gen_random_uuid() NOT NULL,
 	wallet_id uuid NOT NULL,
 	enc_share bytea NOT NULL,
+	status varchar NOT NULL,
+	reshared_at timestamptz DEFAULT now() NOT NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
 	aux jsonb NULL,
-	status varchar NOT NULL,
-	reshared_at timestamptz DEFAULT now() NOT NULL,
 	CONSTRAINT key_shares_pkey PRIMARY KEY (share_id),
 	CONSTRAINT key_shares_unique UNIQUE (wallet_id)
 );
@@ -64,9 +64,9 @@ CREATE TABLE public.wallets (
 	user_id uuid NOT NULL,
 	curve_type varchar(16) NOT NULL,
 	public_key bytea NOT NULL,
-	aux jsonb NULL,
 	created_at timestamptz DEFAULT now() NOT NULL,
 	updated_at timestamptz DEFAULT now() NOT NULL,
+	aux jsonb NULL,
 	CONSTRAINT wallets_pkey PRIMARY KEY (wallet_id),
 	CONSTRAINT wallets_public_key_key UNIQUE (public_key)
 );
