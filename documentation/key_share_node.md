@@ -34,8 +34,8 @@ system includes both the Key Share Node server and PostgreSQL database.
 1. Clone repository and setup:
 
 ```bash
-git clone https://github.com/chainapsis/ewallet.git
-cd ewallet
+git clone https://github.com/chainapsis/oko.git
+cd oko
 git fetch && git checkout <version>
 cd key_share_node/docker
 ```

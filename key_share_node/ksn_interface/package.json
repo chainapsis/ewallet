@@ -44,7 +44,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainapsis/ewallet.git",
+    "url": "https://github.com/chainapsis/oko.git",
     "directory": "key_share_node/ksn_interface"
   },
   "dependencies": {
