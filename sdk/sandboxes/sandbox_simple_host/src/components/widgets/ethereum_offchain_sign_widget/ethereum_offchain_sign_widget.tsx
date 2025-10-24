@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { hashMessage, hashTypedData, recoverPublicKey } from "viem";
-import { publicKeyToEthereumAddress } from "@keplr-ewallet/ewallet-sdk-eth";
+import { publicKeyToEthereumAddress } from "@oko-wallet/ewallet-sdk-eth";
 
 import styles from "./ethereum_offchain_sign_widget.module.scss";
 import { SignWidget } from "@/components/widgets/sign_widget/sign_widget";

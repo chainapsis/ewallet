@@ -11,7 +11,7 @@ import {
 } from "viem";
 import { useReadContract, useWalletClient } from "wagmi";
 
-import { PermitParamsAbi } from "@keplr-ewallet-sandbox-evm/contracts/abis/Permit";
+import { PermitParamsAbi } from "@oko-wallet-sandbox-evm/contracts/abis/Permit";
 
 export function usePermit({
   contractAddress,

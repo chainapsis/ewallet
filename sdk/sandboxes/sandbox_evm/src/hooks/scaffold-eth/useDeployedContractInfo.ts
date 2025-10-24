@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useIsMounted } from "usehooks-ts";
 import { usePublicClient } from "wagmi";
 
-import { useSelectedNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { useSelectedNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
 import {
   Contract,
   ContractCodeStatus,
   ContractName,
   UseDeployedContractConfig,
   contracts,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 
 type DeployedContractData<TContractName extends ContractName> = {
   data: Contract<TContractName> | undefined;

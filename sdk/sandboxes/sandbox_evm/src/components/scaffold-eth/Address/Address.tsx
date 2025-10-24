@@ -6,9 +6,9 @@ import { useEnsAvatar, useEnsName } from "wagmi";
 
 import { AddressCopyIcon } from "./AddressCopyIcon";
 import { AddressLinkWrapper } from "./AddressLinkWrapper";
-import { BlockieAvatar } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
-import { getBlockExplorerAddressLink } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+import { BlockieAvatar } from "@oko-wallet-sandbox-evm/components/scaffold-eth";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
+import { getBlockExplorerAddressLink } from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 
 const textSizeMap = {
   "3xs": "text-[10px]",

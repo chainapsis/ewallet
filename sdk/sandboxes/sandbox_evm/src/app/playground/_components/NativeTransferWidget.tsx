@@ -4,11 +4,11 @@ import { useState } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 import { parseEther, isAddress } from "viem";
 
-import { useTransactor } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { useTransactor } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
 import {
   AddressInput,
   EtherInput,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth/Input";
 
 export function NativeTransferWidget() {
   const { address } = useAccount();

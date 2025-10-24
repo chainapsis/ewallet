@@ -1,13 +1,13 @@
-import { EWALLET_ATTACHED_TARGET } from "@keplr-ewallet-sdk-core/window_msg/target";
+import { EWALLET_ATTACHED_TARGET } from "@oko-wallet-sdk-core/window_msg/target";
 import type {
   KeplrEWalletInterface,
   OAuthState,
   EWalletMsg,
   EWalletMsgOAuthSignInUpdateAck,
   EWalletMsgOAuthSignInUpdate,
-} from "@keplr-ewallet-sdk-core/types";
-import { RedirectUriSearchParamsKey } from "@keplr-ewallet-sdk-core/types/oauth";
-import { GOOGLE_CLIENT_ID } from "@keplr-ewallet-sdk-core/auth/google";
+} from "@oko-wallet-sdk-core/types";
+import { RedirectUriSearchParamsKey } from "@oko-wallet-sdk-core/types/oauth";
+import { GOOGLE_CLIENT_ID } from "@oko-wallet-sdk-core/auth/google";
 
 const FIVE_MINS_MS = 5 * 60 * 1000;
 

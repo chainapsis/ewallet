@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { hardhat } from "viem/chains";
 
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
 
 type AddressLinkWrapperProps = {
   children: React.ReactNode;

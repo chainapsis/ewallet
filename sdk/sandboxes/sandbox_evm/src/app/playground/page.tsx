@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 
-import { getMetadata } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/getMetadata";
-import { SigningPlayground } from "@keplr-ewallet-sandbox-evm/app/playground/_components/SigningPlayground";
+import { getMetadata } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/getMetadata";
+import { SigningPlayground } from "@oko-wallet-sandbox-evm/app/playground/_components/SigningPlayground";
 
 export const metadata = getMetadata({
   title: "Signing Playground",

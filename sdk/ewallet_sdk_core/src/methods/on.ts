@@ -1,7 +1,7 @@
 import type {
   KeplrEWalletCoreEventHandler2,
   KeplrEWalletInterface,
-} from "@keplr-ewallet-sdk-core/types";
+} from "@oko-wallet-sdk-core/types";
 
 export function on(
   this: KeplrEWalletInterface,

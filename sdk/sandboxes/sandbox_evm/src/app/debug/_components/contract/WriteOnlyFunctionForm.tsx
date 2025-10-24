@@ -18,11 +18,11 @@ import {
   getInitialFormState,
   getParsedContractFunctionArgs,
   transformAbiFunction,
-} from "@keplr-ewallet-sandbox-evm/app/debug/_components/contract";
-import { IntegerInput } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
-import { useTransactor } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
-import { simulateContractWriteAndNotifyError } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+} from "@oko-wallet-sandbox-evm/app/debug/_components/contract";
+import { IntegerInput } from "@oko-wallet-sandbox-evm/components/scaffold-eth";
+import { useTransactor } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
+import { simulateContractWriteAndNotifyError } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 
 type WriteOnlyFunctionFormProps = {
   abi: Abi;
@@ -72,7 +72,7 @@ export const WriteOnlyFunctionForm = ({
         onChange();
       } catch (e: any) {
         console.error(
-          "⚡️ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error",
+          "⚡ ~ file: WriteOnlyFunctionForm.tsx:handleWrite ~ error",
           e,
         );
       }

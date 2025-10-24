@@ -5,9 +5,9 @@ import {
   CommonInputProps,
   InputBase,
   SIGNED_NUMBER_REGEX,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
-import { useDisplayUsdMode } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useDisplayUsdMode";
-import { useGlobalState } from "@keplr-ewallet-sandbox-evm/services/store/store";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth";
+import { useDisplayUsdMode } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useDisplayUsdMode";
+import { useGlobalState } from "@oko-wallet-sandbox-evm/services/store/store";
 
 const MAX_DECIMALS_USD = 2;
 

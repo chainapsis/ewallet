@@ -4,12 +4,12 @@ import { useEffect, useMemo } from "react";
 import { useSessionStorage } from "usehooks-ts";
 import { BarsArrowUpIcon } from "@heroicons/react/20/solid";
 
-import { ContractUI } from "@keplr-ewallet-sandbox-evm/app/debug/_components/contract";
+import { ContractUI } from "@oko-wallet-sandbox-evm/app/debug/_components/contract";
 import {
   ContractName,
   GenericContract,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
-import { useAllContracts } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contractsData";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
+import { useAllContracts } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contractsData";
 
 const selectedContractStorageKey = "scaffoldEth2.selectedContract";
 

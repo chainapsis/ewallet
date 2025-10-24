@@ -5,9 +5,9 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 
-import { useCopyToClipboard } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useCopyToClipboard";
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
-import { getBlockExplorerTxLink } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+import { useCopyToClipboard } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useCopyToClipboard";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
+import { getBlockExplorerTxLink } from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 
 export const TxReceipt = ({ txResult }: { txResult: TransactionReceipt }) => {
   const { targetNetwork } = useTargetNetwork();

@@ -1,6 +1,6 @@
 import * as chains from "viem/chains";
 
-import scaffoldConfig from "@keplr-ewallet-sandbox-evm/../scaffold.config";
+import scaffoldConfig from "@oko-wallet-sandbox-evm/../scaffold.config";
 
 type ChainAttributes = {
   // color | [lightThemeColor, darkThemeColor]

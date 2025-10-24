@@ -2,10 +2,10 @@
 
 import { Address, formatEther } from "viem";
 
-import { useDisplayUsdMode } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useDisplayUsdMode";
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
-import { useWatchBalance } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useWatchBalance";
-import { useGlobalState } from "@keplr-ewallet-sandbox-evm/services/store/store";
+import { useDisplayUsdMode } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useDisplayUsdMode";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
+import { useWatchBalance } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useWatchBalance";
+import { useGlobalState } from "@oko-wallet-sandbox-evm/services/store/store";
 
 type BalanceProps = {
   address?: Address;

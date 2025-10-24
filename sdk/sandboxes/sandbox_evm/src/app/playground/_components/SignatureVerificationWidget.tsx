@@ -15,7 +15,7 @@ import { parseSiweMessage } from "viem/siwe";
 import {
   BytesInput,
   TextAreaInput,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth/Input";
 
 function PersonalSignVerifier() {
   const [personalMessage, setPersonalMessage] = useState<string>("");

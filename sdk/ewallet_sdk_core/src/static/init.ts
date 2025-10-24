@@ -1,12 +1,12 @@
-import { type Result } from "@keplr-ewallet/stdlib-js";
+import { type Result } from "@oko-wallet/stdlib-js";
 
-import { setUpIframeElement } from "@keplr-ewallet-sdk-core/iframe";
+import { setUpIframeElement } from "@oko-wallet-sdk-core/iframe";
 import type {
   KeplrEwalletInitArgs,
   KeplrEWalletInterface,
-} from "@keplr-ewallet-sdk-core/types";
-import { KeplrEWallet } from "@keplr-ewallet-sdk-core/constructor";
-import type { KeplrEwalletInitError } from "@keplr-ewallet-sdk-core/errors";
+} from "@oko-wallet-sdk-core/types";
+import { KeplrEWallet } from "@oko-wallet-sdk-core/constructor";
+import type { KeplrEwalletInitError } from "@oko-wallet-sdk-core/errors";
 
 const SDK_ENDPOINT = `https://attached.oko.app`;
 

@@ -1,8 +1,8 @@
 import "@rainbow-me/rainbowkit/styles.css";
-import "@keplr-ewallet-sandbox-evm/styles/globals.css";
+import "@oko-wallet-sandbox-evm/styles/globals.css";
 
-import { ScaffoldEthAppWithProviders } from "@keplr-ewallet-sandbox-evm/components/ScaffoldEthAppWithProviders";
-import { getMetadata } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/getMetadata";
+import { ScaffoldEthAppWithProviders } from "@oko-wallet-sandbox-evm/components/ScaffoldEthAppWithProviders";
+import { getMetadata } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/getMetadata";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-import scaffoldConfig from "@keplr-ewallet-sandbox-evm/../scaffold.config";
+import scaffoldConfig from "@oko-wallet-sandbox-evm/../scaffold.config";
 import {
   ChainWithAttributes,
   NETWORKS_EXTRA_DATA,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 
 /**
  * Zustand Store

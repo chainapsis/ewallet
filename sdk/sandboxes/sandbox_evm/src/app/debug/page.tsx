@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 
 import { DebugContracts } from "./_components/DebugContracts";
-import { getMetadata } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/getMetadata";
+import { getMetadata } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
   title: "Debug Contracts",

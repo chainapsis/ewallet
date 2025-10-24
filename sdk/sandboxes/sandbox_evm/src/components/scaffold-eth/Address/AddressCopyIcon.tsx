@@ -3,7 +3,7 @@ import {
   DocumentDuplicateIcon,
 } from "@heroicons/react/24/outline";
 
-import { useCopyToClipboard } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useCopyToClipboard";
+import { useCopyToClipboard } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useCopyToClipboard";
 
 export const AddressCopyIcon = ({
   className,

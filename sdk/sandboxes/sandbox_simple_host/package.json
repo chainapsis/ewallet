@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@cosmjs/stargate": "^0.34.0",
-    "@keplr-ewallet/ewallet-sdk-core": "workspace:*",
-    "@keplr-ewallet/ewallet-sdk-cosmos": "workspace:*",
-    "@keplr-ewallet/ewallet-sdk-eth": "workspace:*",
+    "@oko-wallet/ewallet-sdk-core": "workspace:*",
+    "@oko-wallet/ewallet-sdk-cosmos": "workspace:*",
+    "@oko-wallet/ewallet-sdk-eth": "workspace:*",
     "@tanstack/react-query": "~5.59.15",
     "classnames": "^2.5.1",
     "long": "^5.3.2",

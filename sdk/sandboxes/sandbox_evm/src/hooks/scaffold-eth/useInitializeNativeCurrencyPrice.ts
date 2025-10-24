@@ -2,9 +2,9 @@ import { useCallback, useEffect } from "react";
 import { useInterval } from "usehooks-ts";
 
 import { useTargetNetwork } from "./useTargetNetwork";
-import scaffoldConfig from "@keplr-ewallet-sandbox-evm/../scaffold.config";
-import { useGlobalState } from "@keplr-ewallet-sandbox-evm/services/store/store";
-import { fetchPriceFromUniswap } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+import scaffoldConfig from "@oko-wallet-sandbox-evm/../scaffold.config";
+import { useGlobalState } from "@oko-wallet-sandbox-evm/services/store/store";
+import { fetchPriceFromUniswap } from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 
 const enablePolling = false;
 

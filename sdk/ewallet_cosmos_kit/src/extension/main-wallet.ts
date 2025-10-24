@@ -1,6 +1,6 @@
 import { type EndpointOptions, MainWalletBase } from "@cosmos-kit/core";
 
-import { initCosmosEWallet } from "@keplr-ewallet/ewallet-sdk-cosmos";
+import { initCosmosEWallet } from "@oko-wallet/ewallet-sdk-cosmos";
 
 import { ChainEWallet } from "./chain-wallet";
 import { EWalletClient } from "./client";

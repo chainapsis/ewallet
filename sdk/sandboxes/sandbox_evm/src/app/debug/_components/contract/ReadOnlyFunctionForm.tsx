@@ -13,12 +13,12 @@ import {
   getInitialFormState,
   getParsedContractFunctionArgs,
   transformAbiFunction,
-} from "@keplr-ewallet-sandbox-evm/app/debug/_components/contract";
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
+} from "@oko-wallet-sandbox-evm/app/debug/_components/contract";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
 import {
   getParsedError,
   notification,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 
 type ReadOnlyFunctionFormProps = {
   contractAddress: Address;

@@ -1,11 +1,11 @@
-import type { Result } from "@keplr-ewallet/stdlib-js";
+import type { Result } from "@oko-wallet/stdlib-js";
 
 import type {
   EWalletMsg,
   EWalletMsgInitAck,
   KeplrEWalletInterface,
-} from "@keplr-ewallet-sdk-core/types";
-import type { InitPayload } from "@keplr-ewallet-sdk-core/types/init";
+} from "@oko-wallet-sdk-core/types";
+import type { InitPayload } from "@oko-wallet-sdk-core/types/init";
 
 export function registerMsgListener(
   _eWallet: KeplrEWalletInterface,

@@ -1,8 +1,8 @@
-import { useSelectedNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { useSelectedNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
 import {
   AllowedChainIds,
   ChainWithAttributes,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 
 export const DEFAULT_NETWORK_COLOR: [string, string] = ["#666666", "#bbbbbb"];
 

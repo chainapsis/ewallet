@@ -9,7 +9,7 @@ import {
   CommonInputProps,
   InputBase,
   isENS,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth";
 
 /**
  * Address input with ENS name resolution

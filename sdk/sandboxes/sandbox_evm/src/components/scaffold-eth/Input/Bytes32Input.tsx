@@ -4,7 +4,7 @@ import { hexToString, isHex, stringToHex } from "viem";
 import {
   CommonInputProps,
   InputBase,
-} from "@keplr-ewallet-sandbox-evm/components/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/components/scaffold-eth";
 
 export const Bytes32Input = ({
   value,

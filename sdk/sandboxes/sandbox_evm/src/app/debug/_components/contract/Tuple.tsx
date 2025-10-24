@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { ContractInput } from "./ContractInput";
 import { getFunctionInputKey, getInitialTupleFormState } from "./utilsContract";
-import { replacer } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/common";
-import { AbiParameterTuple } from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth/contract";
+import { replacer } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/common";
+import { AbiParameterTuple } from "@oko-wallet-sandbox-evm/utils/scaffold-eth/contract";
 
 type TupleProps = {
   abiTupleParameter: AbiParameterTuple;

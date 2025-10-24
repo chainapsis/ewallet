@@ -8,12 +8,12 @@ import { Abi, AbiFunction } from "abitype";
 
 import { InheritanceTooltip } from "./InheritanceTooltip";
 import { displayTxResult } from "./utilsDisplay";
-import { useAnimationConfig } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
-import { useTargetNetwork } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
+import { useAnimationConfig } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
+import { useTargetNetwork } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth/useTargetNetwork";
 import {
   getParsedError,
   notification,
-} from "@keplr-ewallet-sandbox-evm/utils/scaffold-eth";
+} from "@oko-wallet-sandbox-evm/utils/scaffold-eth";
 
 type DisplayVariableProps = {
   contractAddress: Address;

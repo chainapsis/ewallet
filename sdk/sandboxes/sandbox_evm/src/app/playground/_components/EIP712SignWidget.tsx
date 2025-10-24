@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAccount, useChainId, useWalletClient } from "wagmi";
 
-import { TextAreaInput } from "@keplr-ewallet-sandbox-evm/components/scaffold-eth/Input";
+import { TextAreaInput } from "@oko-wallet-sandbox-evm/components/scaffold-eth/Input";
 
 export function Eip712SignWidget() {
   const { address } = useAccount();

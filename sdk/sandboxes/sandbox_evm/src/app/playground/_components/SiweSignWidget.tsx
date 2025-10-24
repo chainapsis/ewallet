@@ -4,7 +4,7 @@ import { useAccount, useChainId, useWalletClient } from "wagmi";
 import { createSiweMessage, generateSiweNonce } from "viem/siwe";
 import { useState } from "react";
 
-import { useSignMessage } from "@keplr-ewallet-sandbox-evm/hooks/scaffold-eth";
+import { useSignMessage } from "@oko-wallet-sandbox-evm/hooks/scaffold-eth";
 
 export function SiweSignWidget() {
   const { address } = useAccount();
