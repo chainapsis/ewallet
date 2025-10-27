@@ -1,8 +1,8 @@
 <a href="https://demo.oko.app/">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light2.svg">
-    <source media="(prefers-color-scheme: dark)" srcset="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_dark2.svg">
-    <img src="https://keplr-ewallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light2.svg" alt="Logo"
+    <source media="(prefers-color-scheme: light)" srcset="https://oko-wallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="https://oko-wallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_dark.svg">
+    <img src="https://oko-wallet.s3.ap-northeast-2.amazonaws.com/icons/oko_product_logo_light.svg" alt="Logo"
     style="width: 240px; height: auto;">
   </picture>
 </a>
@@ -26,8 +26,8 @@ or mobile apps.
 
 <!-- TODO: update sdk names and links -->
 
-| Packages                                                 | Latest                                                                                                                                          |
-| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Packages                                         | Latest                                                                                                                                  |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
 | [@oko-wallet/oko-sdk-core](sdk/oko_sdk_core)     | [![npm version](https://img.shields.io/npm/v/@oko-wallet/oko-sdk-core.svg)](https://www.npmjs.com/package/@oko-wallet/oko-sdk-core)     |
 | [@oko-wallet/oko-sdk-cosmos](sdk/oko_sdk_cosmos) | [![npm version](https://img.shields.io/npm/v/@oko-wallet/oko-sdk-cosmos.svg)](https://www.npmjs.com/package/@oko-wallet/oko-sdk-cosmos) |
 | [@oko-wallet/oko-sdk-eth](sdk/oko_sdk_eth)       | [![npm version](https://img.shields.io/npm/v/@oko-wallet/oko-sdk-eth.svg)](https://www.npmjs.com/package/@oko-wallet/oko-sdk-eth)       |
