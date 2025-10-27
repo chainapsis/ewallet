@@ -1,5 +1,5 @@
 {
-  "name": "ewallet_cosmos_kit",
+  "name": "oko_cosmos_kit",
   "version": "0.0.1",
   "dependencies": {
     "@cosmjs/amino": "^0.36.0",

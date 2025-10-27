@@ -39,7 +39,7 @@ TBD
 ## Running a key share node
 
 Please refer to the
-[document](https://github.com/chainapsis/ewallet/blob/main/documentation/key_share_node.md).
+[document](https://github.com/chainapsis/oko/blob/main/documentation/key_share_node.md).
 
 ## Contributing
 
