@@ -122,9 +122,17 @@ function OkoProvider({ children }: { children: React.ReactNode }) {
 
   async function init() {
     const apiKey = (import.meta as any).env.VITE_OKO_API_KEY ?? "";
+    const sdkEndpoint =
+      (import.meta as any).env.VITE_OKO_SDK_ENDPOINT ?? undefined;
 
-    const cosmosInit = CosmosEWallet.init({ api_key: apiKey });
-    const ethInit = EthEWallet.init({ api_key: apiKey, use_testnet: true });
+    const cosmosInit = CosmosEWallet.init({
+      api_key: apiKey,
+      sdk_endpoint: sdkEndpoint,
+    });
+    const ethInit = EthEWallet.init({
+      api_key: apiKey,
+      sdk_endpoint: sdkEndpoint,
+    });
 
     if (!cosmosInit.success) {
       console.error(cosmosInit.err);
@@ -137,7 +145,7 @@ function OkoProvider({ children }: { children: React.ReactNode }) {
 
     const c = cosmosInit.data;
     const e = ethInit.data;
-    const p = e.getEthereumProvider();
+    const p = await e.getEthereumProvider();
     const signer = c.getOfflineSigner("osmo-test-5");
 
     try {

@@ -17,7 +17,7 @@ import okoIcon from "@/public/icon.png";
 export const defaultWallets = [
   toOko({
     api_key: process.env.NEXT_PUBLIC_OKO_API_KEY ?? "",
-    use_testnet: true,
+    sdk_endpoint: process.env.NEXT_PUBLIC_OKO_SDK_ENDPOINT ?? undefined,
   }),
 ];
 
@@ -156,7 +156,7 @@ function okoConnector(
 
         const ethEWallet = await initEthEWalletOnce();
 
-        cachedProvider = ethEWallet.getEthereumProvider();
+        cachedProvider = await ethEWallet.getEthereumProvider();
 
         cachedProvider.on("chainChanged", (chainId) => {
           wallet.onChainChanged(chainId);

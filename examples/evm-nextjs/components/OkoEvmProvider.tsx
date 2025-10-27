@@ -38,7 +38,7 @@ function OkoEvmProvider({ children }: { children: React.ReactNode }) {
   async function initOkoEvm() {
     const okoEvm = EthEWallet.init({
       api_key: process.env.NEXT_PUBLIC_OKO_API_KEY ?? "",
-      use_testnet: true,
+      sdk_endpoint: process.env.NEXT_PUBLIC_OKO_SDK_ENDPOINT ?? undefined,
     });
 
     if (!okoEvm.success) {
@@ -47,7 +47,7 @@ function OkoEvmProvider({ children }: { children: React.ReactNode }) {
     }
 
     const ethEWallet = okoEvm.data;
-    const provider = ethEWallet.getEthereumProvider();
+    const provider = await ethEWallet.getEthereumProvider();
 
     try {
       const address = await ethEWallet.getAddress();
