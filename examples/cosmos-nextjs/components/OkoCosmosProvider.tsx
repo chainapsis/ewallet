@@ -110,6 +110,7 @@ function OkoCosmosProvider({ children }: { children: React.ReactNode }) {
   async function initOkoCosmos() {
     const okoCosmos = CosmosEWallet.init({
       api_key: process.env.NEXT_PUBLIC_OKO_API_KEY ?? "",
+      sdk_endpoint: process.env.NEXT_PUBLIC_OKO_SDK_ENDPOINT ?? undefined,
     });
 
     if (!okoCosmos.success) {
