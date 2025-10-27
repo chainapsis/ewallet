@@ -9,6 +9,7 @@ This guide explains how to upgrade your Key Share Node to the latest version.
 ```bash
 cd /path/to/oko
 git pull origin main
+git fetch origin tag <version>
 git checkout <version>
 ```
 
