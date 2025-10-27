@@ -47,10 +47,10 @@ RESET_DB=true docker compose up -d --build key_share_node
 
 ```bash
 # Check container status
-docker ps
+docker compose ps
 
 # Check logs
-docker logs <container_id>
+docker compose logs key_share_node
 
 # Verify server health and version
 curl http://localhost:${SERVER_PORT}/status
@@ -62,7 +62,7 @@ Verify that the `version` field in the response matches the version announced in
 
 If the upgrade fails:
 
-1. Check the logs: `docker logs <container_id>`
+1. Check the logs: `docker compose logs key_share_node`
 2. Verify database connectivity
 3. Ensure all environment variables are properly set
 4. Contact the Keplr team for assistance
