@@ -1,5 +1,4 @@
 import React from "react";
-// import { Typography } from "@oko-wallet/ewallet-common-ui/typography";
 
 import styles from "./user_data_widget.module.scss";
 
