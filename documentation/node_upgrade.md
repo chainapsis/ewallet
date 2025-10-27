@@ -56,7 +56,7 @@ docker compose logs key_share_node
 curl http://localhost:${SERVER_PORT}/status
 ```
 
-Verify that the `version` field in the response matches the version announced in the upgrade request from the Keplr team.
+Verify that both the `version` and `git_hash` fields in the response match the values announced in the upgrade request from the Keplr team.
 
 ## Troubleshooting
 
