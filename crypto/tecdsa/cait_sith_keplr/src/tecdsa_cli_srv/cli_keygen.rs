@@ -8,6 +8,7 @@ use crate::keyshare::steps_2;
 use crate::keyshare::RcvdKeyshareMessages;
 use crate::keyshare::{CentralizedKeygenOutput, KeyshareState2};
 use crate::protocol::ProtocolError;
+use crate::tecdsa::keygen_centralized::keygen_import;
 use crate::{
     protocol::Participant,
     tecdsa::{keygen_centralized::combine_shares, keygen_centralized::keygen_centralized},
@@ -39,6 +40,14 @@ impl KeygenClient {
         let threshold = 2;
 
         keygen_centralized::<Secp256k1>(&participants, threshold)
+    }
+
+    pub fn cli_keygen_import(
+        secret: [u8; 32],
+    ) -> Result<CentralizedKeygenOutput<Secp256k1>, ProtocolError> {
+        let participants = vec![Participant::from(0u32), Participant::from(1u32)];
+
+        keygen_import::<Secp256k1>(secret, &participants, participants.len())
     }
 
     pub fn cli_combine_shares(
