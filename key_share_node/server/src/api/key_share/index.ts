@@ -21,7 +21,7 @@ import type { KSNodeApiResponse } from "@oko-wallet/ksn-interface/response";
 import { decryptData, encryptData } from "@oko-wallet-ksn-server/encrypt";
 
 export async function registerKeyShare(
-  db: Pool | PoolClient,
+  db: Pool,
   registerKeyShareRequest: RegisterKeyShareRequest,
   encryptionSecret: string,
 ): Promise<KSNodeApiResponse<void>> {
@@ -62,53 +62,56 @@ export async function registerKeyShare(
       };
     }
 
-    let user_id: string;
-    if (getUserRes.data === null) {
-      const createUserRes = await createUser(db, email);
-      if (createUserRes.success === false) {
-        return {
-          success: false,
-          code: "UNKNOWN_ERROR",
-          msg: createUserRes.err,
-        };
+    const client = await db.connect();
+    try {
+      await client.query("BEGIN");
+
+      let user_id: string;
+      if (getUserRes.data === null) {
+        const createUserRes = await createUser(client, email);
+        if (createUserRes.success === false) {
+          throw new Error(createUserRes.err);
+        }
+
+        user_id = createUserRes.data.user_id;
+      } else {
+        user_id = getUserRes.data.user_id;
       }
 
-      user_id = createUserRes.data.user_id;
-    } else {
-      user_id = getUserRes.data.user_id;
-    }
+      const createWalletRes = await createWallet(client, {
+        user_id,
+        curve_type,
+        public_key: public_key.toUint8Array(),
+      });
+      if (createWalletRes.success === false) {
+        throw new Error(createWalletRes.err);
+      }
 
-    const createWalletRes = await createWallet(db, {
-      user_id,
-      curve_type,
-      public_key: public_key.toUint8Array(),
-    });
-    if (createWalletRes.success === false) {
+      const wallet_id = createWalletRes.data.wallet_id;
+
+      const encryptedShare = encryptData(share.toHex(), encryptionSecret);
+      const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
+
+      const createKeyShareRes = await createKeyShare(client, {
+        wallet_id,
+        enc_share: encryptedShareBuffer,
+      });
+      if (createKeyShareRes.success === false) {
+        throw new Error(createKeyShareRes.err);
+      }
+
+      await client.query("COMMIT");
+      return { success: true, data: void 0 };
+    } catch (error) {
+      await client.query("ROLLBACK");
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: createWalletRes.err,
+        msg: String(error),
       };
+    } finally {
+      client.release();
     }
-
-    const wallet_id = createWalletRes.data.wallet_id;
-
-    const encryptedShare = encryptData(share.toHex(), encryptionSecret);
-    const encryptedShareBuffer = Buffer.from(encryptedShare, "utf-8");
-
-    const createKeyShareRes = await createKeyShare(db, {
-      wallet_id,
-      enc_share: encryptedShareBuffer,
-    });
-    if (createKeyShareRes.success === false) {
-      return {
-        success: false,
-        code: "UNKNOWN_ERROR",
-        msg: createKeyShareRes.err,
-      };
-    }
-
-    return { success: true, data: void 0 };
   } catch (error) {
     return {
       success: false,
