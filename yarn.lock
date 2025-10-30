@@ -5299,12 +5299,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@oko-wallet/bytes@npm:^0.0.3-alpha.45, @oko-wallet/bytes@workspace:*, @oko-wallet/bytes@workspace:crypto/bytes":
+"@oko-wallet/bytes@npm:^0.0.3-alpha.46, @oko-wallet/bytes@workspace:*, @oko-wallet/bytes@workspace:crypto/bytes":
   version: 0.0.0-use.local
   resolution: "@oko-wallet/bytes@workspace:crypto/bytes"
   dependencies:
     "@jest/globals": "npm:*"
-    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.27"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.28"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
@@ -5335,7 +5335,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@oko-wallet/dotenv@workspace:lib/dotenv"
   dependencies:
-    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.27"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.28"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     del-cli: "npm:*"
@@ -5394,7 +5394,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@oko-wallet/ksn-interface@workspace:key_share_node/ksn_interface"
   dependencies:
-    "@oko-wallet/bytes": "npm:^0.0.3-alpha.45"
+    "@oko-wallet/bytes": "npm:^0.0.3-alpha.46"
     "@types/jest": "npm:*"
     "@types/node": "npm:*"
     "@typescript-eslint/eslint-plugin": "npm:*"
@@ -5443,12 +5443,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@oko-wallet/oko-sdk-core@npm:^0.0.6-rc.106, @oko-wallet/oko-sdk-core@workspace:*, @oko-wallet/oko-sdk-core@workspace:sdk/oko_sdk_core":
+"@oko-wallet/oko-sdk-core@npm:^0.0.6-rc.106, @oko-wallet/oko-sdk-core@npm:^0.0.6-rc.107, @oko-wallet/oko-sdk-core@workspace:*, @oko-wallet/oko-sdk-core@workspace:sdk/oko_sdk_core":
   version: 0.0.0-use.local
   resolution: "@oko-wallet/oko-sdk-core@workspace:sdk/oko_sdk_core"
   dependencies:
     "@keplr-wallet/types": "npm:^0.12.257"
-    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.27"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.28"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
     "@rollup/plugin-replace": "npm:*"
@@ -5468,9 +5468,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@oko-wallet/oko-sdk-cosmos@npm:0.0.6-rc.128, @oko-wallet/oko-sdk-cosmos@workspace:*, @oko-wallet/oko-sdk-cosmos@workspace:sdk/oko_sdk_cosmos":
-  version: 0.0.0-use.local
-  resolution: "@oko-wallet/oko-sdk-cosmos@workspace:sdk/oko_sdk_cosmos"
+"@oko-wallet/oko-sdk-cosmos@npm:0.0.6-rc.128":
+  version: 0.0.6-rc.128
+  resolution: "@oko-wallet/oko-sdk-cosmos@npm:0.0.6-rc.128"
   dependencies:
     "@cosmjs/amino": "npm:^0.33.1"
     "@cosmjs/proto-signing": "npm:^0.33.1"
@@ -5480,6 +5480,25 @@ __metadata:
     "@noble/hashes": "npm:^1.8.0"
     "@oko-wallet/oko-sdk-core": "npm:^0.0.6-rc.106"
     "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.27"
+    bech32: "npm:^2.0.0"
+    buffer: "npm:^6.0.3"
+    uuid: "npm:*"
+  checksum: 10c0/6a672e61b4dce0b1edaad3d8a837586ab206f476ea56553eabe44e665a0561f0f57b97d43aa33286642cd6e39ca2a713ffd708a89f9205603746b9235f6191fd
+  languageName: node
+  linkType: hard
+
+"@oko-wallet/oko-sdk-cosmos@workspace:*, @oko-wallet/oko-sdk-cosmos@workspace:sdk/oko_sdk_cosmos":
+  version: 0.0.0-use.local
+  resolution: "@oko-wallet/oko-sdk-cosmos@workspace:sdk/oko_sdk_cosmos"
+  dependencies:
+    "@cosmjs/amino": "npm:^0.33.1"
+    "@cosmjs/proto-signing": "npm:^0.33.1"
+    "@keplr-wallet/proto-types": "npm:^0.12.253"
+    "@keplr-wallet/types": "npm:^0.12.253"
+    "@noble/curves": "npm:1.9.7"
+    "@noble/hashes": "npm:^1.8.0"
+    "@oko-wallet/oko-sdk-core": "npm:^0.0.6-rc.107"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.28"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
     "@rollup/plugin-terser": "npm:*"
@@ -5502,12 +5521,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@oko-wallet/oko-sdk-eth@npm:0.0.6-rc.119, @oko-wallet/oko-sdk-eth@workspace:*, @oko-wallet/oko-sdk-eth@workspace:sdk/oko_sdk_eth":
-  version: 0.0.0-use.local
-  resolution: "@oko-wallet/oko-sdk-eth@workspace:sdk/oko_sdk_eth"
+"@oko-wallet/oko-sdk-eth@npm:0.0.6-rc.119":
+  version: 0.0.6-rc.119
+  resolution: "@oko-wallet/oko-sdk-eth@npm:0.0.6-rc.119"
   dependencies:
     "@oko-wallet/oko-sdk-core": "npm:^0.0.6-rc.106"
     "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.27"
+    eventemitter3: "npm:^5.0.1"
+    uuid: "npm:*"
+    viem: "npm:*"
+  checksum: 10c0/3a9eabb037fdee6c3716f2ae8d13e9d71c7715691ca02b50317cb6d719708ddda1030fcb416ea9f70ccbfcff92f68f838e908ef85a6cd773576fffe1c206f4d0
+  languageName: node
+  linkType: hard
+
+"@oko-wallet/oko-sdk-eth@workspace:*, @oko-wallet/oko-sdk-eth@workspace:sdk/oko_sdk_eth":
+  version: 0.0.0-use.local
+  resolution: "@oko-wallet/oko-sdk-eth@workspace:sdk/oko_sdk_eth"
+  dependencies:
+    "@oko-wallet/oko-sdk-core": "npm:^0.0.6-rc.107"
+    "@oko-wallet/stdlib-js": "npm:^0.0.2-rc.28"
     "@rollup/plugin-commonjs": "npm:*"
     "@rollup/plugin-node-resolve": "npm:*"
     "@rollup/plugin-terser": "npm:*"
@@ -5532,7 +5564,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@oko-wallet/stdlib-js@npm:^0.0.2-rc.27, @oko-wallet/stdlib-js@workspace:*, @oko-wallet/stdlib-js@workspace:lib/stdlib_js":
+"@oko-wallet/stdlib-js@npm:^0.0.2-rc.27, @oko-wallet/stdlib-js@npm:^0.0.2-rc.28, @oko-wallet/stdlib-js@workspace:*, @oko-wallet/stdlib-js@workspace:lib/stdlib_js":
   version: 0.0.0-use.local
   resolution: "@oko-wallet/stdlib-js@workspace:lib/stdlib_js"
   dependencies:
