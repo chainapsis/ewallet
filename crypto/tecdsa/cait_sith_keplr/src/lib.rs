@@ -143,4 +143,3 @@ pub use keyshare::KeygenOutput;
 pub use presign::PresignOutput;
 pub use sign::FullSignature;
 pub use version::*;
-

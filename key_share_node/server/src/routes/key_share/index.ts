@@ -121,7 +121,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -130,52 +130,35 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "SHARE_INVALID",
-          msg: "Share is not valid",
+          msg: `Share is not valid: ${shareBytesRes.err}`,
         });
       }
 
       const shareBytes: Bytes64 = shareBytesRes.data;
 
-      // Start transaction
-      const client = await state.db.connect();
-      try {
-        await client.query("BEGIN");
+      const registerKeyShareRes = await registerKeyShare(
+        state.db,
+        {
+          email: googleUser.email,
+          curve_type: body.curve_type,
+          public_key: publicKeyBytesRes.data,
+          share: shareBytes,
+        },
+        state.encryptionSecret,
+      );
 
-        const registerKeyShareRes = await registerKeyShare(
-          client,
-          {
-            email: googleUser.email,
-            curve_type: body.curve_type,
-            public_key: publicKeyBytesRes.data,
-            share: shareBytes,
-          },
-          state.encryptionSecret,
-        );
-
-        if (registerKeyShareRes.success === false) {
-          await client.query("ROLLBACK");
-          return res.status(ErrorCodeMap[registerKeyShareRes.code]).json({
-            success: false,
-            code: registerKeyShareRes.code,
-            msg: registerKeyShareRes.msg,
-          });
-        }
-
-        await client.query("COMMIT");
-        return res.status(200).json({
-          success: true,
-          data: void 0,
-        });
-      } catch (error) {
-        await client.query("ROLLBACK");
-        return res.status(500).json({
+      if (registerKeyShareRes.success === false) {
+        return res.status(ErrorCodeMap[registerKeyShareRes.code]).json({
           success: false,
-          code: "UNKNOWN_ERROR",
-          msg: String(error),
+          code: registerKeyShareRes.code,
+          msg: registerKeyShareRes.msg,
         });
-      } finally {
-        client.release();
       }
+
+      return res.status(200).json({
+        success: true,
+        data: void 0,
+      });
     },
   );
 
@@ -274,7 +257,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -361,7 +344,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -505,7 +488,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -514,7 +497,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "SHARE_INVALID",
-          msg: "Share is not valid",
+          msg: `Share is not valid: ${shareBytesRes.err}`,
         });
       }
 

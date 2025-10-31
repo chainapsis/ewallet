@@ -40,7 +40,7 @@ export async function bearerTokenMiddleware(
       const errorRes: KSNodeApiErrorResponse = {
         success: false,
         code: "UNAUTHORIZED",
-        msg: result.err.type || "Invalid token",
+        msg: result.err.message,
       };
       res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       return;
@@ -60,7 +60,7 @@ export async function bearerTokenMiddleware(
       const errorRes: KSNodeApiErrorResponse = {
         success: false,
         code: "UNAUTHORIZED",
-        msg: "Invalid token",
+        msg: "Invalid token: missing required fields (email, sub, or name)",
       };
       res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
       return;
@@ -78,7 +78,7 @@ export async function bearerTokenMiddleware(
     const errorRes: KSNodeApiErrorResponse = {
       success: false,
       code: "UNKNOWN_ERROR",
-      msg: "Token validation failed",
+      msg: `Token validation failed: ${error instanceof Error ? error.message : String(error)}`,
     };
     res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
     return;

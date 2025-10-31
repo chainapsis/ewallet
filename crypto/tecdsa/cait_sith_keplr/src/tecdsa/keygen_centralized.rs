@@ -1,4 +1,4 @@
-use elliptic_curve::{group::Curve, CurveArithmetic, Group};
+use elliptic_curve::{group::Curve, CurveArithmetic, Group, ScalarPrimitive};
 use rand_core::OsRng;
 
 use crate::{
@@ -42,6 +42,45 @@ pub fn keygen_centralized<C: CSCurve>(
         };
         results.push(key_out);
     }
+
+    Ok(CentralizedKeygenOutput {
+        private_key: f.evaluate_zero(),
+        keygen_outputs: results,
+    })
+}
+
+pub fn keygen_import<C: CSCurve>(
+    secret: [u8; 32],
+    participants: &Vec<Participant>,
+    threshold: usize,
+) -> Result<CentralizedKeygenOutput<C>, ProtocolError> {
+    if threshold < 2 {
+        return Err(ProtocolError::AssertionFailed(
+            "threshold must be >= 2".to_string(),
+        ));
+    }
+
+    let secret_scalar = ScalarPrimitive::<C>::from_slice(&secret)
+        .map_err(|err| ProtocolError::Other("Failed to convert secret to scalar".into()))?;
+    let constant = C::Scalar::from(secret_scalar);
+
+    let mut rng = OsRng;
+    let f = Polynomial::<C>::extend_random(&mut rng, threshold, &constant);
+
+    let big_x_projective = C::ProjectivePoint::generator() * f.evaluate_zero();
+    let big_x_affine = big_x_projective.to_affine();
+
+    let mut results = Vec::with_capacity(participants.len());
+    for &p in participants {
+        let share_i = f.evaluate(&p.scalar::<C>());
+        let key_out = KeygenOutput {
+            private_share: share_i,
+            public_key: big_x_affine,
+        };
+        results.push(key_out);
+    }
+
+    debug_assert!(f.evaluate_zero() == constant);
 
     Ok(CentralizedKeygenOutput {
         private_key: f.evaluate_zero(),
