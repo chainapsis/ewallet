@@ -32,7 +32,7 @@ export async function registerKeyShare(
       return {
         success: false,
         code: "CURVE_TYPE_NOT_SUPPORTED",
-        msg: "Curve type not supported",
+        msg: `Curve type not supported: ${curve_type}`,
       };
     }
 
@@ -49,7 +49,7 @@ export async function registerKeyShare(
       return {
         success: false,
         code: "DUPLICATE_PUBLIC_KEY",
-        msg: "Duplicate public key",
+        msg: `Duplicate public key: ${public_key.toHex()}`,
       };
     }
 
@@ -142,7 +142,7 @@ export async function getKeyShare(
       return {
         success: false,
         code: "USER_NOT_FOUND",
-        msg: "User not found",
+        msg: `User not found: ${email}`,
       };
     }
 
@@ -158,14 +158,14 @@ export async function getKeyShare(
       return {
         success: false,
         code: "WALLET_NOT_FOUND",
-        msg: "Wallet not found",
+        msg: `Wallet not found: ${public_key.toHex()}`,
       };
     }
     if (getWalletRes.data.user_id !== getUserRes.data.user_id) {
       return {
         success: false,
         code: "UNAUTHORIZED",
-        msg: "Unauthorized",
+        msg: "Unauthorized: wallet belongs to different user",
       };
     }
 
@@ -222,7 +222,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "CURVE_TYPE_NOT_SUPPORTED",
-        msg: "Curve type not supported",
+        msg: `Curve type not supported: ${curve_type}`,
       };
     }
 
@@ -238,7 +238,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "WALLET_NOT_FOUND",
-        msg: "Wallet not found",
+        msg: `Wallet not found: ${public_key.toHex()}`,
       };
     }
 
@@ -258,7 +258,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "USER_NOT_FOUND",
-        msg: "User not found",
+        msg: `User not found: ${email}`,
       };
     }
 
@@ -267,7 +267,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "UNAUTHORIZED",
-        msg: "Unauthorized - wallet belongs to different user",
+        msg: "Unauthorized: wallet belongs to different user",
       };
     }
 
