@@ -121,7 +121,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -130,7 +130,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "SHARE_INVALID",
-          msg: "Share is not valid",
+          msg: `Share is not valid: ${shareBytesRes.err}`,
         });
       }
 
@@ -257,7 +257,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -344,7 +344,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -488,7 +488,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "PUBLIC_KEY_INVALID",
-          msg: "Public key is not valid",
+          msg: `Public key is not valid: ${publicKeyBytesRes.err}`,
         });
       }
 
@@ -497,7 +497,7 @@ export function makeKeyshareRouter() {
         return res.status(400).json({
           success: false,
           code: "SHARE_INVALID",
-          msg: "Share is not valid",
+          msg: `Share is not valid: ${shareBytesRes.err}`,
         });
       }
 

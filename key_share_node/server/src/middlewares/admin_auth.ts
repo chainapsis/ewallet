@@ -14,6 +14,15 @@ export async function adminAuthMiddleware(
 ) {
   const { password } = req.body;
 
+  if (!password) {
+    const errorRes: KSNodeApiErrorResponse = {
+      success: false,
+      code: "UNAUTHORIZED",
+      msg: "Admin password is required",
+    };
+    return res.status(ErrorCodeMap[errorRes.code]).json(errorRes);
+  }
+
   if (password !== process.env.ADMIN_PASSWORD) {
     const errorRes: KSNodeApiErrorResponse = {
       success: false,
