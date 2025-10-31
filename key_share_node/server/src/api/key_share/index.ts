@@ -134,7 +134,7 @@ export async function getKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getUserRes.err,
+        msg: `Failed to getUserByEmail: ${getUserRes.err}`,
       };
     }
 
@@ -151,7 +151,7 @@ export async function getKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getWalletRes.err,
+        msg: `Failed to getWalletByPublicKey: ${getWalletRes.err}`,
       };
     }
     if (getWalletRes.data === null) {
@@ -177,7 +177,7 @@ export async function getKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getKeyShareRes.err,
+        msg: `Failed to getKeyShareByWalletId: ${getKeyShareRes.err}`,
       };
     }
 
@@ -231,7 +231,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getWalletRes.err,
+        msg: `Failed to getWalletByPublicKey: ${getWalletRes.err}`,
       };
     }
     if (getWalletRes.data === null) {
@@ -250,7 +250,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getUserRes.err,
+        msg: `Failed to getUserByEmail: ${getUserRes.err}`,
       };
     }
 
@@ -279,7 +279,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getKeyShareRes.err,
+        msg: `Failed to getKeyShareByWalletId: ${getKeyShareRes.err}`,
       };
     }
 
@@ -309,7 +309,7 @@ export async function reshareKeyShare(
       return {
         success: false,
         code: "RESHARE_FAILED",
-        msg: updateKeyShareRes.err,
+        msg: `Failed to updateReshare: ${updateKeyShareRes.err}`,
       };
     }
 
@@ -335,7 +335,7 @@ export async function checkKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getUserRes.err,
+        msg: `Failed to getUserByEmail: ${getUserRes.err}`,
       };
     }
     if (getUserRes.data === null) {
@@ -352,7 +352,7 @@ export async function checkKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getWalletRes.err,
+        msg: `Failed to getWalletByPublicKey: ${getWalletRes.err}`,
       };
     }
     if (getWalletRes.data === null) {
@@ -379,7 +379,7 @@ export async function checkKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getKeyShareRes.err,
+        msg: `Failed to getKeyShareByWalletId: ${getKeyShareRes.err}`,
       };
     }
 
