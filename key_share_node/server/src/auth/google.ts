@@ -74,8 +74,7 @@ export async function validateOAuthToken(
       success: false,
       err: {
         type: "unknown",
-        message: `Token validation failed: ${error.message}`,
-        error: error,
+        message: `Token validation failed: ${error instanceof Error ? error.message : String(error)}`,
       },
     };
   }

@@ -22,5 +22,4 @@ export type OAuthValidationFail =
   | {
       type: "unknown";
       message: string;
-      error: any;
     };
