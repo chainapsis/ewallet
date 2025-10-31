@@ -41,7 +41,7 @@ export async function registerKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getWalletRes.err,
+        msg: `Failed to getWalletByPublicKey: ${getWalletRes.err}`,
       };
     }
 
@@ -58,7 +58,7 @@ export async function registerKeyShare(
       return {
         success: false,
         code: "UNKNOWN_ERROR",
-        msg: getUserRes.err,
+        msg: `Failed to getUserByEmail: ${getUserRes.err}`,
       };
     }
 
@@ -70,7 +70,7 @@ export async function registerKeyShare(
       if (getUserRes.data === null) {
         const createUserRes = await createUser(client, email);
         if (createUserRes.success === false) {
-          throw new Error(createUserRes.err);
+          throw new Error(`Failed to createUser: ${createUserRes.err}`);
         }
 
         user_id = createUserRes.data.user_id;
@@ -84,7 +84,7 @@ export async function registerKeyShare(
         public_key: public_key.toUint8Array(),
       });
       if (createWalletRes.success === false) {
-        throw new Error(createWalletRes.err);
+        throw new Error(`Failed to createWallet: ${createWalletRes.err}`);
       }
 
       const wallet_id = createWalletRes.data.wallet_id;
@@ -97,7 +97,7 @@ export async function registerKeyShare(
         enc_share: encryptedShareBuffer,
       });
       if (createKeyShareRes.success === false) {
-        throw new Error(createKeyShareRes.err);
+        throw new Error(`Failed to createKeyShare: ${createKeyShareRes.err}`);
       }
 
       await client.query("COMMIT");
